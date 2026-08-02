@@ -1,0 +1,14 @@
+/generate_automation_framework
+
+# CONTEXT
+Tôi cần xây dựng E2E Web UI Automation Framework từ đầu.
+- Công nghệ: Playwright Test + TypeScript (Strict Mode)
+- Test Runner: @playwright/test
+- Report: [HTML Report / Allure / Cả hai]
+
+# HỆ THỐNG
+- URL: [URL hệ thống]
+- Tài khoản test: [EMAIL] / [PASSWORD]
+
+# TÙY CHỌN
+- CI/CD: [GitHub Actions / GitLab CI / Jenkins / Không cần]

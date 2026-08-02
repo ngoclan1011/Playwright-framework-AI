@@ -1,0 +1,21 @@
+/analyze_test_report
+
+# CONTEXT
+- Framework: [Playwright (TypeScript) / Selenium+TestNG (Java) / Pytest]
+- Loại suite: [Smoke / Regression / Full]
+- Môi trường chạy: [Local / CI/CD pipeline]
+
+# TEST REPORT
+[Cung cấp 1 trong các thông tin sau:]
+
+## Cách 1: Path đến report
+- Report path: [playwright-report/ | allure-results/ | target/surefire-reports/ | test-output/testng-results.xml]
+
+## Cách 2: Agent tự tìm
+- Project path: [path/to/project]
+
+## Cách 3: Chạy suite mới rồi phân tích
+- Lệnh chạy test: [VD: npx playwright test --reporter=json]
+
+# TÙY CHỌN
+- So sánh trend — report lần chạy trước: [path hoặc "Không có"]

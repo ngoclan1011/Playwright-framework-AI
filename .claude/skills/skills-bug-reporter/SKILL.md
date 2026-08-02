@@ -1,0 +1,119 @@
+---
+name: skills-bug-reporter
+description: Skill sinh bug report chuẩn từ test FAIL — tự thu thập evidence (screenshot, log, environment), viết steps to reproduce, phân loại severity/priority, và hỗ trợ đẩy lên Jira.
+---
+
+# Bug Reporter
+
+Purpose: Chuyển kết quả test FAIL thành bug report chuẩn, đầy đủ evidence, sẵn sàng gửi developer hoặc đẩy lên Jira.
+
+---
+
+## When to Use
+
+Sử dụng skill này khi:
+
+- Một test case (manual hoặc automation) FAIL và cần báo bug
+- User yêu cầu "viết bug report", "báo bug", "tạo ticket bug"
+- Sau khi chạy test suite có failure cần chuyển thành ticket
+- Cần chuẩn hóa lại một bug report viết sơ sài
+
+---
+
+## Responsibilities
+
+1. **Thu thập evidence** — screenshot tại thời điểm fail, error log, stack trace, console/network log, video (nếu có)
+2. **Viết steps to reproduce** — các bước tối giản, ai đọc cũng tái hiện được
+3. **Xác định Actual vs Expected** — rõ ràng, đo lường được
+4. **Phân loại Severity / Priority** — theo bảng chuẩn bên dưới
+5. **Ghi environment** — browser/version, OS, resolution, môi trường (dev/staging/prod), test data đã dùng
+6. **Đẩy lên Jira** (tùy chọn) — phối hợp với skill `skills-jira-integration`
+
+---
+
+## Bug Report Template (BẮT BUỘC)
+
+```markdown
+# [BUG] <Tóm tắt ngắn gọn — module + hành vi sai>
+
+## Thông tin chung
+- **ID:** BUG_<module>_<timestamp>
+- **Severity:** 🔴 Critical / 🟠 Major / 🟡 Minor / 🟢 Trivial
+- **Priority:** P1 / P2 / P3
+- **Môi trường:** <env> | <browser + version> | <OS> | <resolution>
+- **Test case liên quan:** <TC ID hoặc test file path>
+- **Test data đã dùng:** <email/username/id — traceable>
+
+## Steps to Reproduce
+1. ...
+2. ...
+3. ...
+
+## Expected Result
+<Hành vi đúng theo requirement>
+
+## Actual Result
+<Hành vi thực tế quan sát được>
+
+## Evidence
+- Screenshot: <path/link>
+- Error log / Stack trace: (code block)
+- Console / Network log: (nếu liên quan)
+
+## Ghi chú thêm
+- Tần suất tái hiện: Luôn luôn / Thỉnh thoảng (x/y lần)
+- Workaround (nếu có):
+- Nghi ngờ root cause (nếu phân tích được):
+```
+
+---
+
+## Severity & Priority Guide
+
+| Severity | Định nghĩa | Ví dụ |
+|---|---|---|
+| 🔴 **Critical** | Chặn luồng chính, mất data, crash, security | Không login được, thanh toán sai tiền |
+| 🟠 **Major** | Chức năng chính sai nhưng có workaround | Filter sai kết quả, export thiếu cột |
+| 🟡 **Minor** | Chức năng phụ sai, UI lệch ảnh hưởng sử dụng | Validation message sai, sort không đúng |
+| 🟢 **Trivial** | Lỗi hiển thị nhỏ, không ảnh hưởng chức năng | Sai chính tả, lệch margin |
+
+| Priority | Định nghĩa |
+|---|---|
+| **P1** | Fix ngay trong sprint hiện tại / hotfix |
+| **P2** | Fix trong sprint kế tiếp |
+| **P3** | Fix khi có thời gian (backlog) |
+
+> Severity đánh giá theo **mức ảnh hưởng kỹ thuật**; Priority theo **mức khẩn cấp business**. Hai giá trị độc lập nhau.
+
+---
+
+## Workflow
+
+1. **Collect** — Đọc test fail: error log, screenshot, test file, test data
+2. **Reproduce** — Tái hiện lỗi (chạy lại test hoặc thao tác trên browser qua MCP) để xác nhận không phải flaky. Nếu nghi flaky → chuyển sang skill `skills-flaky-test-analyzer` trước
+3. **Isolate** — Rút gọn steps to reproduce về mức tối thiểu
+4. **Classify** — Gán Severity/Priority theo bảng chuẩn
+5. **Write** — Điền template, đính kèm evidence
+6. **Deliver** — Lưu file `bug_reports/BUG_<module>_<timestamp>.md`; nếu user yêu cầu → đẩy lên Jira qua `skills-jira-integration`
+
+---
+
+## Quality Checklist
+
+Trước khi bàn giao bug report, verify:
+
+- [ ] Steps to reproduce đã tối giản, người khác làm theo tái hiện được
+- [ ] Đã tái hiện ít nhất 1 lần để loại trừ flaky
+- [ ] Expected có căn cứ (requirement/spec), không phải suy đoán
+- [ ] Có ít nhất 1 evidence (screenshot hoặc log)
+- [ ] Test data traceable — dev có thể tìm đúng record trong DB
+- [ ] Severity/Priority gán theo bảng chuẩn, không cảm tính
+- [ ] Title đủ thông tin để tìm kiếm sau này (module + hành vi sai)
+
+---
+
+## Rules References
+
+- `.claude/rules/automation_rules.md` — Test data traceable
+- `.claude/skills/skills-jira-integration/SKILL.md` — Đẩy bug lên Jira
+- `.claude/skills/skills-flaky-test-analyzer/SKILL.md` — Loại trừ flaky trước khi báo bug
