@@ -134,10 +134,9 @@ Dành cho tác vụ **đơn lẻ**, chỉ cần copy → thay `[...]` bằng d�
 
 ---
 
-## 🤝 Hỗ Trợ & Đóng Góp
+## 🤝 Cộng đồng học tập
 
-- Nếu bạn gặp khó khăn trong quá trình sử dụng hoặc muốn đóng góp để bộ công cụ này hoàn thiện hơn, đừng ngần ngại tạo **Issue** hoặc **Pull Request**.
-- Tham gia cộng đồng **Anh Tester** để cùng trao đổi, học hỏi thêm nhiều kiến thức bổ ích về Automation Testing!
+- Tham gia cộng đồng **Anh Tester** để cùng trao đổi:
   - 📘 **Fanpage Facebook:** [Anh Tester](https://www.facebook.com/anhtester)
   - 👥 **Group Facebook Automation:** [Cộng đồng Automation Testing](https://www.facebook.com/groups/automationtest)
   - 👥 **Group Facebook Manual:** [Cộng đồng Manual Testing](https://www.facebook.com/groups/manualtest)
