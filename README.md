@@ -49,12 +49,12 @@ claude-testing-kit/
 
 ### `.claude/` — Bộ não của AI Agent trên Claude Code
 
-| Thư mục | Vai trò |
-|---------|--------|
-| `commands/` | 21 slash commands: `/generate_automation_from_testcases`, `/generate_testcases_manual_rbt`, `/analyze_test_report`, `/create_bug_report`, `/review_testcases`, `/generate_traceability_matrix`, `/generate_api_mocks`... |
-| `rules/` | Quy tắc bắt buộc: POM, locator strategy, smart waits, Playwright/Selenium/Appium rules |
-| `skills/` | 15 kỹ năng chuyên biệt: automation engineer, manual testing, UI debug, locator healer, test data generator, framework architect, jira integration, bug reporter, test report analyzer, testcase reviewer, coverage traceability, api mocking... |
-| `settings.json` | Cấu hình quyền hạn: cho phép/cấm các hành động cụ thể (đọc file, chạy test, push code...) |
+| Thư mục         | Vai trò                                                                                                                                                                                                                                         |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `commands/`     | 21 slash commands: `/generate_automation_from_testcases`, `/generate_testcases_manual_rbt`, `/analyze_test_report`, `/create_bug_report`, `/review_testcases`, `/generate_traceability_matrix`, `/generate_api_mocks`...                        |
+| `rules/`        | Quy tắc bắt buộc: POM, locator strategy, smart waits, Playwright/Selenium/Appium rules                                                                                                                                                          |
+| `skills/`       | 15 kỹ năng chuyên biệt: automation engineer, manual testing, UI debug, locator healer, test data generator, framework architect, jira integration, bug reporter, test report analyzer, testcase reviewer, coverage traceability, api mocking... |
+| `settings.json` | Cấu hình quyền hạn: cho phép/cấm các hành động cụ thể (đọc file, chạy test, push code...)                                                                                                                                                       |
 
 > **📌 Lưu ý về cấu trúc:** Trong Claude Code, **workflows** được gọi là **commands** và đặt trong `.claude/commands/`. Tên file dùng dấu gạch dưới (`_`). Ví dụ: `generate_automation_from_testcases.md`.
 
@@ -64,11 +64,11 @@ claude-testing-kit/
 
 Dành cho các tác vụ phức tạp, cần thực hiện **tuần tự trong cùng 1 conversation**.
 
-| Plan | Mô tả | Bắt đầu nhanh |
-|------|-------|---------------|
-| `plans/manual/` | Sinh Manual Test Cases theo quy trình **AI-RBT 6 bước** (Risk-Based Testing, 15 field types, OWASP & AI Quality Gate) | Xem `plans/manual/QUICK_START.md` |
-| `plans/automation/` | Sinh Automation Scripts theo **6 bước** từ context → review | Xem `plans/automation/QUICK_START.md` |
-| `plans/cross-module/` | Phân tích tính năng **đa module** & sinh **ma trận kết hợp** (Pairwise/Cartesian) | Xem `plans/cross-module/QUICK_START.md` |
+| Plan                  | Mô tả                                                                                                                 | Bắt đầu nhanh                           |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| `plans/manual/`       | Sinh Manual Test Cases theo quy trình **AI-RBT 6 bước** (Risk-Based Testing, 15 field types, OWASP & AI Quality Gate) | Xem `plans/manual/QUICK_START.md`       |
+| `plans/automation/`   | Sinh Automation Scripts theo **6 bước** từ context → review                                                           | Xem `plans/automation/QUICK_START.md`   |
+| `plans/cross-module/` | Phân tích tính năng **đa module** & sinh **ma trận kết hợp** (Pairwise/Cartesian)                                     | Xem `plans/cross-module/QUICK_START.md` |
 
 **Cách dùng:** Mở `QUICK_START.md` → Làm theo từng bước → Gửi prompt mỗi bước vào Claude Code.
 
@@ -76,23 +76,23 @@ Dành cho các tác vụ phức tạp, cần thực hiện **tuần tự trong c
 
 Dành cho tác vụ **đơn lẻ**, chỉ cần copy → thay `[...]` bằng dữ liệu thực → paste → gửi.
 
-| # | Prompt | Mục đích |
-|---|--------|----------|
-| 01 | `prompt_01_generate_requirements.txt` | Phân tích website sinh Requirements |
-| 02 | `prompt_02_generate_test_cases.txt` | **[Mới]** Sinh manual TCs RBT chuẩn 15 field types & Quality Gate |
-| 03 | `prompt_03_create_framework_playwright.txt` | Dựng framework Playwright TS |
-| 03 | `prompt_03_create_framework_selenium.txt` | Dựng framework Selenium Java |
-| 04 | `prompt_04_generate_script_playwright.txt` | Viết test script Playwright TS |
-| 04 | `prompt_04_generate_script_selenium.txt` | Viết test script Selenium Java |
-| 05 | `prompt_05_convert_manual_to_automation.txt` | Chuyển manual TC sang automation |
-| 07 | `prompt_07_generate_test_data.txt` | Sinh test data có cấu trúc |
-| 08 | `prompt_08_analyze_flaky_tests.txt` | Phân tích test không ổn định |
-| 09 | `prompt_09_generate_api_tests.txt` | **[Mới]** Viết test API 12 status codes & OWASP Security |
-| 10 | `prompt_10_create_bug_report.txt` | **[Mới]** Sinh bug report chuẩn từ test FAIL, tùy chọn đẩy Jira |
-| 11 | `prompt_11_analyze_test_report.txt` | **[Mới]** Phân tích test report, gom nhóm failure theo root cause |
-| 12 | `prompt_12_review_testcases.txt` | **[Mới]** Review chất lượng manual TCs theo rubric 6 tiêu chí |
-| 13 | `prompt_13_generate_traceability_matrix.txt` | **[Mới]** Sinh ma trận truy vết RTM 3 tầng |
-| 14 | `prompt_14_generate_api_mocks.txt` | **[Mới]** Sinh API mocks + tests cho edge cases |
+| #   | Prompt                                       | Mục đích                                                          |
+| --- | -------------------------------------------- | ----------------------------------------------------------------- |
+| 01  | `prompt_01_generate_requirements.txt`        | Phân tích website sinh Requirements                               |
+| 02  | `prompt_02_generate_test_cases.txt`          | **[Mới]** Sinh manual TCs RBT chuẩn 15 field types & Quality Gate |
+| 03  | `prompt_03_create_framework_playwright.txt`  | Dựng framework Playwright TS                                      |
+| 03  | `prompt_03_create_framework_selenium.txt`    | Dựng framework Selenium Java                                      |
+| 04  | `prompt_04_generate_script_playwright.txt`   | Viết test script Playwright TS                                    |
+| 04  | `prompt_04_generate_script_selenium.txt`     | Viết test script Selenium Java                                    |
+| 05  | `prompt_05_convert_manual_to_automation.txt` | Chuyển manual TC sang automation                                  |
+| 07  | `prompt_07_generate_test_data.txt`           | Sinh test data có cấu trúc                                        |
+| 08  | `prompt_08_analyze_flaky_tests.txt`          | Phân tích test không ổn định                                      |
+| 09  | `prompt_09_generate_api_tests.txt`           | **[Mới]** Viết test API 12 status codes & OWASP Security          |
+| 10  | `prompt_10_create_bug_report.txt`            | **[Mới]** Sinh bug report chuẩn từ test FAIL, tùy chọn đẩy Jira   |
+| 11  | `prompt_11_analyze_test_report.txt`          | **[Mới]** Phân tích test report, gom nhóm failure theo root cause |
+| 12  | `prompt_12_review_testcases.txt`             | **[Mới]** Review chất lượng manual TCs theo rubric 6 tiêu chí     |
+| 13  | `prompt_13_generate_traceability_matrix.txt` | **[Mới]** Sinh ma trận truy vết RTM 3 tầng                        |
+| 14  | `prompt_14_generate_api_mocks.txt`           | **[Mới]** Sinh API mocks + tests cho edge cases                   |
 
 ---
 
@@ -107,9 +107,11 @@ Dành cho tác vụ **đơn lẻ**, chỉ cần copy → thay `[...]` bằng d�
    Copy thư mục `.claude` vào thư mục gốc (root directory) của dự án Automation hoặc Manual Test mà bạn đang làm việc.
 
 3. **Mở terminal và khởi chạy Claude Code:**
+
    ```bash
    claude
    ```
+
    Claude Code tự động nhận diện thư mục `.claude` và file `CLAUDE.md` ở thư mục gốc, áp dụng ngay các Rule, Skill, Command của **Anh Tester** đã thiết lập sẵn.
 
 4. **Sử dụng slash commands:**
@@ -146,8 +148,9 @@ Dành cho tác vụ **đơn lẻ**, chỉ cần copy → thay `[...]` bằng d�
 
 ## 📄 License
 
-Dự án này được phân phối dưới giấy phép nguồn mở **[MIT License](LICENSE)**.
+Dự án này CÓ PHÍ, chỉ dành cho HỌC VIÊN chính thức của Anh Tester.
 
 ---
+
 Anh Tester Automation Testing 🎯  
 https://anhtester.com
