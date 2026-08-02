@@ -63,7 +63,7 @@ When the user request matches a specific task, select the appropriate workflow f
 
 > **Delegate:** Tác vụ này thuộc skill **`skills-rbt-manual-testing`** — không phải `skills-qa-automation-engineer`.
 
-Use workflow: `generate_testcases_from_requirements` (QUICK mode) hoặc `generate_testcases_manual_rbt` (FULL RBT mode).
+Use workflow: `generate_testcases_from_requirements` (QUICK mode), `generate_testcases_manual_rbt` (FULL RBT mode) hoặc `generate_checklist_test` (CHECKLIST mode).
 
 Triggers when user asks:
 
@@ -71,6 +71,7 @@ Triggers when user asks:
 - write manual test cases → **delegate to `skills-rbt-manual-testing` (QUICK mode)**
 - test scenarios from requirement → **delegate to `skills-rbt-manual-testing` (QUICK mode)**
 - sinh test cases đầy đủ / quy trình 6 bước → **delegate to `skills-rbt-manual-testing` (FULL RBT mode)**
+- sinh checklist test / checklist smoke / danh sách rà soát trước release → **delegate to `skills-rbt-manual-testing` (CHECKLIST mode)**
 
 ---
 

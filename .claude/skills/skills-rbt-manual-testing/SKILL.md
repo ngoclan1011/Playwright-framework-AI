@@ -1,18 +1,19 @@
 ---
 name: skills-rbt-manual-testing
-description: Skill sinh manual test cases với 2 modes — QUICK (sinh nhanh từ requirements) và FULL RBT (quy trình AI-RBT 6 bước có đánh giá rủi ro). Master skill cho mọi tác vụ manual test case.
+description: Skill sinh manual test cases với 3 modes — QUICK (sinh nhanh từ requirements), FULL RBT (quy trình AI-RBT 6 bước có đánh giá rủi ro) và CHECKLIST (checklist rà soát ngắn để tick tay — smoke/regression/release). Master skill cho mọi tác vụ manual test case.
 ---
 
 # RBT Manual Testing
 
 ## Description
 
-Đây là **Master Skill** cho mọi tác vụ sinh manual test cases. Skill cung cấp **2 chế độ hoạt động** (modes) để phù hợp với mọi quy mô yêu cầu:
+Đây là **Master Skill** cho mọi tác vụ sinh manual test cases. Skill cung cấp **3 chế độ hoạt động** (modes) để phù hợp với mọi quy mô yêu cầu:
 
-| Mode | Khi nào dùng | Thời gian |
-|------|-------------|-----------|
-| **QUICK** | Module đơn giản, cần TC nhanh, requirements rõ ràng | 1 lượt (không chờ user) |
-| **FULL RBT** | Module phức tạp, cần phân tích rủi ro, hệ thống lớn | 6 bước tuần tự (có checkpoint) |
+| Mode | Khi nào dùng | Output | Thời gian |
+|------|-------------|--------|-----------|
+| **QUICK** | Module đơn giản, cần TC nhanh, requirements rõ ràng | TC chi tiết có steps | 1 lượt (không chờ user) |
+| **FULL RBT** | Module phức tạp, cần phân tích rủi ro, hệ thống lớn | TC chi tiết + Risk Level + RTM | 6 bước tuần tự (có checkpoint) |
+| **CHECKLIST** | Cần danh sách rà soát ngắn để tick tay — smoke trước release, bàn giao tester, rà nhanh sau hotfix | Checklist 1 dòng/mục, có ô tick | 1 lượt (không chờ user) |
 
 **Nguyên tắc cốt lõi:**
 - **Human Strategy:** Con người xác định chiến lược, mức độ rủi ro và tiêu chuẩn
@@ -32,6 +33,7 @@ Sử dụng skill này khi:
 - Áp dụng Risk-Based Testing (đánh giá rủi ro cho test cases)
 - Chuẩn hóa test cases sang bảng Markdown (Jira/Excel format)
 - Sinh test cases nhanh từ requirements đơn giản
+- Sinh checklist rà soát ngắn để tick tay (smoke / regression / release-readiness / post-hotfix)
 
 **KHÔNG** sử dụng skill này khi:
 
@@ -62,13 +64,24 @@ Kích hoạt khi:
 - User yêu cầu Traceability Matrix hoặc đánh giá Risk Level
 - Requirements chưa rõ ràng, cần phân tích Ambiguity
 
+### → Mode CHECKLIST
+
+Kích hoạt khi:
+- User dùng command `/generate_checklist_test`
+- User nói: "sinh checklist test", "checklist smoke", "checklist trước release", "danh sách rà soát", "checklist bàn giao cho tester", "rà nhanh sau hotfix"
+- User cần **danh sách tick tay** ngắn gọn, KHÔNG cần steps chi tiết
+- User muốn rút gọn bộ TC chi tiết đã có thành checklist chạy nhanh
+
+> Phân biệt: user cần **chạy tay nhanh và tick** → CHECKLIST. User cần **bộ TC lưu trữ, giao cho automation, import Jira/TestRail** → QUICK hoặc FULL RBT.
+
 ### → Khi không rõ
 
 Nếu không xác định được mode, agent **hỏi user**:
 ```
-Bạn muốn sinh test cases theo chế độ nào?
-1. QUICK — Sinh nhanh từ requirements (không qua bước phân tích)
+Bạn muốn sinh theo chế độ nào?
+1. QUICK — Test cases chi tiết, sinh nhanh từ requirements (không qua bước phân tích)
 2. FULL RBT — Quy trình 6 bước đầy đủ (phân tích → phân rã → RBT → sinh TC)
+3. CHECKLIST — Danh sách rà soát ngắn để tick tay (smoke / release / hotfix)
 ```
 
 ---
@@ -125,7 +138,9 @@ Sinh test cases **nhanh, đủ chất lượng** từ requirements/user stories 
 > - **Auto Type:** `UI` / `API` / `Unit` / `N/A` (Loại automation phù hợp)
 > - **Tags:** `@Smoke`, `@Regression`, `@CriticalPath`, `@Security`, `@Boundary`
 
-## Quy Tắc Trình Bày Test Steps (BẮT BUỘC — áp dụng cả 2 modes)
+## Quy Tắc Trình Bày Test Steps (BẮT BUỘC — áp dụng QUICK & FULL RBT)
+
+> Mode CHECKLIST KHÔNG dùng steps đánh số — xem Quy Tắc Viết Mục Checklist ở Mode 3.
 
 - **Mỗi bước 1 hành động, đánh số thứ tự rõ ràng** `1. 2. 3.` — trong cell Markdown dùng `<br>` xuống dòng
 - **Expected Result đánh số khớp 1-1** với step tương ứng (step nào có kết quả quan sát được thì có expected cùng số)
@@ -140,7 +155,7 @@ Sinh test cases **nhanh, đủ chất lượng** từ requirements/user stories 
 | Mở trang login rồi nhập email và password hợp lệ sau đó bấm đăng nhập | Đăng nhập thành công |
 ```
 
-## Quy tắc Test Data (áp dụng cho cả 2 modes)
+## Quy tắc Test Data (áp dụng cho cả 3 modes)
 
 ```
 ❌ Sai: "Nhập mã số hợp lệ"
@@ -415,7 +430,108 @@ Quy trình bài bản, tuần tự cho module phức tạp. Bao gồm phân tíc
 
 ---
 
-## Anti-Patterns (NGHIÊM CẤM — áp dụng cho cả 2 modes)
+# Mode 3: CHECKLIST — Sinh Danh Sách Rà Soát Tick Tay
+
+## Mục đích
+
+Sinh **checklist ngắn gọn để tick tay** khi cần chạy nhanh — smoke trước release, bàn giao cho tester thủ công, rà soát sau hotfix. Mỗi mục là **1 dòng kiểm tra được trong vài phút**, KHÔNG phải test case có steps chi tiết.
+
+> **Ranh giới với QUICK/FULL RBT:** Checklist trả lời "đã rà hết chưa?", test case trả lời "rà bằng cách nào?". Nếu user cần steps chi tiết, test data đầy đủ, import Jira/TestRail hay giao cho automation → dùng QUICK hoặc FULL RBT, KHÔNG dùng mode này.
+
+## 2 Nguồn Input
+
+Agent xác định nguồn trước khi sinh:
+
+| Nguồn | Khi nào | Cách làm |
+|---|---|---|
+| **REQ-based** | Chưa có bộ TC, chỉ có requirements / UI | Rút mục checklist trực tiếp từ requirements + 3 bảng checklist chuẩn của skill |
+| **TC-based** | Đã có file `test_cases_<module>.md` | **Rút gọn** từ bộ TC sẵn có — gom nhóm TC cùng chủ đề thành 1 mục, giữ cột `TC ID liên quan` để truy ngược |
+
+> TC-based được ưu tiên khi bộ TC đã tồn tại — tránh sinh lại nội dung lệch với bộ TC gốc.
+
+## 4 Loại Checklist & Quy Mô Khuyến Nghị
+
+Agent **BẮT BUỘC** hỏi hoặc suy ra loại checklist, vì nó quyết định độ sâu và số mục:
+
+| Loại | Mục đích | Số mục | Thời gian chạy tay |
+|---|---|---|---|
+| **Smoke** | Xác nhận build chạy được, luồng sống còn không vỡ | 10–20 | ≤ 15 phút |
+| **Post-hotfix** | Rà vùng ảnh hưởng của bản vá + vùng lân cận | 5–15 | ≤ 10 phút |
+| **Regression (module)** | Rà toàn bộ 1 module trước khi bàn giao | 20–40 | ≤ 45 phút |
+| **Release-readiness** | Rà toàn hệ thống trước khi lên production | 30–60 | ≤ 60 phút |
+
+> Vượt ngưỡng số mục → agent PHẢI tách theo module hoặc hạ scope, KHÔNG xuất checklist dài lê thê (mất tác dụng "rà nhanh").
+
+## Quy trình (1 lượt duy nhất)
+
+**Agent phải:**
+
+1. **Xác định loại checklist** (Smoke / Post-hotfix / Regression / Release-readiness) và **nguồn input** (REQ-based hay TC-based)
+2. **Xác định scope:** module nào, luồng nào, role nào. Với Post-hotfix → xác định rõ **vùng ảnh hưởng** của thay đổi + vùng lân cận có rủi ro
+3. **Rút mục từ 3 bảng checklist chuẩn của skill** — chỉ lấy mục **thực sự áp dụng** cho module:
+   - **Field-Level Validation (15 loại field):** với checklist chỉ lấy **1–2 mục đại diện rủi ro cao nhất** cho mỗi field quan trọng (KHÔNG liệt kê hết mọi validation — đó là việc của QUICK/FULL)
+   - **Component-Level:** Data Table/List, CRUD Lifecycle, Permission/Role, Modal/Dialog, Notification, Status Flow
+   - **Non-Functional:** Race condition/Double submit, Session/Network, Localization/UTF-8, A11y bàn phím
+4. **Ưu tiên theo rủi ro:** luồng liên quan tiền, phân quyền, mất dữ liệu → luôn nằm trong checklist dù loại nào
+5. **Viết mỗi mục theo Quy Tắc Viết Mục Checklist** (bên dưới)
+6. **Gắn metadata:** `Priority` (P1/P2/P3), `REQ ID` (nếu có), `TC ID liên quan` (nếu TC-based)
+7. **Nhóm mục theo Module → Nhóm chức năng**, đánh số liên tục để dễ đối chiếu khi báo cáo
+8. **Chạy Checklist Quality Gate (4 tiêu chí)** trước khi xuất
+
+## Bảng Output Standard
+
+```markdown
+## [Tên Module] — Checklist <Loại> (<số mục> mục · ~<thời gian> phút)
+
+### Nhóm: <Tên nhóm chức năng>
+
+| # | ✅ | Hạng mục kiểm tra | Kết quả kỳ vọng | Priority | REQ ID | TC ID liên quan |
+|---|---|---|---|---|---|---|
+| 1 | ☐ | Đăng nhập bằng tài khoản admin hợp lệ | Vào /dashboard, hiển thị tên user góc phải | P1 | REQ-LOGIN-01 | CRM_LOGIN_TC_001 |
+| 2 | ☐ | Đăng nhập sai mật khẩu 5 lần liên tiếp | Tài khoản bị khóa, hiện thông báo khóa | P1 | REQ-LOGIN-02 | CRM_LOGIN_TC_012 |
+```
+
+**Kết thúc checklist BẮT BUỘC kèm bảng ký nhận:**
+
+```markdown
+| Môi trường | Build / Version | Người thực hiện | Ngày | Kết quả (Pass/Fail/Blocked) |
+|---|---|---|---|---|
+|  |  |  |  |  |
+```
+
+> Cột `✅` để trống ô tick `☐` — người chạy tự đánh dấu. Cột `TC ID liên quan` ghi `—` khi checklist là REQ-based.
+
+## Quy Tắc Viết Mục Checklist (BẮT BUỘC)
+
+- **Mỗi mục 1 dòng, ≤ 20 từ**, bắt đầu bằng **động từ** (Đăng nhập, Tạo, Sửa, Xóa, Lọc, Xuất...)
+- **Verify được trong ≤ 2 phút** bởi người chưa đọc requirements
+- **Có kết quả kỳ vọng quan sát được** — không viết "hoạt động đúng", phải nêu dấu hiệu cụ thể trên UI
+- **Test data cụ thể ở mục phụ thuộc data** (áp dụng nguyên Quy tắc Test Data của skill)
+- **KHÔNG viết steps đánh số** — nếu một mục cần >3 thao tác mới verify được thì nó là test case, phải tách hoặc chuyển sang mode QUICK
+
+```markdown
+❌ Sai: "Kiểm tra chức năng khách hàng hoạt động tốt"
+✅ Đúng: "Tạo KH mới với đủ field bắt buộc → xuất hiện đầu danh sách, đúng tên vừa nhập"
+
+❌ Sai: "Test phân quyền"
+✅ Đúng: "Đăng nhập role Sale, mở URL /admin/settings trực tiếp → bị chặn, về trang 403"
+
+❌ Sai: "Kiểm tra validate email"
+✅ Đúng: "Nhập email thiếu @ (`test.domain.com`) → hiện lỗi 'Email không hợp lệ', không submit"
+```
+
+## 🛡️ Checklist Quality Gate (4 Tiêu Chí)
+
+Trước khi xuất, agent **BẮT BUỘC** tự rà:
+
+- [ ] **1. Verify được:** 100% mục có kết quả kỳ vọng quan sát được, không còn từ "hoạt động đúng / bình thường / OK"
+- [ ] **2. Critical path đủ:** Mọi luồng sống còn của module (đăng nhập, tạo/sửa/xóa bản ghi chính, phân quyền, thanh toán nếu có) đều có ≥1 mục P1
+- [ ] **3. Component đủ:** Mỗi component có mặt trong module (Table/List, CRUD, Permission, Modal, Notification, Status Flow) có ≥1 mục — component không có trong module thì ghi "Không áp dụng", KHÔNG lặng lẽ bỏ qua
+- [ ] **4. Đúng quy mô:** Số mục nằm trong ngưỡng của loại checklist. Vượt ngưỡng → tách theo module hoặc hạ scope, ghi rõ phần đã cắt
+
+---
+
+## Anti-Patterns (NGHIÊM CẤM — áp dụng cho cả 3 modes)
 
 - ❌ Gộp nhiều bước chạy 1 lần trong FULL RBT (PHẢI tuần tự)
 - ❌ Tự đoán business logic khi chưa hỏi user (Bước 2 - FULL RBT)
@@ -434,6 +550,12 @@ Quy trình bài bản, tuần tự cho module phức tạp. Bao gồm phân tíc
 - ❌ Chỉ test form input mà bỏ qua Table/List, CRUD lifecycle, Permission, Status flow (Component-Level Checklist)
 - ❌ Có ≥3 điều kiện kết hợp nhưng không lập Decision Table; có status flow nhưng không lập bảng State Transition
 - ❌ QUICK mode đoán ngầm khi requirement mơ hồ mà không ghi vào mục Assumptions
+- ❌ CHECKLIST mode viết mục thành test case có steps đánh số (nhầm mode — cần steps thì dùng QUICK/FULL)
+- ❌ CHECKLIST mode viết mục mơ hồ kiểu "Kiểm tra chức năng hoạt động đúng" (không verify được)
+- ❌ CHECKLIST mode liệt kê hết 15 loại validation cho mọi field → checklist phình to, mất tác dụng rà nhanh
+- ❌ Checklist Smoke vượt 20 mục hoặc Release-readiness vượt 60 mục mà không tách module
+- ❌ Xuất checklist thiếu cột tick `☐` hoặc thiếu bảng ký nhận (môi trường/build/người chạy)
+- ❌ Sinh checklist mới trong khi đã có bộ TC chi tiết mà không rút gọn từ bộ TC đó (gây lệch nội dung)
 
 ---
 
@@ -457,5 +579,16 @@ Quy trình bài bản, tuần tự cho module phức tạp. Bao gồm phân tíc
 | 4 | Traceability Matrix + High-Level Scenarios |
 | 5 | Test Cases chi tiết (REQ ID + Risk Level + Test Data) |
 | 6 | Bảng Markdown chuẩn (Jira/Excel ready) + Bảng Đối Soát Coverage |
+
+### Mode CHECKLIST
+
+| Output | Mô tả |
+|--------|--------|
+| Header checklist | Loại checklist + module + số mục + thời gian chạy ước tính |
+| Bảng Checklist | Nhóm theo Module → Nhóm chức năng, có cột tick `☐`, Priority, REQ ID, TC ID liên quan |
+| Ghi chú "Không áp dụng" | Component có trong bảng chuẩn nhưng module không có → nêu rõ, không bỏ im lặng |
+| Bảng ký nhận | Môi trường · Build/Version · Người thực hiện · Ngày · Kết quả |
+
+> File output khuyến nghị: `docs/checklists/checklist_<loại>_<module>.md`
 
 Tất cả output phải bằng **Tiếng Việt**, format **Markdown**, sử dụng **Artifact** nếu nội dung dài.

@@ -149,7 +149,7 @@ Agent sử dụng skills trong `.claude/skills/` tùy theo nhiệm vụ:
 | Skill                      | Vai trò                                                                                  |
 | -------------------------- | ----------------------------------------------------------------------------------------- |
 | `skills-qa-automation-engineer` | Master skill cho automation — điều phối toàn bộ quy trình                          |
-| `skills-rbt-manual-testing`     | Master skill cho manual testing — 2 modes: QUICK (sinh TC nhanh) và FULL RBT (6 bước) |
+| `skills-rbt-manual-testing`     | Master skill cho manual testing — 3 modes: QUICK (sinh TC nhanh), FULL RBT (6 bước) và CHECKLIST (checklist tick tay) |
 | `skills-requirements-analyzer`  | Phân tích requirements từ website/tài liệu                                           |
 | `skills-ui-debug-agent`         | Inspect UI/DOM, thu thập locators                                                        |
 | `skills-smart-locator-agent`    | Sinh locator mới ổn định                                                              |
@@ -233,6 +233,7 @@ Agent sử dụng workflows trong `.claude/commands/` qua slash commands:
 | `/analyze_requirement_document`         | Phân tích requirement document (Jira/.doc) — sinh tài liệu phân tích, KHÔNG sinh TC |
 | `/generate_testcases_manual_rbt`        | Sinh manual test cases theo AI-RBT 6 bước (FULL RBT mode) |
 | `/generate_testcases_from_requirements` | Sinh test cases nhanh từ requirements (QUICK mode)         |
+| `/generate_checklist_test`              | Sinh checklist test tick tay (CHECKLIST mode) — smoke / post-hotfix / regression / release-readiness |
 | `/generate_automation_from_testcases`   | Chuyển manual test cases → automation scripts             |
 | `/generate_automation_from_ui_flow`     | Sinh automation từ UI flow trực tiếp                     |
 | `/generate_application_test_plan`       | Khám phá app, sinh test plan (Mode PLAN) hoặc full suite (Mode FULL) |
