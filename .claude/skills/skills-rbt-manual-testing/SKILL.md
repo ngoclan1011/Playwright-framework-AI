@@ -86,6 +86,76 @@ Bạn muốn sinh theo chế độ nào?
 
 ---
 
+## Quy Tắc Xuất File & Theo Dõi Tiến Độ (BẮT BUỘC — áp dụng cả 3 modes)
+
+Bộ TC thường dài 70–100+ dòng bảng. In toàn bộ ra chat khiến user phải chờ render lâu và không thấy được tiến độ. Agent **BẮT BUỘC** tuân thủ quy tắc sau.
+
+### 1. Write-first — KHÔNG render bảng TC ra chat
+
+- Agent ghi TC **thẳng vào file** bằng công cụ Write/Edit sau mỗi batch
+- **NGHIÊM CẤM** in toàn bộ bảng TC ra chat rồi mới ghi file (user phải chờ 2 lần cho cùng một nội dung)
+- Chat **chỉ** hiển thị:
+  - Dòng tiến độ ngắn sau mỗi batch: `✅ Batch 2/4 — Validation form (18 TC) → test_cases_customers_part1.md`
+  - **Bảng Đối Soát Coverage** (tiêu chí 6) ở cuối
+  - Tóm tắt: tổng số TC · số file · đường dẫn file · điểm cần user review
+- Muốn xem nội dung → user tự mở file. Chỉ trích dẫn tối đa **3–5 dòng TC mẫu** ra chat khi cần minh họa
+
+### 2. Ngưỡng tách file
+
+| Điều kiện | Xử lý |
+|---|---|
+| 1 module | 1 file `test_cases_<module>.md` |
+| File vượt **40 TC** | Tách `_part1`, `_part2`... — mỗi part ≤ 40 TC, **cắt tại ranh giới nhóm chức năng**, không cắt giữa nhóm |
+| Nhiều module | Mỗi module 1 file riêng, KHÔNG gộp chung |
+| Có ≥2 part | **BẮT BUỘC** sinh thêm file index (xem mục 4) |
+
+> 40 TC ≈ 25–30 KB — mở nhanh, review được trong 1 lượt. Tham khảo: `docs/testcases/test_cases_customers.md` hiện 105 KB trong 1 file là **vượt ngưỡng**, nên tách khi có dịp cập nhật.
+
+### 3. Chạy theo batch — không dừng hỏi giữa chừng
+
+- Chia theo **nhóm chức năng** (validation form / data table / CRUD / phân quyền / status flow / non-functional), mỗi batch 15–25 TC
+- Agent **chạy thẳng hết mọi batch trong 1 lượt**, KHÔNG dừng hỏi "có tiếp tục không" sau mỗi batch
+- Trước khi sinh, agent công bố kế hoạch batch để user biết tổng khối lượng:
+  ```
+  Kế hoạch: 4 batch · ~76 TC · 2 file
+  1. Validation form (≈24 TC)   2. Data table & filter (≈18 TC)
+  3. CRUD & phân quyền (≈22 TC) 4. Non-functional (≈12 TC)
+  ```
+- Ngoại lệ được phép dừng: phát hiện requirement mâu thuẫn nghiêm trọng làm sai hàng loạt TC phía sau
+
+### 4. File index (khi có ≥2 part hoặc ≥2 module)
+
+Sinh `test_cases_<module>_index.md`:
+
+```markdown
+# Test Cases — <Module> (tổng <N> TC · <M> file)
+
+| File | Nhóm chức năng | Số TC | TC ID range |
+|---|---|---|---|
+| test_cases_customers_part1.md | Validation form, Data table | 42 | CRM_CUST_TC_001–042 |
+| test_cases_customers_part2.md | CRUD, Phân quyền, Non-functional | 34 | CRM_CUST_TC_043–076 |
+
+## Bảng Đối Soát Coverage (toàn module)
+<gộp coverage của tất cả part — mọi REQ phải có ≥1 TC>
+```
+
+### 5. task.md — theo dõi tiến độ
+
+Khi tổng TC dự kiến **>30** hoặc có **≥2 module**, agent **BẮT BUỘC** tạo `task.md` (nhất quán với các command automation trong repo) và cập nhật sau mỗi batch:
+
+```markdown
+# Task: Sinh TC module Customers
+- [x] Batch 1 — Validation form (24 TC) → part1
+- [x] Batch 2 — Data table & filter (18 TC) → part1
+- [ ] Batch 3 — CRUD & phân quyền (đang chạy)
+- [ ] Batch 4 — Non-functional
+- [ ] Quality Gate + Bảng Đối Soát Coverage
+```
+
+> Nếu môi trường có sẵn task list của Claude Code → dùng luôn task list thay cho `task.md` để user thấy tiến độ trực tiếp trên UI.
+
+---
+
 # Mode 1: QUICK — Sinh Test Cases Nhanh
 
 ## Mục đích
@@ -556,6 +626,12 @@ Trước khi xuất, agent **BẮT BUỘC** tự rà:
 - ❌ Checklist Smoke vượt 20 mục hoặc Release-readiness vượt 60 mục mà không tách module
 - ❌ Xuất checklist thiếu cột tick `☐` hoặc thiếu bảng ký nhận (môi trường/build/người chạy)
 - ❌ Sinh checklist mới trong khi đã có bộ TC chi tiết mà không rút gọn từ bộ TC đó (gây lệch nội dung)
+- ❌ In toàn bộ bảng TC ra chat rồi mới ghi file (vi phạm Write-first — user chờ render 2 lần)
+- ❌ Dồn >40 TC vào 1 file mà không tách part, hoặc gộp nhiều module vào 1 file
+- ❌ Tách part cắt ngang giữa một nhóm chức năng (phải cắt tại ranh giới nhóm)
+- ❌ Có ≥2 part nhưng không sinh file index → không đối soát được coverage toàn module
+- ❌ Dừng hỏi "có tiếp tục không" sau mỗi batch (đã chốt: chạy thẳng, chỉ báo tiến độ)
+- ❌ Sinh >30 TC mà không tạo `task.md` / task list → user không theo dõi được tiến độ
 
 ---
 
@@ -591,4 +667,4 @@ Trước khi xuất, agent **BẮT BUỘC** tự rà:
 
 > File output khuyến nghị: `docs/checklists/checklist_<loại>_<module>.md`
 
-Tất cả output phải bằng **Tiếng Việt**, format **Markdown**, sử dụng **Artifact** nếu nội dung dài.
+Tất cả output phải bằng **Tiếng Việt**, format **Markdown**, và tuân thủ **Quy Tắc Xuất File & Theo Dõi Tiến Độ**: ghi thẳng vào file (`docs/testcases/` hoặc `docs/checklists/`), chat chỉ hiện tiến độ + Bảng Đối Soát Coverage + tóm tắt đường dẫn file.

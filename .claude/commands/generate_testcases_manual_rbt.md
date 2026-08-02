@@ -64,13 +64,19 @@ Thực hiện theo hướng dẫn chi tiết trong skill `skills-rbt-manual-test
    - Keyboard Accessibility (Tab order, Enter/Space trigger, Focus state).
    - HTTP Status Codes (cho API TCs: 200, 400, 401, 403, 404, 409, 422, 429, 500/503).
 7. Test Data phải cụ thể (không placeholder chung chung).
-8. Nếu quá nhiều → sinh từng Module, hỏi user để tiếp tục.
+8. **Sinh theo batch, ghi thẳng vào file** (theo Quy Tắc Xuất File & Theo Dõi Tiến Độ trong skill):
+   - Công bố kế hoạch batch trước khi sinh (số batch · ước tính TC · số file)
+   - Mỗi batch 15–25 TC theo nhóm chức năng → ghi file → báo 1 dòng tiến độ
+   - **Chạy thẳng hết mọi batch**, KHÔNG dừng hỏi giữa các batch (checkpoint của FULL RBT nằm ở Bước 2 và Bước 4, không phải trong Bước 5)
+   - **KHÔNG** in toàn bộ bảng TC ra chat
 
 ### Bước 6: Chuẩn hóa Format & Metadata (Template Mapping)
 1. Đóng gói toàn bộ test cases vào bảng Markdown chuẩn đầy đủ metadata cho Automation:
    `| TC ID | REQ ID | Module | Risk Level | Test Title | Pre-Condition | Test Steps | Expected Result | Priority | Test Data | Automatable | Auto Type | Tags |`
 2. **Chạy Self-Quality Gate (6 tiêu chí):** Unique TC ID, 1-to-1 Step-Expected matching (steps đánh số rõ từng bước), Concrete Test Data, Field Validation Coverage, Automation Metadata Ready, và **Requirement Coverage** (mọi REQ có ≥1 TC — xuất Bảng Đối Soát Coverage; REQ nào 0 TC phải sinh bổ sung trước khi xuất).
-3. Xuất dưới dạng Artifact (`test_cases_<module>.md`).
+3. Ghi file `docs/testcases/test_cases_<module>.md` — **tách `_part1`, `_part2`... khi >40 TC** (cắt tại ranh giới nhóm chức năng); có ≥2 part hoặc ≥2 module thì sinh thêm `test_cases_<module>_index.md`.
+4. Dự kiến **>30 TC** → tạo `task.md` (hoặc dùng task list của Claude Code), cập nhật sau mỗi batch.
+5. Chat chỉ hiện: kế hoạch batch → tiến độ từng batch → Bảng Đối Soát Coverage + tóm tắt đường dẫn file.
 
 ## Output
 

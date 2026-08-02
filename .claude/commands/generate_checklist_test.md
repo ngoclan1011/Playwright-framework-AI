@@ -61,7 +61,7 @@ Command này sử dụng **Mode CHECKLIST** của skill `skills-rbt-manual-testi
 6. **Gắn metadata:** `Priority` (P1/P2/P3), `REQ ID` (nếu có), `TC ID liên quan` (nếu TC-based, không có ghi `—`)
 7. **Nhóm theo Module → Nhóm chức năng**, đánh số liên tục để dễ đối chiếu khi báo cáo kết quả
 8. **Chạy Checklist Quality Gate (4 tiêu chí)** — chưa đạt thì sửa, KHÔNG xuất
-9. **Xuất file** `docs/checklists/checklist_<loại>_<module>.md` kèm bảng ký nhận
+9. **Ghi file** `docs/checklists/checklist_<loại>_<module>.md` kèm bảng ký nhận — theo **Write-first**: ghi thẳng vào file, chat chỉ báo số mục + đường dẫn, KHÔNG in cả bảng checklist ra chat (trừ khi user yêu cầu xem ngay)
 
 ## Quy Tắc Viết Mục Checklist (BẮT BUỘC)
 

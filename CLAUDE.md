@@ -158,6 +158,7 @@ Agent sử dụng skills trong `.claude/skills/` tùy theo nhiệm vụ:
 | `skills-flaky-test-analyzer`    | Phân tích và khắc phục flaky tests                                                   |
 | `skills-jira-integration`       | Tích hợp Jira/Xray — lấy requirements, đẩy test results                             |
 | `skills-bug-reporter`           | Sinh bug report chuẩn từ test FAIL — evidence, severity/priority, đẩy Jira            |
+| `skills-manual-test-executor`   | Thực thi manual TC trên browser thật qua Playwright MCP — chấm PASS/FAIL/BLOCKED/SKIPPED, xuất execution report |
 | `skills-test-report-analyzer`   | Phân tích test report — gom nhóm failure theo root cause, đề xuất thứ tự xử lý     |
 | `skills-testcase-reviewer`      | Review chất lượng manual test cases — rubric 6 tiêu chí, coverage gaps               |
 | `skills-coverage-traceability`  | Sinh ma trận truy vết RTM — Requirements ↔ Test Cases ↔ Automation                    |
@@ -247,6 +248,7 @@ Agent sử dụng workflows trong `.claude/commands/` qua slash commands:
 | `/fetch_jira_requirements`              | Lấy requirements/user stories từ Jira                     |
 | `/import_test_results_xray`             | Đẩy kết quả test lên Xray                              |
 | `/create_bug_report`                    | Sinh bug report chuẩn từ test FAIL (tùy chọn đẩy Jira)  |
+| `/execute_test_cases`                   | Thực thi manual TC trên browser thật — chấm PASS/FAIL/BLOCKED/SKIPPED, xuất execution report |
 | `/analyze_test_report`                  | Phân tích test report — gom nhóm failure, đề xuất xử lý |
 | `/review_testcases`                     | Review chất lượng manual TCs (2 modes: REVIEW/FIX)         |
 | `/generate_traceability_matrix`         | Sinh ma trận truy vết RTM 3 tầng                          |

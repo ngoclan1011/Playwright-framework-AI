@@ -26,6 +26,7 @@ Thư mục này chứa các prompt mẫu dùng nhanh (copy → paste → gửi) 
 | 13 | `prompt_13_generate_traceability_matrix.txt` | `/generate_traceability_matrix` | `skills-coverage-traceability` | Sinh ma trận truy vết RTM 3 tầng — tìm requirement chưa cover, orphan tests |
 | 14 | `prompt_14_generate_api_mocks.txt` | `/generate_api_mocks` | `skills-api-mocking` | Sinh API mocks (Playwright route / WireMock) + tests cho edge cases |
 | 15 | `prompt_15_generate_checklist.txt` | `/generate_checklist_test` | `skills-rbt-manual-testing` | Sinh checklist tick tay (CHECKLIST mode) — 4 loại Smoke/Post-hotfix/Regression/Release-readiness, nguồn TC-based hoặc REQ-based |
+| 16 | `prompt_16_execute_test_cases.txt` | `/execute_test_cases` | `skills-manual-test-executor` | Thực thi manual TC qua Playwright MCP — chấm PASS/FAIL/BLOCKED/SKIPPED, thu evidence, xuất execution report |
 
 *Lưu ý: Prompt 06 (Review Automation Code) thực thi trực tiếp bằng skill `skills-qa-automation-engineer`.*
 

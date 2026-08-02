@@ -54,7 +54,7 @@ Command này sử dụng **Mode QUICK** của skill `skills-rbt-manual-testing` 
    - `Auto Type` (UI / API / Unit / N/A)
    - `Tags` (`@Smoke`, `@Regression`, `@CriticalPath`...)
 9. **Chạy Self-Quality Gate (6 Tiêu chí):** Unique TC ID, 1-to-1 Step-Expected matching, Concrete Test Data, Field Validation Coverage, Automation Metadata Ready, **Requirement Coverage** (mọi REQ có ≥1 TC — kèm Bảng Đối Soát Coverage).
-10. **Xuất ra bảng Markdown chuẩn** + mục Assumptions + Bảng Đối Soát Coverage
+10. **Ghi file theo Quy Tắc Xuất File & Theo Dõi Tiến Độ** (xem skill) — KHÔNG in bảng TC ra chat
 
 ## Bảng Output
 
@@ -70,7 +70,14 @@ Command này sử dụng **Mode QUICK** của skill `skills-rbt-manual-testing` 
 - TC ID theo format thống nhất do user quy ước hoặc mặc định `[DỰ_ÁN]_[MODULE]_TC_[SỐ]`
 - **Mỗi TC phải trỏ về ≥1 REQ ID; mỗi REQ phải có ≥1 TC** — có REQ 0 TC thì phải sinh bổ sung trước khi xuất
 - Test Steps đánh số rõ ràng từng bước — không viết đoạn văn liền
-- Nếu quá nhiều TCs → chia thành Part 1, Part 2 và hỏi user
+
+## Xuất File & Tiến Độ (theo Quy Tắc trong skill)
+
+- **Write-first:** ghi TC thẳng vào `docs/testcases/test_cases_<module>.md` sau mỗi batch. **KHÔNG** in toàn bộ bảng TC ra chat
+- Chat chỉ hiện: kế hoạch batch (đầu) → dòng tiến độ mỗi batch → Bảng Đối Soát Coverage + tóm tắt đường dẫn file (cuối)
+- **Tách file khi >40 TC** → `_part1`, `_part2`... cắt tại ranh giới nhóm chức năng; có ≥2 part thì sinh thêm `test_cases_<module>_index.md`
+- **Chạy thẳng hết mọi batch trong 1 lượt** — không dừng hỏi "có tiếp tục không"
+- Dự kiến **>30 TC** → tạo `task.md` (hoặc dùng task list của Claude Code) và cập nhật sau mỗi batch
 
 ## Khi nào chuyển sang FULL RBT
 
