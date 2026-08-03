@@ -9,8 +9,10 @@
 | Tài khoản khảo sát | `admin@example.com` / `123456` (role: Administrator) |
 | Phương pháp | Inspect DOM thực tế bằng Playwright MCP — viewport 1920×1080, headed mode. Đã tạo/xoá dữ liệu thật để kiểm chứng hành vi |
 | Ngày khảo sát | 2026-08-02 |
-| Bằng chứng | [Danh sách khách hàng](evidence/customers/customers_list_1920x1080.png) · [Form tạo mới](evidence/customers/customer_new_form_1920x1080.png) |
-| Tài liệu liên quan | [requirements_login.md](requirements_login.md) |
+| Bằng chứng | [Danh sách khách hàng](evidence/customers_list_1920x1080.png) · [Form tạo mới](evidence/customer_new_form_1920x1080.png) |
+| Tài liệu liên quan | [requirements_login.md](../login/requirements_login.md) |
+| **Dải mã đã dùng** | `REQ-CUST-01` → `REQ-CUST-53` · `AMB-01` → `AMB-11` · `RISK-01` → `RISK-10` |
+| **Mã kế tiếp** | Đợt phân tích sau bắt đầu từ `REQ-CUST-54` · `AMB-12` · `RISK-11` — **KHÔNG đánh lại từ 01** |
 | Phiên bản | 1.0 |
 
 > **Ghi chú về dữ liệu test:** Trong quá trình khảo sát đã tạo 3 khách hàng và 1 liên hệ với dữ liệu traceable (`Auto_Customer_1785627049`), sau đó **đã xoá toàn bộ**. Số liệu hệ thống trước và sau khảo sát trùng khớp (1431 khách hàng / 360 liên hệ đang hoạt động) — môi trường được trả về nguyên trạng.
@@ -70,7 +72,7 @@ Module Customers quản lý toàn bộ vòng đời hồ sơ khách hàng của 
 | REQ-CUST-24 | Chọn quốc gia từ danh mục | Quốc gia chọn từ danh sách chuẩn, không nhập tự do | Dropdown `country` có 251 lựa chọn kèm ô tìm kiếm | DOM thực tế |
 | REQ-CUST-25 | Địa chỉ thanh toán & giao hàng | Tab Billing & Shipping cho phép nhập 2 bộ địa chỉ độc lập | Bộ `billing_*` (street, city, state, zip, country) và bộ `shipping_*` tương ứng | DOM thực tế |
 | REQ-CUST-26 | Tuỳ chọn hiển thị tên liên hệ chính | Checkbox quyết định có in tên liên hệ chính lên chứng từ | Checkbox `show_primary_contact`, nhãn: `Show primary contact full name on Invoices, Estimates, Payments, Credit Notes`. Mặc định **không tick** | DOM thực tế |
-| REQ-CUST-27 | Bảo vệ CSRF cho form khách hàng | Form kèm token ẩn bắt buộc | Form chứa `<input type="hidden" name="csrf_token_name">`; request sai token bị từ chối (HTTP 403 — xem [REQ-LOGIN-15](requirements_login.md)) | DOM thực tế |
+| REQ-CUST-27 | Bảo vệ CSRF cho form khách hàng | Form kèm token ẩn bắt buộc | Form chứa `<input type="hidden" name="csrf_token_name">`; request sai token bị từ chối (HTTP 403 — xem [REQ-LOGIN-15](../login/requirements_login.md)) | DOM thực tế |
 
 ### 2.3. Trang chi tiết khách hàng
 
@@ -414,7 +416,7 @@ Ma trận quan sát được với role Administrator:
 | Khả năng chịu tải dữ liệu | Danh sách hoạt động bình thường với **1.431 khách hàng** và **366 liên hệ** nhờ DataTables xử lý phía server (mỗi lần chỉ tải 25 dòng) |
 | Bảo mật kênh truyền | Toàn bộ module chạy trên HTTPS |
 | Chống CSRF | Mọi form đều có token ẩn `csrf_token_name`; request sai token trả HTTP 403. ⚠️ **Ngoại lệ:** thao tác xoá qua URL GET không được bảo vệ bằng token (xem RISK-03) |
-| Kiểm soát truy cập | Mọi URL của module đều bị chặn khi chưa đăng nhập, chuyển hướng về trang login (xem [REQ-LOGIN-18](requirements_login.md)) |
+| Kiểm soát truy cập | Mọi URL của module đều bị chặn khi chưa đăng nhập, chuyển hướng về trang login (xem [REQ-LOGIN-18](../login/requirements_login.md)) |
 | Trải nghiệm nhập liệu | Validation hiển thị **inline ngay tại ô nhập**, không cần tải lại trang (khác hẳn module Login) |
 | Đa ngôn ngữ | Hệ thống hỗ trợ 27 ngôn ngữ; có thể đặt ngôn ngữ riêng cho từng khách hàng. Giao diện admin đang ở tiếng Anh |
 | Hỗ trợ RTL | Liên hệ có thiết lập `Direction` (LTR/RTL) phục vụ ngôn ngữ viết từ phải sang trái |
@@ -500,3 +502,21 @@ Tài liệu này (có mã REQ ID) là input chuẩn cho các workflow sau:
 ---
 
 **Tổng kết số lượng:** 53 yêu cầu chức năng (REQ-CUST-01 → 53) · 11 điểm mơ hồ (AMB-01 → 11) · 10 rủi ro (RISK-01 → 10)
+
+---
+
+## Nhật Ký Thay Đổi (Changelog)
+
+> **Cách đọc:** mới nhất lên trên. Đây là bộ nhớ liền mạch của tài liệu.
+>
+> **Quy ước trạng thái REQ:** 🟢 Active · 🟡 Changed (TC phải review) · 🔴 Deprecated (TC phải archive) · ⚪ Chưa implement.
+> **REQ không được ghi trạng thái = 🟢 Active.**
+>
+> Cập nhật bằng `/update_requirements_from_ticket`.
+
+| Ngày | Nguồn | REQ ảnh hưởng | Loại | Tóm tắt thay đổi | TC cần xử lý |
+|---|---|---|---|---|---|
+| 2026-08-02 | UI recon (Playwright MCP) | REQ-CUST-01 → 53 | 🟢 Thêm | Khởi tạo tài liệu từ khảo sát UI thực tế | — |
+
+**Trạng thái hiện tại:** 🟢 Active 53 · 🟡 Changed 0 · 🔴 Deprecated 0 · ⚪ Chưa implement 0
+**Ambiguity:** 11/11 còn treo (❓) — AMB-01, AMB-06, AMB-07, AMB-08 mức 🔴 High

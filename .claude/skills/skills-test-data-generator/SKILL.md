@@ -188,9 +188,9 @@ auto_combo{XX}_{module_short}_{timestamp}
 
 Ví dụ cho combo 01:
 ```
-Module 1: partner_name  = "auto_c01_partner_1712049200"
-Module 2: payment_desc  = "auto_c01_payment_1712049200"
-Module 3: tax_note      = "auto_c01_tax_1712049200"
+Module 1: partner_name  = "auto_combo01_partner_1712049200"
+Module 2: payment_desc  = "auto_combo01_payment_1712049200"
+Module 3: tax_note      = "auto_combo01_tax_1712049200"
 → Có thể trace: combo 01 tạo ra những data nào ở mỗi module
 ```
 
@@ -235,7 +235,7 @@ Module 3: tax_note      = "auto_c01_tax_1712049200"
 | 2 | Mỗi combo dùng data riêng (unique per combo) |
 | 3 | Computed values phải đúng theo formula |
 | 4 | Mỗi combo PHẢI có expected output |
-| 5 | Traceable: prefix `auto_combo{XX}` |
+| 5 | Traceable: format `auto_combo{XX}_{module_short}_{timestamp}` (xem *Data Chain Tracing Format* ở trên) |
 
 ### Workflow tham chiếu
 

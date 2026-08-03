@@ -73,9 +73,10 @@ Command này sử dụng **Mode QUICK** của skill `skills-rbt-manual-testing` 
 
 ## Xuất File & Tiến Độ (theo Quy Tắc trong skill)
 
-- **Write-first:** ghi TC thẳng vào `docs/testcases/test_cases_<module>.md` sau mỗi batch. **KHÔNG** in toàn bộ bảng TC ra chat
+- ⚠️ **Trước batch đầu tiên:** kiểm tra `docs/testcases/README.md` — chưa tồn tại (dự án mới) thì **tạo file danh mục** với bảng rỗng. Ghi xong TC thì bổ sung/cập nhật dòng của module vào đó
+- **Write-first:** ghi TC thẳng vào `docs/testcases/<module>/test_cases_<module>.md` sau mỗi batch. **KHÔNG** in toàn bộ bảng TC ra chat
 - Chat chỉ hiện: kế hoạch batch (đầu) → dòng tiến độ mỗi batch → Bảng Đối Soát Coverage + tóm tắt đường dẫn file (cuối)
-- **Tách file khi >40 TC** → `_part1`, `_part2`... cắt tại ranh giới nhóm chức năng; có ≥2 part thì sinh thêm `test_cases_<module>_index.md`
+- **Tách file khi >40 TC** → `<module>/parts/part_01_<slug>.md`, `part_02_...` cắt tại ranh giới nhóm chức năng; có ≥2 part thì `test_cases_<module>.md` trở thành **index** (giữ nguyên tên, KHÔNG đổi thành `*_index.md`)
 - **Chạy thẳng hết mọi batch trong 1 lượt** — không dừng hỏi "có tiếp tục không"
 - Dự kiến **>30 TC** → tạo `task.md` (hoặc dùng task list của Claude Code) và cập nhật sau mỗi batch
 

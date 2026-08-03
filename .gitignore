@@ -144,3 +144,9 @@ vite.config.ts.timestamp-*
 .claude/worktrees/
 # Playwright MCP temp artifacts (snapshots, console logs)
 .playwright-mcp/
+
+# Claude Code — cấu hình cục bộ từng máy, KHÔNG commit
+.claude/settings.local.json
+
+# File theo dõi tiến độ do agent sinh ra khi chạy batch lớn
+task.md

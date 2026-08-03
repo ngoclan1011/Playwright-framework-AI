@@ -5,8 +5,8 @@
 | Phần | **Part 4/4** — Nhập khẩu CSV, bảo mật, phiên làm việc, khả năng tiếp cận |
 | REQ bao phủ | REQ-CUST-47 → REQ-CUST-53 + nhóm phi chức năng (mục 10 requirements) |
 | Số TC | 24 (`CRM_CUST_TC_117` → `CRM_CUST_TC_140`) |
-| Index | [test_cases_customers_v2_index.md](test_cases_customers_v2_index.md) — Assumptions, coverage toàn module |
-| Nguồn requirement | [requirements_customers.md](../requirements/requirements_customers.md) |
+| Index | [test_cases_customers_v2_index.md](../test_cases_customers.md) — Assumptions, coverage toàn module |
+| Nguồn requirement | [requirements_customers.md](../../../requirements/customers/requirements_customers.md) |
 | Phiên bản | 2.0 |
 
 > ⚠️ **Import trên môi trường dùng chung:** mọi tệp CSV test chỉ chứa **tối đa 2–3 dòng** với dữ liệu traceable, và **phải xoá các bản ghi đã nhập ngay sau khi verify**. KHÔNG import tệp số lượng lớn.
@@ -72,4 +72,4 @@
 
 ---
 
-> **Trước đó:** [Part 3 — Chi tiết, Xoá & Contacts](test_cases_customers_v2_part3.md) · **Về đầu:** [Index](test_cases_customers_v2_index.md)
+> **Trước đó:** [Part 3 — Chi tiết, Xoá & Contacts](part_03_chi_tiet_contacts.md) · **Về đầu:** [Index](../test_cases_customers.md)

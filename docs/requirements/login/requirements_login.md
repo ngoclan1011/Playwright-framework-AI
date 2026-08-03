@@ -8,7 +8,9 @@
 | Tài khoản khảo sát | `admin@example.com` / `123456` (role: Administrator) |
 | Phương pháp | Inspect DOM thực tế bằng Playwright MCP — viewport 1920×1080, headed mode |
 | Ngày khảo sát | 2026-08-02 |
-| Bằng chứng | [Ảnh giao diện](evidence/login/login_page_1920x1080.png) |
+| Bằng chứng | [Ảnh giao diện](evidence/login_page_1920x1080.png) |
+| **Dải mã đã dùng** | `REQ-LOGIN-01` → `REQ-LOGIN-24` · `AMB-01` → `AMB-10` · `RISK-01` → `RISK-08` |
+| **Mã kế tiếp** | Đợt phân tích sau bắt đầu từ `REQ-LOGIN-25` · `AMB-11` · `RISK-09` — **KHÔNG đánh lại từ 01** |
 | Phiên bản | 1.0 |
 
 ---
@@ -279,3 +281,21 @@ Tài liệu này (có mã REQ ID) là input chuẩn cho các workflow sau:
 ---
 
 **Tổng kết số lượng:** 24 yêu cầu chức năng (REQ-LOGIN-01 → 24) · 10 điểm mơ hồ (AMB-01 → 10) · 8 rủi ro (RISK-01 → 08)
+
+---
+
+## Nhật Ký Thay Đổi (Changelog)
+
+> **Cách đọc:** mới nhất lên trên. Đây là bộ nhớ liền mạch của tài liệu.
+>
+> **Quy ước trạng thái REQ:** 🟢 Active · 🟡 Changed (TC phải review) · 🔴 Deprecated (TC phải archive) · ⚪ Chưa implement.
+> **REQ không được ghi trạng thái = 🟢 Active.**
+>
+> Cập nhật bằng `/update_requirements_from_ticket`.
+
+| Ngày | Nguồn | REQ ảnh hưởng | Loại | Tóm tắt thay đổi | TC cần xử lý |
+|---|---|---|---|---|---|
+| 2026-08-02 | UI recon (Playwright MCP) | REQ-LOGIN-01 → 24 | 🟢 Thêm | Khởi tạo tài liệu từ khảo sát UI thực tế | — |
+
+**Trạng thái hiện tại:** 🟢 Active 24 · 🟡 Changed 0 · 🔴 Deprecated 0 · ⚪ Chưa implement 0
+**Ambiguity:** 10/10 còn treo (❓) — AMB-01, AMB-02 mức 🔴 High chặn nhóm test bảo mật

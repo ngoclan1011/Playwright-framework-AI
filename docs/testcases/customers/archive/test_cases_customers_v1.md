@@ -5,7 +5,7 @@
 | Hệ thống | CRM (Perfex CRM — Anh Tester Demo) |
 | Module | Customers (Khách hàng) |
 | URL | https://crm.anhtester.com/admin/clients |
-| Nguồn requirement | [requirements_customers.md](../requirements/requirements_customers.md) — 53 REQ (REQ-CUST-01 → 53) |
+| Nguồn requirement | [requirements_customers.md](../../../requirements/customers/requirements_customers.md) — 53 REQ (REQ-CUST-01 → 53) |
 | Mode sinh TC | QUICK (skill `skills-rbt-manual-testing`) |
 | Tài khoản test | `admin@example.com` / `123456` (role Administrator) |
 | Tổng số TC | **99** (Critical: 7 · High: 30 · Medium: 45 · Low: 17) |

@@ -23,7 +23,7 @@ Command này sử dụng **Mode CHECKLIST** của skill `skills-rbt-manual-testi
 |---|---|---|
 | Module / tính năng cần rà | ⭐ Bắt buộc | Xác định scope |
 | Loại checklist | ⭐ Bắt buộc | Smoke / Post-hotfix / Regression / Release-readiness — nếu user không nói, agent **hỏi** hoặc suy ra từ ngữ cảnh và ghi rõ đã chọn loại nào |
-| File TC sẵn có (`docs/testcases/test_cases_<module>.md`) | Khuyến nghị | Có → dùng nguồn **TC-based** |
+| File TC sẵn có (`docs/testcases/<module>/test_cases_<module>.md`) | Khuyến nghị | Có → dùng nguồn **TC-based** |
 | Requirements / REQ ID | Khuyến nghị | Để điền cột REQ ID phục vụ truy vết |
 | Mô tả thay đổi của bản vá | Bắt buộc với Post-hotfix | Để khoanh vùng ảnh hưởng |
 
@@ -84,7 +84,7 @@ Command này sử dụng **Mode CHECKLIST** của skill `skills-rbt-manual-testi
 ```markdown
 ## [Tên Module] — Checklist <Loại> (<số mục> mục · ~<thời gian> phút)
 
-**Nguồn:** TC-based (`docs/testcases/test_cases_<module>.md`) | REQ-based
+**Nguồn:** TC-based (`docs/testcases/<module>/test_cases_<module>.md`) | REQ-based
 **Scope:** <module / luồng / role>
 
 ### Nhóm: <Tên nhóm chức năng>

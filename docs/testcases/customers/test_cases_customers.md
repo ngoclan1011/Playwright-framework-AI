@@ -5,14 +5,14 @@
 | Hệ thống | CRM (Perfex CRM — Anh Tester Demo) |
 | Module | Customers (Khách hàng) |
 | URL | https://crm.anhtester.com/admin/clients |
-| Nguồn requirement | [requirements_customers.md](../requirements/requirements_customers.md) — 53 REQ (REQ-CUST-01 → 53) |
+| Nguồn requirement | [requirements_customers.md](../../requirements/customers/requirements_customers.md) — 53 REQ (REQ-CUST-01 → 53) |
 | Mode sinh TC | QUICK (skill `skills-rbt-manual-testing`) |
 | Tài khoản test | `admin@example.com` / `123456` (role Administrator) |
 | **Tổng số TC** | **140** — Critical 13 · High 32 · Medium 79 · Low 16 |
 | Khả năng tự động hoá | Automatable `Yes` 119 · `Partial` 15 · `No` 6 |
 | Số file | 4 part + 1 index |
 | Ngày tạo | 2026-08-02 |
-| Phiên bản | **2.0** — bản sinh **độc lập** để đối chiếu với [v1.0 (99 TC)](test_cases_customers.md). Hai bản không thay thế nhau cho tới khi chọn xong bản giữ lại |
+| Phiên bản | **2.0** — bản sinh **độc lập** để đối chiếu với [v1.0 (99 TC)](archive/test_cases_customers_v1.md). Hai bản không thay thế nhau cho tới khi chọn xong bản giữ lại |
 
 > ⚠️ **Lưu ý môi trường (RISK-01, RISK-02):** `crm.anhtester.com` là môi trường demo **dùng chung**. Mọi TC tạo dữ liệu **bắt buộc** dùng tiền tố traceable `Auto_Customer_<timestamp>` / `auto_contact_<timestamp>@auto.test` và **phải xoá sạch sau khi chạy**. TUYỆT ĐỐI KHÔNG dùng "Select All", KHÔNG thực thi Mass Delete.
 > 📌 **Quy ước dữ liệu:** timestamp mẫu trong tài liệu là `1785700456` → `1785700524`. Khi chạy thật, thay bằng timestamp thời điểm chạy để đảm bảo unique.
@@ -23,10 +23,10 @@
 
 | File | Nhóm chức năng | Số TC | TC ID range | REQ bao phủ |
 |---|---|---|---|---|
-| [Part 1](test_cases_customers_v2_part1.md) | Danh sách khách hàng: hiển thị, thống kê, tìm kiếm, phân trang, bộ lọc, xuất dữ liệu, bulk actions, trạng thái Active | 36 | `CRM_CUST_TC_001` → `036` | REQ-CUST-01 → 13 |
-| [Part 2](test_cases_customers_v2_part2.md) | Form tạo/sửa khách hàng + validation riêng từng trường (Company, VAT, Phone, Website, Groups, Currency, Language, Country, Address, Zip, Checkbox) | 40 | `CRM_CUST_TC_037` → `076` | REQ-CUST-14 → 24, 26 |
-| [Part 3](test_cases_customers_v2_part3.md) | Billing & Shipping, CSRF, trang chi tiết, xoá khách hàng, quản lý liên hệ (validation, phân quyền, thông báo email) | 40 | `CRM_CUST_TC_077` → `116` | REQ-CUST-25, 27 → 46 |
-| [Part 4](test_cases_customers_v2_part4.md) | Nhập khẩu CSV, kiểm soát truy cập, phiên làm việc, race condition, khả năng tiếp cận, HTTPS | 24 | `CRM_CUST_TC_117` → `140` | REQ-CUST-47 → 53 + phi chức năng |
+| [Part 1](parts/part_01_danh_sach.md) | Danh sách khách hàng: hiển thị, thống kê, tìm kiếm, phân trang, bộ lọc, xuất dữ liệu, bulk actions, trạng thái Active | 36 | `CRM_CUST_TC_001` → `036` | REQ-CUST-01 → 13 |
+| [Part 2](parts/part_02_tao_sua.md) | Form tạo/sửa khách hàng + validation riêng từng trường (Company, VAT, Phone, Website, Groups, Currency, Language, Country, Address, Zip, Checkbox) | 40 | `CRM_CUST_TC_037` → `076` | REQ-CUST-14 → 24, 26 |
+| [Part 3](parts/part_03_chi_tiet_contacts.md) | Billing & Shipping, CSRF, trang chi tiết, xoá khách hàng, quản lý liên hệ (validation, phân quyền, thông báo email) | 40 | `CRM_CUST_TC_077` → `116` | REQ-CUST-25, 27 → 46 |
+| [Part 4](parts/part_04_import_nfr.md) | Nhập khẩu CSV, kiểm soát truy cập, phiên làm việc, race condition, khả năng tiếp cận, HTTPS | 24 | `CRM_CUST_TC_117` → `140` | REQ-CUST-47 → 53 + phi chức năng |
 
 ---
 
@@ -153,7 +153,7 @@ QUICK mode không dừng hỏi Q&A — mọi điểm mơ hồ được xử lý 
 
 ## 6. So sánh nhanh với bản v1.0
 
-| Tiêu chí | [v1.0](test_cases_customers.md) | **v2.0** (bản này) |
+| Tiêu chí | [v1.0](archive/test_cases_customers_v1.md) | **v2.0** (bản này) |
 |---|---|---|
 | Tổng TC | 99 | **140** |
 | Số file | 1 file (105.8 KB) | 4 part + index (mỗi part ≤ 40 TC) |
@@ -164,4 +164,4 @@ QUICK mode không dừng hỏi Q&A — mọi điểm mơ hồ được xử lý 
 
 ---
 
-**Điều hướng:** [Part 1](test_cases_customers_v2_part1.md) · [Part 2](test_cases_customers_v2_part2.md) · [Part 3](test_cases_customers_v2_part3.md) · [Part 4](test_cases_customers_v2_part4.md)
+**Điều hướng:** [Part 1](parts/part_01_danh_sach.md) · [Part 2](parts/part_02_tao_sua.md) · [Part 3](parts/part_03_chi_tiet_contacts.md) · [Part 4](parts/part_04_import_nfr.md)

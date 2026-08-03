@@ -53,7 +53,7 @@ skills-rbt-manual-testing          skills-manual-test-executor          skills-b
 
 | Input | Bắt buộc? | Ghi chú |
 |---|---|---|
-| File TC hoặc checklist | ⭐ Bắt buộc | VD `docs/testcases/test_cases_customers_v2_part1.md` |
+| File TC hoặc checklist | ⭐ Bắt buộc | VD `docs/testcases/customers/parts/part_01_danh_sach.md` |
 | Phạm vi chạy | ⭐ Bắt buộc | Toàn bộ file · theo tag (`@Smoke`) · theo TC ID range · theo nhóm chức năng |
 | Môi trường & tài khoản | ⭐ Bắt buộc | URL, tài khoản đăng nhập, build/version đang test |
 | Mức độ dùng chung của môi trường | ⭐ Bắt buộc | Dùng chung → bật auto-skip TC phá huỷ; môi trường riêng → có thể chạy đầy đủ |
@@ -146,7 +146,7 @@ Khi một TC FAIL:
 | Milestone quan trọng (tạo bản ghi thành công, hoàn tất luồng chính) | ✅ Nên chụp |
 | Mỗi bước của mọi TC | ❌ **KHÔNG** — chụp tràn lan làm report nặng và khó đọc |
 
-Lưu tại: `docs/evidence/execution/<run_id>/<TC_ID>_<mô_tả>.png`
+Lưu tại: `docs/executions/<module>/<run_id>/evidence/<TC_ID>_<mô_tả>.png`
 
 ---
 
@@ -171,7 +171,7 @@ Lưu tại: `docs/evidence/execution/<run_id>/<TC_ID>_<mô_tả>.png`
 
 ## Output — Execution Report
 
-File: `docs/reports/execution_report_<module>_<run_id>.md`
+File: `docs/executions/<module>/<run_id>/execution_report.md`
 
 ```markdown
 # Execution Report — <Module> · <Loại chạy>
@@ -179,11 +179,11 @@ File: `docs/reports/execution_report_<module>_<run_id>.md`
 | Thông tin | Nội dung |
 |---|---|
 | Run ID | run_1785700456 |
-| Nguồn TC | docs/testcases/test_cases_customers_v2_part1.md |
+| Nguồn TC | docs/testcases/customers/parts/part_01_danh_sach.md |
 | Phạm vi | 36 TC (toàn bộ Part 1) |
-| Môi trường | https://crm.anhtester.com — Staging |
+| Môi trường | `<URL môi trường test>` — `<Staging/UAT/Production>` |
 | Build / Version | (nếu có) |
-| Tài khoản | admin@example.com (Administrator) |
+| Tài khoản | `<tài khoản test>` (`<role>`) |
 | Người thực hiện | <tên tester> (agent hỗ trợ) |
 | Bắt đầu → Kết thúc | 2026-08-02 09:15 → 10:40 (85 phút) |
 | Môi trường dùng chung? | Có — auto-skip TC phá huỷ đang BẬT |
@@ -219,7 +219,7 @@ File: `docs/reports/execution_report_<module>_<run_id>.md`
 | Bước fail | Bước 4 |
 | **Expected** | Request trả HTTP 200; bảng hiển thị 0 kết quả |
 | **Actual** | Request trả HTTP 500; trang hiện thông báo lỗi cơ sở dữ liệu |
-| Evidence | ![](../evidence/execution/run_1785700456/CRM_CUST_TC_011_step4_error500.png) |
+| Evidence | ![](evidence/CRM_CUST_TC_011_step4_error500.png) |
 | Tái hiện được? | Có — thử lại 2 lần đều lỗi |
 
 ## 4. TC BLOCKED

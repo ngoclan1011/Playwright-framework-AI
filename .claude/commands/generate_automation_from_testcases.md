@@ -50,8 +50,8 @@ Nếu user chưa cung cấp đủ → hỏi trước khi bắt đầu.
 ### Bước 1: Khởi tạo, Phân tích & Lên Kế Hoạch (Context & Analysis)
 
 1. **Đọc file test cases** do user cung cấp:
-   - File local → `view_file`
-   - URL (Google Sheets, Confluence, etc.) → `read_url_content`
+   - File local → `Read`
+   - URL (Google Sheets, Confluence, etc.) → `WebFetch`
    - Xác định format: Markdown table, Excel, JSON, hoặc free-form text
 
 2. **Parse test cases** và trích xuất:

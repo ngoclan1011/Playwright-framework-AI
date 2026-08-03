@@ -36,12 +36,45 @@ skills:
 | Mode | Khi nào dùng | Output |
 |------|-------------|--------|
 | **GENERATE** (mặc định) | Sinh bộ data có cấu trúc từ ma trận — KHÔNG chạy browser | File JSON/CSV/Markdown với data cho mỗi bộ kết hợp |
-| **PIPELINE** | Cần tạo data THẬT trên hệ thống bằng cách chạy qua từng module trên browser | Data thật đã tạo + IDs + screenshots evidence |
+| **PIPELINE** (lựa chọn cuối) | **Bắt buộc** phải đi qua UI mới tạo được data | Data thật đã tạo + IDs + screenshots evidence |
 
 > Agent tự chọn mode:
 > - User nói "sinh data", "generate data" → **GENERATE**
-> - User nói "tạo data trên hệ thống", "chạy tạo data", "setup data thật" → **PIPELINE**
+> - User nói "tạo data trên hệ thống", "chạy tạo data", "setup data thật" → xem **Thứ tự ưu tiên** bên dưới
 > - Nếu không rõ → hỏi user
+
+### ⚠️ Thứ tự ưu tiên khi cần data THẬT trên hệ thống
+
+PIPELINE (drive browser qua N modules × N combos) là cách **đắt nhất và kém ổn định nhất**.
+Trước khi chọn PIPELINE, agent PHẢI hỏi user theo thứ tự:
+
+| # | Cách | Khi nào dùng | Chi phí / Rủi ro |
+|---|------|-------------|-----------------|
+| 1 | **Seed qua API** | Hệ thống có API tạo record | ⭐ Rẻ, nhanh, ổn định — **luôn ưu tiên** |
+| 2 | **Seed qua DB / script** | Có quyền truy cập DB test | Rẻ, nhanh — cẩn thận ràng buộc toàn vẹn |
+| 3 | **Import file** | Hệ thống hỗ trợ import Excel/CSV | Trung bình |
+| 4 | **PIPELINE (browser)** | 3 cách trên **không khả thi** — nghiệp vụ chỉ tồn tại ở tầng UI | ⚠️ Chậm, dễ vỡ, để lại rác data |
+
+**Câu hỏi agent PHẢI hỏi trước khi chạy PIPELINE:**
+
+```
+Bạn cần data thật trên hệ thống. Trước khi tôi drive browser (chậm và dễ gãy),
+kiểm tra giúp:
+
+  1. Hệ thống có API tạo record không?          → seed qua API nhanh hơn nhiều
+  2. Có quyền truy cập DB test không?           → seed script
+  3. Có chức năng import Excel/CSV không?       → import file
+
+Nếu cả 3 đều KHÔNG → tôi chạy PIPELINE qua browser.
+```
+
+### ⚠️ Cảnh báo môi trường dùng chung
+
+Nếu app là **môi trường demo/staging nhiều người dùng chung**:
+- PIPELINE sẽ tạo hàng chục record rác ảnh hưởng người khác
+- **PHẢI** hỏi user xác nhận trước khi chạy
+- **PHẢI** ghi lại toàn bộ ID đã tạo vào report để dọn dẹp sau
+- Ưu tiên chạy batch nhỏ (5-10 bộ) thay vì chạy hết ma trận
 
 ---
 
@@ -62,9 +95,9 @@ skills:
 ### Bước 1: Đọc & Parse Ma Trận Kết Hợp
 
 1. **Đọc file ma trận** từ user cung cấp:
-   - File local → `view_file`
+   - File local → `Read`
    - Inline trong chat → parse trực tiếp
-   - URL → `read_url_content`
+   - URL → `WebFetch`
 
 2. **Parse và validate:**
    - Xác định danh sách dimensions (D1, D2, D3...)
@@ -129,7 +162,7 @@ skills:
      },
      "module_data": {
        "module_1_partner": {
-         "partner_name": "auto_combo01_tc_1712049200",
+         "partner_name": "auto_combo01_partner_1712049200",
          "partner_type": "Tổ chức",
          "tax_id": "0123456789",
          "address": "Số 1 Nguyễn Huệ, Q1, HCM"
@@ -138,7 +171,7 @@ skills:
          "currency": "VND",
          "amount": 100000000,
          "payment_date": "2026-04-15",
-         "description": "Thanh toán combo01"
+         "description": "auto_combo01_payment_1712049200"
        },
        "module_3_tax": {
          "tax_type": "VAT",
@@ -163,7 +196,7 @@ skills:
 
 3. **Đảm bảo data rules:**
    - Unique per combo (không trùng giữa các bộ)
-   - Traceable: prefix `auto_combo{XX}_{dimension_short}`
+   - Traceable: prefix `auto_combo{XX}_{module_short}_{timestamp}`
    - No real PII
    - Computed values phải đúng theo formula
 
@@ -213,9 +246,11 @@ skills:
    | Combo không hợp lệ (constraint) | Skip → đánh dấu "INVALID" trong report |
 
 4. **Giới hạn pipeline:**
-   - Tối đa **30 bộ kết hợp** / phiên chạy (tránh timeout)
-   - Nếu > 30 → chia batch, hỏi user "Tiếp tục batch tiếp?"
-   - Sau mỗi 10 bộ → báo progress cho user
+   - **Mặc định tối đa 10 bộ kết hợp / phiên chạy** — batch nhỏ để phát hiện lỗi sớm, giảm rác data
+   - Nếu > 10 → dừng, báo cáo kết quả batch, hỏi user "Chạy batch tiếp theo?"
+   - Trần cứng: **30 bộ / phiên** kể cả khi user yêu cầu chạy liên tục (tránh timeout)
+   - Sau mỗi 5 bộ → báo progress cho user
+   - **Ghi lại mọi ID đã tạo** ngay khi tạo — kể cả khi pipeline gãy giữa chừng, user vẫn dọn được
 
 ---
 
@@ -244,7 +279,7 @@ Tạo artifact file(s) theo format user yêu cầu:
 ```markdown
 | Combo | Đối tác | Thanh toán | Thuế | Công nợ | Nguồn | Partner Name | Amount | Expected Template | Expected Total |
 |-------|---------|-----------|------|---------|-------|-------------|--------|------------------|----------------|
-| 01 | Tổ chức | VND | VAT | Thường | Quỹ A | auto_c01_tc | 100M | BB_TC_VND_VAT | 110M |
+| 01 | Tổ chức | VND | VAT | Thường | Quỹ A | auto_combo01_partner | 100M | BB_TC_VND_VAT | 110M |
 | 02 | ... | ... | ... | ... | ... | ... | ... | ... | ... |
 ```
 
@@ -254,7 +289,7 @@ Tạo artifact file(s) theo format user yêu cầu:
 export const combinatorialData = [
   {
     id: 'COMBO_01',
-    partner: { name: `auto_combo01_${Date.now()}`, type: 'Tổ chức', taxId: '0123456789' },
+    partner: { name: `auto_combo01_partner_${Date.now()}`, type: 'Tổ chức', taxId: '0123456789' },
     payment: { currency: 'VND', amount: 100_000_000 },
     tax: { type: 'VAT', rate: 10 },
     expected: { template: 'BB_TC_VND_VAT', total: 110_000_000 },
@@ -274,10 +309,21 @@ export const combinatorialData = [
 | 2 | COMBO_02 | ✅ PASS | PTR-002 | PAY-002 | TAX-002 | BB_TC_USD_PIT | ✅ Match | combo02.png |
 | 3 | COMBO_03 | ❌ FAIL | PTR-003 | PAY-003 | — | — | — | combo03_fail.png |
 
-### Summary
-- ✅ Passed: 18/20
-- ❌ Failed: 2/20 (COMBO_03: Tax module validation error, COMBO_17: Timeout)
-- 📊 Data created: 18 partners, 18 payments, 18 tax configs, 18 biên bản
+### Summary (Batch 1/2 — 10 bộ)
+- ✅ Passed: 9/10
+- ❌ Failed: 1/10 (COMBO_03: Tax module validation error)
+- 📊 Data created: 9 partners, 9 payments, 9 tax configs, 9 biên bản
+
+### 🧹 Data cần dọn dẹp
+| Module | IDs đã tạo |
+|--------|-----------|
+| Đối tác | PTR-001 → PTR-009 |
+| Thanh toán | PAY-001 → PAY-009 |
+| Thuế | TAX-001, TAX-002, TAX-004 → TAX-009 |
+
+> ⚠️ COMBO_03 tạo dở dang (PTR-003, PAY-003 đã tạo nhưng chưa có TAX) — cần dọn thủ công.
+
+**Chạy batch 2 (10 bộ còn lại)?**
 ```
 
 ---
@@ -287,7 +333,7 @@ export const combinatorialData = [
 | # | Rule | Mô tả |
 |---|------|-------|
 | 1 | **Unique per combo** | Mỗi bộ kết hợp dùng data riêng — không chia sẻ giữa combos |
-| 2 | **Traceable** | Prefix: `auto_combo{XX}_{dimension_short}_{timestamp}` |
+| 2 | **Traceable** | Prefix: `auto_combo{XX}_{module_short}_{timestamp}` — xem [skills-test-data-generator/SKILL.md](../skills/skills-test-data-generator/SKILL.md) mục *Data Chain Tracing Format* |
 | 3 | **Dimension values exact** | Giá trị dimension PHẢI đúng như trong ma trận — KHÔNG random |
 | 4 | **Supporting fields random** | Fields không thuộc dimension → sinh random + unique |
 | 5 | **Computed values verified** | Giá trị tính toán phải đúng theo formula trong ma trận |
@@ -303,7 +349,10 @@ export const combinatorialData = [
 | Random dimension values | Dimension values lấy chính xác từ ma trận |
 | Hardcode data giống nhau cho mọi combo | Data unique per combo với traceable prefix |
 | Bỏ qua expected output | Mỗi combo PHẢI có expected template + values |
-| Chạy pipeline > 30 combos / phiên không hỏi | Chia batch 30, hỏi user tiếp tục |
+| Chạy PIPELINE ngay khi user nói "tạo data thật" | Hỏi API / DB / import trước — PIPELINE là lựa chọn cuối |
+| Chạy pipeline > 10 combos / batch không hỏi | Chia batch 10, báo cáo, hỏi user tiếp tục |
+| Chạy PIPELINE trên môi trường dùng chung mà không xác nhận | Hỏi user + ghi lại ID để dọn dẹp |
+| Kết thúc PIPELINE mà không liệt kê ID đã tạo | Report PHẢI có mục "Data cần dọn dẹp" |
 | Bỏ qua combo fail, không report | Ghi log đầy đủ: combo nào fail, tại sao, screenshot |
 | Đọc `.env` để lấy credentials | Hỏi User hoặc dùng fixture sẵn có |
 
@@ -316,6 +365,10 @@ export const combinatorialData = [
 - [ ] Data sinh ra unique per combo + traceable
 - [ ] Dimension values đúng 100% so với ma trận
 - [ ] Computed values đúng theo formula
+- [ ] **(PIPELINE)** Đã hỏi API / DB / import trước khi quyết định drive browser
+- [ ] **(PIPELINE)** Nếu môi trường dùng chung → đã xác nhận với user trước khi chạy
+- [ ] **(PIPELINE)** Batch ≤ 10 bộ, đã báo cáo trước khi chạy batch tiếp
+- [ ] **(PIPELINE)** Report có mục "🧹 Data cần dọn dẹp" liệt kê đủ ID đã tạo
 - [ ] (PIPELINE) Screenshots evidence cho mỗi combo
 - [ ] (PIPELINE) Report pass/fail cho mỗi combo
 - [ ] Không chứa real PII

@@ -5,8 +5,8 @@
 | Phần | **Part 1/4** — Danh sách khách hàng |
 | REQ bao phủ | REQ-CUST-01 → REQ-CUST-13 |
 | Số TC | 36 (`CRM_CUST_TC_001` → `CRM_CUST_TC_036`) |
-| Index | [test_cases_customers_v2_index.md](test_cases_customers_v2_index.md) — Assumptions, coverage toàn module |
-| Nguồn requirement | [requirements_customers.md](../requirements/requirements_customers.md) |
+| Index | [test_cases_customers_v2_index.md](../test_cases_customers.md) — Assumptions, coverage toàn module |
+| Nguồn requirement | [requirements_customers.md](../../../requirements/customers/requirements_customers.md) |
 | Phiên bản | 2.0 (bản sinh độc lập để đối chiếu với v1.0) |
 
 > ⚠️ **Môi trường dùng chung** (RISK-01, RISK-02): mọi TC tạo dữ liệu phải dùng tiền tố traceable `Auto_Customer_<timestamp>` và **xoá sạch sau khi chạy**. KHÔNG dùng "Select All", KHÔNG thực thi Mass Delete.
@@ -106,4 +106,4 @@
 
 ---
 
-> **Tiếp theo:** [Part 2 — Tạo & sửa khách hàng](test_cases_customers_v2_part2.md)
+> **Tiếp theo:** [Part 2 — Tạo & sửa khách hàng](part_02_tao_sua.md)

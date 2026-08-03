@@ -125,7 +125,9 @@ Triggers when user asks:
 
 Use workflow: `generate_cross_module_test_plan`
 
-> Workflow dành cho **tính năng phức tạp đi qua nhiều modules nối tiếp**. Sinh Data Flow Map + Ma trận kết hợp đa chiều (Pairwise / Business-critical / Full Cartesian).
+> Workflow dành cho **tính năng phức tạp đi qua nhiều modules nối tiếp**. Sinh Data Flow Map + Ma trận kết hợp đa chiều (Output-Class Coverage mặc định / Pairwise / Full Cartesian).
+>
+> ⚠️ Rule bất biến: mỗi Expected Output class phải xuất hiện ≥1 lần trong ma trận. Pairwise phủ *cặp*, KHÔNG đảm bảo phủ output class.
 
 Triggers when user asks:
 

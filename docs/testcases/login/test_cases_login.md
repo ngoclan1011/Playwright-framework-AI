@@ -5,7 +5,7 @@
 | Hệ thống | CRM (Perfex CRM — Anh Tester Demo) |
 | Module | Login (Admin Authentication) |
 | URL | https://crm.anhtester.com/admin/authentication |
-| Nguồn requirement | [requirements_login.md](../requirements/requirements_login.md) — 24 REQ (REQ-LOGIN-01 → 24) |
+| Nguồn requirement | [requirements_login.md](../../requirements/login/requirements_login.md) — 24 REQ (REQ-LOGIN-01 → 24) |
 | Mode sinh TC | QUICK (skill `skills-rbt-manual-testing`) |
 | Tài khoản test | `admin@example.com` / `123456` (role Administrator) |
 | Tổng số TC | **54** (Critical: 9 · High: 14 · Medium: 20 · Low: 11) |

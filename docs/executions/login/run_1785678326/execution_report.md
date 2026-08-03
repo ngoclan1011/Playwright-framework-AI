@@ -3,7 +3,7 @@
 | Thông tin | Nội dung |
 |---|---|
 | Run ID | run_1785678326 |
-| Nguồn TC | [test_cases_login.md](../testcases/test_cases_login.md) |
+| Nguồn TC | [test_cases_login.md](../../../testcases/login/test_cases_login.md) |
 | Phạm vi | 5 TC gắn tag `@Smoke` (TC_001, TC_004, TC_008, TC_036, TC_040) trên tổng 54 TC |
 | Môi trường | https://crm.anhtester.com — Perfex CRM Anh Tester Demo |
 | Build / Version | Không công bố trên UI |
@@ -68,7 +68,7 @@
 | Cách verify | `performance.getEntriesByType('navigation')[0]` → `responseStatus = 200`, `redirectCount = 0`; `location.protocol = "http:"`; request `maxRedirects: 0` xác nhận không có `Location` và không có HSTS |
 | Tái hiện được? | Có — 2/2 lần |
 | Mức ảnh hưởng | **Bảo mật cao.** Đã kiểm chứng thêm: `form.action` là `https://...` nên POST đăng nhập vẫn đi qua HTTPS — mật khẩu **không** bị truyền plaintext trong kịch bản thường. Rủi ro thật nằm ở chỗ HTML trang login phục vụ trên kênh không mã hoá có thể bị sửa trên đường truyền (SSL stripping/MITM) để đổi `form.action` sang máy chủ của kẻ tấn công. Cần redirect 301 toàn site sang HTTPS + bật HSTS |
-| Bug report | [BUG_login_1785678750.md](../../bug_reports/BUG_login_1785678750.md) |
+| Bug report | [BUG_login_1785678750.md](../../../../bug_reports/BUG_login_1785678750.md) |
 
 ---
 

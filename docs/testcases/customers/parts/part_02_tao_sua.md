@@ -5,8 +5,8 @@
 | Phần | **Part 2/4** — Form tạo/sửa khách hàng + validation từng trường |
 | REQ bao phủ | REQ-CUST-14 → REQ-CUST-24, REQ-CUST-26 |
 | Số TC | 40 (`CRM_CUST_TC_037` → `CRM_CUST_TC_076`) |
-| Index | [test_cases_customers_v2_index.md](test_cases_customers_v2_index.md) — Assumptions, coverage toàn module |
-| Nguồn requirement | [requirements_customers.md](../requirements/requirements_customers.md) |
+| Index | [test_cases_customers_v2_index.md](../test_cases_customers.md) — Assumptions, coverage toàn module |
+| Nguồn requirement | [requirements_customers.md](../../../requirements/customers/requirements_customers.md) |
 | Phiên bản | 2.0 |
 
 > ⚠️ **Môi trường dùng chung:** mọi khách hàng tạo ra trong Part này phải dùng Company traceable `Auto_Customer_<timestamp>` và **xoá ở bước teardown**.
@@ -124,4 +124,4 @@
 
 ---
 
-> **Trước đó:** [Part 1 — Danh sách khách hàng](test_cases_customers_v2_part1.md) · **Tiếp theo:** [Part 3 — Chi tiết, Xoá & Contacts](test_cases_customers_v2_part3.md)
+> **Trước đó:** [Part 1 — Danh sách khách hàng](part_01_danh_sach.md) · **Tiếp theo:** [Part 3 — Chi tiết, Xoá & Contacts](part_03_chi_tiet_contacts.md)

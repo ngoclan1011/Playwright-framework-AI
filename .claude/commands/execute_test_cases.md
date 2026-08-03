@@ -22,7 +22,7 @@ Chạy bộ manual test cases trực tiếp trên browser thật, đối chiếu
 
 | Input | Bắt buộc? | Ghi chú |
 |---|---|---|
-| File TC hoặc checklist | ⭐ Bắt buộc | VD `docs/testcases/test_cases_customers_v2_part1.md` |
+| File TC hoặc checklist | ⭐ Bắt buộc | VD `docs/testcases/customers/parts/part_01_danh_sach.md` |
 | Phạm vi chạy | ⭐ Bắt buộc | Toàn bộ · theo tag (`@Smoke`) · theo TC ID range · theo nhóm chức năng. **Không có → agent hỏi**, không tự chạy hết |
 | URL & tài khoản | ⭐ Bắt buộc | Môi trường đang test + tài khoản đăng nhập |
 | Môi trường dùng chung? | ⭐ Bắt buộc | Có → bật auto-skip TC phá huỷ; Không → chạy đầy đủ, ghi rõ trong report |
@@ -42,8 +42,8 @@ Chạy bộ manual test cases trực tiếp trên browser thật, đối chiếu
 
 ### Bước 2: Chuẩn bị
 1. Tạo `run_id` dạng `run_<timestamp>`
-2. Tạo thư mục evidence `docs/evidence/execution/<run_id>/`
-3. Khởi tạo file report `docs/reports/execution_report_<module>_<run_id>.md` với phần header
+2. Tạo thư mục evidence `docs/executions/<module>/<run_id>/evidence/`
+3. Khởi tạo file report `docs/executions/<module>/<run_id>/execution_report.md` với phần header
 
 ### Bước 3: Khởi tạo browser & đăng nhập
 1. `browser_navigate(url)`
@@ -77,7 +77,7 @@ Sau mỗi 5–10 TC, báo 1 dòng:
 3. Bản nào không xoá được → ghi rõ vào report để người khác xử lý
 
 ### Bước 7: Xuất report
-Xuất `execution_report_<module>_<run_id>.md` theo template trong skill, gồm 6 mục: Tổng kết · Kết quả từng TC · Chi tiết FAIL · TC BLOCKED · Dữ liệu đã tạo & dọn dẹp · Đề xuất bước tiếp theo.
+Xuất `execution_report.md` theo template trong skill, gồm 6 mục: Tổng kết · Kết quả từng TC · Chi tiết FAIL · TC BLOCKED · Dữ liệu đã tạo & dọn dẹp · Đề xuất bước tiếp theo.
 
 ## Điều kiện DỪNG giữa chừng
 

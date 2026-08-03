@@ -74,9 +74,10 @@ Thực hiện theo hướng dẫn chi tiết trong skill `skills-rbt-manual-test
 1. Đóng gói toàn bộ test cases vào bảng Markdown chuẩn đầy đủ metadata cho Automation:
    `| TC ID | REQ ID | Module | Risk Level | Test Title | Pre-Condition | Test Steps | Expected Result | Priority | Test Data | Automatable | Auto Type | Tags |`
 2. **Chạy Self-Quality Gate (6 tiêu chí):** Unique TC ID, 1-to-1 Step-Expected matching (steps đánh số rõ từng bước), Concrete Test Data, Field Validation Coverage, Automation Metadata Ready, và **Requirement Coverage** (mọi REQ có ≥1 TC — xuất Bảng Đối Soát Coverage; REQ nào 0 TC phải sinh bổ sung trước khi xuất).
-3. Ghi file `docs/testcases/test_cases_<module>.md` — **tách `_part1`, `_part2`... khi >40 TC** (cắt tại ranh giới nhóm chức năng); có ≥2 part hoặc ≥2 module thì sinh thêm `test_cases_<module>_index.md`.
-4. Dự kiến **>30 TC** → tạo `task.md` (hoặc dùng task list của Claude Code), cập nhật sau mỗi batch.
-5. Chat chỉ hiện: kế hoạch batch → tiến độ từng batch → Bảng Đối Soát Coverage + tóm tắt đường dẫn file.
+3. ⚠️ **Kiểm tra `docs/testcases/README.md`** — chưa tồn tại (dự án mới) thì **tạo file danh mục trước** với bảng rỗng, để biết prefix TC ID nào đã bị chiếm và có chỗ theo dõi độ phủ REQ↔TC.
+4. Ghi file `docs/testcases/<module>/test_cases_<module>.md` — **tách vào `<module>/parts/part_NN_<slug>.md` khi >40 TC** (cắt tại ranh giới nhóm chức năng); có ≥2 part thì `test_cases_<module>.md` trở thành **index** (giữ nguyên tên). Mỗi module một thư mục riêng. Xong thì **bổ sung/cập nhật dòng của module** trong danh mục.
+5. Dự kiến **>30 TC** → tạo `task.md` (hoặc dùng task list của Claude Code), cập nhật sau mỗi batch.
+6. Chat chỉ hiện: kế hoạch batch → tiến độ từng batch → Bảng Đối Soát Coverage + tóm tắt đường dẫn file.
 
 ## Output
 

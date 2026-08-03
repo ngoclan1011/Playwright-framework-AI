@@ -45,7 +45,7 @@ Agent cần ít nhất **1 trong các input** sau từ user:
 
 ### Bước 1: Thu thập thông tin & Tái hiện lỗi (Detect & Reproduce)
 
-1. **Đọc test file** bằng `view_file`:
+1. **Đọc test file** bằng `Read`:
    - Xác định framework (Playwright / Selenium / Appium / Pytest / TestNG)
    - Ghi nhận cấu trúc: Page Objects, fixtures, helper functions
    - Đánh dấu các vùng code nghi ngờ (waits, locators, assertions, setup/teardown)

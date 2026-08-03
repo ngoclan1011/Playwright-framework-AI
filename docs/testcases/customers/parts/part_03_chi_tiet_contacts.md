@@ -5,8 +5,8 @@
 | Phần | **Part 3/4** — Billing & Shipping, CSRF, trang chi tiết, xoá khách hàng, quản lý liên hệ |
 | REQ bao phủ | REQ-CUST-25, REQ-CUST-27 → REQ-CUST-46 |
 | Số TC | 40 (`CRM_CUST_TC_077` → `CRM_CUST_TC_116`) |
-| Index | [test_cases_customers_v2_index.md](test_cases_customers_v2_index.md) — Assumptions, coverage toàn module |
-| Nguồn requirement | [requirements_customers.md](../requirements/requirements_customers.md) |
+| Index | [test_cases_customers_v2_index.md](../test_cases_customers.md) — Assumptions, coverage toàn module |
+| Nguồn requirement | [requirements_customers.md](../../../requirements/customers/requirements_customers.md) |
 | Phiên bản | 2.0 |
 
 > ⚠️ **Chỉ xoá khách hàng do chính test tạo ra và chưa phát sinh dữ liệu liên quan** (ASM-07, RISK-10). Nhánh xoá khách hàng đang có hoá đơn/dự án/hợp đồng **nằm ngoài phạm vi** — xem Gap #2 trong index.
@@ -131,4 +131,4 @@
 
 ---
 
-> **Trước đó:** [Part 2 — Tạo & sửa khách hàng](test_cases_customers_v2_part2.md) · **Tiếp theo:** [Part 4 — Import CSV & Non-functional](test_cases_customers_v2_part4.md)
+> **Trước đó:** [Part 2 — Tạo & sửa khách hàng](part_02_tao_sua.md) · **Tiếp theo:** [Part 4 — Import CSV & Non-functional](part_04_import_nfr.md)

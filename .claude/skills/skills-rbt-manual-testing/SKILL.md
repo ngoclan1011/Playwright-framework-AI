@@ -95,21 +95,44 @@ Bộ TC thường dài 70–100+ dòng bảng. In toàn bộ ra chat khiến use
 - Agent ghi TC **thẳng vào file** bằng công cụ Write/Edit sau mỗi batch
 - **NGHIÊM CẤM** in toàn bộ bảng TC ra chat rồi mới ghi file (user phải chờ 2 lần cho cùng một nội dung)
 - Chat **chỉ** hiển thị:
-  - Dòng tiến độ ngắn sau mỗi batch: `✅ Batch 2/4 — Validation form (18 TC) → test_cases_customers_part1.md`
+  - Dòng tiến độ ngắn sau mỗi batch: `✅ Batch 2/4 — Validation form (18 TC) → parts/part_01_danh_sach.md`
   - **Bảng Đối Soát Coverage** (tiêu chí 6) ở cuối
   - Tóm tắt: tổng số TC · số file · đường dẫn file · điểm cần user review
 - Muốn xem nội dung → user tự mở file. Chỉ trích dẫn tối đa **3–5 dòng TC mẫu** ra chat khi cần minh họa
 
-### 2. Ngưỡng tách file
+### 2. Cấu trúc thư mục & ngưỡng tách file
+
+**Test cases tổ chức theo thư mục từng module** (đối xứng với `docs/requirements/`):
+
+```
+docs/testcases/
+├── README.md                                   ← DANH MỤC toàn hệ thống
+└── <module>/
+    ├── test_cases_<module>.md                  ← INDEX — TÊN FILE BẤT BIẾN
+    ├── parts/part_NN_<slug>.md                 ← khi tách (>40 TC)
+    └── archive/test_cases_<module>_vN.md       ← phiên bản cũ, giữ để truy vết
+```
+
+> ⚠️ **Dự án mới — BẮT BUỘC kiểm tra trước khi ghi bộ TC đầu tiên:** `docs/testcases/README.md` chưa tồn tại thì **tạo ngay** với bảng danh mục rỗng, rồi mới ghi TC và bổ sung dòng đầu tiên. Thiếu file này thì không ai biết prefix TC ID nào đã bị chiếm, và độ phủ REQ↔TC không có chỗ theo dõi.
+>
+> Nội dung file danh mục gồm 6 mục: bảng danh mục module (kèm **prefix TC ID đã chiếm**) · độ phủ so với requirements · cấu trúc thư mục chuẩn · kết quả thực thi (`docs/executions/`) · quy trình sử dụng · nhật ký danh mục.
+
+| Quy tắc | Lý do |
+|---|---|
+| Tên index **luôn** `test_cases_<module>.md` | Mọi workflow phía sau (`/execute_test_cases`, `/review_testcases`, `/generate_automation_from_testcases`, `/generate_traceability_matrix`) đọc theo mẫu `docs/testcases/<module>/test_cases_<module>.md`. Đổi tên là vỡ chuỗi |
+| **KHÔNG** nhét số phiên bản vào tên index (`_v2`, `_new`…) | Phiên bản mới **thay thế** index; bản cũ chuyển vào `archive/` |
+| Part đặt trong `parts/`, đặt tên `part_NN_<slug>.md` | `NN` có số 0 đứng đầu để sắp xếp đúng; slug mô tả nhóm chức năng |
+
+**Ngưỡng tách:**
 
 | Điều kiện | Xử lý |
 |---|---|
-| 1 module | 1 file `test_cases_<module>.md` |
-| File vượt **40 TC** | Tách `_part1`, `_part2`... — mỗi part ≤ 40 TC, **cắt tại ranh giới nhóm chức năng**, không cắt giữa nhóm |
-| Nhiều module | Mỗi module 1 file riêng, KHÔNG gộp chung |
-| Có ≥2 part | **BẮT BUỘC** sinh thêm file index (xem mục 4) |
+| ≤ 40 TC | 1 file `test_cases_<module>.md`, không cần `parts/` |
+| Vượt **40 TC** | Tách vào `parts/part_01_<slug>.md`, `part_02_...` — mỗi part ≤ 40 TC, **cắt tại ranh giới nhóm chức năng**, không cắt giữa nhóm |
+| Nhiều module | Mỗi module một thư mục riêng, KHÔNG gộp chung |
+| Có ≥2 part | File `test_cases_<module>.md` trở thành **index** (xem mục 4), TC chi tiết nằm hết trong `parts/` |
 
-> 40 TC ≈ 25–30 KB — mở nhanh, review được trong 1 lượt. Tham khảo: `docs/testcases/test_cases_customers.md` hiện 105 KB trong 1 file là **vượt ngưỡng**, nên tách khi có dịp cập nhật.
+> 40 TC ≈ 25–30 KB — mở nhanh, review được trong 1 lượt.
 
 ### 3. Chạy theo batch — không dừng hỏi giữa chừng
 
@@ -123,21 +146,30 @@ Bộ TC thường dài 70–100+ dòng bảng. In toàn bộ ra chat khiến use
   ```
 - Ngoại lệ được phép dừng: phát hiện requirement mâu thuẫn nghiêm trọng làm sai hàng loạt TC phía sau
 
-### 4. File index (khi có ≥2 part hoặc ≥2 module)
+### 4. File index (khi có ≥2 part)
 
-Sinh `test_cases_<module>_index.md`:
+File `docs/testcases/<module>/test_cases_<module>.md` **trở thành index** — giữ nguyên tên, không đổi thành `*_index.md`:
 
 ```markdown
-# Test Cases — <Module> (tổng <N> TC · <M> file)
+# Test Cases — <Module> (tổng <N> TC · <M> part)
 
-| File | Nhóm chức năng | Số TC | TC ID range |
-|---|---|---|---|
-| test_cases_customers_part1.md | Validation form, Data table | 42 | CRM_CUST_TC_001–042 |
-| test_cases_customers_part2.md | CRUD, Phân quyền, Non-functional | 34 | CRM_CUST_TC_043–076 |
+| Thông tin | Nội dung |
+|---|---|
+| Nguồn requirement | [requirements_<module>.md](../../requirements/<module>/requirements_<module>.md) |
+
+## Bản đồ tài liệu
+| File | Nhóm chức năng | Số TC | TC ID range | REQ bao phủ |
+|---|---|---|---|---|
+| [Part 1](parts/part_01_danh_sach.md) | Danh sách, tìm kiếm, lọc | 36 | CRM_CUST_TC_001–036 | REQ-CUST-01 → 13 |
+| [Part 2](parts/part_02_tao_sua.md) | Tạo/sửa + validation | 40 | CRM_CUST_TC_037–076 | REQ-CUST-14 → 26 |
 
 ## Bảng Đối Soát Coverage (toàn module)
 <gộp coverage của tất cả part — mọi REQ phải có ≥1 TC>
 ```
+
+- Mỗi part **BẮT BUỘC** có link ngược về index và link tới part liền kề
+- Bảng Đối Soát Coverage **chỉ nằm ở index**, không nhân bản vào từng part
+- **Cập nhật `docs/testcases/README.md`** (danh mục) sau khi sinh xong: số TC, số part, REQ bao phủ, ngày cập nhật
 
 ### 5. task.md — theo dõi tiến độ
 

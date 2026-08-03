@@ -33,8 +33,8 @@ Command này giúp agent phân tích Swagger/OpenAPI specification, xác định
 ### Bước 1: Tiếp nhận & Phân tích Spec (Parse & Analyze)
 
 1. **Thu thập Swagger/OpenAPI spec** từ user:
-   - **URL trực tiếp** (VD: `https://api.example.com/swagger.json`) → dùng `read_url_content` để fetch
-   - **File local** (JSON/YAML) → dùng `view_file` để đọc
+   - **URL trực tiếp** (VD: `https://api.example.com/swagger.json`) → dùng `WebFetch` để fetch
+   - **File local** (JSON/YAML) → dùng `Read` để đọc
    - **Swagger UI URL** → trích xuất URL spec gốc (thường là `/v2/api-docs` hoặc `/v3/api-docs`)
    - **Scalar API Reference URL** → inspect HTML để tìm `data-configuration` chứa URL spec (thường là `/swagger/json`, `/reference/json`, hoặc relative path trong attribute `url`). VD: `https://book.anhtester.com/swagger` → spec tại `https://book.anhtester.com/swagger/json`
    - **Các dạng API Doc khác** (Redoc, Stoplight, RapiDoc) → tìm URL spec trong page source hoặc network requests
