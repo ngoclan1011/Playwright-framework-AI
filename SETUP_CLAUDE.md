@@ -45,30 +45,21 @@
 
 Playwright MCP cho Claude quyền **mở browser thật, đọc DOM, click, gõ phím, chụp screenshot**. Đây là điều kiện bắt buộc để chạy các skill `skills-ui-debug-agent`, `skills-manual-test-executor`, và các command `/execute_test_cases`, `/generate_requirements_from_website`.
 
-### 1.1. Cách A — Qua giao diện Claude Desktop (dễ nhất)
+> 📌 **Claude Desktop KHÔNG có form điền sẵn.** Mục `Local MCP servers` chỉ có nút **Edit Config** — bấm vào là mở thẳng file `claude_desktop_config.json` để bạn tự gõ JSON. Không có ô Name / Command / Arguments riêng lẻ.
+
+### 1.1. Cách A — Bấm Edit Config trong Claude Desktop (nhanh nhất)
 
 1. Mở **Claude Desktop**.
 2. Vào **Settings** (biểu tượng ⚙️ hoặc `Ctrl + ,`).
-3. Chọn tab **Developer** (một số bản ghi là **Developers**).
-4. Tìm mục **Local MCP servers** → bấm **Add local MCP server** (hoặc **Add server**).
-5. Điền form:
+3. Chọn tab **Developer**.
+4. Tìm mục **Local MCP servers** → bấm **Edit Config**.
+5. File `claude_desktop_config.json` mở ra (bằng editor mặc định — VS Code, Notepad…). Thêm khối `playwright` như [mục 1.3](#13-nội-dung-cần-điền).
+6. **Lưu file** → **Restart Claude Desktop** (bắt buộc — thoát **hẳn** từ khay hệ thống, không phải chỉ đóng cửa sổ).
+7. Mở lại, vào **Settings → Developer**, server `playwright` phải hiện trạng thái **running / connected**.
 
-   | Trường | Giá trị (Windows) | Giá trị (macOS / Linux) |
-   |---|---|---|
-   | **Name** | `playwright` | `playwright` |
-   | **Command** | `cmd` | `npx` |
-   | **Arguments** | `/c`<br>`npx`<br>`-y`<br>`@playwright/mcp@latest` | `-y`<br>`@playwright/mcp@latest` |
+### 1.2. Cách B — Mở thẳng file theo đường dẫn
 
-   > 🪟 **Vì sao Windows phải bọc `cmd /c`?** Trên Windows, `npx` thực chất là file `.cmd` — tiến trình con không tự spawn được nếu gọi trực tiếp. Bỏ `cmd /c` là gặp lỗi `spawn npx ENOENT`.
-
-6. Bấm **Save** → **Restart Claude Desktop** (bắt buộc, không phải chỉ đóng cửa sổ — thoát hẳn từ khay hệ thống).
-7. Mở lại, vào **Settings → Developer**, server `playwright` phải hiện trạng thái **running / connected** (chấm xanh).
-
-### 1.2. Cách B — Sửa trực tiếp file cấu hình JSON
-
-Dùng khi UI không có form, hoặc muốn cấu hình nâng cao (viewport, headless, output dir).
-
-**Vị trí file `claude_desktop_config.json`:**
+Dùng khi nút **Edit Config** mở bằng app không mong muốn, hoặc bạn muốn sửa bằng editor khác.
 
 | Hệ điều hành | Đường dẫn |
 |---|---|
@@ -82,20 +73,9 @@ Mở nhanh trên Windows (dán vào Run — `Win + R`):
 %APPDATA%\Claude
 ```
 
-**Nội dung tối thiểu (Windows):**
+### 1.3. Nội dung cần điền
 
-```json
-{
-  "mcpServers": {
-    "playwright": {
-      "command": "cmd",
-      "args": ["/c", "npx", "-y", "@playwright/mcp@latest"]
-    }
-  }
-}
-```
-
-**Nội dung tối thiểu (macOS / Linux):**
+**Cấu hình tối thiểu — dùng chung cho Windows / macOS / Linux:**
 
 ```json
 {
@@ -108,9 +88,16 @@ Mở nhanh trên Windows (dán vào Run — `Win + R`):
 }
 ```
 
-> ⚠️ **Nếu file đã có sẵn `mcpServers`** — đừng ghi đè cả file. Chỉ **thêm key `"playwright"`** vào bên trong object `mcpServers` đã có. Sai JSON (thiếu dấu phẩy, thừa dấu ngoặc) là Claude sẽ **im lặng không load** server nào cả.
+> ⚠️ **Nếu file đã có sẵn nội dung** — đừng ghi đè cả file. File này còn chứa `preferences`, `coworkUserFilesPath`… của Claude Desktop. Chỉ **thêm key `"playwright"`** vào bên trong object `mcpServers` (tạo mới `mcpServers` nếu chưa có). Sai JSON một dấu phẩy là Claude **im lặng không load** server nào cả — không báo lỗi gì.
 
-### 1.3. Cấu hình khuyến nghị theo Rules của bộ Kit này
+> 🪟 **Windows — chỉ dùng `cmd /c` khi thực sự gặp lỗi.** Bản Claude Desktop hiện tại gọi thẳng `npx` được bình thường. Chỉ khi log báo `spawn npx ENOENT` mới đổi sang dạng bọc:
+> ```json
+> "command": "cmd",
+> "args": ["/c", "npx", "-y", "@playwright/mcp@latest"]
+> ```
+> Nguyên nhân lỗi này: `npx` trên Windows là file `.cmd`, một số phiên bản Node/Electron không spawn trực tiếp được.
+
+### 1.4. Cấu hình khuyến nghị theo Rules của bộ Kit này
 
 `CLAUDE.md` và `.claude/rules/playwright_rules.md` yêu cầu: **desktop viewport 1920×1080**, **headed mode khi debug**. Cấu hình sẵn để khỏi phải resize thủ công mỗi lần:
 
@@ -118,17 +105,25 @@ Mở nhanh trên Windows (dán vào Run — `Win + R`):
 {
   "mcpServers": {
     "playwright": {
-      "command": "cmd",
+      "command": "npx",
       "args": [
-        "/c", "npx", "-y", "@playwright/mcp@latest",
-        "--browser", "chrome",
-        "--viewport-size", "1920,1080",
-        "--output-dir", "D:\\ANHTESTER\\ClaudeCode\\claude-testing-skills\\.playwright-mcp"
+        "-y", "@playwright/mcp@latest",
+        "--browser=chrome",
+        "--viewport-size=1920,1080",
+        "--output-dir=D:\\ANHTESTER\\ClaudeCode\\claude-testing-skills\\.playwright-mcp"
       ]
     }
   }
 }
 ```
+
+> 💡 **Hai kiểu viết tham số đều chạy** — chọn kiểu nào cũng được, miễn nhất quán:
+> - Gộp bằng dấu `=`: `"--viewport-size=1920,1080"` (1 phần tử)
+> - Tách rời: `"--viewport-size", "1920,1080"` (2 phần tử)
+>
+> Kiểu `=` gọn hơn và ít nhầm hơn khi sửa tay.
+
+> 🖥️ **Màn hình nhỏ hơn Full HD?** Nếu laptop bạn chỉ 1366×768, đặt `1920,1080` sẽ khiến cửa sổ browser tràn ra ngoài màn hình, khó quan sát khi debug headed. Lúc đó hạ xuống mức vừa màn (ví dụ `1500,750`) để **debug cho dễ nhìn** — nhưng khi **chạy thật để chấm PASS/FAIL và chụp evidence**, vẫn phải quay về `1920×1080` theo rule, vì layout responsive có thể khác hẳn ở 2 kích thước.
 
 **Các tham số hay dùng:**
 
@@ -147,7 +142,7 @@ Mở nhanh trên Windows (dán vào Run — `Win + R`):
 
 Sau khi sửa JSON: **lưu file → thoát hẳn Claude Desktop → mở lại**.
 
-### 1.4. Cách C — Claude Code CLI (cho terminal / VS Code)
+### 1.5. Cách C — Claude Code CLI (cho terminal / VS Code)
 
 Claude Code **không đọc** `claude_desktop_config.json`. Phải khai báo riêng.
 
@@ -194,7 +189,7 @@ claude mcp remove playwright
 
 Trong phiên Claude Code, gõ `/mcp` để xem trạng thái kết nối và danh sách tool của từng server.
 
-### 1.5. Nghiệm thu — xác nhận Playwright MCP đã chạy
+### 1.6. Nghiệm thu — xác nhận Playwright MCP đã chạy
 
 Gửi cho Claude câu lệnh sau:
 
@@ -205,7 +200,7 @@ Dùng Playwright MCP mở https://anhtester.com, resize 1920x1080, rồi chụp 
 **Đạt** khi: một cửa sổ browser **thật sự bật lên**, và Claude trả về nội dung DOM/tiêu đề trang.
 **Chưa đạt** khi: Claude nói "tôi không có công cụ browser" → xem [mục 4](#4-checklist-nghiệm-thu--xử-lý-lỗi-thường-gặp).
 
-### 1.6. Cài browser binary (chạy lần đầu có thể thiếu)
+### 1.7. Cài browser binary (chạy lần đầu có thể thiếu)
 
 ```bash
 npx playwright install chrome
@@ -633,8 +628,9 @@ Khi đã tin tưởng output, mở khoá gửi tự động. Ba nguyên tắc b�
 
 | Triệu chứng | Nguyên nhân | Cách xử lý |
 |---|---|---|
-| `spawn npx ENOENT` (Windows) | Gọi trực tiếp `npx` | Đổi thành `"command": "cmd"`, args bắt đầu bằng `/c`, `npx` |
+| `spawn npx ENOENT` (Windows) | Phiên bản Node/Electron không spawn được file `.cmd` | Đổi thành `"command": "cmd"`, args bắt đầu bằng `/c`, `npx`. **Chỉ làm khi gặp đúng lỗi này** — bình thường `npx` trần chạy tốt |
 | MCP server không hiện sau khi sửa JSON | File JSON sai cú pháp | Dán vào trình kiểm tra JSON; chú ý **dấu phẩy thừa** ở phần tử cuối |
+| Sửa xong thì Claude Desktop mất hết cấu hình khác | Ghi đè cả file thay vì thêm key | File này còn chứa `preferences`, `coworkUserFilesPath`… — chỉ thêm vào trong `mcpServers` |
 | Sửa config rồi vẫn không thấy | Chưa restart **hẳn** | Thoát Claude từ **khay hệ thống**, không phải chỉ đóng cửa sổ |
 | Claude nói "không có công cụ browser" | Claude Code đọc `.mcp.json`, không đọc `claude_desktop_config.json` | Chạy `claude mcp add --scope project playwright -- npx -y @playwright/mcp@latest` |
 | Browser bật rồi tắt ngay | Thiếu browser binary | `npx playwright install chrome` |
@@ -663,17 +659,19 @@ Khi đã tin tưởng output, mở khoá gửi tự động. Ba nguyên tắc b�
 {
   "mcpServers": {
     "playwright": {
-      "command": "cmd",
+      "command": "npx",
       "args": [
-        "/c", "npx", "-y", "@playwright/mcp@latest",
-        "--browser", "chrome",
-        "--viewport-size", "1920,1080",
-        "--output-dir", "D:\\ANHTESTER\\ClaudeCode\\claude-testing-skills\\.playwright-mcp"
+        "-y", "@playwright/mcp@latest",
+        "--browser=chrome",
+        "--viewport-size=1920,1080",
+        "--output-dir=D:\\ANHTESTER\\ClaudeCode\\claude-testing-skills\\.playwright-mcp"
       ]
     }
   }
 }
 ```
+
+> Đây là **trích đoạn**, không phải toàn bộ file. File thật của bạn còn có `preferences`, `coworkUserFilesPath`, `localAgentModeTrustedFolders`… — giữ nguyên, chỉ chèn thêm khối `mcpServers`.
 
 **`.mcp.json`** (đặt ở thư mục gốc dự án, dùng cho Claude Code CLI — **nên commit**):
 
