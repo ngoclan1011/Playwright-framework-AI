@@ -73,7 +73,7 @@ Thực hiện theo hướng dẫn chi tiết trong skill `skills-rbt-manual-test
 ### Bước 6: Chuẩn hóa Format & Metadata (Template Mapping)
 1. Đóng gói toàn bộ test cases vào bảng Markdown chuẩn đầy đủ metadata cho Automation:
    `| TC ID | REQ ID | Module | Risk Level | Test Title | Pre-Condition | Test Steps | Expected Result | Priority | Test Data | Automatable | Auto Type | Tags |`
-2. **Chạy Self-Quality Gate (6 tiêu chí):** Unique TC ID, 1-to-1 Step-Expected matching (steps đánh số rõ từng bước), Concrete Test Data, Field Validation Coverage, Automation Metadata Ready, và **Requirement Coverage** (mọi REQ có ≥1 TC — xuất Bảng Đối Soát Coverage; REQ nào 0 TC phải sinh bổ sung trước khi xuất).
+2. **Chạy Self-Quality Gate (7 tiêu chí):** Unique TC ID, 1-to-1 Step-Expected matching (steps đánh số rõ từng bước), Concrete Test Data, Field Validation Coverage, Automation Metadata Ready, **Requirement Coverage** (mọi REQ có ≥1 TC — xuất Bảng Đối Soát Coverage; REQ nào 0 TC phải sinh bổ sung trước khi xuất), và **Evidence-verified** (đã mở 100% ảnh trong `evidence/` — xuất Bảng Đối Soát Evidence; vùng không có ảnh thì TC gắn `@NeedsVerify`).
 3. ⚠️ **Kiểm tra `docs/testcases/README.md`** — chưa tồn tại (dự án mới) thì **tạo file danh mục trước** với bảng rỗng, để biết prefix TC ID nào đã bị chiếm và có chỗ theo dõi độ phủ REQ↔TC.
 4. Ghi file `docs/testcases/<module>/test_cases_<module>.md` — **tách vào `<module>/parts/part_NN_<slug>.md` khi >40 TC** (cắt tại ranh giới nhóm chức năng); có ≥2 part thì `test_cases_<module>.md` trở thành **index** (giữ nguyên tên). Mỗi module một thư mục riêng. Xong thì **bổ sung/cập nhật dòng của module** trong danh mục.
 5. Dự kiến **>30 TC** → tạo `task.md` (hoặc dùng task list của Claude Code), cập nhật sau mỗi batch.
@@ -84,4 +84,4 @@ Thực hiện theo hướng dẫn chi tiết trong skill `skills-rbt-manual-test
 - Bảng Test Cases Markdown hoàn chỉnh (có cột **REQ ID**) kèm Automation Metadata (`Automatable`, `Auto Type`, `Tags`), sẵn sàng copy sang Excel/Jira/TestRail hoặc sync trực tiếp vào Google Sheets
 - Traceability Matrix + **Bảng Đối Soát Coverage** (REQ × số TC × đủ Positive/Negative/Boundary)
 - Danh sách Ambiguities đã giải quyết
-- Báo cáo Self-Quality Gate Verification (6 tiêu chí)
+- Báo cáo Self-Quality Gate Verification (7 tiêu chí)

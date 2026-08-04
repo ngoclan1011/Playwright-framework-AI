@@ -21,25 +21,26 @@ Command này sử dụng **Mode QUICK** của skill `skills-rbt-manual-testing` 
 
 1. **Đọc và hiểu requirements** được user cung cấp
    - Requirements đã có REQ ID → dùng nguyên mã; chưa có → agent tự gán `REQ-<MODULE>-<SỐ>`
-2. **Ghi nhận Assumptions:** mọi điểm mơ hồ phải ghi rõ giả định đã dùng (`ASM-XX`) — không đoán ngầm
-3. **Xác định các luồng chính:** Happy Path, Negative Path, Boundary Cases, Edge Cases
-4. **Áp dụng kỹ thuật thiết kế test case theo Quy Tắc Bắt Buộc trong skill:**
+2. **Mở TOÀN BỘ evidence** — liệt kê `docs/requirements/<module>/evidence/` và `Read` từng ảnh (Quy Tắc Đối Chiếu Evidence trong skill). **Chưa mở xong thì chưa được ghi dòng TC đầu tiên.** Tài liệu ↔ ảnh mâu thuẫn → **ảnh thắng**, ghi `ASM-XX` và báo user. Vùng không có ảnh → TC gắn `@NeedsVerify`
+3. **Ghi nhận Assumptions:** mọi điểm mơ hồ phải ghi rõ giả định đã dùng (`ASM-XX`) — không đoán ngầm
+4. **Xác định các luồng chính:** Happy Path, Negative Path, Boundary Cases, Edge Cases
+5. **Áp dụng kỹ thuật thiết kế test case theo Quy Tắc Bắt Buộc trong skill:**
    - Equivalence Partitioning (EP) + Boundary Value Analysis (BVA) — mọi field có ràng buộc
    - Decision Table — BẮT BUỘC khi ≥3 điều kiện kết hợp
    - State Transition — BẮT BUỘC khi có status flow
-5. **Validation chuyên biệt từng trường (Field-Level Validation - 15 Field Types):**
+6. **Validation chuyên biệt từng trường (Field-Level Validation - 15 Field Types):**
    - Liệt kê tất cả input fields trên form/UI
    - Sinh validation TCs **riêng cho TỪNG trường** theo đặc tính riêng (Text, Email, Phone, Date, Number, Dropdown, Checkbox/Radio, File Upload, Password, Textarea, OTP/MFA, Date Range, Rich Text, Multi-Select, Range Slider)
    - Áp dụng **Bảng Field-Level Validation Checklist** trong skill `skills-rbt-manual-testing`
    - **KHÔNG** gộp validation nhiều trường vào 1 test case
-6. **Bao phủ Component-Level Checklist** (trong skill): Data Table/List (sort/filter/search/pagination/empty state/bulk), CRUD Lifecycle, Permission/Role, Modal/Dialog, Notification, Status Flow
-7. **Bao phủ Scenarios Chuyên Sâu & Non-Functional:**
+7. **Bao phủ Component-Level Checklist** (trong skill): Data Table/List (sort/filter/search/pagination/empty state/bulk), CRUD Lifecycle, Permission/Role, Modal/Dialog, Notification, Status Flow
+8. **Bao phủ Scenarios Chuyên Sâu & Non-Functional:**
    - Double Submit / Race Condition (click liên tiếp nút submit, concurrent edit).
    - Session & Network Resilience (session timeout mid-form, loss of network, slow 3G).
    - Localization & UTF-8 / Emoji (tiếng Việt có dấu, emoji, ký tự đa ngôn ngữ).
    - Keyboard Accessibility (Tab order, Enter/Space trigger, Focus state).
    - HTTP Status Codes (cho API TCs).
-8. **Sinh test cases đầy đủ fields & Automation Metadata:**
+9. **Sinh test cases đầy đủ fields & Automation Metadata:**
    - `TC ID` (format: `[DỰ_ÁN]_[MODULE]_TC_[SỐ]`)
    - `REQ ID` (**bắt buộc** — mã requirement mà TC cover, VD `REQ-LOGIN-01`)
    - `Module`
@@ -53,8 +54,8 @@ Command này sử dụng **Mode QUICK** của skill `skills-rbt-manual-testing` 
    - `Automatable` (Yes / No / Partial)
    - `Auto Type` (UI / API / Unit / N/A)
    - `Tags` (`@Smoke`, `@Regression`, `@CriticalPath`...)
-9. **Chạy Self-Quality Gate (6 Tiêu chí):** Unique TC ID, 1-to-1 Step-Expected matching, Concrete Test Data, Field Validation Coverage, Automation Metadata Ready, **Requirement Coverage** (mọi REQ có ≥1 TC — kèm Bảng Đối Soát Coverage).
-10. **Ghi file theo Quy Tắc Xuất File & Theo Dõi Tiến Độ** (xem skill) — KHÔNG in bảng TC ra chat
+10. **Chạy Self-Quality Gate (7 Tiêu chí):** Unique TC ID, 1-to-1 Step-Expected matching, Concrete Test Data, Field Validation Coverage, Automation Metadata Ready, **Requirement Coverage** (mọi REQ có ≥1 TC — kèm Bảng Đối Soát Coverage), **Evidence-verified** (đã mở 100% ảnh evidence — kèm Bảng Đối Soát Evidence).
+11. **Ghi file theo Quy Tắc Xuất File & Theo Dõi Tiến Độ** (xem skill) — KHÔNG in bảng TC ra chat
 
 ## Bảng Output
 

@@ -86,6 +86,75 @@ Bạn muốn sinh theo chế độ nào?
 
 ---
 
+## Quy Tắc Đối Chiếu Evidence (BẮT BUỘC — áp dụng cả 3 modes, chạy TRƯỚC batch đầu tiên)
+
+Tài liệu requirements là **mô tả bằng chữ**; ảnh trong `docs/requirements/<module>/evidence/` là **bằng chứng**. Sinh TC chỉ từ chữ dẫn tới bịa bố cục, nhãn, thứ tự tab, định dạng hiển thị — và không ai phát hiện được vì TC đọc vẫn rất thuyết phục.
+
+**Thứ tự tin cậy khi ba nguồn mâu thuẫn:**
+
+```
+DOM thật (đọc trực tiếp) > Ảnh evidence > Tài liệu chữ
+```
+
+### 1. Mở toàn bộ evidence trước khi sinh TC
+
+- Liệt kê `docs/requirements/<module>/evidence/` rồi **mở TỪNG ảnh bằng `Read`**. Không được bỏ ảnh nào vì "tên file nghe không liên quan"
+- Ảnh của module liên quan (VD Projects tham chiếu Customers) cũng mở nếu TC chạm tới
+- **Chưa mở evidence thì chưa được ghi dòng TC đầu tiên**
+
+### 2. Xung đột giữa tài liệu và ảnh → ảnh thắng
+
+Tài liệu ghi một đằng, ảnh cho thấy một nẻo → **KHÔNG tự chọn bên nào**. Bắt buộc:
+1. Viết TC theo **những gì ảnh cho thấy**
+2. Ghi một dòng `ASM-XX` nêu rõ xung đột, kèm tên tệp ảnh
+3. Báo user ngay ở phần tóm tắt cuối — đây là **tín hiệu requirements đã lỗi thời**, cần recon lại
+
+### 3. Evidence thiếu / cắt cụt → gắn `@NeedsVerify`, KHÔNG suy diễn
+
+Ảnh chụp theo viewport thường **cắt mất phần dưới** của form dài (nút Save, checkbox cuối, rich text editor). Vùng không có ảnh chống lưng:
+
+- TC vẫn được viết, nhưng **bắt buộc gắn tag `@NeedsVerify`** và ghi `⚠️ chưa có evidence` trong cột `Expected Result`
+- Liệt kê ở mục **"Vùng chưa có evidence"** trong index, kèm đề xuất recon bổ sung theo chuẩn 7.2.1 của skill `skills-requirements-analyzer`
+- **NGHIÊM CẤM** viết Expected Result khẳng định chắc chắn về thứ tự Tab, vị trí phần tử, nhãn nút, định dạng hiển thị khi không nhìn thấy trong ảnh
+
+### 4. Bốn nhóm TC BẮT BUỘC phải có evidence chống lưng
+
+| Nhóm TC | Vì sao không được suy diễn |
+|---|---|
+| Bố cục & thứ tự (tab order, thứ tự cột, thứ tự field) | Bố cục 2 cột làm thứ tự Tab **khác hẳn** thứ tự đọc từ trên xuống |
+| Nhãn nguyên văn (nút, tiêu đề, thông báo, tooltip) | Sai một chữ là TC fail giả |
+| Giá trị mặc định (checkbox tick sẵn, option đang chọn, multi-select chọn sẵn) | Đây là chỗ tài liệu hay lỗi thời nhất |
+| Định dạng hiển thị (tiền tệ `$1,403.00`, giờ `100:00`, ngày `dd-mm-yyyy`, badge màu, avatar) | Assert sai định dạng là fail hàng loạt |
+
+### 5. Có Playwright MCP → đọc DOM, đừng chỉ nhìn ảnh
+
+Ảnh là **bằng chứng lưu trữ**; DOM là **nguồn chính xác**. Ảnh độ phân giải thường **không phân biệt nổi** `disabled` với `không tick`, không đếm được option nào đang `selected` trong multi-select bị cắt, không đọc được `value` hay `data-*`. Khi có Playwright MCP, sau khi mở ảnh hãy đọc thẳng DOM để chốt các con số:
+
+```js
+// Mẫu: chốt option, giá trị mặc định, trạng thái khoá — một lượt
+() => {
+  const q = s => document.querySelector(s);
+  const sel = q('#<select_id>');
+  return {
+    options: [...sel.options].map(o => ({ v: o.value, text: o.text.trim(), subtext: o.getAttribute('data-subtext') })),
+    selectedIndex: sel.selectedIndex,
+    selectedValues: [...sel.options].filter(o => o.selected).map(o => o.value),
+    checkboxes: [...document.querySelectorAll('<scope> input[type=checkbox]')]
+      .map(c => ({ name: c.name, checked: c.checked, disabled: c.disabled })),
+    fieldOrder: [...document.querySelectorAll('<form> input:not([type=hidden]), <form> select, <form> textarea')]
+      .filter(e => e.offsetParent !== null).map(e => e.id || e.name)
+  };
+}
+```
+
+Những thứ **chỉ DOM mới chốt được**: số `<option>` thật (kể cả option rỗng) · `selectedIndex` · danh sách option đang `selected` · `disabled` vs `checked` · `data-subtext` / `data-*` · thứ tự focus thật của form · phần tử ẩn bằng class nhưng vẫn nằm trong DOM.
+
+### 6. Trạng thái phần tử — đọc kỹ ảnh, đừng chỉ đọc nhãn
+
+Checkbox **xám mờ = disabled**, khác hoàn toàn **không tick**. Phát hiện phần tử disabled trong ảnh nghĩa là có **business rule phụ thuộc** mà requirements có thể đã bỏ sót → sinh TC cho cả hai chiều (bật điều kiện → mở khoá; tắt điều kiện → khoá lại) và mở `AMB-XX`.
+
+---
+
 ## Quy Tắc Xuất File & Theo Dõi Tiến Độ (BẮT BUỘC — áp dụng cả 3 modes)
 
 Bộ TC thường dài 70–100+ dòng bảng. In toàn bộ ra chat khiến user phải chờ render lâu và không thấy được tiến độ. Agent **BẮT BUỘC** tuân thủ quy tắc sau.
@@ -201,32 +270,33 @@ Sinh test cases **nhanh, đủ chất lượng** từ requirements/user stories 
 1. **Đọc và hiểu requirements** được cung cấp
    - Nếu requirements đã có mã REQ ID (từ `skills-requirements-analyzer`) → dùng nguyên mã đó
    - Nếu chưa có mã → agent tự gán `REQ-<MODULE>-<SỐ>` cho từng yêu cầu/rule trước khi sinh TC
-2. **Ghi nhận Assumptions (BẮT BUỘC khi requirement mơ hồ):**
+2. **Mở toàn bộ evidence** theo [Quy Tắc Đối Chiếu Evidence](#quy-tắc-đối-chiếu-evidence-bắt-buộc--áp-dụng-cả-3-modes-chạy-trước-batch-đầu-tiên) — liệt kê `docs/requirements/<module>/evidence/` và `Read` từng ảnh. **Chưa làm xong bước này thì chưa được ghi dòng TC đầu tiên.** Ghi lại ảnh nào cắt cụt / vùng nào không có ảnh để dùng ở bước 10
+3. **Ghi nhận Assumptions (BẮT BUỘC khi requirement mơ hồ):**
    - QUICK mode không dừng hỏi Q&A → mọi điểm không rõ agent phải **ghi rõ giả định** đã dùng
    - Xuất mục "Assumptions" ngay đầu output: `ASM-XX | Điểm chưa rõ | Giả định đã áp dụng | TC bị ảnh hưởng`
    - KHÔNG được đoán ngầm mà không ghi lại
-3. **Xác định các luồng chính:**
+4. **Xác định các luồng chính:**
    - Happy Path (luồng chính)
    - Negative Path (dữ liệu sai, thiếu)
    - Boundary Cases (giá trị biên)
-4. **Áp dụng kỹ thuật thiết kế test case** theo Quy Tắc Bắt Buộc Áp Dụng Kỹ Thuật (xem section riêng):
+5. **Áp dụng kỹ thuật thiết kế test case** theo Quy Tắc Bắt Buộc Áp Dụng Kỹ Thuật (xem section riêng):
    - **Equivalence Partitioning (EP):** Chia input thành nhóm tương đương
    - **Boundary Value Analysis (BVA):** Test giá trị tại ranh giới
    - **Decision Table:** Liệt kê tổ hợp điều kiện (nếu có nhiều rules)
    - **State Transition:** Test chuyển đổi trạng thái (nếu có workflow)
-5. **Validation chuyên biệt từng trường (Field-Level Validation):**
+6. **Validation chuyên biệt từng trường (Field-Level Validation):**
    - Liệt kê **tất cả input fields** trên form/UI
    - Sinh validation test cases **riêng cho TỪNG trường** dựa theo Bảng Checklist 15 loại field
    - **KHÔNG** gộp validation của nhiều trường vào 1 test case
-6. **Bao phủ Component-Level Checklist:** Data Table/List, CRUD Lifecycle, Permission/Role, Modal/Dialog, Notification (xem bảng riêng bên dưới)
-7. **Bao phủ các Scenarios Chuyên sâu & Non-Functional:**
+7. **Bao phủ Component-Level Checklist:** Data Table/List, CRUD Lifecycle, Permission/Role, Modal/Dialog, Notification (xem bảng riêng bên dưới)
+8. **Bao phủ các Scenarios Chuyên sâu & Non-Functional:**
    - Race Condition & Double Submit
    - Session & Network Resilience
    - Localization & UTF-8 / Emoji
    - Keyboard Accessibility (A11y)
    - HTTP Status Codes (cho API TCs)
-8. **Xuất ra bảng Markdown** chuẩn có đầy đủ metadata cho Automation, sẵn sàng sync vào Google Sheets hoặc Jira/TestRail.
-9. **Chạy Self-Quality Gate (6 Tiêu chí):** Rà soát lại 100% test cases + đối soát coverage trước khi xuất kết quả.
+9. **Xuất ra bảng Markdown** chuẩn có đầy đủ metadata cho Automation, sẵn sàng sync vào Google Sheets hoặc Jira/TestRail.
+10. **Chạy Self-Quality Gate (7 Tiêu chí):** Rà soát lại 100% test cases + đối soát coverage + đối soát evidence trước khi xuất kết quả.
 
 ## Bảng Output Standard (chuẩn hóa đầy đủ Metadata)
 
@@ -368,7 +438,7 @@ Agent phải tích hợp thêm các tình huống kiểm thử nâng cao khi ph�
 
 ## 🛡️ AI Self-Quality Gate (Quy trình Tự Kiểm Định Chất Lượng)
 
-Trước khi xuất kết quả cuối cùng cho user, Agent **BẮT BUỘC** tự rà soát qua 6 tiêu chí:
+Trước khi xuất kết quả cuối cùng cho user, Agent **BẮT BUỘC** tự rà soát qua 7 tiêu chí:
 - [ ] **1. Unique TC ID:** Đảm bảo không trùng mã TC ID và đúng quy tắc dự án (`PROJECT_MODULE_TC_001`).
 - [ ] **2. 1-to-1 Step-Expected Matching:** Các bước `Test Steps` đánh số rõ ràng (1,2,3 — mỗi bước 1 hành động) và khớp 1-1 với `Expected Result` đánh số tương ứng.
 - [ ] **3. Concrete Test Data:** 100% test data chứa giá trị cụ thể, không còn từ ngữ mơ hồ ("hợp lệ", "dữ liệu đúng").
@@ -383,6 +453,17 @@ Trước khi xuất kết quả cuối cùng cho user, Agent **BẮT BUỘC** t�
 | REQ-LOGIN-02 | Khóa sau 5 lần sai | 0 | — | 🔴 THIẾU — phải bổ sung trước khi xuất |
 ```
 > Nếu có REQ nào 0 TC → agent PHẢI quay lại sinh bổ sung, KHÔNG được xuất kết quả có dòng 🔴.
+
+- [ ] **7. Evidence-verified:** đã mở **100%** ảnh trong `docs/requirements/<module>/evidence/`; mọi TC thuộc 4 nhóm bắt buộc (bố cục/thứ tự · nhãn nguyên văn · giá trị mặc định · định dạng hiển thị) đều truy được về một tấm ảnh cụ thể **hoặc một lần đọc DOM cụ thể**. TC không truy được → gắn `@NeedsVerify` và liệt kê ở mục "Vùng chưa có evidence". Xuất kèm **Bảng Đối Soát Evidence**:
+
+```markdown
+| Ảnh evidence | Màn hình / trạng thái | TC dựa vào | Đầy đủ? |
+|---|---|---|---|
+| project_new_form_default_fullpage.png | Form tạo — mặc định | TC_041→050 | ✅ full-page |
+| project_new_form_1920x1080.png | Form tạo — mặc định | TC_092→095 | 🔴 CẮT CỤT tại "Description" — thiếu editor, checkbox email, nút Save |
+| (không có) | Form tạo — dropdown Customer đang mở | TC_060→063 | 🔴 THIẾU — TC gắn @NeedsVerify |
+```
+> Có dòng 🔴 → **vẫn xuất được** bộ TC, nhưng phải nêu rõ ở tóm tắt cuối và đề xuất recon bổ sung. KHÔNG được im lặng bỏ qua.
 
 ---
 
@@ -413,7 +494,9 @@ Quy trình bài bản, tuần tự cho module phức tạp. Bao gồm phân tíc
 3. Tóm tắt scope kiểm thử
 4. **Chờ user xác nhận** trước khi sang Bước 2
 
-**Output:** Xác nhận hiểu bối cảnh + tóm tắt scope kiểm thử.
+> ⚠️ **Bước 1 chưa xong nếu chưa mở evidence.** Trước khi tóm tắt scope, agent phải liệt kê `docs/requirements/<module>/evidence/` và `Read` từng ảnh theo [Quy Tắc Đối Chiếu Evidence](#quy-tắc-đối-chiếu-evidence-bắt-buộc--áp-dụng-cả-3-modes-chạy-trước-batch-đầu-tiên). Kết quả đưa vào Output dưới dạng **Danh mục Evidence** (ảnh nào đủ / cắt cụt / thiếu).
+
+**Output:** Xác nhận hiểu bối cảnh + tóm tắt scope kiểm thử + **Danh mục Evidence đã mở**.
 
 ---
 
@@ -430,6 +513,7 @@ Quy trình bài bản, tuần tự cho module phức tạp. Bao gồm phân tíc
    - Yêu cầu thiếu sót (không quy định độ dài textbox, timeout, hành vi mất kết nối...)
    - Yêu cầu mâu thuẫn
    - Yêu cầu chưa rõ ràng
+   - **Xung đột giữa tài liệu và evidence** — tài liệu mô tả một đằng, ảnh cho thấy một nẻo. Đây là dấu hiệu requirements đã lỗi thời, **bắt buộc đưa vào Q&A**, không tự chọn bên nào
 3. Đặt câu hỏi Q&A có đánh số thứ tự (Q1, Q2...) cho user/PO/BA giải đáp, mỗi câu kèm ngữ cảnh và assumption nếu không được trả lời
 4. **DỪNG LẠI — Chờ user trả lời** các câu hỏi trước khi tiếp tục
 
@@ -526,7 +610,7 @@ Quy trình bài bản, tuần tự cho module phức tạp. Bao gồm phân tíc
    - Test Steps đánh số `1. 2. 3.` (mỗi bước 1 hành động), Expected Result đánh số khớp 1-1, dùng `<br>` xuống dòng trong cell
    - Gắn đầy đủ metadata `Automatable` (`Yes`/`No`/`Partial`), `Auto Type` (`UI`/`API`/`Unit`/`N/A`), và `@Tags` (`@Smoke`, `@Regression`, `@CriticalPath`...)
    - **TUYỆT ĐỐI không được bỏ sót** bất kỳ test case nào đã sinh ở Bước 5
-3. **Chạy Self-Quality Gate (6 Tiêu chí):** Kiểm định lại — bao gồm **Bảng Đối Soát Coverage** (tiêu chí 6: mọi REQ có ≥1 TC) — trước khi xuất Artifact (`test_cases_<module>.md`).
+3. **Chạy Self-Quality Gate (7 Tiêu chí):** Kiểm định lại — bao gồm **Bảng Đối Soát Coverage** (tiêu chí 6: mọi REQ có ≥1 TC) và **Bảng Đối Soát Evidence** (tiêu chí 7) — trước khi xuất Artifact (`test_cases_<module>.md`).
 
 **Output:** Bảng Test Cases Markdown hoàn chỉnh kèm Metadata Automation.
 
@@ -568,6 +652,7 @@ Agent **BẮT BUỘC** hỏi hoặc suy ra loại checklist, vì nó quyết đ�
 
 **Agent phải:**
 
+0. **Mở evidence** theo [Quy Tắc Đối Chiếu Evidence](#quy-tắc-đối-chiếu-evidence-bắt-buộc--áp-dụng-cả-3-modes-chạy-trước-batch-đầu-tiên) — checklist nêu **nhãn nút và dấu hiệu quan sát được trên UI**, sai một chữ là người chạy tick nhầm. Nguồn TC-based thì evidence đã được đối chiếu ở bước sinh TC, chỉ cần mở lại ảnh của màn hình có trong checklist
 1. **Xác định loại checklist** (Smoke / Post-hotfix / Regression / Release-readiness) và **nguồn input** (REQ-based hay TC-based)
 2. **Xác định scope:** module nào, luồng nào, role nào. Với Post-hotfix → xác định rõ **vùng ảnh hưởng** của thay đổi + vùng lân cận có rủi ro
 3. **Rút mục từ 3 bảng checklist chuẩn của skill** — chỉ lấy mục **thực sự áp dụng** cho module:
@@ -664,6 +749,11 @@ Trước khi xuất, agent **BẮT BUỘC** tự rà:
 - ❌ Có ≥2 part nhưng không sinh file index → không đối soát được coverage toàn module
 - ❌ Dừng hỏi "có tiếp tục không" sau mỗi batch (đã chốt: chạy thẳng, chỉ báo tiến độ)
 - ❌ Sinh >30 TC mà không tạo `task.md` / task list → user không theo dõi được tiến độ
+- ❌ **Ghi dòng TC đầu tiên khi chưa mở hết ảnh trong `evidence/`** — lỗi gốc gây bịa bố cục/nhãn/mặc định
+- ❌ Viết Expected Result khẳng định chắc chắn về thứ tự Tab, vị trí phần tử, nhãn nút, định dạng hiển thị khi **không nhìn thấy trong ảnh** mà không gắn `@NeedsVerify`
+- ❌ Thấy tài liệu và ảnh mâu thuẫn nhưng **tự chọn một bên rồi im lặng** — phải viết theo ảnh, ghi `ASM-XX` và báo user
+- ❌ Đọc checkbox **xám mờ (disabled)** thành "không tick" — bỏ sót nguyên một business rule phụ thuộc
+- ❌ Xuất bộ TC mà không kèm **Bảng Đối Soát Evidence** (tiêu chí 7 Quality Gate)
 
 ---
 
@@ -673,20 +763,22 @@ Trước khi xuất, agent **BẮT BUỘC** tự rà:
 
 | Output | Mô tả |
 |--------|--------|
-| Mục Assumptions | Các giả định đã áp dụng khi requirement mơ hồ (ASM-XX) |
+| Mục Assumptions | Các giả định đã áp dụng khi requirement mơ hồ (ASM-XX) — gồm cả xung đột tài liệu ↔ evidence |
 | Bảng TC Markdown | Test Cases đầy đủ (có cột REQ ID), sẵn sàng copy sang Excel/Jira |
 | Bảng Đối Soát Coverage | Mỗi REQ ID × số TC × đủ Positive/Negative/Boundary (tiêu chí 6) |
+| **Bảng Đối Soát Evidence** | Mỗi ảnh × màn hình/trạng thái × TC dựa vào × đầy đủ hay cắt cụt (tiêu chí 7) |
+| **Vùng chưa có evidence** | Danh sách màn hình/trạng thái không có ảnh chống lưng + TC bị gắn `@NeedsVerify` |
 
 ### Mode FULL RBT
 
 | Bước | Output |
 |------|--------|
-| 1 | Xác nhận bối cảnh |
-| 2 | Luồng + Ambiguities + Câu hỏi Q&A |
+| 1 | Xác nhận bối cảnh + **Danh mục Evidence đã mở** |
+| 2 | Luồng + Ambiguities + Câu hỏi Q&A (gồm xung đột tài liệu ↔ evidence) |
 | 3 | Module Decomposition + Dependencies |
 | 4 | Traceability Matrix + High-Level Scenarios |
 | 5 | Test Cases chi tiết (REQ ID + Risk Level + Test Data) |
-| 6 | Bảng Markdown chuẩn (Jira/Excel ready) + Bảng Đối Soát Coverage |
+| 6 | Bảng Markdown chuẩn (Jira/Excel ready) + Bảng Đối Soát Coverage + **Bảng Đối Soát Evidence** |
 
 ### Mode CHECKLIST
 

@@ -19,7 +19,7 @@ Bộ Kit này **không chỉ dành riêng cho Automation** — mà được thi�
   - Đánh giá rủi ro theo 3 mức độ `High / Medium / Low Risk`.
   - Checklist validation **15 loại Input Field Types** (Text, Email, Phone, Date, Number, Dropdown, Checkbox/Radio, File Upload, Password, Textarea, OTP/MFA, Date Range, Rich Text, Multi-Select, Range Slider).
   - Tích hợp Scenarios Chuyên Sâu & Non-Functional (Race Condition, Session/Network Resilience, Localization/UTF-8/Emoji, Keyboard A11y, HTTP Status Codes).
-  - **AI Self-Quality Gate (6 Tiêu chí):** Đảm bảo Unique TC ID, Step-Expected 1-1, Concrete Test Data, Field Coverage, Automation Metadata Ready, và Requirement Coverage (đối soát mọi REQ có ≥1 TC).
+  - **AI Self-Quality Gate (7 Tiêu chí):** Đảm bảo Unique TC ID, Step-Expected 1-1, Concrete Test Data, Field Coverage, Automation Metadata Ready, Requirement Coverage (đối soát mọi REQ có ≥1 TC), và **Evidence-verified** (bắt buộc mở hết ảnh evidence trước khi sinh TC — đối soát ảnh nào chống lưng cho TC nào).
   - **Truy vết REQ ID xuyên suốt:** Requirements được gán mã `REQ-<MODULE>-<SỐ>` → mỗi TC có cột `REQ ID` → Bảng Đối Soát Coverage chứng minh "đủ case", sẵn sàng cho `/generate_traceability_matrix`.
 - **🌐 API Testing & OWASP Security Standards:**
   - Bao phủ đủ **12 HTTP Status Codes** tiêu chuẩn (`200`, `201`, `400`, `401`, `403`, `404`, `406`, `409`, `413`, `415`, `429`, `500`).
