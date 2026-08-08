@@ -8,6 +8,3 @@
   - Tên: 2-100 ký tự, không chứa số
   - Email: format chuẩn, unique
   - SĐT: 10 số, bắt đầu bằng 0]
-
-# TÙY CHỌN
-- Ngôn ngữ code DataGenerator: [Java / TypeScript]

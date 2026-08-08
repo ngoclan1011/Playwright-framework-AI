@@ -3,7 +3,6 @@
 # CONTEXT
 Tôi cần xây dựng Web UI Automation Framework từ đầu.
 - Công nghệ: Playwright TypeScript
-- Report: HTML Report + Allure Report
 
 # HỆ THỐNG
 - URL: [URL hệ thống]

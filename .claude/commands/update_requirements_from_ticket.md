@@ -166,4 +166,5 @@ Báo cáo riêng cho tester — **hiển thị trong chat**, đồng thời là 
 | Sau đó — sinh TC cho REQ mới (🟢) | `/generate_testcases_manual_rbt` hoặc `/generate_testcases_from_requirements` |
 | Sau đó — rà soát TC bị ảnh hưởng (🟡) | `/review_testcases` |
 | Sau đó — cập nhật ma trận truy vết | `/generate_traceability_matrix` |
-| Sau đó — cập nhật automation script | `/generate_automation_from_testcases` |
+| Sau đó — cập nhật automation script **đã có** theo Impact Report | `/update_automation_from_impact` |
+| Sau đó — automate TC mới hoàn toàn (chưa có script) | `/generate_automation_from_testcases` |

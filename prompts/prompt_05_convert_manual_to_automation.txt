@@ -1,11 +1,5 @@
 /generate_automation_from_testcases
 
-# CONTEXT
-- Framework: [Playwright / Selenium / Appium]
-- Language: [TypeScript / Java / Python]
-- Design Pattern: Page Object Model (POM)
-- Mode: FULL (tự inspect UI + sinh code + chạy test + auto-heal)
-
 # HỆ THỐNG
 - URL: [URL ứng dụng]
 - Tài khoản test: [Dùng fixture/config sẵn có / hoặc EMAIL + PASSWORD]

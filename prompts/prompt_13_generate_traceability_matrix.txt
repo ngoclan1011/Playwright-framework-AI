@@ -1,7 +1,6 @@
 /generate_traceability_matrix
 
 # CONTEXT
-- Dự án: [Tên dự án]
 - Phạm vi: [Toàn dự án / Module cụ thể: ...]
 - Mục đích: [Báo cáo coverage trước release / Audit bộ test cũ / Đối soát sau khi sinh TC]
 

@@ -1,10 +1,7 @@
 /generate_automation_from_testcases
 
 # CONTEXT
-- Language: TypeScript
-- Test Framework: Playwright Test
-- Design Pattern: Page Object Model (POM)
-- Build tool: npm
+- Stack: Playwright Test + TypeScript
 
 # HỆ THỐNG
 - URL: [URL hệ thống]

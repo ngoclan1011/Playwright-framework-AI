@@ -3,9 +3,6 @@
 # CONTEXT
 Tôi cần xây dựng Mobile Automation Framework từ đầu.
 - Công nghệ: Appium + Java + TestNG
-- Build tool: Maven
-- Report: Allure Report
-- Logging: Log4j 2.x
 
 # ỨNG DỤNG
 - Platform: [Android / iOS / Cả hai]

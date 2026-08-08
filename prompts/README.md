@@ -3,6 +3,12 @@
 Thư mục này chứa các prompt mẫu dùng nhanh (copy → paste → gửi) đã được thiết kế tối ưu cho **Claude Code**. Các prompt này hỗ trợ gọi trực tiếp slash command hoặc thực thi đơn lẻ theo tiêu chuẩn chất lượng cao.
 
 > **📌 Nguyên tắc thiết kế prompt:** Prompt chỉ chứa **INPUT của lần chạy** (slash command + context + data + lựa chọn per-run như Mode, format output). KHÔNG lặp lại CONSTRAINTS / OUTPUT FORMAT / quy trình — những phần đó đã được định nghĩa duy nhất trong `.claude/skills/` và `.claude/commands/`, agent tự nạp khi gọi command. Lặp lại sẽ gây drift khi nâng cấp skill.
+>
+> **📌 KHÔNG khai báo thứ agent tự đọc được từ repo.** Bỏ hẳn các dòng kiểu `Dự án`, `Stack`, `Framework`, `Language`, `Build tool`, `Design Pattern`, `Test Runner` — agent mở `package.json` / `pom.xml` / source code là biết. Điền tay chỉ tốn công và sai lệch khi dự án đổi.
+>
+> **Chỉ giữ thứ agent KHÔNG suy ra được:** URL · tài khoản test · môi trường (Dev/Staging/Prod, có dùng chung không) · Mode · phạm vi chạy · trọng tâm · dữ liệu dán trực tiếp.
+>
+> *Ngoại lệ duy nhất:* `03_create_framework_*` và `04_generate_script_*` vẫn ghi công nghệ, vì hai bộ này có nhánh **chưa có project — agent tự scaffold**. Lúc đó chưa có code để đọc, dòng công nghệ chính là lựa chọn cần chốt. Đã có project sẵn thì xoá dòng đó đi.
 
 ---
 
@@ -18,6 +24,7 @@ Thư mục này chứa các prompt mẫu dùng nhanh (copy → paste → gửi) 
 | 04 | `prompt_04_generate_script_playwright.txt` | `/generate_automation_from_testcases` | `skills-qa-automation-engineer` | Viết kịch bản tự động Playwright TypeScript theo POM |
 | 04 | `prompt_04_generate_script_selenium.txt` | `/generate_automation_from_testcases` | `skills-qa-automation-engineer` | Viết kịch bản tự động Selenium Java theo POM |
 | 05 | `prompt_05_convert_manual_to_automation.txt` | `/generate_automation_from_testcases` | `skills-qa-automation-engineer` | Chuyển đổi Manual Test Cases sang Automation Script |
+| 06 | `prompt_06_review_automation_code.txt` | `/review_automation_code` | `skills-automation-code-reviewer` | **[Mới]** Review chất lượng automation code theo Definition of Done — rubric 6 nhóm, bắt hard sleep / locator inline / thiếu Allure metadata / assertion yếu (pass giả). 2 modes REVIEW/FIX |
 | 07 | `prompt_07_generate_test_data.txt` | `/generate_test_data` | `skills-test-data-generator` | Sinh dữ liệu kiểm thử có cấu trúc |
 | 08 | `prompt_08_analyze_flaky_tests.txt` | `/analyze_flaky_tests` | `skills-flaky-test-analyzer` | Phân tích và khắc phục Flaky Tests |
 | 09 | `prompt_09_generate_api_tests.txt` | `/generate_api_tests_from_swagger` | `skills-qa-automation-engineer` | **[Nâng cấp mới]** Sinh API tests từ Swagger/OpenAPI cover 12 HTTP Status Codes, OWASP API Security (BOLA/IDOR, Mass Assignment, ReDoS), SLA < 2s & Dynamic Auth Token |
@@ -28,8 +35,9 @@ Thư mục này chứa các prompt mẫu dùng nhanh (copy → paste → gửi) 
 | 14 | `prompt_14_generate_api_mocks.txt` | `/generate_api_mocks` | `skills-api-mocking` | Sinh API mocks (Playwright route / WireMock) + tests cho edge cases |
 | 15 | `prompt_15_generate_checklist.txt` | `/generate_checklist_test` | `skills-rbt-manual-testing` | Sinh checklist tick tay (CHECKLIST mode) — 4 loại Smoke/Post-hotfix/Regression/Release-readiness, nguồn TC-based hoặc REQ-based |
 | 16 | `prompt_16_execute_test_cases.txt` | `/execute_test_cases` | `skills-manual-test-executor` | Thực thi manual TC qua Playwright MCP — chấm PASS/FAIL/BLOCKED/SKIPPED, thu evidence, xuất execution report |
-
-*Lưu ý: Prompt 06 (Review Automation Code) thực thi trực tiếp bằng skill `skills-qa-automation-engineer`.*
+| 17 | `prompt_17_run_and_fix_tests.txt` | `/run_and_fix_tests` | `skills-test-report-analyzer` | **[Mới]** Chạy suite có sẵn → phân loại failure theo root cause → tự sửa nhóm sửa được → chạy lại. 2 modes RUN/FIX. Bug app giữ nguyên đỏ, không sửa test để né |
+| 18 | `prompt_18_heal_locators.txt` | `/heal_locators` | `skills-locator-healer-agent` | **[Mới]** Rà locator trong Page Object đối chiếu DOM thực tế sau khi UI đổi — bắt cả locator gãy, mong manh và sai element. 2 modes SCAN/HEAL |
+| 19 | `prompt_19_update_automation_from_impact.txt` | `/update_automation_from_impact` | `skills-coverage-traceability` | **[Mới]** Delta mode cho automation — từ Impact Report map TC đã đổi sang script, sửa đúng phần đổi, không sinh lại cả module. 2 modes PLAN/APPLY |
 
 ## Cách Sử Dụng Trong Claude Code
 

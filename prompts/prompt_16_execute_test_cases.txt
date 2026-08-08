@@ -1,7 +1,6 @@
 /execute_test_cases
 
 # CONTEXT
-- Dự án: [Tên dự án]
 - Module: [Tên module cần chạy test]
 - URL môi trường: [VD: https://crm.anhtester.com]
 - Build / Version: [VD: 2.4.1 — để trống nếu không rõ]

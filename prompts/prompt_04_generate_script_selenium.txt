@@ -1,11 +1,7 @@
 /generate_automation_from_testcases
 
 # CONTEXT
-- Language: Java
-- Test Framework: TestNG
-- Automation Tool: Selenium WebDriver v4
-- Design Pattern: Page Object Model (POM)
-- Build tool: Maven
+- Stack: Selenium WebDriver v4 + TestNG + Java
 
 # HỆ THỐNG
 - URL: [URL hệ thống]

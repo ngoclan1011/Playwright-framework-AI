@@ -1,7 +1,6 @@
 /review_testcases
 
 # CONTEXT
-- Dự án: [Tên dự án]
 - Module/Tính năng: [Tên module của bộ TC]
 - Mode: [REVIEW (chỉ báo cáo) / FIX (báo cáo + sinh file TC cải thiện)]
 

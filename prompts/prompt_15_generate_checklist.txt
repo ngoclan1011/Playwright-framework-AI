@@ -1,7 +1,6 @@
 /generate_checklist_test
 
 # CONTEXT
-- Dự án: [Tên dự án]
 - Module/Tính năng cần rà: [Tên module — VD: Customers, Login, Invoice]
 - Loại checklist: [Smoke / Post-hotfix / Regression (module) / Release-readiness]
 - Môi trường: [VD: Staging - build 2.4.1]

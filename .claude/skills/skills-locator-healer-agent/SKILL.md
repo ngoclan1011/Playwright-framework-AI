@@ -17,6 +17,19 @@ Use this skill when:
 - UI has changed and existing locators no longer work
 - After a frontend deployment that modifies DOM structure
 
+Workflow: `/heal_locators` (2 modes — SCAN chỉ báo cáo, HEAL sửa + verify).
+
+---
+
+## Hai Kiểu Kích Hoạt
+
+| Kiểu | Trigger | Input | Đường vào |
+|---|---|---|---|
+| **Reactive** — chữa theo lỗi | Test fail với `ElementNotFound` / `strict mode violation` | Error log + stack trace | `/run_and_fix_tests`, `/analyze_test_report`, `/analyze_flaky_tests` |
+| **Proactive** — rà cả loạt | UI vừa đổi, chưa chạy test cũng rà được | Page Object + URL | `/heal_locators` |
+
+Kiểu proactive **không có error log để lần theo** — phải trích toàn bộ locator từ Page Object, mở browser đưa về đúng trạng thái chứa element, rồi đối chiếu từng cái. Bắt được cả locator **mong manh** (còn chạy nhưng bám thuộc tính dễ đổi) lẫn locator **sai element** (match 1 element nhưng không phải element cần — test vẫn xanh mà thao tác nhầm chỗ).
+
 ---
 
 ## Responsibilities
@@ -97,3 +110,5 @@ After healing:
 
 - `.claude/rules/locator_strategy.md` — Master locator priority map
 - `.claude/rules/automation_rules.md` — General automation best practices
+- `.claude/skills/skills-smart-locator-agent/SKILL.md` — Sinh locator thay thế
+- `.claude/skills/skills-ui-debug-agent/SKILL.md` — Inspect DOM đúng trạng thái

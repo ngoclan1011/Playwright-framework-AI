@@ -1,7 +1,6 @@
 /create_bug_report
 
 # CONTEXT
-- Dự án: [Tên dự án]
 - Môi trường: [Dev / Staging / Production] — [URL nếu có]
 - Browser/Device: [Chrome 126 / Firefox / Mobile...]
 - Account test: [email/username đã dùng khi gặp lỗi]

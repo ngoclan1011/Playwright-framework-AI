@@ -41,15 +41,15 @@ claude-testing-skills/
 │
 │ ══════════ KHUNG — dùng lại cho mọi dự án ══════════
 ├── .claude/
-│   ├── commands/            # 24 lệnh tùy chỉnh (slash commands)
+│   ├── commands/            # 28 lệnh tùy chỉnh (slash commands)
 │   ├── rules/               # 5 quy tắc bắt buộc AI phải tuân theo
-│   ├── skills/              # 16 kỹ năng chuyên biệt cho AI
+│   ├── skills/              # 17 kỹ năng chuyên biệt cho AI
 │   └── settings.json        # Cấu hình quyền hạn cho Claude Code
 ├── plans/
 │   ├── manual/              # Quy trình 6 bước sinh Manual Test Cases (AI-RBT)
 │   ├── automation/          # Quy trình 6 bước sinh Automation Scripts
 │   └── cross-module/        # Quy trình phân tích Cross-Module & Ma trận kết hợp
-├── prompts/                 # 17 prompt mẫu dùng nhanh (copy → paste → gửi)
+├── prompts/                 # 22 prompt mẫu dùng nhanh (copy → paste → gửi)
 ├── scripts/
 │   └── testcases-viewer/    # Công cụ web xem/lọc test case
 ├── CLAUDE.md                # Rule chung cho AI Agent (Claude Code đọc tự động)
@@ -83,9 +83,9 @@ claude-testing-skills/
 
 | Thư mục         | Vai trò                                                                                                                                                                                                                                         |
 | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `commands/`     | 24 slash commands: `/generate_requirements_from_website`, `/update_requirements_from_ticket`, `/generate_testcases_manual_rbt`, `/generate_automation_from_testcases`, `/execute_test_cases`, `/analyze_test_report`, `/create_bug_report`, `/review_testcases`, `/generate_traceability_matrix`, `/generate_api_mocks`...                        |
+| `commands/`     | 28 slash commands: `/generate_requirements_from_website`, `/update_requirements_from_ticket`, `/generate_testcases_manual_rbt`, `/generate_automation_from_testcases`, `/update_automation_from_impact`, `/run_and_fix_tests`, `/heal_locators`, `/review_automation_code`, `/execute_test_cases`, `/analyze_test_report`, `/create_bug_report`, `/review_testcases`, `/generate_traceability_matrix`, `/generate_api_mocks`...                        |
 | `rules/`        | 5 quy tắc bắt buộc: automation chung, locator strategy, Playwright, Selenium, Appium                                                                                                                                                          |
-| `skills/`       | 16 kỹ năng chuyên biệt: requirements analyzer, automation engineer, manual testing, manual test executor, UI debug, locator healer, test data generator, framework architect, jira integration, bug reporter, test report analyzer, testcase reviewer, coverage traceability, api mocking... |
+| `skills/`       | 17 kỹ năng chuyên biệt: requirements analyzer, automation engineer, manual testing, manual test executor, UI debug, locator healer, test data generator, framework architect, jira integration, bug reporter, test report analyzer, testcase reviewer, automation code reviewer, coverage traceability, api mocking... |
 | `settings.json` | Cấu hình quyền hạn: cho phép/cấm các hành động cụ thể (đọc file, chạy test, push code...). Riêng `settings.local.json` là cấu hình **cục bộ từng máy** — đã gitignore, không commit |
 
 > **📌 Lưu ý về cấu trúc:** Trong Claude Code, **workflows** được gọi là **commands** và đặt trong `.claude/commands/`. Tên file dùng dấu gạch dưới (`_`). Ví dụ: `generate_automation_from_testcases.md`.
@@ -117,6 +117,7 @@ Dành cho tác vụ **đơn lẻ**, chỉ cần copy → thay `[...]` bằng d�
 | 04  | `prompt_04_generate_script_playwright.txt`   | Viết test script Playwright TS                                    |
 | 04  | `prompt_04_generate_script_selenium.txt`     | Viết test script Selenium Java                                    |
 | 05  | `prompt_05_convert_manual_to_automation.txt` | Chuyển manual TC sang automation                                  |
+| 06  | `prompt_06_review_automation_code.txt`       | **[Mới]** Review chất lượng automation code theo Definition of Done |
 | 07  | `prompt_07_generate_test_data.txt`           | Sinh test data có cấu trúc                                        |
 | 08  | `prompt_08_analyze_flaky_tests.txt`          | Phân tích test không ổn định                                      |
 | 09  | `prompt_09_generate_api_tests.txt`           | **[Mới]** Viết test API 12 status codes & OWASP Security          |
@@ -127,6 +128,9 @@ Dành cho tác vụ **đơn lẻ**, chỉ cần copy → thay `[...]` bằng d�
 | 14  | `prompt_14_generate_api_mocks.txt`           | **[Mới]** Sinh API mocks + tests cho edge cases                   |
 | 15  | `prompt_15_generate_checklist.txt`           | **[Mới]** Sinh checklist tick tay (smoke / regression / release)  |
 | 16  | `prompt_16_execute_test_cases.txt`           | **[Mới]** Thực thi manual TC trên browser thật, xuất execution report |
+| 17  | `prompt_17_run_and_fix_tests.txt`            | **[Mới]** Chạy suite có sẵn, phân loại failure, tự sửa nhóm sửa được |
+| 18  | `prompt_18_heal_locators.txt`                | **[Mới]** Rà & sửa locator trong Page Object sau khi UI đổi        |
+| 19  | `prompt_19_update_automation_from_impact.txt` | **[Mới]** Cập nhật script đã có theo Impact Report (delta mode)   |
 
 ---
 

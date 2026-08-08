@@ -169,6 +169,7 @@ Agent sử dụng skills trong `.claude/skills/` tùy theo nhiệm vụ:
 | `skills-locator-healer-agent`   | Sửa locator hỏng                                                                        |
 | `skills-test-data-generator`    | Sinh test data unique, traceable — hỗ trợ multi-step pipeline & combinatorial data       |
 | `skills-flaky-test-analyzer`    | Phân tích và khắc phục flaky tests                                                   |
+| `skills-automation-code-reviewer` | Review chất lượng automation code theo Definition of Done — hard sleep, POM, Allure metadata, assertion yếu |
 | `skills-jira-integration`       | Tích hợp Jira/Xray — lấy requirements, đẩy test results                             |
 | `skills-bug-reporter`           | Sinh bug report chuẩn từ test FAIL — evidence, severity/priority, đẩy Jira            |
 | `skills-manual-test-executor`   | Thực thi manual TC trên browser thật qua Playwright MCP — chấm PASS/FAIL/BLOCKED/SKIPPED, xuất execution report |
@@ -331,6 +332,10 @@ Agent sử dụng workflows trong `.claude/commands/` qua slash commands:
 | `/generate_cross_module_test_plan`    | Phân tích cross-module (2 modes: DOCUMENT/BROWSER), sinh ma trận kết hợp — mặc định Output-Class Coverage, pairwise bằng script |
 | `/generate_combinatorial_test_data`   | Sinh test data cho ma trận kết hợp — offline hoặc pipeline qua browser          |
 | `/generate_api_tests_from_swagger`      | Sinh API tests từ Swagger spec                             |
+| `/update_automation_from_impact`        | **Delta mode cho automation** — từ Impact Report, map TC đã đổi sang script và sửa đúng phần đổi (2 modes: PLAN/APPLY). KHÔNG sinh lại cả module |
+| `/run_and_fix_tests`                    | Chạy suite có sẵn, phân loại failure, tự sửa nhóm sửa được (2 modes: RUN/FIX). KHÔNG sửa test để né bug app |
+| `/heal_locators`                        | Rà & sửa locator trong Page Object sau khi UI đổi (2 modes: SCAN/HEAL) |
+| `/review_automation_code`               | Review chất lượng automation code theo Definition of Done (2 modes: REVIEW/FIX) |
 | `/analyze_flaky_tests`                  | Phân tích và khắc phục flaky tests                     |
 | `/fetch_jira_requirements`              | Lấy requirements/user stories từ Jira                     |
 | `/import_test_results_xray`             | Đẩy kết quả test lên Xray                              |

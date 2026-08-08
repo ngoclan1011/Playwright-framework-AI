@@ -17,6 +17,9 @@ The agent can:
 - Explore applications and discover test scenarios
 - Generate automation frameworks
 - Generate test data
+- Run an existing suite, triage failures and fix what QA can fix
+- Scan and heal broken locators after a UI change
+- Review the quality of existing automation code
 - Analyze flaky tests
 - Generate stable locators
 - Generate requirements from website analysis
@@ -199,6 +202,82 @@ Triggers when user asks:
 - generate test plan
 - generate full automation suite
 - bootstrap automation for project
+
+---
+
+### Run existing suite & fix failures
+
+> **Delegate:** skill **`skills-test-report-analyzer`** để phân loại failure.
+
+Use workflow: `run_and_fix_tests`
+
+> Dành cho suite **đã có code**. 2 modes: RUN (chạy + báo cáo) và FIX (chạy + sửa + chạy lại).
+>
+> 🚨 Rule bất biến: **KHÔNG sửa test cho xanh khi nguyên nhân là bug của app.** Nhóm 🐛 giữ nguyên đỏ → `create_bug_report`. Nhóm 🌐 Environment → dừng, báo user.
+
+Triggers when user asks:
+
+- chạy regression / chạy suite / chạy test đi
+- suite đang đỏ, xử lý giùm
+- fix cho test xanh lại
+- run tests and fix failures
+- CI đỏ, sửa giùm
+
+---
+
+### Update existing automation from Impact Report (delta mode)
+
+> **Delegate:** skill **`skills-coverage-traceability`** để map TC ID ↔ script.
+
+Use workflow: `update_automation_from_impact`
+
+> Requirements/TC đổi → sửa **đúng phần đổi** trong script đã có. 2 modes: PLAN (kế hoạch) và APPLY (sửa + chạy lại).
+>
+> ⚠️ Rule bất biến: **KHÔNG sinh lại cả module** (đó là `generate_automation_from_testcases`), **KHÔNG xoá file** cho TC bị archive, **KHÔNG bịa mapping** TC ↔ script.
+
+Triggers when user asks:
+
+- TC đổi rồi, cập nhật script
+- requirement này đổi, script nào phải sửa
+- đồng bộ automation với test case mới
+- update automation after requirement change
+- thay đổi này ảnh hưởng test nào
+
+---
+
+### Scan & heal broken locators
+
+> **Delegate:** skill **`skills-locator-healer-agent`**.
+
+Use workflow: `heal_locators`
+
+> Dành cho **UI vừa đổi** làm locator gãy hàng loạt — rà chủ động, KHÔNG cần error log. 2 modes: SCAN (báo cáo) và HEAL (sửa + verify).
+
+Triggers when user asks:
+
+- UI đổi rồi, locator gãy hết
+- rà lại locator trong Page Object
+- cập nhật locator sau khi deploy frontend
+- heal locators / fix broken selectors
+- kiểm tra locator còn dùng được không
+
+---
+
+### Review automation code quality
+
+> **Delegate:** skill **`skills-automation-code-reviewer`**.
+
+Use workflow: `review_automation_code`
+
+> Soi code automation **đã có** theo Definition of Done: hard sleep, locator inline, thiếu Allure metadata/screenshot, assertion yếu (pass giả). 2 modes: REVIEW và FIX.
+
+Triggers when user asks:
+
+- review code automation
+- script này viết ổn chưa
+- kiểm tra code trước khi bàn giao / merge
+- dọn code test / cleanup automation
+- test xanh nhưng có đáng tin không
 
 ---
 

@@ -1,7 +1,6 @@
 /generate_api_tests_from_swagger
 
 # CONTEXT
-- Framework: [REST Assured (Java) / Playwright API (TypeScript) / Supertest (TypeScript) / Requests + Pytest (Python)]
 - Base URL: [Ví dụ: https://api.anhtester.com/v1]
 - Authentication: [Bearer Token / Basic Auth / API Key / OAuth2]
 - Swagger URL (nếu có): [URL Swagger]

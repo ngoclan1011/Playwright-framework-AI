@@ -1,7 +1,6 @@
 /analyze_test_report
 
 # CONTEXT
-- Framework: [Playwright (TypeScript) / Selenium+TestNG (Java) / Pytest]
 - Loại suite: [Smoke / Regression / Full]
 - Môi trường chạy: [Local / CI/CD pipeline]
 

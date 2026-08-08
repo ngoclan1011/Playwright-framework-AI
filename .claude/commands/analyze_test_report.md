@@ -44,7 +44,8 @@ skills:
 
 ### Bước 4: Báo Cáo
 1. Xuất `test_report_analysis.md` theo template trong skill
-2. Đề xuất thứ tự xử lý: Environment → App Bugs (kèm gợi ý `/create_bug_report`) → Locator (`/generate_locator` hoặc locator healer) → Flaky (`/analyze_flaky_tests`)
+2. Đề xuất thứ tự xử lý: Environment → App Bugs (kèm gợi ý `/create_bug_report`) → Locator (`/heal_locators`) → Flaky (`/analyze_flaky_tests`)
+3. Nếu user muốn **sửa luôn cho suite xanh lại** thay vì chỉ đọc report → chuyển sang `/run_and_fix_tests` (workflow đó chạy test thật và tự sửa)
 
 ## Output
 

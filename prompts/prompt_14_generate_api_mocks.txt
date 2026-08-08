@@ -1,8 +1,7 @@
 /generate_api_mocks
 
 # CONTEXT
-- Framework: [Playwright (TypeScript) / WireMock (Java)]
-- Dự án: [path/to/project]
+- Project path: [path/to/project]
 - Lý do mock: [Backend chưa sẵn sàng / Test edge cases khó tái hiện / Third-party API / Giảm flaky]
 
 # API CẦN MOCK

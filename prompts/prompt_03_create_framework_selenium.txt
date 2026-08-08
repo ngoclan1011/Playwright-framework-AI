@@ -3,9 +3,6 @@
 # CONTEXT
 Tôi cần xây dựng Web UI Automation Framework từ đầu.
 - Công nghệ: Selenium WebDriver v4 + TestNG
-- Build tool: Maven
-- Report: Allure Report
-- Logging: Log4j 2.x
 
 # HỆ THỐNG
 - URL: [URL hệ thống]
