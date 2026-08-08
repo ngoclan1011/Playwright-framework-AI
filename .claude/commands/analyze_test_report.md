@@ -22,7 +22,7 @@ skills:
 
 | Input | Cách lấy |
 |---|---|
-| **Test report** | User cung cấp path, HOẶC agent tự tìm: `playwright-report/`, `allure-results/`, `target/surefire-reports/`, `test-output/` |
+| **Test report** | User cung cấp path, HOẶC agent tự tìm — **ưu tiên `reports/`** (`reports/allure-results/`, `reports/html/`, `reports/surefire/`), sau đó mới đến vị trí mặc định của tool: `playwright-report/`, `allure-results/`, `target/surefire-reports/`, `test-output/` |
 | **Report lần chạy trước** (tùy chọn) | Để so sánh trend — hỏi user nếu cần |
 
 > Nếu không tìm thấy report → hỏi user path hoặc đề nghị chạy suite để sinh report mới.

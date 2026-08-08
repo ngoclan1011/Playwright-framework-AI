@@ -201,6 +201,16 @@ Nếu user chưa cung cấp đủ → hỏi:
    - Method names mô tả hành vi user, không mô tả thao tác DOM
    - Mỗi page → 1 file, mỗi test → 1 file
 
+4. **Tích hợp Report (BẮT BUỘC — tuân thủ `.claude/rules/reporting_rules.md`):**
+   - **Metadata mỗi test:** tên hiển thị Tiếng Việt mô tả hành vi + Description + Severity + Tags. Nếu flow chưa có mã TC, sinh mã tạm theo module (`<HỆ_THỐNG>_<MODULE>_TC_<3 số>`) gắn vào label `testId`
+   - **Test Body:** mỗi bước trong UI flow đã chạy ở Bước 2 → 1 step trong report, tên step Tiếng Việt có tiền tố `Arrange:` / `Act:` / `Assert:`
+   - **Page Object method** đánh dấu step API để sinh sub-step tự động
+   - **Screenshot:** đính ảnh trạng thái cuối trong teardown cho **MỌI** test — `trang_thai_cuoi_cua_test` (PASS) / `trang_thai_khi_that_bai` (FAIL)
+   - **KHÔNG** sinh attachment `stdout` / `stderr`
+   - **Output gom vào `reports/`** (allure-results · allure-report · html · logs · screenshots) — không rải file report ra root
+
+   Code mẫu: `.claude/skills/skills-framework-architect/references/CODE_TEMPLATES.md` § 7.
+
 ### Bước 4: Chạy Test & Tự sửa lỗi (Execution & Auto-Heal)
 
 1. **Chạy test** bằng `run_command`:

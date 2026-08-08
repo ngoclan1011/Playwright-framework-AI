@@ -20,7 +20,7 @@
    - **Tech Stack:** Chọn framework, ngôn ngữ, build tool
    - **Mục tiêu:** Hệ thống/tính năng cần tự động hóa
    - **Bối cảnh:** Kiến trúc web, công nghệ frontend, đặc thù element
-   - **Kiến trúc:** Copy từ `project_architecture/README.md` hoặc mô tả project hiện có
+   - **Kiến trúc:** Copy từ `.claude/skills/skills-framework-architect/references/PROJECT_STRUCTURE.md` hoặc mô tả project hiện có
 3. Gửi cho AI và chờ xác nhận → sang Bước 2.
 
 ## Lưu ý

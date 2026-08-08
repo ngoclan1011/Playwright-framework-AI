@@ -49,8 +49,8 @@ Bạn phải tuân thủ nghiêm ngặt:
 
 ## Kiến trúc Project
 
-[Copy kiến trúc phù hợp từ file `0_project_architecture/README.md` vào đây,
-hoặc mô tả cấu trúc project hiện có nếu đã tồn tại]
+[Copy kiến trúc phù hợp từ `.claude/skills/skills-framework-architect/references/PROJECT_STRUCTURE.md`
+vào đây, hoặc mô tả cấu trúc project hiện có nếu đã tồn tại]
 
 ---
 

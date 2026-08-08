@@ -94,6 +94,17 @@ Test chỉ được coi là **hoàn thành** khi đáp ứng **toàn bộ** các
 - [ ] Mỗi test case độc lập — không phụ thuộc thứ tự chạy
 - [ ] Test data được sinh động (timestamp/random) và traceable
 
+#### 📊 Chất Lượng Report (Allure / tương đương)
+
+> Chi tiết: [`.claude/rules/reporting_rules.md`](.claude/rules/reporting_rules.md)
+
+- [ ] Tên test hiển thị bằng **Tiếng Việt** mô tả hành vi — KHÔNG phải tên hàm
+- [ ] Có **Description**, **Severity**, **Tags**, **TC ID** cho mỗi test
+- [ ] Test Body có step `Arrange:` / `Act:` / `Assert:` đọc hiểu được, không phẳng
+- [ ] Có screenshot đính kèm ở cuối **MỌI** test — cả PASS lẫn FAIL
+- [ ] **KHÔNG** có attachment `stdout` / `stderr` trong report
+- [ ] Toàn bộ output report gom trong **`reports/`** — root project sạch, `.gitignore` đã chặn `reports/`
+
 #### 📁 File Output
 
 - [ ] Source code được lưu đúng vị trí trong project structure
@@ -137,6 +148,7 @@ Test chỉ được coi là **hoàn thành** khi đáp ứng **toàn bộ** các
 Agent phải tham chiếu quy tắc chi tiết trong `.claude/rules/`:
 
 - [Quy tắc chung Automation](.claude/rules/automation_rules.md) — POM, Test Data, Naming, Assertions
+- [Quy tắc Report (Allure)](.claude/rules/reporting_rules.md) — Metadata test, step Tiếng Việt, screenshot, cấm stdout
 - [Chiến lược chọn Locator](.claude/rules/locator_strategy.md) — Thứ tự ưu tiên locator
 - [Quy tắc Playwright](.claude/rules/playwright_rules.md) — Browser setup, locator semantic, wait strategy
 - [Quy tắc Selenium](.claude/rules/selenium_rules.md) — WebDriverWait, TestNG structure
@@ -150,6 +162,7 @@ Agent sử dụng skills trong `.claude/skills/` tùy theo nhiệm vụ:
 | -------------------------- | ----------------------------------------------------------------------------------------- |
 | `skills-qa-automation-engineer` | Master skill cho automation — điều phối toàn bộ quy trình                          |
 | `skills-rbt-manual-testing`     | Master skill cho manual testing — 3 modes: QUICK (sinh TC nhanh), FULL RBT (6 bước) và CHECKLIST (checklist tick tay) |
+| `skills-framework-architect`     | Thiết kế & scaffold automation framework — project structure, base classes, reporting, CI/CD |
 | `skills-requirements-analyzer`  | Phân tích requirements từ website/tài liệu                                           |
 | `skills-ui-debug-agent`         | Inspect UI/DOM, thu thập locators                                                        |
 | `skills-smart-locator-agent`    | Sinh locator mới ổn định                                                              |
@@ -245,10 +258,17 @@ rm -rf docs bug_reports .playwright-mcp task.md .claude/settings.local.json
 
 Không cần dọn gì thêm. Agent tự tạo lại `docs/` và 2 file danh mục (`docs/requirements/README.md`, `docs/testcases/README.md`) ở lần chạy workflow đầu tiên — xem skill `skills-requirements-analyzer` mục 5.7.1.
 
-**Chốt trước khi phân tích module đầu tiên:**
-- **Prefix REQ** cho từng module (`LOGIN`, `CUST`…) — ngắn, HOA, không dấu
-- **Prefix TC ID** `<HỆ_THỐNG>_<MODULE>_TC_<3 số>` — phần `<HỆ_THỐNG>` đổi theo dự án mới (`CRM_` → `ERP_`, `HRM_`…). Đổi giữa chừng là phải sửa toàn bộ TC ID
-- Môi trường test: URL · tài khoản từng role · **có phải môi trường dùng chung không** (nếu có, nêu rõ để agent bật quy tắc dọn dữ liệu test và tránh thao tác phá huỷ)
+**Chốt trước khi phân tích module đầu tiên** — agent **tự khám phá**, chỉ hỏi user thứ không suy ra được:
+
+| Cần chốt | Ai xác định |
+|---|---|
+| **Prefix REQ** từng module (`LOGIN`, `CUST`…) — ngắn, HOA, không dấu | Agent tự đặt từ tên module đã recon, ghi vào `docs/requirements/README.md` |
+| **Prefix TC ID** `<HỆ_THỐNG>_<MODULE>_TC_<3 số>` — `<HỆ_THỐNG>` đổi theo dự án (`CRM_` → `ERP_`, `HRM_`…) | Agent suy từ tên hệ thống, **xác nhận với user một câu** rồi dùng xuyên suốt. Đổi giữa chừng là phải sửa toàn bộ TC ID |
+| **URL · tài khoản test** | User cung cấp lúc chat — lưu ở `.env`, KHÔNG ghi vào tài liệu |
+| **Môi trường dùng chung không?** | **Hỏi user một lần** — không suy ra được từ UI. Nếu CÓ → bật quy tắc dọn dữ liệu test, cấm thao tác phá huỷ |
+| Business rules ẩn (CAPTCHA, OTP, quy tắc sinh mã…) | Agent phát hiện khi recon → ghi ngay vào tài liệu module. Chỉ hỏi user khi mâu thuẫn |
+
+> **Không có file hồ sơ dự án để điền tay.** Ngữ cảnh dự án nằm trong `docs/` do agent tự sinh — xem `skills-requirements-analyzer` mục 5.7.1.
 
 ## 7. Test Data
 

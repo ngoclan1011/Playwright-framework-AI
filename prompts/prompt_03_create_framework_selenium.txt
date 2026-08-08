@@ -2,7 +2,7 @@
 
 # CONTEXT
 Tôi cần xây dựng Web UI Automation Framework từ đầu.
-- Công nghệ: Java 17+ + Selenium WebDriver v4 + TestNG
+- Công nghệ: Selenium WebDriver v4 + TestNG
 - Build tool: Maven
 - Report: Allure Report
 - Logging: Log4j 2.x

@@ -12,8 +12,9 @@ Thư mục này chứa các prompt mẫu dùng nhanh (copy → paste → gửi) 
 |---|------|-------------------|----------------|----------------------|
 | 01 | `prompt_01_generate_requirements.txt` | `/generate_requirements_from_website` | `skills-requirements-analyzer` | Phân tích website/sơ đồ để sinh tài liệu Yêu cầu |
 | 02 | `prompt_02_generate_test_cases.txt` | `/generate_testcases_manual_rbt` | `skills-rbt-manual-testing` | **[Nâng cấp mới]** Sinh Manual TCs chuẩn RBT, Checklist 15 loại input fields, Race condition, Session, A11y, AI Self-Quality Gate & Automation Metadata |
-| 03 | `prompt_03_create_framework_playwright.txt` | `/generate_automation_framework` | `skills-qa-automation-engineer` | Dựng khung dự án Automation Playwright TypeScript |
-| 03 | `prompt_03_create_framework_selenium.txt` | `/generate_automation_framework` | `skills-qa-automation-engineer` | Dựng khung dự án Automation Selenium Java |
+| 03 | `prompt_03_create_framework_playwright.txt` | `/generate_automation_framework` | `skills-framework-architect` | Dựng khung dự án Automation Playwright TypeScript |
+| 03 | `prompt_03_create_framework_selenium.txt` | `/generate_automation_framework` | `skills-framework-architect` | Dựng khung dự án Automation Selenium Java |
+| 03 | `prompt_03_create_framework_appium.txt` | `/generate_automation_framework` | `skills-framework-architect` | Dựng khung dự án Automation Appium Java (Mobile) |
 | 04 | `prompt_04_generate_script_playwright.txt` | `/generate_automation_from_testcases` | `skills-qa-automation-engineer` | Viết kịch bản tự động Playwright TypeScript theo POM |
 | 04 | `prompt_04_generate_script_selenium.txt` | `/generate_automation_from_testcases` | `skills-qa-automation-engineer` | Viết kịch bản tự động Selenium Java theo POM |
 | 05 | `prompt_05_convert_manual_to_automation.txt` | `/generate_automation_from_testcases` | `skills-qa-automation-engineer` | Chuyển đổi Manual Test Cases sang Automation Script |

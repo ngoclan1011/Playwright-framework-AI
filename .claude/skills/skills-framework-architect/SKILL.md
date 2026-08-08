@@ -99,14 +99,19 @@ Mỗi framework PHẢI bao gồm các thành phần sau (tùy chỉnh theo stack
 
 ### 7. Utilities (Mandatory)
 - Wait helpers (smart waits, custom conditions)
-- Screenshot utilities (capture on failure)
+- Screenshot utilities (capture cuối MỌI test — cả PASS lẫn FAIL)
 - Logger (structured logging, không dùng print/console.log)
 - Date/Time helpers, String generators
 
 ### 8. Reporting (Mandatory)
-- Tích hợp ít nhất 1 reporting tool
-- Screenshot attach on failure
+- Tích hợp ít nhất 1 reporting tool (Allure ưu tiên)
+- **Metadata mỗi test:** tên Tiếng Việt · Description · Severity · Tags · label `testId`
+- **Test Body có step** `Arrange:` / `Act:` / `Assert:` — Base Page dùng step API để sinh sub-step
+- **Screenshot attach cuối MỌI test** — cả PASS lẫn FAIL, không chỉ khi fail
+- **KHÔNG** attachment `stdout` / `stderr`
 - Test execution summary (pass/fail/skip counts)
+
+> Chi tiết bắt buộc: [`.claude/rules/reporting_rules.md`](../../rules/reporting_rules.md) · Code mẫu: [`references/CODE_TEMPLATES.md`](references/CODE_TEMPLATES.md) § 7
 
 ### 9. CI/CD Pipeline (Optional — nhưng khuyến khích)
 - GitHub Actions / GitLab CI / Jenkins pipeline template
@@ -117,148 +122,36 @@ Mỗi framework PHẢI bao gồm các thành phần sau (tùy chỉnh theo stack
 
 ## Project Structure Templates
 
-### Playwright + TypeScript
+> **📍 NGUỒN DUY NHẤT:** Toàn bộ cấu trúc thư mục cho **8 stacks** nằm ở [`references/PROJECT_STRUCTURE.md`](references/PROJECT_STRUCTURE.md).
+> **KHÔNG** sao chép template vào file này — mọi thay đổi cấu trúc chỉ sửa ở một nơi để tránh drift.
 
-```
-project-root/
-├── playwright.config.ts        # Playwright configuration
-├── package.json                # Dependencies + scripts
-├── .env.example                # Environment template
-├── .gitignore
-├── README.md
-├── src/
-│   ├── pages/                  # Page Object classes
-│   │   ├── base.page.ts        # Base page (common methods)
-│   │   ├── login.page.ts
-│   │   └── dashboard.page.ts
-│   ├── fixtures/               # Custom fixtures
-│   │   ├── auth.fixture.ts     # Authentication fixture
-│   │   └── base.fixture.ts     # Extended test with all fixtures
-│   ├── utils/                  # Helpers & utilities
-│   │   ├── test-data.ts        # Data generators
-│   │   ├── env.config.ts       # Environment config reader
-│   │   └── helpers.ts          # Common helper functions
-│   └── tests/                  # Test specs
-│       ├── auth/
-│       │   └── login.spec.ts
-│       └── dashboard/
-│           └── dashboard.spec.ts
-├── test-data/                  # External test data (JSON/YAML)
-│   └── users.json
-└── .github/
-    └── workflows/
-        └── playwright.yml      # CI pipeline
-```
+| # | Stack | Mục trong `PROJECT_STRUCTURE.md` |
+|---|---|---|
+| 1 | Playwright + TypeScript | § 1 |
+| 2 | Playwright + Java | § 2 |
+| 3 | Playwright + Python | § 3 |
+| 4 | Selenium + Java | § 4 |
+| 5 | Selenium + Python | § 5 |
+| 6 | Appium + Java | § 6 |
+| 7 | Appium + Python | § 7 |
+| 8 | REST Assured (Java) | § 8 |
 
-### Selenium + Java (Maven + TestNG)
+**API testing bằng Playwright API** (TypeScript / Python) không có template riêng — dùng lại cấu trúc § 1 / § 3, thay thư mục `pages/` bằng `api/` (API client classes) và thêm `test-data/schemas/` cho JSON Schema validation.
 
-```
-project-root/
-├── pom.xml                     # Maven config + dependencies
-├── testng.xml                  # TestNG suite config
-├── .env.example
-├── .gitignore
-├── README.md
-├── src/
-│   ├── main/java/
-│   │   └── com/project/
-│   │       ├── pages/          # Page Object classes
-│   │       │   ├── BasePage.java
-│   │       │   ├── LoginPage.java
-│   │       │   └── DashboardPage.java
-│   │       ├── drivers/        # Driver management
-│   │       │   └── DriverFactory.java
-│   │       ├── config/         # Configuration
-│   │       │   └── ConfigReader.java
-│   │       └── utils/          # Utilities
-│   │           ├── WaitHelper.java
-│   │           ├── ScreenshotUtil.java
-│   │           └── TestDataGenerator.java
-│   └── test/java/
-│       └── com/project/
-│           ├── base/
-│           │   └── BaseTest.java
-│           └── tests/
-│               ├── LoginTest.java
-│               └── DashboardTest.java
-├── test-data/
-│   └── users.json
-└── .github/
-    └── workflows/
-        └── selenium.yml
-```
+---
 
-### Appium + Java (Maven + TestNG)
+## Browser Setup Rules (BẮT BUỘC)
 
-```
-project-root/
-├── pom.xml
-├── testng.xml
-├── .env.example
-├── .gitignore
-├── README.md
-├── src/
-│   ├── main/java/
-│   │   └── com/project/
-│   │       ├── screens/        # Screen Object classes (mobile POM)
-│   │       │   ├── BaseScreen.java
-│   │       │   ├── LoginScreen.java
-│   │       │   └── HomeScreen.java
-│   │       ├── drivers/        # Appium driver management
-│   │       │   ├── AppiumDriverFactory.java
-│   │       │   └── CapabilitiesManager.java
-│   │       ├── config/
-│   │       │   └── AppConfig.java
-│   │       └── utils/
-│   │           ├── MobileGestures.java    # Swipe, scroll, tap
-│   │           ├── ScreenshotUtil.java
-│   │           └── TestDataGenerator.java
-│   └── test/java/
-│       └── com/project/
-│           ├── base/
-│           │   └── BaseTest.java
-│           └── tests/
-│               ├── LoginTest.java
-│               └── HomeTest.java
-├── apps/                       # APK/IPA files
-│   └── .gitkeep
-├── test-data/
-│   └── users.json
-└── .github/
-    └── workflows/
-        └── appium.yml
-```
+Áp dụng cho mọi framework Web sinh ra từ skill này — kế thừa từ `CLAUDE.md > Browser Rules`:
 
-### Playwright + Python (Pytest)
+| Quy tắc | Giá trị | Nơi cấu hình |
+|---|---|---|
+| **Viewport mặc định** | `1920 x 1080` | `playwright.config.ts` · `BrowserOptions.java` · `DriverFactory.java` · `conftest.py` |
+| **Headed mode** | Bật khi debug local | Đọc từ biến môi trường `HEADLESS=false` |
+| **Headless mode** | Chỉ khi chạy CI | CI pipeline set `HEADLESS=true` |
+| **Hard sleep** | ❌ CẤM tuyệt đối | Chỉ smart waits — xem bảng Anti-Patterns bên dưới |
 
-```
-project-root/
-├── playwright.config.py        # Pytest-playwright config (nếu có)
-├── pyproject.toml              # Python project config
-├── requirements.txt            # Dependencies
-├── conftest.py                 # Root fixtures + browser setup
-├── .env.example
-├── .gitignore
-├── README.md
-├── src/
-│   ├── pages/
-│   │   ├── base_page.py
-│   │   ├── login_page.py
-│   │   └── dashboard_page.py
-│   ├── utils/
-│   │   ├── config.py           # Env config reader
-│   │   ├── test_data.py        # Data generators
-│   │   └── helpers.py
-│   └── tests/
-│       ├── conftest.py         # Test-level fixtures
-│       ├── test_login.py
-│       └── test_dashboard.py
-├── test-data/
-│   └── users.json
-└── .github/
-    └── workflows/
-        └── playwright.yml
-```
+Framework **phải** cho phép bật/tắt headless qua config, **không** hardcode trong code.
 
 ---
 
@@ -268,7 +161,7 @@ project-root/
 2. **Single Responsibility** — Mỗi class/module làm 1 việc (Page chỉ chứa UI interaction, Test chỉ chứa test logic)
 3. **Open/Closed** — Framework dễ mở rộng (thêm page, thêm test) mà không sửa core
 4. **Configuration over Code** — Env, browser, timeout... quản lý qua config, không hardcode
-5. **Fail Fast, Log Rich** — Screenshot on failure, structured logging, clear assertion messages
+5. **Fail Fast, Log Rich** — Screenshot cuối mọi test, structured logging, clear assertion messages
 
 ---
 
@@ -290,7 +183,20 @@ project-root/
 Agent PHẢI tuân thủ các rules chi tiết:
 
 - `.claude/rules/automation_rules.md` — General automation best practices
+- `.claude/rules/reporting_rules.md` — Allure report: metadata, step, screenshot, cấm stdout
 - `.claude/rules/locator_strategy.md` — Locator selection priority
 - `.claude/rules/playwright_rules.md` — Playwright-specific rules
 - `.claude/rules/selenium_rules.md` — Selenium-specific rules
 - `.claude/rules/appium_rules.md` — Appium mobile automation rules
+- `CLAUDE.md` > "Browser Rules" — Viewport 1920×1080, headed/headless
+- `CLAUDE.md` > "Cleanup & Delivery" — Definition of Done trước khi bàn giao
+
+---
+
+## Related Files
+
+| File | Vai trò |
+|---|---|
+| [`references/PROJECT_STRUCTURE.md`](references/PROJECT_STRUCTURE.md) | **Nguồn duy nhất** của project structure (8 stacks) |
+| [`references/CODE_TEMPLATES.md`](references/CODE_TEMPLATES.md) | Code mẫu base classes / factory / config — copy & sửa, không viết lại từ đầu |
+| `.claude/commands/generate_automation_framework.md` | Workflow 6 bước thực thi scaffold |

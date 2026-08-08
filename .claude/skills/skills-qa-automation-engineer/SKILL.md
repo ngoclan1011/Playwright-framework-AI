@@ -281,16 +281,132 @@ Triggers when user asks:
 
 ---
 
+### Update requirements from ticket (delta mode)
+
+> **Delegate:** skill **`skills-requirements-analyzer`**.
+
+Use workflow: `update_requirements_from_ticket`
+
+> Cập nhật tài liệu requirements **đã có** — nhận diện THÊM/SỬA/BỎ, giữ nguyên REQ ID, ghi Nhật ký thay đổi, xuất Impact Report cho test cases.
+
+Triggers when user asks:
+
+- cập nhật requirements từ ticket mới
+- có ticket thay đổi yêu cầu
+- update requirement document
+- requirement này đổi rồi, cập nhật lại tài liệu
+
+---
+
+### Review manual test cases
+
+> **Delegate:** skill **`skills-testcase-reviewer`**.
+
+Use workflow: `review_testcases`
+
+> 2 modes: REVIEW (chỉ báo cáo) và FIX (báo cáo + sửa TC).
+
+Triggers when user asks:
+
+- review test cases
+- đánh giá chất lượng test case
+- test case này ổn chưa
+- tìm coverage gap trong test cases
+
+---
+
+### Execute manual test cases on browser
+
+> **Delegate:** skill **`skills-manual-test-executor`**.
+
+Use workflow: `execute_test_cases`
+
+> Chạy manual TC trên browser thật qua Playwright MCP, chấm PASS/FAIL/BLOCKED/SKIPPED. **KHÔNG** sinh code automation.
+
+Triggers when user asks:
+
+- thực thi test cases
+- chạy manual test trên browser
+- execute test cases
+- test thử các TC này trên hệ thống
+
+---
+
+### Analyze test report
+
+> **Delegate:** skill **`skills-test-report-analyzer`**.
+
+Use workflow: `analyze_test_report`
+
+Triggers when user asks:
+
+- phân tích test report
+- tổng hợp kết quả chạy test
+- vì sao nhiều test fail
+- analyze playwright/allure report
+
+---
+
+### Create bug report
+
+> **Delegate:** skill **`skills-bug-reporter`**.
+
+Use workflow: `create_bug_report`
+
+Triggers when user asks:
+
+- tạo bug report
+- viết bug từ test fail
+- log bug lên Jira
+- create bug report from failure
+
+---
+
+### Generate traceability matrix (RTM)
+
+> **Delegate:** skill **`skills-coverage-traceability`**.
+
+Use workflow: `generate_traceability_matrix`
+
+Triggers when user asks:
+
+- sinh ma trận truy vết / RTM
+- requirement nào chưa có test case
+- TC nào chưa được automate
+- coverage matrix / traceability matrix
+
+---
+
+### Generate API mocks
+
+> **Delegate:** skill **`skills-api-mocking`**.
+
+Use workflow: `generate_api_mocks`
+
+Triggers when user asks:
+
+- mock API
+- giả lập response 500 / timeout
+- test UI khi backend chưa xong
+- stub API cho edge case
+
+---
+
 # Automation Framework
 
-Default automation stack:
+Default stack theo platform — dùng khi user **không chỉ định**. Bảng này là nguồn duy nhất; workflow `generate_automation_framework` (Bước 1) tuân theo đúng bảng này.
 
-- **Language:** Java
-- **UI automation:** Selenium WebDriver or Playwright
-- **Test framework:** TestNG
-- **API automation:** REST Assured
-- **Mobile automation:** Appium
-- **Design pattern:** Page Object Model (POM)
+| Platform | Framework mặc định | Ngôn ngữ | Runner | Report |
+|---|---|---|---|---|
+| 🌐 Web | **Playwright** | TypeScript | Playwright Test | HTML Report + Allure |
+| 📱 Mobile | **Appium** | Java | TestNG | Allure |
+| 🔌 API | **REST Assured** | Java | TestNG | Allure |
+
+- **Design pattern:** Page Object Model (POM) — mobile dùng Screen Object
+- **Stack thay thế** (khi user yêu cầu): Selenium WebDriver + Java + TestNG cho Web, Playwright + Java/Python
+- **Danh sách đầy đủ 8 stacks được hỗ trợ:** xem `skills-framework-architect` > Supported Stacks
+
+> ⚠️ **KHÔNG tự chọn stack khi user đã nêu ràng buộc** (team dùng Java, CI chỉ có Maven…). Hỏi xác nhận trước khi scaffold.
 
 ---
 
@@ -326,26 +442,39 @@ Avoid fragile selectors such as dynamic class names.
 
 The agent MUST also follow the detailed rules defined in `.claude/rules/`:
 
-- [automation_rules.md](.claude/rules/automation_rules.md) — General automation best practices
-- [locator_strategy.md](.claude/rules/locator_strategy.md) — Detailed locator selection rules
-- [playwright_rules.md](.claude/rules/playwright_rules.md) — Playwright-specific rules
-- [selenium_rules.md](.claude/rules/selenium_rules.md) — Selenium-specific rules
-- [appium_rules.md](.claude/rules/appium_rules.md) — Appium mobile automation rules
+- [`.claude/rules/automation_rules.md`](../../rules/automation_rules.md) — General automation best practices
+- [`.claude/rules/reporting_rules.md`](../../rules/reporting_rules.md) — Allure report: metadata, step, screenshot, cấm stdout
+- [`.claude/rules/locator_strategy.md`](../../rules/locator_strategy.md) — Detailed locator selection rules
+- [`.claude/rules/playwright_rules.md`](../../rules/playwright_rules.md) — Playwright-specific rules
+- [`.claude/rules/selenium_rules.md`](../../rules/selenium_rules.md) — Selenium-specific rules
+- [`.claude/rules/appium_rules.md`](../../rules/appium_rules.md) — Appium mobile automation rules
 
 ---
 
 # References
 
-The agent may consult additional documentation in the `references/` folder:
+## Ngữ cảnh dự án — agent TỰ KHÁM PHÁ, không có file template điền tay
 
-- `PROJECT_CONTEXT.md` — Project domain, tech stack, key modules
-- `TEST_STRATEGY.md` — Testing objectives, scope, execution plan
-- `PROMPT_TEMPLATES.md` — Reusable prompt templates for common QA tasks
+Skill này **không** kèm file hồ sơ dự án để user điền sẵn. Agent tự thu thập và tự ghi lại:
 
-External references (thay thế cho các file đã gộp):
+| Cần biết | Lấy ở đâu | Ghi vào đâu |
+|---|---|---|
+| Hệ thống làm gì, module nào, luồng nào | **Recon UI thực tế** qua Playwright MCP | `docs/requirements/<module>/requirements_<module>.md` |
+| Prefix module, mã REQ/TC kế tiếp | Đọc danh mục hiện có | `docs/requirements/README.md` · `docs/testcases/README.md` |
+| Business rules ẩn, known issues (CAPTCHA, OTP…) | Gặp khi recon / chạy test → ghi lại ngay | Mục "Ghi chú" của tài liệu module + Nhật ký thay đổi |
+| URL, tài khoản test | **User cung cấp lúc chat** | `.env` (git-ignored) — KHÔNG ghi vào tài liệu |
+| Môi trường dùng chung hay không | **Hỏi user một lần** nếu chưa biết | Bộ nhớ phiên của Claude Code |
 
-- `plans/automation/project_architecture/README.md` — Repository structure & project architecture (thay thế REPOSITORY_MAP.md)
-- `GEMINI.md` > "Cleanup & Delivery" — Quality checklist / Definition of Done (thay thế SELF_CHECK.md)
+**Nguyên tắc:**
+- Thiếu thông tin **suy ra được từ UI** → đi recon, KHÔNG hỏi user
+- Thiếu thông tin **không thể suy ra** (credentials, môi trường dùng chung, ràng buộc nội bộ) → hỏi user **một lần**, rồi ghi lại để phiên sau khỏi hỏi lại
+- **KHÔNG bịa** prefix, URL, hay business rule
+
+External references:
+
+- [`skills-framework-architect/references/PROJECT_STRUCTURE.md`](../skills-framework-architect/references/PROJECT_STRUCTURE.md) — Project structure cho 8 stacks (**nguồn duy nhất**)
+- [`skills-framework-architect/references/CODE_TEMPLATES.md`](../skills-framework-architect/references/CODE_TEMPLATES.md) — Code mẫu base classes / factory / config
+- `CLAUDE.md` > "Cleanup & Delivery" — Quality checklist / Definition of Done
 
 ---
 

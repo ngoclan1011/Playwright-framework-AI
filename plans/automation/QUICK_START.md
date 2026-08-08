@@ -23,7 +23,7 @@ Manual Test Cases:
 
 | Bước | Prompt gửi Claude Code | Chờ User? |
 |------|------------------------|-----------|
-| **0** | Xem `project_architecture/README.md` | Setup 1 lần |
+| **0** | Xem `.claude/skills/skills-framework-architect/references/PROJECT_STRUCTURE.md` | Setup 1 lần |
 | **1** | Copy `01.../prompt.txt` + điền `[...]` | ✅ Chờ xác nhận |
 | **2** | Copy `02.../prompt.txt` + điền URL & TCs | ✅ Review locators |
 | **3** | Copy `03.../prompt.txt` | Review POM |

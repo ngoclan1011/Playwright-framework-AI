@@ -205,6 +205,26 @@ Nếu user chưa cung cấp đủ → hỏi trước khi bắt đầu.
    - Test independent — không phụ thuộc thứ tự chạy
    - Cleanup/teardown nếu test tạo data
 
+4. **Tích hợp Report (BẮT BUỘC — tuân thủ `.claude/rules/reporting_rules.md`):**
+
+   Mỗi test sinh ra PHẢI có đủ:
+
+   | Mục | Nguồn lấy từ manual TC |
+   |---|---|
+   | **Tên test** (Tiếng Việt) | Tiêu đề của TC — KHÔNG dùng tên hàm làm tên hiển thị |
+   | **Description** | Mục tiêu / Điều kiện tiên quyết của TC |
+   | **Severity** | Mức độ ưu tiên của TC (`blocker`/`critical`/`normal`/`minor`) |
+   | **Tags** | Nhóm chạy (`smoke`, `regression`) + tên module |
+   | **TC ID** | Mã TC gốc, gắn qua label `testId` → phục vụ RTM |
+
+   - **Test Body:** bọc mỗi giai đoạn bằng step có tên Tiếng Việt — `Arrange: ...` / `Act: ...` / `Assert: ...`. Mapping 1-1: mỗi **Step** trong manual TC → 1 step trong report.
+   - **Method của Page Object** đánh dấu step API (`@Step` / `test.step` / `@allure.step`) để sinh sub-step tự động.
+   - **Screenshot:** đính kèm ảnh trạng thái cuối trong teardown cho **MỌI** test — PASS đặt tên `trang_thai_cuoi_cua_test`, FAIL đặt `trang_thai_khi_that_bai`.
+   - **KHÔNG** để report sinh attachment `stdout` / `stderr` (pytest: thêm `--allure-no-capture`).
+   - **Output gom vào `reports/`:** allure-results · allure-report · allure-report-single · html · logs · screenshots. Nếu project đã có framework, tuân theo cấu hình sẵn có; nếu output đang rải ở root thì gom lại.
+
+   Code mẫu đầy đủ: `.claude/skills/skills-framework-architect/references/CODE_TEMPLATES.md` § 7.
+
 ### Bước 6: Chạy Thử Nghiệm & Tự Sửa Lỗi (Execution & Auto-Heal — RULE E3)
 
 1. **Chạy test** bằng `run_command`:

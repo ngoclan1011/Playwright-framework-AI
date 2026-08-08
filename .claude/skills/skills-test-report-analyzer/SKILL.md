@@ -22,13 +22,15 @@ Sử dụng skill này khi:
 
 ## Supported Report Formats
 
-| Framework | Format | Vị trí mặc định |
-|---|---|---|
-| Playwright | JSON (`--reporter=json`), HTML | `playwright-report/`, `test-results/` |
-| Allure | JSON results | `allure-results/`, `allure-report/` |
-| JUnit / Surefire | XML | `target/surefire-reports/` |
-| TestNG | XML (`testng-results.xml`) | `test-output/` |
-| Pytest | JUnit XML (`--junitxml`) | do user cấu hình |
+> **Ưu tiên tìm trong `reports/`** — theo `.claude/rules/reporting_rules.md` mục 6, framework sinh từ repo này gom toàn bộ output vào `reports/`. Các vị trí mặc định của tool chỉ dùng cho project cũ chưa chuẩn hoá.
+
+| Framework | Format | Vị trí chuẩn (`reports/`) | Vị trí mặc định của tool |
+|---|---|---|---|
+| Playwright | JSON (`--reporter=json`), HTML | `reports/html/`, `reports/test-artifacts/` | `playwright-report/`, `test-results/` |
+| Allure | JSON results | `reports/allure-results/`, `reports/allure-report/` | `allure-results/`, `allure-report/` |
+| JUnit / Surefire | XML | `reports/surefire/` | `target/surefire-reports/` |
+| TestNG | XML (`testng-results.xml`) | `reports/surefire/` | `test-output/` |
+| Pytest | JUnit XML (`--junitxml`), HTML | `reports/html/` | do user cấu hình |
 
 ---
 

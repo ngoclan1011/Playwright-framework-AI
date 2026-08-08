@@ -35,7 +35,7 @@
 
 - KHÔNG tự động xóa file source khi chưa xác nhận với user.
 - Kiểm tra cấu trúc thư mục hiện có trước khi tạo file mới — tránh duplicate.
-- Đặt file đúng thư mục theo kiến trúc project (xem `plan/automation/0_project_architecture`).
+- Đặt file đúng thư mục theo kiến trúc project (xem `.claude/skills/skills-framework-architect/references/PROJECT_STRUCTURE.md`).
 
 ## 5. Quy Tắc Đặt Tên
 
@@ -73,7 +73,11 @@
   await expect(page.getByText('Đăng nhập thành công')).toBeVisible();
   ```
 
-## 7. Tính Độc Lập Của Test (Test Independence)
+## 7. Report
+
+Mọi script sinh ra phải tuân thủ [`reporting_rules.md`](reporting_rules.md): tên test Tiếng Việt, Description/Severity/Tags/TC ID, step `Arrange`/`Act`/`Assert` trong Test Body, screenshot cuối **mọi** test (cả PASS), KHÔNG attachment `stdout`.
+
+## 8. Tính Độc Lập Của Test (Test Independence)
 
 - Mỗi test case phải **độc lập** — không phụ thuộc kết quả test khác.
 - Setup/teardown rõ ràng (`@BeforeMethod/@AfterMethod` hoặc `beforeEach/afterEach`).

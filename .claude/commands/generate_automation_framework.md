@@ -79,8 +79,9 @@ Workflow này giúp agent thiết kế, scaffold và triển khai một automati
    - [ ] Bước 6: Verify & Deliver
    ```
 
-2. **Tạo thư mục project** theo template trong skill `skills-framework-architect`:
-   - Tham khảo mục **Project Structure Templates** trong SKILL.md
+2. **Tạo thư mục project** theo template chuẩn:
+   - **Nguồn duy nhất:** `.claude/skills/skills-framework-architect/references/PROJECT_STRUCTURE.md` — chọn đúng mục § tương ứng stack (8 stacks)
+   - **Code mẫu base classes:** `.claude/skills/skills-framework-architect/references/CODE_TEMPLATES.md` — copy & sửa, KHÔNG viết lại từ đầu
    - Tạo toàn bộ thư mục + file cấu hình gốc
 
 3. **Sinh file cấu hình build** (tuỳ stack):
@@ -106,7 +107,7 @@ Workflow này giúp agent thiết kế, scaffold và triển khai một automati
    - `pyproject.toml` — pytest config, tool settings
    - `conftest.py` — root fixtures, browser setup
 
-4. **Tạo file .gitignore** phù hợp (node_modules, target, __pycache__, .env, reports...)
+4. **Tạo file .gitignore** — BẮT BUỘC có `reports/` (toàn bộ output test), kèm node_modules, target, __pycache__, .env
 5. **Tạo README.md** với hướng dẫn:
    - Prerequisites (Node.js, Java, Python version)
    - Installation steps
@@ -137,12 +138,12 @@ Workflow này giúp agent thiết kế, scaffold và triển khai một automati
 3. **Base Page / Screen class:**
    - Common methods: `navigate()`, `click()`, `type()`, `getText()`, `isVisible()`
    - Built-in smart waits (KHÔNG có hard sleep)
-   - Screenshot on failure
+   - Method đánh dấu **step API** (`@Step` / `test.step` / `@allure.step`) → sinh sub-step trong report
    - Logging mỗi action
 
 4. **Base Test class:**
    - Setup: khởi tạo browser/driver, navigate to baseURL
-   - Teardown: đóng browser/driver, capture screenshot nếu fail
+   - Teardown: attach screenshot trạng thái cuối cho **MỌI** test (PASS → `trang_thai_cuoi_cua_test`, FAIL → `trang_thai_khi_that_bai`), rồi đóng browser/driver
    - Test lifecycle hooks (beforeAll, afterAll, beforeEach, afterEach)
 
 5. **Utilities:**
@@ -155,13 +156,22 @@ Workflow này giúp agent thiết kế, scaffold và triển khai một automati
 
 1. **Tạo ít nhất 1 example Page Object:**
    - `LoginPage` (hoặc `LoginScreen` cho mobile) với locators + methods thực tế
-   - Locator dùng placeholder mô tả rõ cần thay thế:
+
+   **Nếu user đã cung cấp URL hệ thống** (khuyến nghị — cho locator dùng được ngay):
+   - Mở browser qua Playwright MCP: `navigate` → `resize(1920×1080)` → `snapshot`
+   - Lấy locator **từ DOM thực tế**, ưu tiên theo `.claude/rules/locator_strategy.md`
+   - Locator sinh ra là locator thật, không cần comment REPLACE
+
+   **Nếu chưa có URL** (framework scaffold thuần):
+   - Dùng placeholder + comment cảnh báo bắt buộc:
      ```typescript
-     // REPLACE: Update locator after inspecting actual DOM
+     // ⚠️ PLACEHOLDER — chưa inspect DOM. Chạy /generate_locator hoặc mở
+     // Playwright MCP inspect trang thật rồi thay thế trước khi chạy test.
      readonly usernameInput = this.page.getByLabel('Username');
      readonly passwordInput = this.page.getByLabel('Password');
      readonly loginButton = this.page.getByRole('button', { name: 'Login' });
      ```
+   - **Ghi rõ trong README.md** mục "Việc cần làm trước khi chạy test": danh sách file chứa locator placeholder
 
 2. **Tạo ít nhất 1 example Test:**
    - `LoginTest` — demo happy path (login thành công)
@@ -184,8 +194,32 @@ Workflow này giúp agent thiết kế, scaffold và triển khai một automati
    | Appium Java | Allure + ExtentReports | `allure-testng` + `ExtentManager` singleton |
    | Playwright Python | pytest-html + Allure | `conftest.py` hooks + pytest addopts |
 
-   - Screenshot auto-attach on failure
-   - Test step logging trong report
+   **Chuẩn report BẮT BUỘC** — tuân thủ `.claude/rules/reporting_rules.md`:
+
+   - **Metadata:** framework phải hỗ trợ khai báo tên test Tiếng Việt, Description, Severity, Tags, label `testId`
+   - **Step API:** Base Page/Screen đánh dấu step (`@Step` / `test.step` / `@allure.step`) → sub-step tự sinh trong Test Body
+   - **Screenshot:** teardown attach ảnh trạng thái cuối cho **MỌI** test — `trang_thai_cuoi_cua_test` (PASS) / `trang_thai_khi_that_bai` (FAIL). KHÔNG chỉ chụp khi fail
+   - **Tắt stdout:** pytest thêm `--allure-no-capture` vào `addopts`; Playwright TS để `screenshot: 'off'` (attach thủ công ở `afterEach`, tránh đính 2 lần)
+   - Example test sinh ở Bước 4 phải **demo đủ** các mục trên để làm mẫu cho test sau
+
+   **Thư mục output — gom hết vào `reports/`:**
+
+   ```text
+   reports/
+   ├── allure-results/         # raw results
+   ├── allure-report/          # HTML report
+   ├── allure-report-single/   # report gộp 1 file
+   ├── html/                   # HTML report của runner
+   ├── logs/                   # log thực thi
+   └── screenshots/            # ảnh chụp lưu đĩa
+   ```
+
+   - Trỏ **mọi** đường dẫn output vào `reports/` — CẤM để `allure-results/` / `test-results/` / `playwright-report/` nằm ở root
+   - Thêm script sinh report vào `package.json` / `pom.xml` / README:
+     `allure generate reports/allure-results -o reports/allure-report --clean`
+   - `.gitignore` phải chặn `reports/`
+
+   Code mẫu + config từng stack: `.claude/skills/skills-framework-architect/references/CODE_TEMPLATES.md` § 7 (§ 7.4 cho thư mục output).
 
 2. **CI/CD Pipeline** (nếu user yêu cầu):
 
@@ -197,7 +231,7 @@ Workflow này giúp agent thiết kế, scaffold và triển khai một automati
 
    - Install dependencies
    - Run tests (headless mode cho CI)
-   - Upload test report as artifact
+   - Upload **1 artifact duy nhất** trỏ vào `reports/` — không upload lẻ từng thư mục con
    - Parallel execution (nếu được yêu cầu)
    - Environment variables từ GitHub Secrets
 
@@ -237,8 +271,13 @@ Workflow này giúp agent thiết kế, scaffold và triển khai một automati
    - [ ] Example test chạy được (hoặc chạy được khi có app)
    - [ ] README.md hướng dẫn đầy đủ
    - [ ] .gitignore bao phủ đúng
-   - [ ] Reporting tích hợp
-   - [ ] Không có debug log, commented code, TODO placeholder
+   - [ ] Reporting tích hợp — mở report kiểm: tên test Tiếng Việt, Description, Severity, Tags, TC ID
+   - [ ] Test Body có step `Arrange:` / `Act:` / `Assert:`, không phẳng
+   - [ ] Có ảnh cuối test cho **cả** PASS lẫn FAIL; **không** có attachment `stdout`
+   - [ ] Toàn bộ output nằm trong `reports/` — root project sạch, không có `allure-results/` / `test-results/` / `playwright-report/` lạc ra ngoài
+   - [ ] `.gitignore` đã chặn `reports/`
+   - [ ] Không có debug log, commented code, `// TODO` bỏ ngỏ
+   - [ ] Locator placeholder (nếu có) đã đánh dấu `⚠️ PLACEHOLDER` **và** liệt kê trong README
 
 4. **Cập nhật `task.md`** với trạng thái hoàn thành
 
