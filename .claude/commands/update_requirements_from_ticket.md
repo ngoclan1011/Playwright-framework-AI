@@ -92,7 +92,7 @@ Sửa **tại chỗ** `requirements_<module>.md`, theo đúng thứ tự:
 5. **Nhật ký thay đổi (6.9):** thêm dòng mới **lên đầu bảng**, một dòng cho mỗi nhóm thay đổi
 6. **Metadata (6.1):** cập nhật `Dải mã đã dùng` và `Mã kế tiếp`
 7. **Danh mục toàn hệ thống** `docs/requirements/README.md` — **BẮT BUỘC**, đây là chỗ hay quên nhất:
-   - Bảng mục 1: cột `REQ đã dùng`, `Mã kế tiếp`, `AMB treo`, `Cập nhật`
+   - Bảng mục 1: cột `REQ đã dùng`, `Mã kế tiếp`, `AMB treo`, `Cập nhật`. Module mới chỉ được `/discover_system` phát hiện (đang ⬜) mà ticket này là lần đầu sinh REQ → đổi `Trạng thái recon` sang ✅ và điền `Mức phủ tài liệu`
    - Bảng mục 2: số lượng REQ theo trạng thái 🟢/🟡/🔴/⚪ của module này và dòng Tổng
    - Mục 3: thêm/gỡ ambiguity 🔴 High vừa phát sinh hoặc vừa được trả lời
 

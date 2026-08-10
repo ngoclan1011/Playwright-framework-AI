@@ -39,6 +39,13 @@ Xác định mode **ngay ở Bước 0**, ghi rõ vào tài liệu đầu ra:
 | **HYBRID** | Hệ thống chạy **+ một phần tài liệu** (QA cung cấp) | Phổ biến nhất. Tài liệu cho **ý định**, UI cho **thực tế**. Bắt buộc lập **Bản đồ phủ tài liệu** (Bước 2) |
 | **DOC** | Chỉ có tài liệu, chưa truy cập được hệ thống | Chỉ dựng được bản đồ dự kiến. Mọi module đánh dấu `⬜ Chưa khảo sát UI` — **không** được coi là đã xác minh |
 
+Ngoài ra có 2 chế độ chạy bổ sung khi **đã có bản đồ từ trước** (xem cuối tài liệu):
+
+| Chế độ | Khi nào | Phạm vi |
+|---|---|---|
+| **ADD** | User chỉ đích danh module bị sót | Chỉ module đó — không crawl lại |
+| **DELTA** | Hệ thống đã thay đổi, hoặc muốn rà lại toàn bộ | Crawl lại, báo phần chênh |
+
 > Tài liệu QA cung cấp thường **không phủ hết** — vài module có spec, phần còn lại trắng. Mode HYBRID xử lý đúng tình huống này: **không** vứt tài liệu đi, cũng **không** tin tài liệu thay cho UI.
 
 ---
@@ -187,9 +194,11 @@ browser_navigate → browser_resize(1920, 1080) → chờ load → browser_snaps
 4. **Thứ tự khảo sát đề xuất** — xếp theo *phụ thuộc trước, risk sau*, không theo alphabet
 
 Hỏi đúng 3 câu:
-- Danh sách module đã đủ chưa? Có module nào tôi không thấy được vì thiếu quyền?
+- Danh sách module đã đủ chưa? Có module nào tôi **không thấy được** vì thiếu quyền, nằm sâu trong menu, hoặc chỉ vào được bằng URL trực tiếp?
 - Ranh giới tách/gộp có đúng cách team hiểu không?
 - Thứ tự khảo sát ưu tiên thế nào?
+
+> Câu đầu là quan trọng nhất — user thường biết những module agent **không có cách nào thấy được**. Trả lời ở đây thì chưa file nào bị ghi; phát hiện sau đó phải chạy **Mode ADD** để bổ sung.
 
 ⚠️ **Chưa có phản hồi thì chưa ghi file.** Prefix ghi ra rồi là bất biến — sửa sau tốn hơn hỏi trước rất nhiều.
 
@@ -348,7 +357,47 @@ Không có mục này → workflow sau hiểu là bản đồ 1 file và **sẽ 
 
 ---
 
+## Bổ sung module do user chỉ ra (Mode ADD)
+
+> Kích hoạt khi user nói: *"còn thiếu module X"* · *"menu Báo cáo bạn chưa khảo sát"* · *"vào /admin/settings xem"* — tức **user biết có module mà agent không thấy được**.
+>
+> Khác với Delta bên dưới: ở đây **không crawl lại toàn hệ thống**, chỉ xử lý đúng phần user chỉ.
+
+**Vì sao agent hay sót — hỏi lại user đúng câu để biết đường đi:**
+
+| Nguyên nhân | Dấu hiệu | Cần user cung cấp |
+|---|---|---|
+| **Thiếu quyền** — account đang dùng không thấy menu | Module chỉ hiện với role cao hơn | Account có quyền, hoặc xác nhận "chỉ role X thấy" |
+| **Menu chỉ hiện khi hover/click nhiều tầng** | Nằm ở menu cấp 3 trở lên | Đường đi menu: `Hệ thống → Cấu hình → Phân quyền` |
+| **Route không có trong menu** | Vào được bằng URL trực tiếp | URL đầy đủ |
+| **Chỉ vào được từ hành động trên bảng** | Bấm nút trong dòng dữ liệu mới ra | Mô tả thao tác để tới đó |
+| **Cần dữ liệu mới hiện** | Danh sách rỗng nên không có nút/tab nào | Bản ghi mẫu để mở, hoặc xác nhận môi trường chưa có data |
+| **Bị ẩn bởi feature flag / chưa bật** | Có API nhưng không có UI | Xác nhận tính năng đã bật chưa |
+
+**Các bước:**
+
+1. **Hỏi user đủ 2 thứ**: đường đi tới module (URL hoặc menu path) + lý do agent không thấy (theo bảng trên). Thiếu đường đi thì không tự đoán route
+2. **Thử truy cập thật:**
+
+| Kết quả | Xử lý |
+|---|---|
+| ✅ Vào được | Khảo sát như Bước 3, ghi nhận đầy đủ, `Nguồn` = `UI thực tế` |
+| ❌ Không vào được (403 / không có quyền / chưa có data) | **Vẫn thêm vào danh mục** với `Trạng thái recon` = ⬜ và ghi rõ ở mục 7 của index: *"Chưa xác minh được — thiếu quyền, chờ account role X"*. `Nguồn` = **`User cung cấp — chưa xác minh UI`** |
+
+3. **Cấp prefix** — đối chiếu danh sách prefix đã chiếm trong `README.md`, chọn prefix chưa dùng
+4. **Ghi vào đúng file** theo bảng "Module mới xuất hiện — thêm vào đâu" ở phần Delta bên dưới
+5. **Cập nhật 3 nơi**: bảng module ở index · `README.md` danh mục · **Nhật ký khám phá** (ghi rõ `Nguồn: user bổ sung`)
+6. **Xem lại thứ tự khảo sát** ở mục 6 của index — module mới chen vào đâu, có `BLOCKED` module nào không
+
+⚠️ **KHÔNG được ghi module user chỉ ra như thể đã tự khảo sát.** Vào được thì mới ghi `UI thực tế`; không vào được thì `User cung cấp — chưa xác minh UI`. Trộn hai cái là bước sinh TC sau đó sẽ tin nhầm vào thứ chưa ai nhìn thấy.
+
+💡 **Rẻ nhất là chặn ngay ở checkpoint Bước 5** — lúc đó agent hỏi thẳng *"có module nào tôi không thấy được vì thiếu quyền?"*. Trả lời ở đó thì chưa file nào được ghi, không phải sửa gì cả.
+
+---
+
 ## Chạy lại lần sau (Delta)
+
+> Dùng khi **hệ thống đã thay đổi** (deploy tính năng mới) hoặc muốn **rà lại toàn bộ** — agent tự crawl và so sánh. User chỉ đích danh một module thì dùng Mode ADD ở trên cho nhanh.
 
 Hệ thống có module mới, hoặc lần trước bỏ sót:
 

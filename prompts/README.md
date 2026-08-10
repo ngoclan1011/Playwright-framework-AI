@@ -16,6 +16,7 @@ Thư mục này chứa các prompt mẫu dùng nhanh (copy → paste → gửi) 
 
 | # | File | Command Tương Ứng | Skill Tích Hợp | Mô Tả & Cải Tiến Mới |
 |---|------|-------------------|----------------|----------------------|
+| 00 | `prompt_00_discover_system.txt` | `/discover_system` | `skills-requirements-analyzer` | **[Mới]** Chạy **đầu tiên** khi hệ thống không có tài liệu — crawl navigation, lập bản đồ module, gán prefix, khởi tạo danh mục. 3 modes UI/HYBRID/DOC |
 | 01 | `prompt_01_generate_requirements.txt` | `/generate_requirements_from_website` | `skills-requirements-analyzer` | Phân tích website/sơ đồ để sinh tài liệu Yêu cầu |
 | 02 | `prompt_02_generate_test_cases.txt` | `/generate_testcases_manual_rbt` | `skills-rbt-manual-testing` | **[Nâng cấp mới]** Sinh Manual TCs chuẩn RBT, Checklist 15 loại input fields, Race condition, Session, A11y, AI Self-Quality Gate & Automation Metadata |
 | 03 | `prompt_03_create_framework_playwright.txt` | `/generate_automation_framework` | `skills-framework-architect` | Dựng khung dự án Automation Playwright TypeScript |

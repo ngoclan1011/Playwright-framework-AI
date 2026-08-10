@@ -538,7 +538,8 @@ Skill này **không** kèm file hồ sơ dự án để user điền sẵn. Agen
 
 | Cần biết | Lấy ở đâu | Ghi vào đâu |
 |---|---|---|
-| Hệ thống làm gì, module nào, luồng nào | **Recon UI thực tế** qua Playwright MCP | `docs/requirements/<module>/requirements_<module>.md` |
+| **Hệ thống có những module nào** (chưa biết gì về hệ thống) | `/discover_system` — crawl navigation cấp hệ thống | `docs/requirements/_discovery/system_map.md` + `README.md` |
+| Module X làm gì, luồng nào, field nào | **Recon UI thực tế** qua Playwright MCP | `docs/requirements/<module>/requirements_<module>.md` |
 | Prefix module, mã REQ/TC kế tiếp | Đọc danh mục hiện có | `docs/requirements/README.md` · `docs/testcases/README.md` |
 | Business rules ẩn, known issues (CAPTCHA, OTP…) | Gặp khi recon / chạy test → ghi lại ngay | Mục "Ghi chú" của tài liệu module + Nhật ký thay đổi |
 | URL, tài khoản test | **User cung cấp lúc chat** | `.env` (git-ignored) — KHÔNG ghi vào tài liệu |
