@@ -9,24 +9,25 @@
 ## Toàn cảnh 7 chặng
 
 ```
-┌─ CHUẨN BỊ TÀI LIỆU ────────────────────────────────────────────┐
-│  0. /discover_system                  → bản đồ module + prefix  │  1 lần / hệ thống
-│  1. /generate_requirements_from_website → REQ ID                │  N lần = số module
-└─────────────────────────────────────────────────────────────────┘
-                              ↓
-┌─ SINH & KIỂM TEST CASES ───────────────────────────────────────┐
-│  2. /generate_testcases_manual_rbt    → TC có cột REQ ID        │  N lần = số module
-│  3. /review_testcases                 → chấm rubric, lấp gap    │
-└─────────────────────────────────────────────────────────────────┘
-                              ↓
-┌─ THỰC THI & XỬ LÝ LỖI ─────────────────────────────────────────┐
-│  4. /execute_test_cases               → chạy tay, chấm P/F/B/S  │
-│  5. /analyze_test_report → /create_bug_report                   │
-└─────────────────────────────────────────────────────────────────┘
-                              ↓
-┌─ CHỨNG MINH ĐỘ PHỦ ────────────────────────────────────────────┐
-│  6. /generate_traceability_matrix     → RTM                     │
-└─────────────────────────────────────────────────────────────────┘
+┌─ CHUẨN BỊ TÀI LIỆU ──────────────────────────────────────────────┐
+│  0. /discover_system                     → bản đồ module + prefix│  1 lần / hệ thống
+│  1. /generate_requirements_from_website  → REQ ID                │  N lần = số module
+└──────────────────────────────────────────────────────────────────┘
+                                  ↓
+┌─ SINH & KIỂM TEST CASES ─────────────────────────────────────────┐
+│  2. /generate_testcases_manual_rbt       → TC có cột REQ ID      │  N lần = số module
+│  3. /review_testcases                    → chấm rubric, lấp gap  │
+└──────────────────────────────────────────────────────────────────┘
+                                  ↓
+┌─ THỰC THI & XỬ LÝ LỖI ───────────────────────────────────────────┐
+│  4. /execute_test_cases                  → chạy tay, chấm P/F/B/S│  Mỗi đợt kiểm thử
+│  5. /analyze_test_report                 → gom nhóm root cause   │
+│     /create_bug_report                   → bug report chuẩn      │
+└──────────────────────────────────────────────────────────────────┘
+                                  ↓
+┌─ CHỨNG MINH ĐỘ PHỦ ──────────────────────────────────────────────┐
+│  6. /generate_traceability_matrix        → RTM                   │  Trước release
+└──────────────────────────────────────────────────────────────────┘
 ```
 
 **Mắt xích giữ cả chuỗi là `REQ ID`.** Chặng 1 sinh ra → chặng 2 ghi vào cột `REQ ID` của mỗi TC → chặng 6 dùng để tính coverage. Đứt ở đâu thì từ đó trở đi không chứng minh được "đã test đủ".
