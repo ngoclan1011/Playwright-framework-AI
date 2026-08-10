@@ -1,8 +1,8 @@
 # ============================================================
 # BƯỚC 1: KHỞI TẠO NGỮ CẢNH (Context & Role-play)
 # ============================================================
-# Đây là prompt độc lập — copy & paste vào bất kỳ AI nào
-# (ChatGPT, Claude, Gemini...)
+# Đây là prompt độc lập — copy & paste vào bất kỳ AI agent nào
+# (Claude Code, Codex, Antigravity, Kiro, Cursor...)
 # ============================================================
 # CÁCH DÙNG:
 # 1. Copy nội dung bên dưới dòng "---START---"

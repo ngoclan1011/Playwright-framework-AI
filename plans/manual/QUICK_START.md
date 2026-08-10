@@ -15,7 +15,7 @@ Gõ: /generate_testcases_manual_rbt + dán requirements
 **Ưu điểm:** Nhanh, tự động, agent nhớ context xuyên suốt.
 **Nhược điểm:** Hướng dẫn ở mức tổng quát (không chi tiết bằng prompt templates).
 
-### Luồng 2: Copy-Paste Prompt — Thủ công (ChatGPT / Claude / AI bất kỳ)
+### Luồng 2: Copy-Paste Prompt — Thủ công (Codex / Antigravity / Kiro / Cursor / AI agent bất kỳ)
 
 ```
 Copy prompt Bước 1 → paste vào chat → AI xử lý
