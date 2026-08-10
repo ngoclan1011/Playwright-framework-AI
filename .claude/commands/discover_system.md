@@ -31,7 +31,36 @@ Workflow này chạy **trước tất cả**, khi bạn mở một hệ thống 
 
 ## 3 Chế độ (Mode)
 
-Xác định mode **ngay ở Bước 0**, ghi rõ vào tài liệu đầu ra:
+**Agent TỰ nhận diện mode ở Bước 0 — user không cần khai báo.** Mode suy ra hoàn toàn từ đầu vào:
+
+```
+Đã có docs/requirements/_discovery/system_map.md ?
+├─ CHƯA → khảo sát lần đầu
+│         User có đưa tài liệu?     ─ có ─→ HYBRID
+│                                   └ không ─→ UI
+│         Không truy cập được hệ thống (chưa có URL / chưa có account) → DOC
+└─ RỒI  → User chỉ đích danh module bị sót?  ─ có ─→ ADD
+                                              └ không ─→ DELTA
+```
+
+**Trigger từ lời user:**
+
+| User nói gì | Mode |
+|---|---|
+| *"khám phá hệ thống này"* + đưa URL | **UI** |
+| *"đây là spec tôi có"* · đính kèm file · *"tài liệu chỉ có một phần"* | **HYBRID** |
+| *"chưa có account, đọc tài liệu trước"* | **DOC** |
+| *"còn thiếu module X"* · *"bạn chưa khảo sát menu Báo cáo"* | **ADD** |
+| *"rà lại xem có gì mới"* · *"vừa deploy tính năng mới"* | **DELTA** |
+
+**Agent BẮT BUỘC công bố mode đã chọn** ngay câu đầu tiên, kèm lý do một dòng:
+> *"Chạy mode HYBRID — có 2 file tài liệu bạn đưa, và hệ thống truy cập được."*
+
+Sai mode thì bạn chặn ngay ở câu đó, chưa tốn công gì. **User luôn được quyền chỉ định đè** — nói *"chạy mode UI thôi, bỏ tài liệu đó đi, nó cũ rồi"* thì agent theo.
+
+⚠️ Mode **không** được đổi giữa chừng. Đang HYBRID mà thấy tài liệu quá cũ → **không** tự hạ xuống UI; vẫn giữ HYBRID và đánh vùng đó `⚠️ Nghi lỗi thời` (Bước 2), vì lệch pha giữa tài liệu và UI là **thông tin có giá trị**, vứt tài liệu đi là mất luôn.
+
+Ghi mode đã chạy vào mục 1 của `system_map.md`.
 
 | Mode | Đầu vào | Đặc điểm |
 |---|---|---|
@@ -39,7 +68,7 @@ Xác định mode **ngay ở Bước 0**, ghi rõ vào tài liệu đầu ra:
 | **HYBRID** | Hệ thống chạy **+ một phần tài liệu** (QA cung cấp) | Phổ biến nhất. Tài liệu cho **ý định**, UI cho **thực tế**. Bắt buộc lập **Bản đồ phủ tài liệu** (Bước 2) |
 | **DOC** | Chỉ có tài liệu, chưa truy cập được hệ thống | Chỉ dựng được bản đồ dự kiến. Mọi module đánh dấu `⬜ Chưa khảo sát UI` — **không** được coi là đã xác minh |
 
-Ngoài ra có 2 chế độ chạy bổ sung khi **đã có bản đồ từ trước** (xem cuối tài liệu):
+Hai chế độ chạy bổ sung khi **đã có bản đồ từ trước** (chi tiết ở cuối tài liệu):
 
 | Chế độ | Khi nào | Phạm vi |
 |---|---|---|
