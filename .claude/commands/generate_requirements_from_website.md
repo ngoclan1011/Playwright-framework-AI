@@ -8,8 +8,12 @@ skills:
 
 > **BẮT BUỘC (MANDATORY SKILL):** Bạn PHẢI nạp và đọc kỹ nội dung của skill **`skills-requirements-analyzer`** (tại `.claude/skills/skills-requirements-analyzer/SKILL.md`) để biết định dạng chuẩn của tài liệu Requirements trước khi bắt đầu thực hiện tác vụ này.
 >
-> Workflow này chạy **nhánh UI Recon** — dùng mục **2 + 2.1** (đánh mã), **3.1** (trích xuất từ UI), **4** (AMB/RISK), **5** (quy mô/tách file), **6** (cấu trúc đầu ra), **7.1 + 7.2** (strict rules).
-> ❌ KHÔNG dùng mục **3.2** (Document Analysis) trừ khi user cung cấp kèm tài liệu — khi đó chạy 3.2 trước, 3.1 sau và đối chiếu theo mục **3.3**.
+> Workflow này chạy **nhánh UI Recon** — dùng mục **2 + 2.1** (đánh mã), **3.1** (trích xuất từ UI), **3.1.1** (tầng network), **3.1.2** (phân quyền khi thiếu account), **4** (AMB/RISK), **5** (quy mô/tách file), **5.8** (tầng khám phá), **6** (cấu trúc đầu ra), **7.1 + 7.2** (strict rules).
+> ❌ KHÔNG dùng mục **3.2** (Document Analysis) trừ khi user cung cấp kèm tài liệu — khi đó:
+> - Tài liệu phủ **đầy đủ** module → chạy 3.2 trước, 3.1 sau, đối chiếu theo mục **3.3**
+> - Tài liệu chỉ phủ **một phần** (phổ biến nhất) → chạy mục **3.3.1** — lập Bản đồ phủ tài liệu rồi recon theo chiến lược riêng từng vùng
+>
+> ⚠️ **Chưa biết hệ thống có module nào** → chạy `/discover_system` trước, đừng bắt đầu ở đây.
 
 Workflow này giúp bạn phân tích một module hoặc trang web được cung cấp và sinh ra tài liệu Yêu cầu (Requirements) chi tiết, chuẩn xác, **có mã REQ ID truy vết được**, phục vụ cho quá trình kiểm thử hoặc phát triển.
 
@@ -17,14 +21,23 @@ Workflow này giúp bạn phân tích một module hoặc trang web được cun
 
 1. **Tiếp nhận thông tin (Information Gathering):**
    - Đọc kỹ hướng dẫn từ kỹ năng (skill) **`skills-requirements-analyzer`** để nắm bắt chuẩn đầu ra.
+   - **Đọc tầng khám phá nếu đã có** (mục **5.8** của skill) — tiết kiệm toàn bộ bước dò đường:
+     * `docs/requirements/_discovery/system_map.md` → route · loại màn hình · số tab · risk · vùng chưa xác minh của module này
+     * `docs/requirements/_discovery/doc_inventory.md` → Bản đồ phủ tài liệu cấp hệ thống
+     * `docs/requirements/README.md` → **prefix đã cấp cho module này** — dùng đúng, KHÔNG tự đặt lại
+     * Chưa có `_discovery/` → vẫn chạy bình thường, chỉ là không có bản đồ sẵn
    - Lấy thông tin URL của trang web, tên module, hoặc mô tả/hình ảnh mà người dùng cung cấp.
    - Nếu cần thiết, hỏi người dùng về thông tin đăng nhập hoặc các trạng thái đặc biệt cần lưu ý.
-   - Nếu hệ thống có nhiều role → hỏi user account của từng role để phân tích phân quyền.
+   - Nếu hệ thống có nhiều role → hỏi user account của từng role. **Không đủ account thì vẫn phải làm ma trận phân quyền** theo mục **3.1.2**, không bỏ trống.
+   - **Hỏi user có tài liệu nào cho module này không** — spec, ticket, file Excel field, mockup. Có thì xác định mức phủ theo mục **3.3.1** trước khi mở browser.
 
 2. **Khảo sát hệ thống (Recon & Investigation):**
    - Sử dụng các công cụ duyệt web (Browser tools/MCP) để truy cập vào module trang web được yêu cầu (`navigate → resize 1920x1080 → snapshot`).
    - Inspect kỹ lưỡng cấu trúc HTML, DOM, các form nhập liệu, các nút tương tác (buttons, links), và các thông báo lỗi (validation messages — ghi **nguyên văn**).
    - Trigger từng validation để thu thập error messages thực tế.
+   - **Bật `browser_network_requests` trong suốt quá trình** (mục **3.1.1**) — bắt buộc khi module không có tài liệu. Thu: schema entity thật · field ẩn trong payload · **validation server-side** · enum trạng thái · endpoint không có UI.
+     🚫 Chỉ **quan sát thụ động** request do UI phát sinh — CẤM gọi API trực tiếp để dò hành vi.
+   - **Đọc DOM bằng `browser_evaluate`** cho những dữ kiện ảnh không thể hiện được (mục **7.2.1**): số `<option>` thật · `disabled` vs `checked` · `value` của option · phần tử ẩn bằng class.
    - *Lưu ý: Không tự đoán các trường thông tin nếu không nhìn thấy trên giao diện thực tế.*
 
 3. **Phân tích chức năng và tương tác (Analyze UI & Interactions):**
@@ -44,7 +57,9 @@ Workflow này giúp bạn phân tích một module hoặc trang web được cun
      * **Yêu cầu chức năng (Functional Requirements):** Mỗi tính năng/business rule/validation rule **gán mã `REQ-<MODULE>-<SỐ>`** — bảng có cột REQ ID.
      * **Quy tắc trường dữ liệu (Field Specifications):** Bảng chi tiết từng thành phần UI (Tên trường, Loại, Bắt buộc/Không, Ràng buộc, REQ liên quan).
      * **Business Rules & Validation Messages:** Error message ghi nguyên văn từ UI, gắn REQ ID.
+     * **Bản đồ phủ tài liệu (mục 6.5.1):** BẮT BUỘC khi user có cung cấp tài liệu — vùng nào 🟩 đầy đủ / 🟨 một phần / ⬜ trắng / ⚠️ nghi lỗi thời. Không có tài liệu thì ghi một dòng nêu rõ.
      * **Ma trận Phân quyền** (nếu có nhiều role) và **Ma trận Trạng thái** (nếu có status flow) — không áp dụng thì ghi rõ "Không áp dụng".
+       ⚠️ Thiếu account role → dùng thang 3 mức `✅` / `⚠️✅` / `❔` (mục **6.5**), kèm **dòng tổng** `Đã kiểm chứng / Suy diễn / Chưa rõ` và 1 `AMB-XX` 🔴 cho mỗi role thiếu account.
      * **Điểm Mơ Hồ & Rủi Ro:** Bảng AMB-XX (kèm Assumption tạm) + RISK-XX theo framework trong skill.
      * **Luồng xử lý (Business/User Flows):** Các bước để hoàn thành một chức năng chính.
      * **Yêu cầu phi chức năng (Non-functional Requirements - Nếu có thể quan sát):** Tính tương thích, hiệu năng tĩnh.
@@ -59,7 +74,8 @@ Workflow này giúp bạn phân tích một module hoặc trang web được cun
      docs/requirements/<module>/evidence/*.png
      docs/requirements/<module>/stories/story_NN_<slug>.md     ← chỉ khi tách
      ```
-   - **BẮT BUỘC cập nhật danh mục** `docs/requirements/README.md`: thêm/sửa dòng của module ở bảng mục 1 (`REQ đã dùng`, `Mã kế tiếp`, `AMB treo`, `Story`, `Cập nhật`), bảng trạng thái mục 2, và ambiguity 🔴 High ở mục 3.
+   - **BẮT BUỘC cập nhật danh mục** `docs/requirements/README.md`: thêm/sửa dòng của module ở bảng mục 1 (**`Trạng thái recon` → ✅ Đã có tài liệu**, `Mức phủ tài liệu`, `REQ đã dùng`, `Mã kế tiếp`, `AMB treo`, `Story`, `Cập nhật`), bảng trạng thái mục 2, và ambiguity 🔴 High ở mục 3.
+   - **Nếu đã có `_discovery/system_map.md`:** ghi 1 dòng vào Nhật ký khám phá khi phát hiện lệch so với bản đồ (module lớn hơn/nhỏ hơn dự kiến, có tab con là entity riêng nên phải tách, route đổi). Bản đồ sai mà không sửa thì module sau lại đi nhầm đường.
    - Nếu tài liệu bị tách nhiều file: file index **vẫn phải là** `requirements_<module>.md` và **BẮT BUỘC** chứa mục `## Bản đồ tài liệu` liệt kê file con kèm dải REQ.
    - **Checklist trước khi bàn giao:** đối chiếu đủ 6 mục bất biến tại **mục 5.4** của skill (REQ ID giữ nguyên · mỗi REQ thuộc đúng 1 Story · tổng REQ khớp · AMB/RISK đánh số toàn module · không nhân bản hạng mục cắt ngang · link 2 chiều index ↔ story).
    - Nhắc user: tài liệu này (với REQ ID) là input chuẩn cho `/generate_testcases_manual_rbt`, `/generate_testcases_from_requirements` và `/generate_traceability_matrix`.

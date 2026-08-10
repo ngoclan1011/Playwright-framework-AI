@@ -77,7 +77,10 @@ Skill có **2 nhánh trích xuất** tuỳ theo nguồn đầu vào. Xác địn
 |---|---|---|
 | Website/ứng dụng đang chạy | **3.1 — UI Recon** | Sự thật nằm ở hệ thống; xác minh bằng tương tác thật |
 | Jira ticket, .docx, .pdf, .xlsx/.csv, .xml, user story | **3.2 — Document Analysis** | Sự thật nằm ở văn bản; xác minh bằng trích dẫn nguyên văn |
-| Có cả hai | Chạy **3.2 trước** (nắm ý định) → **3.1 sau** (đối chiếu thực tế) | Mọi lệch pha giữa 2 nguồn là ambiguity, xem 3.3 |
+| Có cả hai, tài liệu phủ **đầy đủ** module | Chạy **3.2 trước** (nắm ý định) → **3.1 sau** (đối chiếu thực tế) | Mọi lệch pha giữa 2 nguồn là ambiguity, xem 3.3 |
+| Có cả hai nhưng tài liệu **chỉ phủ một phần** | **3.3.1 — Tài liệu bán phần** | Tình huống phổ biến nhất ở hệ thống thiếu tài liệu. Phải chia vùng trước khi recon |
+
+> ⚠️ **Chưa biết hệ thống có những module nào** → đây chưa phải việc của skill này. Chạy `/discover_system` trước để có bản đồ hệ thống + prefix, rồi mới recon từng module (xem mục **5.8**).
 
 ### 3.1. Nhánh UI Recon — phân tích website/ứng dụng thực tế
 
@@ -88,6 +91,70 @@ Skill có **2 nhánh trích xuất** tuỳ theo nguồn đầu vào. Xác địn
 5. **Thu thập Phân quyền (nếu có nhiều role):** đăng nhập từng role (nếu được cung cấp account) — ghi nhận role nào thấy gì / làm được gì
 6. **Thu thập Trạng thái (nếu entity có status):** các trạng thái quan sát được và hành động cho phép ở từng trạng thái
 7. **Thu thập Thông báo lỗi:** trigger từng validation để ghi nhận nguyên văn error message
+8. **Đọc tầng network** (mục **3.1.1**) — bắt buộc khi hệ thống không có tài liệu
+9. **Thăm dò phân quyền khi thiếu account** (mục **3.1.2**) — chỉ khi không đủ account cho mọi role
+
+### 3.1.1. Thu thập từ tầng Network (BẮT BUỘC khi hệ thống không có tài liệu)
+
+DOM chỉ cho biết **hệ thống đang hiển thị gì**. Tầng network cho biết **hệ thống thật sự làm gì** — đây là nguồn quý nhất khi không có một dòng tài liệu nào, và là thứ duy nhất tiết lộ được phần backend mà UI giấu đi.
+
+Bật `browser_network_requests` trong suốt quá trình recon (không chỉ lúc load trang — **phải bật khi submit form** mới bắt được response lỗi).
+
+| Loại request | Dữ kiện rút ra được | Ghi vào mục nào |
+|---|---|---|
+| `GET /api/<entity>` — danh sách | Tên trường thật của entity · trường **có trong data nhưng không hiển thị** trên bảng · cấu trúc phân trang (`page`/`size`/`total`) | 6.3 Field Spec · 6.2 REQ về phân trang |
+| `GET /api/<entity>/{id}` — chi tiết | Toàn bộ schema entity · quan hệ tới entity khác (`customer_id`, `owner`) | 6.3 · Bản đồ phụ thuộc |
+| `POST`/`PUT` — payload submit | Tên field thật ↔ nhãn hiển thị · field ẩn được gửi kèm · **kiểu dữ liệu thật** (số vs chuỗi) | 6.3 (cột ánh xạ nhãn ↔ field) |
+| Response **4xx khi submit sai** | ⭐ **Validation server-side** — rule mà UI không chặn · **nguyên văn message** trong body (thường khác message hiện trên UI) | 6.4 Validation Messages |
+| Response chứa enum | Danh sách trạng thái đầy đủ — kể cả trạng thái **chưa từng thấy trên UI** | 6.6 Ma trận Trạng thái |
+| Endpoint gọi khi mở dropdown | Nguồn dữ liệu của dropdown (bảng master nào) · **tổng số option thật** so với số đang hiển thị | 6.3 · phát hiện dropdown bị giới hạn |
+| Endpoint **có nhưng không UI nào gọi** | Tính năng chưa build hoặc đã gỡ giao diện | 6.2 với trạng thái ⚪ + `AMB-XX` |
+| Response `403` khi đổi role | Ranh giới phân quyền thật ở tầng server | 6.5 Ma trận Phân quyền |
+
+**Luật ghi nhận — bắt buộc:**
+
+| Tình huống | Xử lý |
+|---|---|
+| Rule chỉ có ở server, UI **không** chặn | Vẫn gán REQ, cột `Nguồn` ghi `API response · POST /api/x · 422` + mở `AMB-XX` hỏi: chặn ở UI hay cố ý để server chặn? |
+| Message API **khác** message hiện trên UI | Ghi **cả hai nguyên văn** vào 6.4 + `AMB-XX` 🔴 — đây là bug tiềm ẩn, không phải ambiguity thường |
+| Field có trong payload nhưng **không** có trên form | Gán REQ trạng thái ⚪ hoặc mở `AMB-XX` — **không** im lặng bỏ qua |
+| Endpoint không có UI | Ghi nhận, **KHÔNG** gọi thử để "kiểm chứng" |
+
+🚫 **Cấm tuyệt đối:** gọi API trực tiếp (curl/fetch/`browser_evaluate` gọi endpoint) để dò hành vi. Recon chỉ được **quan sát thụ động** request do UI tự phát sinh. Gọi thẳng API là hành vi kiểm thử xâm nhập, càng nguy hiểm trên môi trường dùng chung — và request tự tay tạo ra **không** chứng minh được điều gì về hành vi của UI.
+
+📌 Cột `Nguồn` cho dữ kiện lấy từ network ghi rõ: `API · POST /api/customers · 422` — đủ để người review mở lại tab Network mà đối chiếu.
+
+### 3.1.2. Phân quyền khi không đủ account cho mọi role
+
+Thực tế hay gặp: hệ thống có 5 role nhưng QA chỉ đưa 1 account admin. Không được vì thế mà **bỏ trống** mục 6.5, cũng không được **bịa** ma trận.
+
+**Bước 1 — Xác định hệ thống có những role nào** (không cần account vẫn làm được):
+
+| Nguồn | Cách lấy |
+|---|---|
+| Màn hình quản lý người dùng / phân quyền | Đọc dropdown chọn role, bảng danh sách role — thường lộ đủ tên role |
+| Màn hình cấu hình quyền | Ma trận quyền của chính hệ thống — **nguồn tốt nhất**, chép nguyên trạng |
+| Response API chứa `role` / `permissions` | Mục 3.1.1 |
+| Tài liệu QA cung cấp (nếu có) | Mục 3.2 |
+
+**Bước 2 — Suy diễn có kiểm soát, theo 3 mức bằng chứng:**
+
+| Mức | Cách có được | Ghi vào ma trận |
+|---|---|---|
+| ✅ **Đã kiểm chứng** | Đăng nhập đúng role đó và thử thật | `✅` / `❌` bình thường |
+| ⚠️ **Suy từ cấu hình** | Đọc từ màn hình phân quyền của hệ thống, chưa đăng nhập thử | `⚠️✅` / `⚠️❌` — kèm chú thích nguồn |
+| ❔ **Chưa có căn cứ** | Không có account, không có màn hình cấu hình | `❔` + **bắt buộc** mở `AMB-XX` 🔴 |
+
+**Bước 3 — Với account đang có, vẫn khai thác được:**
+- Menu/nút **bị ẩn** vs **hiện nhưng disabled** — hai cái này nghĩa khác nhau, phải đọc DOM để phân biệt (ảnh không cho biết)
+- Truy cập thẳng URL của chức năng bị ẩn → quan sát phản ứng (chuyển hướng · trang 403 · vẫn vào được). ⚠️ Chỉ thử với **URL chỉ đọc**, tuyệt đối không thử URL xoá/sửa
+- So sánh response `permissions` trả về lúc đăng nhập với danh sách quyền đầy đủ ở màn hình cấu hình
+
+**Luật cứng:**
+- ❌ **Không** suy quyền của role B từ hành vi của role A — "admin làm được nên manager chắc cũng làm được" là bịa
+- ❌ Ô `❔` **không được** làm tròn thành `❌`. "Chưa kiểm chứng" ≠ "không có quyền"
+- ✅ Cuối ma trận 6.5 **bắt buộc** có dòng tổng: `Đã kiểm chứng: N ô · Suy diễn: M ô · Chưa rõ: K ô` — người đọc biết ngay tin được bao nhiêu phần
+- ✅ Mỗi role **chưa có account** = 1 `AMB-XX` 🔴 riêng, nội dung: *"Xin account role X để kiểm chứng N ô đang suy diễn"*
 
 ### 3.2. Nhánh Document Analysis — phân tích tài liệu có sẵn
 
@@ -169,6 +236,46 @@ Chạy 3.2 trước để nắm **ý định**, rồi 3.1 để đối chiếu *
 | Tài liệu có, UI chưa có | Tính năng chưa build hoặc build thiếu | REQ vẫn giữ, ghi trạng thái `Chưa implement` |
 | UI có, tài liệu không nói | Tính năng ngoài tài liệu (scope creep / di sản) | Vẫn gán REQ, nguồn ghi `UI thực tế — ngoài tài liệu` + `AMB-XX` |
 | Cả hai có nhưng khác nhau | Xung đột thật | `AMB-XX` 🔴 High, ghi cả hai giá trị nguyên văn |
+
+### 3.3.1. Tài liệu bán phần — chia vùng trước khi recon
+
+Tình huống thực tế phổ biến nhất: QA đưa được **một phần** tài liệu (spec của 2/8 màn hình, file Excel chỉ có danh sách field, mockup cũ 6 tháng trước), phần còn lại phải tự khám phá.
+
+Sai lầm hay gặp là xử lý cả module theo **một** cách: hoặc tin tài liệu rồi recon qua loa, hoặc bỏ tài liệu rồi recon lại từ đầu. Cả hai đều tốn công và đều sai.
+
+**Bước 1 — Lập Bản đồ phủ tài liệu cho module, TRƯỚC khi mở browser:**
+
+| Vùng chức năng | Tài liệu phủ | Mức phủ | Chiến lược recon |
+|---|---|---|---|
+| Form tạo mới | `field_spec.xlsx` sheet "Customer" dòng 3–28 | 🟩 Đầy đủ | **Đối chiếu** — mở form kiểm từng dòng spec, tìm lệch |
+| Danh sách & lọc | Mockup `list_v1.png` (2026-02) | ⚠️ Nghi lỗi thời | **UI thắng** — recon đầy đủ, mọi lệch ghi `AMB` |
+| Phân quyền | — | ⬜ Trắng | **Recon đầy đủ** như mode UI thuần |
+| Import Excel | Ticket ABC-12 mô tả 3 dòng | 🟨 Một phần | **Bổ khuyết** — tài liệu cho luồng chính, recon lấy validation + error |
+
+**Bước 2 — Recon theo đúng chiến lược từng vùng:**
+
+| Mức phủ | Việc phải làm | Việc được rút gọn |
+|---|---|---|
+| 🟩 **Đầy đủ** | Mở màn hình, kiểm **từng** rule tài liệu nêu có đúng trên UI không. Lệch → `AMB` | Không cần dò lại từ đầu những rule đã ghi rõ và đã khớp |
+| 🟨 **Một phần** | Recon **đầy đủ** phần tài liệu không nói (thường là: validation message, edge case, phân quyền) | Phần tài liệu đã nêu rõ và khớp UI → trích dẫn, không mô tả lại |
+| ⬜ **Trắng** | Recon đầy đủ 9 bước mục 3.1 | Không rút gọn gì |
+| ⚠️ **Nghi lỗi thời** | Recon đầy đủ như ⬜. Tài liệu chỉ dùng làm **danh sách câu hỏi**: "chỗ này tài liệu nói X, thực tế thế nào?" | Không rút gọn gì |
+
+**Bước 3 — Ghi nguồn phân biệt được 4 mức** (cột `Nguồn` của mỗi REQ):
+
+| Giá trị cột `Nguồn` | Nghĩa |
+|---|---|
+| `Tài liệu · <file> · <vị trí>` | Chỉ có trong tài liệu, **chưa** mở UI kiểm |
+| `Tài liệu + kiểm chứng thực tế` | Tài liệu nêu, đã mở UI xác nhận khớp — **mức tin cậy cao nhất** |
+| `UI thực tế` / `Kiểm chứng thực tế` | Chỉ có ở UI, tài liệu không nói |
+| `API · <method> <endpoint>` | Lấy từ tầng network (mục 3.1.1) |
+
+**Luật cứng của nhánh này:**
+- ❌ **Không** dùng tài liệu bán phần để suy ra vùng nó không phủ. Spec form tạo mới **không** nói gì về form sửa — dù hai form nhìn giống nhau
+- ❌ Vùng ⬜ Trắng **không** được rút gọn recon với lý do "module này chắc giống module kia"
+- ✅ **Bản đồ phủ tài liệu phải nằm trong tài liệu đầu ra** (một mục ngay sau Tổng quan) — người đọc cần biết phần nào tin được từ spec, phần nào do agent quan sát
+- ✅ Tài liệu ⚠️ nghi lỗi thời mà **khớp** UI → nâng lên `Tài liệu + kiểm chứng thực tế`; **lệch** → `AMB-XX` kèm nguyên văn cả hai bên
+- ✅ Khi `/discover_system` đã chạy: đọc `docs/requirements/_discovery/doc_inventory.md` — Bản đồ phủ tài liệu cấp hệ thống đã có sẵn ở đó, chỉ cần chi tiết hoá xuống cấp vùng chức năng
 
 ---
 
@@ -312,7 +419,8 @@ File danh mục là **điểm vào cấp hệ thống**, phải được cập n
 
 | Mục | Nội dung |
 |---|---|
-| **1. Bảng danh mục module** | `Module · Prefix · Tài liệu · REQ đã dùng · Mã kế tiếp · AMB treo · Story · Cập nhật` |
+| **1. Bảng danh mục module** | `Module · Prefix · Trạng thái recon · Mức phủ tài liệu · Tài liệu · REQ đã dùng · Mã kế tiếp · AMB treo · Story · Cập nhật` |
+| **Trạng thái recon** | `⬜ Chưa khảo sát` · `🟨 Đang khảo sát` · `✅ Đã có tài liệu` · `⏸️ Hoãn` · `⚪ Chưa implement` — module do `/discover_system` phát hiện vào danh mục ngay ở mức ⬜, chưa cần có tài liệu |
 | **Danh sách prefix đã chiếm** | Module mới **phải** chọn prefix chưa có trong danh sách — chống trùng mã giữa các module |
 | **2. Trạng thái REQ toàn hệ thống** | Tổng hợp 🟢/🟡/🔴/⚪ theo từng module |
 | **3. Ambiguity 🔴 High còn treo** | Danh sách chặn tiến độ, gom từ mọi module — để đưa PO một lần thay vì hỏi lẻ tẻ |
@@ -325,20 +433,77 @@ File danh mục là **điểm vào cấp hệ thống**, phải được cập n
 2. **Chống trùng prefix** giữa các module
 3. Gom ambiguity 🔴 High của mọi module về một chỗ — thấy ngay vấn đề lặp lại (VD: cả 3 module đều thiếu tài khoản role thấp)
 
+### 5.8. Tầng khám phá — `docs/requirements/_discovery/`
+
+Skill này làm việc ở **cấp module**: đã biết module tên gì, ở đâu, thì recon và sinh REQ. Nhưng với hệ thống **không có tài liệu**, câu hỏi đầu tiên lại là *"hệ thống này có những module nào?"* — đó là việc của tầng khám phá, do workflow `/discover_system` đảm nhiệm.
+
+```
+docs/requirements/
+├── README.md              ← danh mục (5.7) — do /discover_system khởi tạo
+├── _discovery/            ← TẦNG KHÁM PHÁ — cấp hệ thống
+│   ├── system_map.md      ← INDEX BẤT BIẾN — bản đồ module · entity · phụ thuộc · risk
+│   ├── modules/           ← chỉ khi > 8 module (xem 5.8.1)
+│   │   └── module_NN_<slug>.md
+│   ├── doc_inventory.md   ← bản đồ phủ tài liệu (khi QA có đưa tài liệu)
+│   ├── sources/           ← bản gốc tài liệu QA cung cấp
+│   └── evidence/          ← 1 ảnh tổng quan mỗi module
+└── <module>/              ← TẦNG MODULE — skill này làm việc ở đây
+```
+
+**Phân vai — không được lấn:**
+
+| | Tầng khám phá (`/discover_system`) | Tầng module (skill này) |
+|---|---|---|
+| Đơn vị làm việc | Cả hệ thống | Một module |
+| Cấp mã | **Prefix** (`CUST`) | **Số REQ** (`REQ-CUST-01`) |
+| Độ sâu | Module tồn tại · loại màn hình · có CRUD không | Từng field · từng rule · từng message |
+| Evidence | 1 ảnh/module, chứng minh module có thật | Chuẩn đầy đủ mục 7.2.1 |
+| Đầu ra | `_discovery/` + `README.md` | `<module>/requirements_<module>.md` |
+
+> ❌ Tầng khám phá **không được** sinh mã `REQ-XXX-NN`. Mã REQ là bất biến (mục 2); cấp mã khi chưa mở form, chưa trigger validation thì chắc chắn phải đánh lại số — đúng thứ mục 2.1 cấm.
+
+**Cách skill này dùng tầng khám phá — làm ở đầu mỗi lần recon module:**
+
+1. Có `_discovery/system_map.md` → đọc phần của module sắp recon: route · loại màn hình · số tab · risk · vùng chưa xác minh. Tiết kiệm được toàn bộ bước dò đường
+2. Có `_discovery/doc_inventory.md` → lấy Bản đồ phủ tài liệu của module, chi tiết hoá xuống cấp vùng chức năng theo mục **3.3.1**
+3. Prefix **lấy từ danh mục**, không tự đặt lại — kể cả khi thấy prefix cũ đặt chưa hay
+4. Recon xong → cập nhật cột `Trạng thái recon` trong `README.md` sang ✅, và ghi 1 dòng vào Nhật ký khám phá của `system_map.md` nếu phát hiện lệch so với bản đồ
+
+**Không có `_discovery/` thì sao?** Vẫn recon module bình thường — tầng khám phá là bước tăng tốc, không phải điều kiện bắt buộc. Nhưng nếu user hỏi *"hệ thống có gì"* thay vì *"module X có gì"* → **route sang `/discover_system`**, đừng tự crawl rồi sinh REQ lẫn lộn hai tầng.
+
+#### 5.8.1. Bản đồ khám phá bị tách file — cách đọc
+
+Hệ thống > 8 module thì `/discover_system` tách bản đồ thành nhiều file. Quy tắc đọc **giống hệt** hợp đồng ở mục 5.5:
+
+- **Điểm vào luôn là `docs/requirements/_discovery/system_map.md`** — tên bất biến, dù tách hay không
+- Index có mục `## Bản đồ tài liệu` → đọc tiếp file trong `modules/` để lấy chi tiết module cần recon. Không có mục đó → hiểu là bản đồ 1 file
+- **Một file `modules/module_NN_<slug>.md` có thể chứa nhiều module** khi chúng quan hệ chặt (VD `module_01_dang_nhap_phan_quyen.md` chứa cả `LOGIN` · `USER` · `ROLE`)
+
+⚠️ **Gộp file KHÔNG gộp prefix, cũng KHÔNG gộp tài liệu requirements.** Ba module nằm chung một file khám phá vẫn sinh ra **ba** thư mục và **ba** file `requirements_<module>.md` riêng ở tầng module. Bản đồ khám phá gộp là để **đọc cho gọn**; ranh giới truy vết vẫn là **prefix**, không phải file.
+
+| | Tầng khám phá | Tầng module |
+|---|---|---|
+| `LOGIN` · `USER` · `ROLE` | 1 file `module_01_dang_nhap_phan_quyen.md` | 3 file `login/requirements_login.md` · `user/…` · `role/…` |
+
+Bản đồ khám phá **không mang mã REQ** (mục 5.8), nên tách/gộp lại về sau là thao tác an toàn — khác hẳn tài liệu requirements, nơi REQ ID bất biến ràng buộc mọi thứ.
+
 ---
 
 ## 6. Cấu trúc Tài liệu Yêu cầu Đầu ra (Output Format)
 
 > ### ⚠️ Phạm vi áp dụng — đọc trước khi dùng mục này
 >
-> Skill có **2 template đầu ra khác nhau** tuỳ workflow. Chọn đúng một cái, không trộn:
+> Skill có **3 template đầu ra khác nhau** tuỳ workflow. Chọn đúng một cái, không trộn:
 >
 > | Workflow | Template dùng | Ghi chú |
 > |---|---|---|
 > | `/generate_requirements_from_website` | **Mục 6 này** — tài liệu đặc tả module | Đầu ra là `requirements_<module>.md` |
 > | `/analyze_requirement_document` | **Template 10 mục của chính command đó** | Đầu ra là `analysis_<TICKET-ID>.md` — tài liệu phân tích ticket, KHÁC tài liệu đặc tả module |
+> | `/discover_system` | **Template của chính command đó** (Bước 6) | Đầu ra là `_discovery/system_map.md` + `README.md` — cấp hệ thống, **KHÔNG có mã REQ**. Xem mục **5.8** |
 >
 > Nhánh `/analyze_requirement_document` chỉ **mượn** từ skill các mục: **2 + 2.1** (đánh mã), **3.2** (quy trình trích xuất), **4** (AMB/RISK), **5** (scaling), **7.1 + 7.3** (strict rules) — **KHÔNG** dùng cấu trúc mục 6.
+>
+> Nhánh `/discover_system` mượn: **2** (quy ước prefix), **3.1 + 3.1.1** (crawl UI + network), **3.1.2** (phân quyền sơ bộ), **5.3 + 5.7 + 5.8** (thư mục, danh mục, tầng khám phá), **7.1 + 7.2** — **KHÔNG** dùng mục 6 và **KHÔNG** cấp số REQ.
 >
 > Riêng 2 dòng metadata `Dải mã đã dùng` / `Mã kế tiếp` ở mục 6.1 là **bắt buộc với cả hai template**, vì quy tắc nối tiếp mã (2.1) cần chúng để hoạt động.
 
@@ -389,10 +554,37 @@ Bảng chi tiết từng field — phần cốt lõi cho Tester:
 |---|---|---|
 
 ### 6.5. Ma trận Phân quyền (nếu có nhiều role)
+
 | Hành động | Admin | Manager | Staff | Guest |
 |---|---|---|---|---|
-| Xem danh sách | ✅ | ✅ | ✅ | ❌ |
-| Xóa bản ghi | ✅ | ❌ | ❌ | ❌ |
+| Xem danh sách | ✅ | ✅ | ⚠️✅ | ❌ |
+| Xóa bản ghi | ✅ | ⚠️❌ | ❔ | ❌ |
+
+**Ký hiệu mức bằng chứng** (mục 3.1.2) — bắt buộc dùng khi không đủ account cho mọi role:
+
+| Ký hiệu | Nghĩa |
+|---|---|
+| `✅` / `❌` | **Đã kiểm chứng** — đăng nhập đúng role và thử thật |
+| `⚠️✅` / `⚠️❌` | **Suy từ cấu hình** — đọc từ màn hình phân quyền của hệ thống, chưa đăng nhập thử |
+| `❔` | **Chưa có căn cứ** — bắt buộc kèm `AMB-XX` 🔴 |
+
+**Dòng tổng bắt buộc đặt ngay dưới bảng:**
+```
+Đã kiểm chứng: 12 ô · Suy diễn: 5 ô · Chưa rõ: 3 ô — role Staff/Guest chưa có account (AMB-07)
+```
+
+Không có dòng tổng thì người đọc không biết ma trận này tin được bao nhiêu phần. Ô `❔` **không được** làm tròn thành `❌`.
+
+### 6.5.1. Bản đồ phủ tài liệu — bắt buộc khi có tài liệu bán phần (mục 3.3.1)
+
+Đặt ngay sau Tổng quan (6.1). Người đọc phải biết phần nào tin được từ spec, phần nào do agent quan sát:
+
+| Vùng chức năng | Tài liệu phủ | Mức phủ | REQ liên quan |
+|---|---|---|---|
+| Form tạo mới | `field_spec.xlsx` sheet "Customer" dòng 3–28 | 🟩 Đầy đủ | REQ-CUST-01 → 14 |
+| Phân quyền | — | ⬜ Trắng | REQ-CUST-30 → 33 |
+
+Module không có tài liệu nào → ghi một dòng: *"Không có tài liệu — toàn bộ REQ sinh từ khảo sát UI thực tế"*. **KHÔNG** bỏ hẳn mục.
 
 ### 6.6. Ma trận Trạng thái (nếu entity có status flow)
 | Trạng thái hiện tại | Hành động cho phép | Trạng thái kế tiếp | Ai được thực hiện |
@@ -486,8 +678,16 @@ Nhật ký (6.9)  ←→  Trạng thái REQ (6.2)  ←→  Dải mã metadata (6
 - Nếu có Playwright MCP: mở browser thật (`navigate → resize 1920x1080 → snapshot`) để capture giao diện — **KHÔNG đoán field/validation**.
 - Error messages ghi **nguyên văn từ UI thực tế**, không diễn đạt lại.
 - **Trigger từng validation** để lấy message thật — không chép từ code cũ, không suy ra từ tên field.
-- Cột `Nguồn` ghi `UI thực tế` (chỉ quan sát) hoặc `Kiểm chứng thực tế` (đã tương tác và xác nhận) — **phân biệt rõ hai mức này**.
+- Cột `Nguồn` ghi `UI thực tế` (chỉ quan sát) hoặc `Kiểm chứng thực tế` (đã tương tác và xác nhận) — **phân biệt rõ hai mức này**. Có tài liệu kèm thì dùng thang 4 mức ở **3.3.1 Bước 3**.
 - Lưu evidence screenshot vào `docs/requirements/<module>/evidence/` — **trong** thư mục module, không tách ra ngoài (mục 5.3).
+- **Bật `browser_network_requests` trong suốt recon** (mục 3.1.1) — kể cả lúc submit form. Hệ thống không có tài liệu mà bỏ tầng network là bỏ mất validation server-side và trạng thái ẩn.
+- 🚫 **CẤM gọi API trực tiếp** (curl / fetch / `browser_evaluate` gọi endpoint) để dò hành vi. Chỉ **quan sát thụ động** request do UI tự phát sinh — gọi thẳng API là kiểm thử xâm nhập, và không chứng minh được gì về hành vi UI.
+- **Không đủ account cho mọi role → KHÔNG bỏ trống mục 6.5, cũng KHÔNG bịa.** Áp thang 3 mức bằng chứng ở mục 3.1.2, kèm dòng tổng `Đã kiểm chứng / Suy diễn / Chưa rõ`, và mỗi role thiếu account = 1 `AMB-XX` 🔴.
+- **Ô `❔` không được làm tròn thành `❌`** — "chưa kiểm chứng" khác hẳn "không có quyền".
+- **Có tài liệu bán phần → lập Bản đồ phủ tài liệu TRƯỚC khi mở browser** (mục 3.3.1) và đưa vào tài liệu đầu ra ở mục 6.5.1. Không được recon cả module theo một chiến lược duy nhất.
+- **Không dùng tài liệu của vùng này để suy ra vùng khác** — spec form tạo mới không nói gì về form sửa, dù hai form trông giống nhau.
+- **Đọc `docs/requirements/_discovery/` trước khi recon nếu đã chạy `/discover_system`** (mục 5.8) — lấy route, prefix, bản đồ phủ tài liệu; **không tự đặt lại prefix**.
+- **User hỏi "hệ thống có gì" (chưa biết module nào) → route sang `/discover_system`**, không tự crawl rồi sinh REQ lẫn hai tầng.
 
 #### 7.2.1. Chuẩn Evidence (BẮT BUỘC) — evidence thiếu thì bước sinh TC sẽ bịa
 

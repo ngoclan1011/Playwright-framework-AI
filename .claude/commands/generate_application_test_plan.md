@@ -28,6 +28,19 @@ Workflow này giúp agent tự động khám phá một ứng dụng web, phân 
 
 > Nếu user nói "generate full automation suite", "bootstrap automation", hoặc yêu cầu code → tự động chuyển sang **Mode FULL**.
 
+## ⚠️ Chọn đúng workflow — đừng nhầm với `/discover_system`
+
+Hai workflow cùng bắt đầu bằng "khám phá app" nhưng **đi về hai đích khác nhau**:
+
+| Mục tiêu của user | Workflow đúng | Đầu ra |
+|---|---|---|
+| *"Hệ thống này không có tài liệu, tôi cần **tài liệu requirements**"* | **`/discover_system`** → rồi `/generate_requirements_from_website` từng module | `docs/requirements/` — có **REQ ID** truy vết được |
+| *"Tôi cần biết **test cái gì trước**, lập kế hoạch kiểm thử"* | **Workflow này** | `test_plan.md` — scenarios + priority, **không** có REQ ID |
+
+> 📌 **Đã chạy `/discover_system` rồi thì đọc `docs/requirements/_discovery/system_map.md` ở Bước 1** — bản đồ module, entity, phụ thuộc và risk đã có sẵn, không cần crawl lại từ đầu. Chỉ bổ sung phần workflow này cần thêm: user flow chi tiết và scenario.
+>
+> Ngược lại, workflow này **không thay thế** được `/discover_system`: nó không cấp prefix, không ghi `docs/requirements/README.md`, nên chạy xong vẫn phải khám phá lại nếu sau đó cần sinh requirements.
+
 ## Các bước thực hiện
 
 ### Bước 1: Tiếp nhận & Khám phá ứng dụng (Recon)

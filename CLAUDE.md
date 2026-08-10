@@ -206,6 +206,12 @@ Toàn bộ tài liệu tổ chức **theo thư mục từng module**. Mỗi nhá
 docs/
 ├── requirements/
 │   ├── README.md                              ← DANH MỤC requirements
+│   ├── _discovery/                            ← TẦNG KHÁM PHÁ — cấp hệ thống
+│   │   ├── system_map.md                      ← INDEX — TÊN FILE BẤT BIẾN
+│   │   ├── modules/module_NN_<slug>.md        ← chỉ khi > 8 module; module liên quan gộp chung 1 file
+│   │   ├── doc_inventory.md                   ← bản đồ phủ tài liệu (khi QA có đưa tài liệu)
+│   │   ├── sources/                           ← bản gốc tài liệu QA cung cấp
+│   │   └── evidence/*.png                     ← 1 ảnh tổng quan mỗi module
 │   └── <module>/
 │       ├── requirements_<module>.md           ← INDEX — TÊN FILE BẤT BIẾN
 │       ├── evidence/*.png                     ← bằng chứng khảo sát
@@ -237,6 +243,9 @@ docs/
 | Mọi thay đổi requirements phải ghi **Nhật ký thay đổi** ở cuối tài liệu module | Bộ nhớ liền mạch giữa các phiên, và là nơi báo TC nào đã stale |
 | Evidence nằm **cùng** tài liệu sinh ra nó (recon → `<module>/evidence/`, execution → `run_*/evidence/`) | Di chuyển/xoá không lạc file; link tương đối không gãy |
 | Thêm module = thêm thư mục + 1 dòng ở `README.md` danh mục | Không đụng gì khác trong repo |
+| `_discovery/` **không được** chứa mã `REQ-XXX-NN` — chỉ cấp **prefix** | Tầng khám phá chưa mở form, chưa trigger validation; cấp số REQ ở đó là chắc chắn phải đánh lại |
+| Bản đồ khám phá tách file thì index **vẫn** là `_discovery/system_map.md` + có mục `## Bản đồ tài liệu` | Cùng hợp đồng đọc với `requirements_<module>.md` — workflow sau chỉ nhớ một đường dẫn |
+| Gộp module vào chung 1 file khám phá **KHÔNG** gộp prefix, **KHÔNG** gộp `requirements_<module>.md` | Gộp là để đọc cho gọn; ranh giới truy vết vẫn là prefix. 3 module chung file khám phá vẫn ra 3 tài liệu requirements riêng |
 
 Chi tiết: skill `skills-requirements-analyzer` mục 2.1 (nối tiếp mã), 5.3 (thư mục), 5.7 (danh mục), 6.9 (nhật ký) · skill `skills-rbt-manual-testing` mục "Quy Tắc Xuất File" phần 2 và 4.
 
@@ -270,6 +279,8 @@ Không cần dọn gì thêm. Agent tự tạo lại `docs/` và 2 file danh m�
 | Business rules ẩn (CAPTCHA, OTP, quy tắc sinh mã…) | Agent phát hiện khi recon → ghi ngay vào tài liệu module. Chỉ hỏi user khi mâu thuẫn |
 
 > **Không có file hồ sơ dự án để điền tay.** Ngữ cảnh dự án nằm trong `docs/` do agent tự sinh — xem `skills-requirements-analyzer` mục 5.7.1.
+
+📌 **Hệ thống mới, chỉ có UI, chưa biết có module nào → chạy `/discover_system` trước tiên.** Workflow đó chốt luôn 5 mục trong bảng trên (prefix module · tiền tố TC ID · URL/tài khoản · môi trường dùng chung · business rules ẩn) và sinh sẵn `docs/requirements/README.md` + `_discovery/system_map.md`. QA có sẵn **một phần** tài liệu thì đưa vào cùng — chạy mode HYBRID, workflow sẽ lập Bản đồ phủ tài liệu để biết vùng nào tin được từ spec, vùng nào phải recon.
 
 ## 7. Test Data
 
@@ -317,6 +328,7 @@ Agent sử dụng workflows trong `.claude/commands/` qua slash commands:
 
 | Workflow                                  | Mô tả                                                     |
 | ----------------------------------------- | ----------------------------------------------------------- |
+| `/discover_system`                      | **Bước đầu tiên khi hệ thống không có tài liệu** — crawl navigation, lập bản đồ module, gán prefix, khởi tạo danh mục (3 modes: UI/HYBRID/DOC). KHÔNG sinh REQ ID |
 | `/generate_requirements_from_website`   | Sinh requirements từ website/module (nhánh UI Recon)        |
 | `/analyze_requirement_document`         | Phân tích requirement document (Jira/.docx/.pdf/.xlsx/.csv) — sinh tài liệu phân tích, KHÔNG sinh TC |
 | `/update_requirements_from_ticket`      | **Delta mode** — cập nhật tài liệu requirements đã có từ ticket mới: nhận diện THÊM/SỬA/BỎ, giữ nguyên REQ ID, ghi Nhật ký thay đổi, xuất Impact Report cho test cases |
