@@ -41,7 +41,7 @@
 /discover_system
 ```
 
-Prompt mẫu: [`prompts/prompt_00_discover_system.txt`](prompts/prompt_00_discover_system.txt)
+📋 Prompt mẫu: [`prompts/prompt_00_discover_system.txt`](prompts/prompt_00_discover_system.txt)
 
 **Cần chuẩn bị:** URL · tài khoản (càng nhiều role càng tốt) · tài liệu sẵn có nếu QA đưa được · môi trường có dùng chung không.
 
@@ -78,9 +78,12 @@ docs/requirements/_discovery/doc_inventory.md  ← chỉ khi có tài liệu
 /generate_requirements_from_website
 ```
 
-Prompt mẫu: [`prompts/prompt_01_generate_requirements.txt`](prompts/prompt_01_generate_requirements.txt)
+📋 Prompt mẫu: [`prompts/prompt_01_generate_requirements.txt`](prompts/prompt_01_generate_requirements.txt)
 
-Có ticket Jira thay vì UI → `/analyze_requirement_document`. Tài liệu đã có mà ticket sửa đổi → `/update_requirements_from_ticket` (delta mode, giữ nguyên REQ ID).
+| Biến thể | Command | Prompt mẫu |
+|---|---|---|
+| Có ticket Jira thay vì UI | `/analyze_requirement_document` | *chưa có — gõ lệnh rồi dán nội dung ticket* |
+| Tài liệu đã có, ticket sửa đổi | `/update_requirements_from_ticket` | *chưa có — gõ lệnh rồi dán ticket* |
 
 **AI làm gì:** đọc bản đồ chặng 0 (khỏi dò đường) → mở từng form → **trigger từng validation lấy message nguyên văn** → đọc DOM bằng `browser_evaluate` → bắt network lấy validation server-side → chụp evidence full-page → sinh `REQ-<PREFIX>-NN`.
 
@@ -107,11 +110,13 @@ Cộng thêm: `README.md` cập nhật `Trạng thái recon` ⬜ → ✅.
 
 > **Chạy lặp, mỗi lần một module.** Chọn đúng 1 trong 3 mode.
 
-| Mode | Command | Khi nào dùng | Ra cái gì |
+| Mode | Command | Prompt mẫu | Khi nào dùng |
 |---|---|---|---|
-| **FULL RBT** | `/generate_testcases_manual_rbt` | Module lớn · requirements còn mơ hồ · cần đánh giá risk · **bộ TC gốc của module** | 6 bước, 2 checkpoint chờ bạn, TC chi tiết + traceability |
-| **QUICK** | `/generate_testcases_from_requirements` | Requirements đã rõ · scope 1 form / 1 tính năng · cần nhanh | 1 lượt, TC chi tiết, không phân tích risk |
-| **CHECKLIST** | `/generate_checklist_test` | Rà tay nhanh: smoke · sau hotfix · trước release | Danh sách tick, **không** có steps chi tiết |
+| **FULL RBT** | `/generate_testcases_manual_rbt` | [`prompt_02_generate_test_cases.txt`](prompts/prompt_02_generate_test_cases.txt) | Module lớn · requirements còn mơ hồ · cần đánh giá risk · **bộ TC gốc của module** |
+| **QUICK** | `/generate_testcases_from_requirements` | *chưa có — dùng chung `prompt_02`, bỏ phần yêu cầu 6 bước* | Requirements đã rõ · scope 1 form / 1 tính năng · cần nhanh |
+| **CHECKLIST** | `/generate_checklist_test` | [`prompt_15_generate_checklist.txt`](prompts/prompt_15_generate_checklist.txt) | Rà tay nhanh: smoke · sau hotfix · trước release |
+
+**Đầu ra tương ứng:** FULL RBT / QUICK → TC chi tiết có steps. CHECKLIST → danh sách tick, **không** có steps.
 
 **Ranh giới:** cần **bộ TC lưu trữ / import Jira / giao cho automation** → QUICK hoặc FULL RBT. Cần **tick tay cho nhanh** → CHECKLIST.
 
@@ -138,6 +143,8 @@ docs/checklists/checklist_<loại>_<module>.md     ← nếu chạy mode CHECKLI
 /review_testcases
 ```
 
+📋 Prompt mẫu: [`prompts/prompt_12_review_testcases.txt`](prompts/prompt_12_review_testcases.txt)
+
 | Mode | Làm gì |
 |---|---|
 | **REVIEW** (mặc định) | Chấm rubric 6 tiêu chí, chỉ ra TC mơ hồ / trùng lặp / thiếu negative-boundary / coverage gap |
@@ -155,7 +162,7 @@ Nói *"sửa luôn"* / *"cải thiện giùm"* → AI tự chuyển sang **FIX**
 /execute_test_cases
 ```
 
-Prompt mẫu: [`prompts/prompt_16_execute_test_cases.txt`](prompts/prompt_16_execute_test_cases.txt)
+📋 Prompt mẫu: [`prompts/prompt_16_execute_test_cases.txt`](prompts/prompt_16_execute_test_cases.txt)
 
 **AI làm gì:** mở browser thật qua Playwright MCP → chạy từng bước theo TC → đối chiếu Expected vs Actual → chấm **PASS / FAIL / BLOCKED / SKIPPED** → thu evidence.
 
@@ -177,11 +184,11 @@ Report gồm 6 mục: Tổng kết · Kết quả từng TC · Chi tiết FAIL �
 
 ## Chặng 5 — Xử lý FAIL
 
-| Tình huống | Command | Ghi chú |
-|---|---|---|
-| **Nhiều TC FAIL**, chưa rõ nguyên nhân | `/analyze_test_report` | **Chạy cái này trước** — 12 TC FAIL thường chỉ là 2 bug |
-| Đã rõ bug, cần báo cáo | `/create_bug_report` | Tự lấy evidence từ run vừa rồi, tuỳ chọn đẩy Jira |
-| FAIL vì **TC viết sai**, không phải lỗi hệ thống | `/review_testcases` mode FIX | Quay lại chặng 3 |
+| Tình huống | Command | Prompt mẫu | Ghi chú |
+|---|---|---|---|
+| **Nhiều TC FAIL**, chưa rõ nguyên nhân | `/analyze_test_report` | [`prompt_11_analyze_test_report.txt`](prompts/prompt_11_analyze_test_report.txt) | **Chạy cái này trước** — 12 TC FAIL thường chỉ là 2 bug |
+| Đã rõ bug, cần báo cáo | `/create_bug_report` | [`prompt_10_create_bug_report.txt`](prompts/prompt_10_create_bug_report.txt) | Tự lấy evidence từ run vừa rồi, tuỳ chọn đẩy Jira |
+| FAIL vì **TC viết sai**, không phải lỗi hệ thống | `/review_testcases` mode FIX | [`prompt_12_review_testcases.txt`](prompts/prompt_12_review_testcases.txt) | Quay lại chặng 3 |
 
 **Đầu ra:**
 ```
@@ -199,7 +206,7 @@ bug_reports/BUG_<module>_<timestamp>.md          ← mỗi bug 1 file
 /generate_traceability_matrix
 ```
 
-Prompt mẫu: [`prompts/prompt_13_generate_traceability_matrix.txt`](prompts/prompt_13_generate_traceability_matrix.txt)
+📋 Prompt mẫu: [`prompts/prompt_13_generate_traceability_matrix.txt`](prompts/prompt_13_generate_traceability_matrix.txt)
 
 **Ra 4 nhóm phát hiện:**
 
@@ -235,15 +242,19 @@ Cột **`TC cần xử lý`** trong Nhật ký thay đổi của tài liệu req
 
 ## Bảng tra nhanh — chạy bao nhiêu lần
 
-| Chặng | Command | Số lần chạy |
-|---|---|---|
-| 0 | `/discover_system` | **1 lần** / hệ thống (+ ADD/DELTA khi cần) |
-| 1 | `/generate_requirements_from_website` | **N lần** = số module |
-| 2 | `/generate_testcases_manual_rbt` | **N lần** = số module |
-| 3 | `/review_testcases` | 1 lần / bộ TC |
-| 4 | `/execute_test_cases` | Mỗi đợt kiểm thử |
-| 5 | `/analyze_test_report` · `/create_bug_report` | Khi có FAIL |
-| 6 | `/generate_traceability_matrix` | Định kỳ / trước release |
+| Chặng | Command | Prompt mẫu | Số lần chạy |
+|---|---|---|---|
+| 0 | `/discover_system` | [`prompt_00`](prompts/prompt_00_discover_system.txt) | **1 lần** / hệ thống (+ ADD/DELTA khi cần) |
+| 1 | `/generate_requirements_from_website` | [`prompt_01`](prompts/prompt_01_generate_requirements.txt) | **N lần** = số module |
+| 2 | `/generate_testcases_manual_rbt` | [`prompt_02`](prompts/prompt_02_generate_test_cases.txt) | **N lần** = số module |
+| 2' | `/generate_checklist_test` | [`prompt_15`](prompts/prompt_15_generate_checklist.txt) | Khi cần checklist tick tay |
+| 3 | `/review_testcases` | [`prompt_12`](prompts/prompt_12_review_testcases.txt) | 1 lần / bộ TC |
+| 4 | `/execute_test_cases` | [`prompt_16`](prompts/prompt_16_execute_test_cases.txt) | Mỗi đợt kiểm thử |
+| 5 | `/analyze_test_report` | [`prompt_11`](prompts/prompt_11_analyze_test_report.txt) | Khi nhiều TC FAIL |
+| 5 | `/create_bug_report` | [`prompt_10`](prompts/prompt_10_create_bug_report.txt) | Mỗi bug cần báo |
+| 6 | `/generate_traceability_matrix` | [`prompt_13`](prompts/prompt_13_generate_traceability_matrix.txt) | Định kỳ / trước release |
+
+**Chưa có prompt mẫu** (gõ lệnh rồi dán nội dung trực tiếp): `/generate_testcases_from_requirements` · `/analyze_requirement_document` · `/update_requirements_from_ticket`.
 
 ---
 
