@@ -49,7 +49,7 @@ claude-testing-skills/
 │   ├── manual/              # Quy trình 6 bước sinh Manual Test Cases (AI-RBT)
 │   ├── automation/          # Quy trình 6 bước sinh Automation Scripts
 │   └── cross-module/        # Quy trình phân tích Cross-Module & Ma trận kết hợp
-├── prompts/                 # 23 prompt mẫu dùng nhanh (copy → paste → gửi)
+├── prompts/                 # 26 prompt mẫu dùng nhanh (copy → paste → gửi)
 ├── scripts/
 │   └── testcases-viewer/    # Công cụ web xem/lọc test case
 ├── CLAUDE.md                # Rule chung cho AI Agent (Claude Code đọc tự động)
@@ -132,6 +132,11 @@ Dành cho tác vụ **đơn lẻ**, chỉ cần copy → thay `[...]` bằng d�
 | 17  | `prompt_17_run_and_fix_tests.txt`            | **[Mới]** Chạy suite có sẵn, phân loại failure, tự sửa nhóm sửa được |
 | 18  | `prompt_18_heal_locators.txt`                | **[Mới]** Rà & sửa locator trong Page Object sau khi UI đổi        |
 | 19  | `prompt_19_update_automation_from_impact.txt` | **[Mới]** Cập nhật script đã có theo Impact Report (delta mode)   |
+| 20  | `prompt_20_analyze_requirement_document.txt` | **[Mới]** Phân tích ticket/tài liệu → tài liệu phân tích, KHÔNG sinh TC |
+| 21  | `prompt_21_update_requirements_from_ticket.txt` | **[Mới]** Cập nhật requirements từ ticket (delta mode) + Impact Report |
+| 22  | `prompt_22_generate_testcases_quick.txt`     | **[Mới]** Sinh manual TCs QUICK mode — 1 lượt, không qua 6 bước RBT |
+
+> Danh mục đầy đủ chia theo 5 nhóm tra cứu: [`prompts/README.md`](prompts/README.md)
 
 ---
 

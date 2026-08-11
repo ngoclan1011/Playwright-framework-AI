@@ -83,8 +83,8 @@ docs/requirements/_discovery/doc_inventory.md  ← chỉ khi có tài liệu
 
 | Biến thể | Command | Prompt mẫu |
 |---|---|---|
-| Có ticket Jira thay vì UI | `/analyze_requirement_document` | *chưa có — gõ lệnh rồi dán nội dung ticket* |
-| Tài liệu đã có, ticket sửa đổi | `/update_requirements_from_ticket` | *chưa có — gõ lệnh rồi dán ticket* |
+| Có ticket Jira thay vì UI | `/analyze_requirement_document` | [`prompt_20`](prompts/prompt_20_analyze_requirement_document.txt) |
+| Tài liệu đã có, ticket sửa đổi | `/update_requirements_from_ticket` | [`prompt_21`](prompts/prompt_21_update_requirements_from_ticket.txt) |
 
 **AI làm gì:** đọc bản đồ chặng 0 (khỏi dò đường) → mở từng form → **trigger từng validation lấy message nguyên văn** → đọc DOM bằng `browser_evaluate` → bắt network lấy validation server-side → chụp evidence full-page → sinh `REQ-<PREFIX>-NN`.
 
@@ -114,7 +114,7 @@ Cộng thêm: `README.md` cập nhật `Trạng thái recon` ⬜ → ✅.
 | Mode | Command | Prompt mẫu | Khi nào dùng |
 |---|---|---|---|
 | **FULL RBT** | `/generate_testcases_manual_rbt` | [`prompt_02_generate_test_cases.txt`](prompts/prompt_02_generate_test_cases.txt) | Module lớn · requirements còn mơ hồ · cần đánh giá risk · **bộ TC gốc của module** |
-| **QUICK** | `/generate_testcases_from_requirements` | *chưa có — dùng chung `prompt_02`, bỏ phần yêu cầu 6 bước* | Requirements đã rõ · scope 1 form / 1 tính năng · cần nhanh |
+| **QUICK** | `/generate_testcases_from_requirements` | [`prompt_22_generate_testcases_quick.txt`](prompts/prompt_22_generate_testcases_quick.txt) | Requirements đã rõ · scope 1 form / 1 tính năng · cần nhanh |
 | **CHECKLIST** | `/generate_checklist_test` | [`prompt_15_generate_checklist.txt`](prompts/prompt_15_generate_checklist.txt) | Rà tay nhanh: smoke · sau hotfix · trước release |
 
 **Đầu ra tương ứng:** FULL RBT / QUICK → TC chi tiết có steps. CHECKLIST → danh sách tick, **không** có steps.
@@ -254,8 +254,9 @@ Cột **`TC cần xử lý`** trong Nhật ký thay đổi của tài liệu req
 | 5 | `/analyze_test_report` | [`prompt_11`](prompts/prompt_11_analyze_test_report.txt) | Khi nhiều TC FAIL |
 | 5 | `/create_bug_report` | [`prompt_10`](prompts/prompt_10_create_bug_report.txt) | Mỗi bug cần báo |
 | 6 | `/generate_traceability_matrix` | [`prompt_13`](prompts/prompt_13_generate_traceability_matrix.txt) | Định kỳ / trước release |
+| ↻ | `/update_requirements_from_ticket` | [`prompt_21`](prompts/prompt_21_update_requirements_from_ticket.txt) | Mỗi ticket sửa yêu cầu |
 
-**Chưa có prompt mẫu** (gõ lệnh rồi dán nội dung trực tiếp): `/generate_testcases_from_requirements` · `/analyze_requirement_document` · `/update_requirements_from_ticket`.
+**Biến thể của chặng 1–2** (không nằm trên luồng chính): `/analyze_requirement_document` → [`prompt_20`](prompts/prompt_20_analyze_requirement_document.txt) · `/generate_testcases_from_requirements` → [`prompt_22`](prompts/prompt_22_generate_testcases_quick.txt).
 
 ---
 
@@ -279,5 +280,5 @@ Xem lại cảnh báo ở chặng 6.
 | [`CLAUDE.md`](CLAUDE.md) | Quy tắc bắt buộc · cấu trúc `docs/` · danh sách đầy đủ workflows |
 | [`README.md`](README.md) | Tổng quan bộ kit · cài đặt |
 | [`SETUP_CLAUDE.md`](SETUP_CLAUDE.md) | Cài Claude Code + Playwright MCP |
-| [`prompts/README.md`](prompts/README.md) | 23 prompt mẫu copy-paste |
+| [`prompts/README.md`](prompts/README.md) | 26 prompt mẫu copy-paste, chia 5 nhóm tra cứu |
 | [`plans/manual/QUICK_START.md`](plans/manual/QUICK_START.md) | Luồng 6 bước AI-RBT bản copy-paste — dùng cho AI agent khác (Codex · Antigravity · Kiro · Cursor) không có slash command của bộ này |

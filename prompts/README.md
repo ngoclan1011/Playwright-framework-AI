@@ -14,31 +14,58 @@ Thư mục này chứa các prompt mẫu dùng nhanh (copy → paste → gửi) 
 
 ## Danh Sách Prompt Mẫu
 
+> **Số thứ tự file = ID cố định**, không phải thứ tự chạy. Các nhóm dưới đây chỉ để tra cứu cho nhanh — cần thứ tự chạy thực tế thì xem [`AI_FULL_FLOW.md`](../AI_FULL_FLOW.md).
+
+### 🔍 Khảo sát & Requirements
+
 | # | File | Command Tương Ứng | Skill Tích Hợp | Mô Tả & Cải Tiến Mới |
 |---|------|-------------------|----------------|----------------------|
 | 00 | `prompt_00_discover_system.txt` | `/discover_system` | `skills-requirements-analyzer` | **[Mới]** Chạy **đầu tiên** khi hệ thống không có tài liệu — crawl navigation, lập bản đồ module, gán prefix, khởi tạo danh mục. 3 modes UI/HYBRID/DOC |
 | 01 | `prompt_01_generate_requirements.txt` | `/generate_requirements_from_website` | `skills-requirements-analyzer` | Phân tích website/sơ đồ để sinh tài liệu Yêu cầu |
+| 20 | `prompt_20_analyze_requirement_document.txt` | `/analyze_requirement_document` | `skills-requirements-analyzer` | **[Mới]** Phân tích ticket/tài liệu (.docx/.xlsx/.pdf/mockup) → `analysis_<TICKET-ID>.md` kèm REQ ID + Ambiguity/Risk. **KHÔNG** sinh test cases |
+| 21 | `prompt_21_update_requirements_from_ticket.txt` | `/update_requirements_from_ticket` | `skills-requirements-analyzer` | **[Mới]** Delta mode cho requirements — sửa tại chỗ tài liệu module, giữ nguyên REQ ID, ghi Nhật ký thay đổi, xuất **Impact Report** (input cho `prompt_19`) |
+
+### 📝 Manual Test Cases
+
+| # | File | Command Tương Ứng | Skill Tích Hợp | Mô Tả & Cải Tiến Mới |
+|---|------|-------------------|----------------|----------------------|
 | 02 | `prompt_02_generate_test_cases.txt` | `/generate_testcases_manual_rbt` | `skills-rbt-manual-testing` | **[Nâng cấp mới]** Sinh Manual TCs chuẩn RBT, Checklist 15 loại input fields, Race condition, Session, A11y, AI Self-Quality Gate & Automation Metadata |
+| 22 | `prompt_22_generate_testcases_quick.txt` | `/generate_testcases_from_requirements` | `skills-rbt-manual-testing` | **[Mới]** Sinh Manual TCs **QUICK mode** — 1 lượt, không dừng hỏi. Dành cho module đơn giản, requirements đã rõ (bản đầy đủ 6 bước xem `prompt_02`) |
+| 15 | `prompt_15_generate_checklist.txt` | `/generate_checklist_test` | `skills-rbt-manual-testing` | Sinh checklist tick tay (CHECKLIST mode) — 4 loại Smoke/Post-hotfix/Regression/Release-readiness, nguồn TC-based hoặc REQ-based |
+| 12 | `prompt_12_review_testcases.txt` | `/review_testcases` | `skills-testcase-reviewer` | Review chất lượng manual TCs theo rubric 6 tiêu chí — 2 modes REVIEW/FIX |
+| 16 | `prompt_16_execute_test_cases.txt` | `/execute_test_cases` | `skills-manual-test-executor` | Thực thi manual TC qua Playwright MCP — chấm PASS/FAIL/BLOCKED/SKIPPED, thu evidence, xuất execution report |
+
+### 🏗️ Framework & Sinh Script Automation
+
+| # | File | Command Tương Ứng | Skill Tích Hợp | Mô Tả & Cải Tiến Mới |
+|---|------|-------------------|----------------|----------------------|
 | 03 | `prompt_03_create_framework_playwright.txt` | `/generate_automation_framework` | `skills-framework-architect` | Dựng khung dự án Automation Playwright TypeScript |
 | 03 | `prompt_03_create_framework_selenium.txt` | `/generate_automation_framework` | `skills-framework-architect` | Dựng khung dự án Automation Selenium Java |
 | 03 | `prompt_03_create_framework_appium.txt` | `/generate_automation_framework` | `skills-framework-architect` | Dựng khung dự án Automation Appium Java (Mobile) |
 | 04 | `prompt_04_generate_script_playwright.txt` | `/generate_automation_from_testcases` | `skills-qa-automation-engineer` | Viết kịch bản tự động Playwright TypeScript theo POM |
 | 04 | `prompt_04_generate_script_selenium.txt` | `/generate_automation_from_testcases` | `skills-qa-automation-engineer` | Viết kịch bản tự động Selenium Java theo POM |
 | 05 | `prompt_05_convert_manual_to_automation.txt` | `/generate_automation_from_testcases` | `skills-qa-automation-engineer` | Chuyển đổi Manual Test Cases sang Automation Script |
-| 06 | `prompt_06_review_automation_code.txt` | `/review_automation_code` | `skills-automation-code-reviewer` | **[Mới]** Review chất lượng automation code theo Definition of Done — rubric 6 nhóm, bắt hard sleep / locator inline / thiếu Allure metadata / assertion yếu (pass giả). 2 modes REVIEW/FIX |
-| 07 | `prompt_07_generate_test_data.txt` | `/generate_test_data` | `skills-test-data-generator` | Sinh dữ liệu kiểm thử có cấu trúc |
-| 08 | `prompt_08_analyze_flaky_tests.txt` | `/analyze_flaky_tests` | `skills-flaky-test-analyzer` | Phân tích và khắc phục Flaky Tests |
 | 09 | `prompt_09_generate_api_tests.txt` | `/generate_api_tests_from_swagger` | `skills-qa-automation-engineer` | **[Nâng cấp mới]** Sinh API tests từ Swagger/OpenAPI cover 12 HTTP Status Codes, OWASP API Security (BOLA/IDOR, Mass Assignment, ReDoS), SLA < 2s & Dynamic Auth Token |
-| 10 | `prompt_10_create_bug_report.txt` | `/create_bug_report` | `skills-bug-reporter` | Sinh bug report chuẩn từ test FAIL — evidence, severity/priority, tùy chọn đẩy Jira |
-| 11 | `prompt_11_analyze_test_report.txt` | `/analyze_test_report` | `skills-test-report-analyzer` | Phân tích test report — gom nhóm failure theo root cause, so sánh trend, đề xuất thứ tự xử lý |
-| 12 | `prompt_12_review_testcases.txt` | `/review_testcases` | `skills-testcase-reviewer` | Review chất lượng manual TCs theo rubric 6 tiêu chí — 2 modes REVIEW/FIX |
-| 13 | `prompt_13_generate_traceability_matrix.txt` | `/generate_traceability_matrix` | `skills-coverage-traceability` | Sinh ma trận truy vết RTM 3 tầng — tìm requirement chưa cover, orphan tests |
 | 14 | `prompt_14_generate_api_mocks.txt` | `/generate_api_mocks` | `skills-api-mocking` | Sinh API mocks (Playwright route / WireMock) + tests cho edge cases |
-| 15 | `prompt_15_generate_checklist.txt` | `/generate_checklist_test` | `skills-rbt-manual-testing` | Sinh checklist tick tay (CHECKLIST mode) — 4 loại Smoke/Post-hotfix/Regression/Release-readiness, nguồn TC-based hoặc REQ-based |
-| 16 | `prompt_16_execute_test_cases.txt` | `/execute_test_cases` | `skills-manual-test-executor` | Thực thi manual TC qua Playwright MCP — chấm PASS/FAIL/BLOCKED/SKIPPED, thu evidence, xuất execution report |
+
+### 🔧 Bảo trì Automation
+
+| # | File | Command Tương Ứng | Skill Tích Hợp | Mô Tả & Cải Tiến Mới |
+|---|------|-------------------|----------------|----------------------|
+| 06 | `prompt_06_review_automation_code.txt` | `/review_automation_code` | `skills-automation-code-reviewer` | **[Mới]** Review chất lượng automation code theo Definition of Done — rubric 6 nhóm, bắt hard sleep / locator inline / thiếu Allure metadata / assertion yếu (pass giả). 2 modes REVIEW/FIX |
 | 17 | `prompt_17_run_and_fix_tests.txt` | `/run_and_fix_tests` | `skills-test-report-analyzer` | **[Mới]** Chạy suite có sẵn → phân loại failure theo root cause → tự sửa nhóm sửa được → chạy lại. 2 modes RUN/FIX. Bug app giữ nguyên đỏ, không sửa test để né |
 | 18 | `prompt_18_heal_locators.txt` | `/heal_locators` | `skills-locator-healer-agent` | **[Mới]** Rà locator trong Page Object đối chiếu DOM thực tế sau khi UI đổi — bắt cả locator gãy, mong manh và sai element. 2 modes SCAN/HEAL |
 | 19 | `prompt_19_update_automation_from_impact.txt` | `/update_automation_from_impact` | `skills-coverage-traceability` | **[Mới]** Delta mode cho automation — từ Impact Report map TC đã đổi sang script, sửa đúng phần đổi, không sinh lại cả module. 2 modes PLAN/APPLY |
+| 08 | `prompt_08_analyze_flaky_tests.txt` | `/analyze_flaky_tests` | `skills-flaky-test-analyzer` | Phân tích và khắc phục Flaky Tests |
+
+### 🔗 Xuyên suốt Manual ↔ Automation
+
+| # | File | Command Tương Ứng | Skill Tích Hợp | Mô Tả & Cải Tiến Mới |
+|---|------|-------------------|----------------|----------------------|
+| 07 | `prompt_07_generate_test_data.txt` | `/generate_test_data` | `skills-test-data-generator` | Sinh dữ liệu kiểm thử có cấu trúc |
+| 10 | `prompt_10_create_bug_report.txt` | `/create_bug_report` | `skills-bug-reporter` | Sinh bug report chuẩn từ test FAIL — evidence, severity/priority, tùy chọn đẩy Jira |
+| 11 | `prompt_11_analyze_test_report.txt` | `/analyze_test_report` | `skills-test-report-analyzer` | Phân tích test report — gom nhóm failure theo root cause, so sánh trend, đề xuất thứ tự xử lý |
+| 13 | `prompt_13_generate_traceability_matrix.txt` | `/generate_traceability_matrix` | `skills-coverage-traceability` | Sinh ma trận truy vết RTM 3 tầng — tìm requirement chưa cover, orphan tests |
 
 ## Cách Sử Dụng Trong Claude Code
 
