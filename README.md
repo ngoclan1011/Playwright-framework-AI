@@ -2,13 +2,15 @@
 
 👋 Chào mừng bạn đến với **Claude Testing Skills** phiên bản dành cho **Claude Code**!
 
-Đây là bộ Kit được xây dựng và phát triển bởi **Anh Tester**, dành riêng cho **Cộng đồng Tester Việt Nam**. Mục tiêu của repo này là cung cấp sẵn các thiết lập, quy tắc hành vi (Rules), kỹ năng (Skills), và lệnh tùy chỉnh (Commands) chuẩn để hỗ trợ sử dụng AI Agent trên phần mềm **Claude Code** (bao gồm Claude Code CLI và Claude Code Desktop hoặc Claude Code dạng Extention trên VS Code).
+Đây là bộ Skills được xây dựng và phát triển bởi **Anh Tester**, dành riêng cho **Học viên học khoá AI tại Anh Tester**. Mục tiêu của repo này là cung cấp sẵn các thiết lập, quy tắc hành vi (Rules), kỹ năng (Skills), và lệnh tùy chỉnh (Commands) chuẩn để hỗ trợ sử dụng AI Agent trên phần mềm **Claude Code** (bao gồm Claude Code CLI và Claude Code Desktop hoặc Claude Code dạng Extention trên VS Code).
 
-Bộ Kit này **không chỉ dành riêng cho Automation** — mà được thiết kế toàn diện cho cả **Manual Testing** lẫn **Automation Testing**, bao phủ toàn bộ vòng đời kiểm thử phần mềm từ phân tích yêu cầu, thiết kế test cases cho đến thực thi và báo cáo kết quả.
+Bộ Skills này **không chỉ dành riêng cho Automation** — mà được thiết kế toàn diện cho cả **Manual Testing** lẫn **Automation Testing**, bao phủ toàn bộ vòng đời kiểm thử phần mềm từ phân tích yêu cầu, thiết kế test cases cho đến thực thi và báo cáo kết quả.
 
 Đặc biệt, mọi công đoạn đều được **tích hợp AI một cách có hệ thống**, tạo thành một **quy trình ứng dụng AI hoàn thiện (End-to-End AI Testing Workflow)** — giúp Tester làm việc thông minh hơn, nhanh hơn và hiệu quả hơn trong kỷ nguyên AI.
 
 > 🔌 **Lần đầu cài đặt?** Đọc **[SETUP_CLAUDE.md](SETUP_CLAUDE.md)** — hướng dẫn add **Playwright MCP** thủ công, kết nối **Atlassian / Slack / GitHub / Claude in Chrome**, và setup **Cowork Schedule** để tự động chạy task theo lịch.
+>
+> 🔄 **Cài xong rồi, chạy cái gì trước?** Đọc **[AI_FULL_FLOW.md](AI_FULL_FLOW.md)** — quy trình 7 chặng cho tình huống phổ biến nhất: hệ thống chỉ có UI, không tài liệu, không bộ test cases. Từ `/discover_system` → requirements → test cases → chạy tay → bug report → ma trận truy vết.
 
 ---
 
@@ -41,8 +43,8 @@ claude-testing-skills/
 │
 │ ══════════ KHUNG — dùng lại cho mọi dự án ══════════
 ├── .claude/
-│   ├── commands/            # 28 lệnh tùy chỉnh (slash commands)
-│   ├── rules/               # 5 quy tắc bắt buộc AI phải tuân theo
+│   ├── commands/            # 29 lệnh tùy chỉnh (slash commands)
+│   ├── rules/               # 6 quy tắc bắt buộc AI phải tuân theo
 │   ├── skills/              # 17 kỹ năng chuyên biệt cho AI
 │   └── settings.json        # Cấu hình quyền hạn cho Claude Code
 ├── plans/
@@ -54,6 +56,7 @@ claude-testing-skills/
 │   └── testcases-viewer/    # Công cụ web xem/lọc test case
 ├── CLAUDE.md                # Rule chung cho AI Agent (Claude Code đọc tự động)
 ├── SETUP_CLAUDE.md          # Hướng dẫn cài Playwright MCP, Connectors & Cowork Schedule
+├── AI_FULL_FLOW.md          # Quy trình 7 chặng Manual Testing — chạy command nào, theo thứ tự nào
 │
 │ ══════════ ĐẦU RA — dữ liệu của dự án đang làm ══════════
 ├── docs/
@@ -81,12 +84,12 @@ claude-testing-skills/
 
 ### `.claude/` — Bộ não của AI Agent trên Claude Code
 
-| Thư mục         | Vai trò                                                                                                                                                                                                                                         |
-| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `commands/`     | 29 slash commands: `/discover_system`, `/generate_requirements_from_website`, `/update_requirements_from_ticket`, `/generate_testcases_manual_rbt`, `/generate_automation_from_testcases`, `/update_automation_from_impact`, `/run_and_fix_tests`, `/heal_locators`, `/review_automation_code`, `/execute_test_cases`, `/analyze_test_report`, `/create_bug_report`, `/review_testcases`, `/generate_traceability_matrix`, `/generate_api_mocks`...                        |
-| `rules/`        | 5 quy tắc bắt buộc: automation chung, locator strategy, Playwright, Selenium, Appium                                                                                                                                                          |
-| `skills/`       | 17 kỹ năng chuyên biệt: requirements analyzer, automation engineer, manual testing, manual test executor, UI debug, locator healer, test data generator, framework architect, jira integration, bug reporter, test report analyzer, testcase reviewer, automation code reviewer, coverage traceability, api mocking... |
-| `settings.json` | Cấu hình quyền hạn: cho phép/cấm các hành động cụ thể (đọc file, chạy test, push code...). Riêng `settings.local.json` là cấu hình **cục bộ từng máy** — đã gitignore, không commit |
+| Thư mục         | Vai trò                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `commands/`     | 29 slash commands: `/discover_system`, `/generate_requirements_from_website`, `/update_requirements_from_ticket`, `/generate_testcases_manual_rbt`, `/generate_automation_from_testcases`, `/update_automation_from_impact`, `/run_and_fix_tests`, `/heal_locators`, `/review_automation_code`, `/execute_test_cases`, `/analyze_test_report`, `/create_bug_report`, `/review_testcases`, `/generate_traceability_matrix`, `/generate_api_mocks`... |
+| `rules/`        | 6 quy tắc bắt buộc: automation chung, reporting (Allure), locator strategy, Playwright, Selenium, Appium                                                                                                                                                                                                                                                                                                                                                                |
+| `skills/`       | 17 kỹ năng chuyên biệt: requirements analyzer, automation engineer, manual testing, manual test executor, UI debug, locator healer, test data generator, framework architect, jira integration, bug reporter, test report analyzer, testcase reviewer, automation code reviewer, coverage traceability, api mocking...                                                                                                                              |
+| `settings.json` | Cấu hình quyền hạn: cho phép/cấm các hành động cụ thể (đọc file, chạy test, push code...). Riêng `settings.local.json` là cấu hình **cục bộ từng máy** — đã gitignore, không commit                                                                                                                                                                                                                                                                 |
 
 > **📌 Lưu ý về cấu trúc:** Trong Claude Code, **workflows** được gọi là **commands** và đặt trong `.claude/commands/`. Tên file dùng dấu gạch dưới (`_`). Ví dụ: `generate_automation_from_testcases.md`.
 
@@ -100,7 +103,7 @@ Dành cho các tác vụ phức tạp, cần thực hiện **tuần tự trong c
 | --------------------- | --------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
 | `plans/manual/`       | Sinh Manual Test Cases theo quy trình **AI-RBT 6 bước** (Risk-Based Testing, 15 field types, OWASP & AI Quality Gate) | Xem `plans/manual/QUICK_START.md`       |
 | `plans/automation/`   | Sinh Automation Scripts theo **6 bước** từ context → review                                                           | Xem `plans/automation/QUICK_START.md`   |
-| `plans/cross-module/` | Phân tích tính năng **đa module** & sinh **ma trận kết hợp** (Output-Class/Pairwise/Cartesian)                                     | Xem `plans/cross-module/QUICK_START.md` |
+| `plans/cross-module/` | Phân tích tính năng **đa module** & sinh **ma trận kết hợp** (Output-Class/Pairwise/Cartesian)                        | Xem `plans/cross-module/QUICK_START.md` |
 
 **Cách dùng:** Mở `QUICK_START.md` → Làm theo từng bước → Gửi prompt mỗi bước vào Claude Code.
 
@@ -108,33 +111,33 @@ Dành cho các tác vụ phức tạp, cần thực hiện **tuần tự trong c
 
 Dành cho tác vụ **đơn lẻ**, chỉ cần copy → thay `[...]` bằng dữ liệu thực → paste → gửi.
 
-| #   | Prompt                                       | Mục đích                                                          |
-| --- | -------------------------------------------- | ----------------------------------------------------------------- |
-| 00  | `prompt_00_discover_system.txt`              | **[Mới]** Khám phá hệ thống chưa có tài liệu — bản đồ module + prefix |
-| 01  | `prompt_01_generate_requirements.txt`        | Phân tích website sinh Requirements                               |
-| 02  | `prompt_02_generate_test_cases.txt`          | **[Mới]** Sinh manual TCs RBT chuẩn 15 field types & Quality Gate |
-| 03  | `prompt_03_create_framework_playwright.txt`  | Dựng framework Playwright TS                                      |
-| 03  | `prompt_03_create_framework_selenium.txt`    | Dựng framework Selenium Java                                      |
-| 04  | `prompt_04_generate_script_playwright.txt`   | Viết test script Playwright TS                                    |
-| 04  | `prompt_04_generate_script_selenium.txt`     | Viết test script Selenium Java                                    |
-| 05  | `prompt_05_convert_manual_to_automation.txt` | Chuyển manual TC sang automation                                  |
-| 06  | `prompt_06_review_automation_code.txt`       | **[Mới]** Review chất lượng automation code theo Definition of Done |
-| 07  | `prompt_07_generate_test_data.txt`           | Sinh test data có cấu trúc                                        |
-| 08  | `prompt_08_analyze_flaky_tests.txt`          | Phân tích test không ổn định                                      |
-| 09  | `prompt_09_generate_api_tests.txt`           | **[Mới]** Viết test API 12 status codes & OWASP Security          |
-| 10  | `prompt_10_create_bug_report.txt`            | **[Mới]** Sinh bug report chuẩn từ test FAIL, tùy chọn đẩy Jira   |
-| 11  | `prompt_11_analyze_test_report.txt`          | **[Mới]** Phân tích test report, gom nhóm failure theo root cause |
-| 12  | `prompt_12_review_testcases.txt`             | **[Mới]** Review chất lượng manual TCs theo rubric 6 tiêu chí     |
-| 13  | `prompt_13_generate_traceability_matrix.txt` | **[Mới]** Sinh ma trận truy vết RTM 3 tầng                        |
-| 14  | `prompt_14_generate_api_mocks.txt`           | **[Mới]** Sinh API mocks + tests cho edge cases                   |
-| 15  | `prompt_15_generate_checklist.txt`           | **[Mới]** Sinh checklist tick tay (smoke / regression / release)  |
-| 16  | `prompt_16_execute_test_cases.txt`           | **[Mới]** Thực thi manual TC trên browser thật, xuất execution report |
-| 17  | `prompt_17_run_and_fix_tests.txt`            | **[Mới]** Chạy suite có sẵn, phân loại failure, tự sửa nhóm sửa được |
-| 18  | `prompt_18_heal_locators.txt`                | **[Mới]** Rà & sửa locator trong Page Object sau khi UI đổi        |
-| 19  | `prompt_19_update_automation_from_impact.txt` | **[Mới]** Cập nhật script đã có theo Impact Report (delta mode)   |
-| 20  | `prompt_20_analyze_requirement_document.txt` | **[Mới]** Phân tích ticket/tài liệu → tài liệu phân tích, KHÔNG sinh TC |
-| 21  | `prompt_21_update_requirements_from_ticket.txt` | **[Mới]** Cập nhật requirements từ ticket (delta mode) + Impact Report |
-| 22  | `prompt_22_generate_testcases_quick.txt`     | **[Mới]** Sinh manual TCs QUICK mode — 1 lượt, không qua 6 bước RBT |
+| #   | Prompt                                          | Mục đích                                                                |
+| --- | ----------------------------------------------- | ----------------------------------------------------------------------- |
+| 00  | `prompt_00_discover_system.txt`                 | **[Mới]** Khám phá hệ thống chưa có tài liệu — bản đồ module + prefix   |
+| 01  | `prompt_01_generate_requirements.txt`           | Phân tích website sinh Requirements                                     |
+| 02  | `prompt_02_generate_test_cases.txt`             | **[Mới]** Sinh manual TCs RBT chuẩn 15 field types & Quality Gate       |
+| 03  | `prompt_03_create_framework_playwright.txt`     | Dựng framework Playwright TS                                            |
+| 03  | `prompt_03_create_framework_selenium.txt`       | Dựng framework Selenium Java                                            |
+| 04  | `prompt_04_generate_script_playwright.txt`      | Viết test script Playwright TS                                          |
+| 04  | `prompt_04_generate_script_selenium.txt`        | Viết test script Selenium Java                                          |
+| 05  | `prompt_05_convert_manual_to_automation.txt`    | Chuyển manual TC sang automation                                        |
+| 06  | `prompt_06_review_automation_code.txt`          | **[Mới]** Review chất lượng automation code theo Definition of Done     |
+| 07  | `prompt_07_generate_test_data.txt`              | Sinh test data có cấu trúc                                              |
+| 08  | `prompt_08_analyze_flaky_tests.txt`             | Phân tích test không ổn định                                            |
+| 09  | `prompt_09_generate_api_tests.txt`              | **[Mới]** Viết test API 12 status codes & OWASP Security                |
+| 10  | `prompt_10_create_bug_report.txt`               | **[Mới]** Sinh bug report chuẩn từ test FAIL, tùy chọn đẩy Jira         |
+| 11  | `prompt_11_analyze_test_report.txt`             | **[Mới]** Phân tích test report, gom nhóm failure theo root cause       |
+| 12  | `prompt_12_review_testcases.txt`                | **[Mới]** Review chất lượng manual TCs theo rubric 6 tiêu chí           |
+| 13  | `prompt_13_generate_traceability_matrix.txt`    | **[Mới]** Sinh ma trận truy vết RTM 3 tầng                              |
+| 14  | `prompt_14_generate_api_mocks.txt`              | **[Mới]** Sinh API mocks + tests cho edge cases                         |
+| 15  | `prompt_15_generate_checklist.txt`              | **[Mới]** Sinh checklist tick tay (smoke / regression / release)        |
+| 16  | `prompt_16_execute_test_cases.txt`              | **[Mới]** Thực thi manual TC trên browser thật, xuất execution report   |
+| 17  | `prompt_17_run_and_fix_tests.txt`               | **[Mới]** Chạy suite có sẵn, phân loại failure, tự sửa nhóm sửa được    |
+| 18  | `prompt_18_heal_locators.txt`                   | **[Mới]** Rà & sửa locator trong Page Object sau khi UI đổi             |
+| 19  | `prompt_19_update_automation_from_impact.txt`   | **[Mới]** Cập nhật script đã có theo Impact Report (delta mode)         |
+| 20  | `prompt_20_analyze_requirement_document.txt`    | **[Mới]** Phân tích ticket/tài liệu → tài liệu phân tích, KHÔNG sinh TC |
+| 21  | `prompt_21_update_requirements_from_ticket.txt` | **[Mới]** Cập nhật requirements từ ticket (delta mode) + Impact Report  |
+| 22  | `prompt_22_generate_testcases_quick.txt`        | **[Mới]** Sinh manual TCs QUICK mode — 1 lượt, không qua 6 bước RBT     |
 
 > Danh mục đầy đủ chia theo 5 nhóm tra cứu: [`prompts/README.md`](prompts/README.md)
 
@@ -182,14 +185,15 @@ Copy `.claude` vào dự án là AI đã có **Rule / Skill / Command**. Nhưng 
 
 📖 **Xem hướng dẫn đầy đủ tại [SETUP_CLAUDE.md](SETUP_CLAUDE.md):**
 
-| Nội dung | Vì sao cần |
-| --- | --- |
+| Nội dung                                                       | Vì sao cần                                                                                                                                                                     |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Cài Playwright MCP thủ công** (Developer → Local MCP Server) | **Bắt buộc** cho `/discover_system`, `/execute_test_cases`, `/generate_requirements_from_website`, `/generate_automation_from_ui_flow` — không có thì AI không mở được browser |
-| **Connectors: Atlassian / Slack / GitHub / Claude in Chrome** | Kéo requirement từ Jira, gửi report vào Slack, đọc log CI từ GitHub Actions |
-| **Cowork Schedule** — tự động chạy task theo lịch | Ví dụ sẵn: mỗi sáng đọc task từ Slack và ước lượng effort · cuối ngày tổng hợp kết quả GitHub Actions gửi vào kênh Slack |
-| **Checklist nghiệm thu & bảng lỗi thường gặp** | Xử lý nhanh `spawn npx ENOENT` trên Windows, connector kẹt OAuth, task chạy sai múi giờ |
+| **Connectors: Atlassian / Slack / GitHub / Claude in Chrome**  | Kéo requirement từ Jira, gửi report vào Slack, đọc log CI từ GitHub Actions                                                                                                    |
+| **Cowork Schedule** — tự động chạy task theo lịch              | Ví dụ sẵn: mỗi sáng đọc task từ Slack và ước lượng effort · cuối ngày tổng hợp kết quả GitHub Actions gửi vào kênh Slack                                                       |
+| **Checklist nghiệm thu & bảng lỗi thường gặp**                 | Xử lý nhanh `spawn npx ENOENT` trên Windows, connector kẹt OAuth, task chạy sai múi giờ                                                                                        |
 
 > ⚡ **Cài nhanh nhất:** nếu chỉ cần Playwright MCP cho Claude Code CLI, chạy đúng 1 lệnh ở thư mục gốc dự án:
+>
 > ```bash
 > claude mcp add --scope project playwright -- npx -y @playwright/mcp@latest --viewport-size "1920,1080"
 > ```
