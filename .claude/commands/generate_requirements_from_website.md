@@ -75,7 +75,32 @@ Workflow này giúp bạn phân tích một module hoặc trang web được cun
      docs/requirements/<module>/stories/story_NN_<slug>.md     ← chỉ khi tách
      ```
    - **BẮT BUỘC cập nhật danh mục** `docs/requirements/README.md`: thêm/sửa dòng của module ở bảng mục 1 (**`Trạng thái recon` → ✅ Đã có tài liệu**, `Mức phủ tài liệu`, `REQ đã dùng`, `Mã kế tiếp`, `AMB treo`, `Story`, `Cập nhật`), bảng trạng thái mục 2, và ambiguity 🔴 High ở mục 3.
+   - **BẮT BUỘC — tự đối chiếu danh mục sau khi cập nhật** (xem khối "Đối chiếu danh mục" bên dưới). Làm nhiều phiên thì danh mục trôi khỏi thực tế mà **không có cảnh báo nào**; đối chiếu ngay lúc còn nhớ rẻ hơn nhiều so với dò lại sau 10 module.
    - **Nếu đã có `_discovery/system_map.md`:** ghi 1 dòng vào Nhật ký khám phá khi phát hiện lệch so với bản đồ (module lớn hơn/nhỏ hơn dự kiến, có tab con là entity riêng nên phải tách, route đổi). Bản đồ sai mà không sửa thì module sau lại đi nhầm đường.
    - Nếu tài liệu bị tách nhiều file: file index **vẫn phải là** `requirements_<module>.md` và **BẮT BUỘC** chứa mục `## Bản đồ tài liệu` liệt kê file con kèm dải REQ.
    - **Checklist trước khi bàn giao:** đối chiếu đủ 6 mục bất biến tại **mục 5.4** của skill (REQ ID giữ nguyên · mỗi REQ thuộc đúng 1 Story · tổng REQ khớp · AMB/RISK đánh số toàn module · không nhân bản hạng mục cắt ngang · link 2 chiều index ↔ story).
    - Nhắc user: tài liệu này (với REQ ID) là input chuẩn cho `/generate_testcases_manual_rbt`, `/generate_testcases_from_requirements` và `/generate_traceability_matrix`.
+
+---
+
+## Đối chiếu danh mục (BẮT BUỘC — chạy ở Bước 5, sau khi đã cập nhật `README.md`)
+
+> **Vì sao cần:** danh mục là **bản phái sinh** do agent ghi tay qua nhiều phiên; thư mục `docs/requirements/` mới là **sự thật**. Một phiên quên cập nhật là danh mục lệch vĩnh viễn — mà cơ chế chống trùng prefix và nối tiếp mã REQ (skill mục 2.1) lại đọc **từ danh mục**. Lệch âm thầm ở đây sẽ nổ ở module thứ 5, thứ 10, dưới dạng trùng mã REQ.
+
+**Cách làm — chỉ đọc, không mở lại browser:**
+
+1. Glob `docs/requirements/*/requirements_*.md` → danh sách module **có thật trên đĩa**
+2. Đọc bảng danh mục mục 1 của `docs/requirements/README.md` → danh sách module **đã khai báo**
+3. So hai danh sách theo 4 điểm dưới, chỉ mở file module khi cần lấy số
+
+| Điểm kiểm | Cách phát hiện | Xử lý |
+|---|---|---|
+| **Module có tài liệu nhưng thiếu ở danh mục** | Có thư mục + file index, không có dòng trong bảng | Thêm dòng — lấy prefix, `REQ đã dùng`, `Mã kế tiếp` **từ chính tài liệu module**, không đoán |
+| **Dòng danh mục trỏ tới module không tồn tại** | Có dòng, không có thư mục | **KHÔNG xoá dòng.** Đổi `Trạng thái recon` về ⬜ và ghi lý do ở Nhật ký danh mục — prefix đã cấp là vĩnh viễn (skill mục 5.8) |
+| **`Mã kế tiếp` lệch với REQ cuối trong tài liệu** | Mở file module, lấy số REQ lớn nhất, so với cột `Mã kế tiếp` | Sửa danh mục theo tài liệu module. **Tài liệu module thắng** — nó là nơi mã REQ thực sự tồn tại |
+| **Prefix trùng giữa 2 module** | Hai dòng cùng prefix | ⛔ **DỪNG, báo user ngay** — đây là lỗi phải người quyết định. Đổi prefix nghĩa là đổi mọi REQ ID của một module và mọi TC map về nó. **Agent KHÔNG tự đổi** |
+
+4. Có sửa gì → ghi **1 dòng vào Nhật ký danh mục** (mục 6 của `README.md`): ngày · phát hiện gì · sửa gì
+5. Không lệch → không ghi gì thêm, chỉ báo trong phần bàn giao: `Danh mục khớp với thư mục thực tế`
+
+**Nguyên tắc phân xử khi lệch:** thư mục + tài liệu module là **nguồn sự thật**, danh mục là bản phái sinh → **sửa danh mục theo tài liệu**, không bao giờ ngược lại. Ngoại lệ duy nhất là **prefix** — prefix đã cấp thì bất biến, lệch prefix phải hỏi user.

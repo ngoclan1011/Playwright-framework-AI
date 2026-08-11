@@ -41,7 +41,9 @@ Sử dụng skill này khi:
 - **Severity:** 🔴 Critical / 🟠 Major / 🟡 Minor / 🟢 Trivial
 - **Priority:** P1 / P2 / P3
 - **Môi trường:** <env> | <browser + version> | <OS> | <resolution>
+- **Build / Version:** <build đang test khi phát hiện lỗi — BẮT BUỘC, thiếu thì không retest được>
 - **Test case liên quan:** <TC ID hoặc test file path>
+- **REQ ID liên quan:** <mã REQ — dùng để chọn phạm vi regression khi retest>
 - **Test data đã dùng:** <email/username/id — traceable>
 
 ## Steps to Reproduce
@@ -64,7 +66,26 @@ Sử dụng skill này khi:
 - Tần suất tái hiện: Luôn luôn / Thỉnh thoảng (x/y lần)
 - Workaround (nếu có):
 - Nghi ngờ root cause (nếu phân tích được):
+
+## Lịch sử retest
+<!-- Do /retest_fixed_bugs ghi. Dòng mới thêm LÊN ĐẦU bảng. Bảng rỗng = chưa retest lần nào -->
+
+| Ngày | Build | Kết quả | Retest report | Ghi chú |
+|---|---|---|---|---|
 ```
+
+> ⚠️ **Mục `Lịch sử retest` là phần DUY NHẤT được phép thêm vào bug report sau khi đã bàn giao.** Mọi mục khác — Steps, Expected, Actual, Evidence — là **bằng chứng lịch sử tại thời điểm phát hiện**, không được sửa cho khớp hành vi build mới. Hành vi build mới lệch Expected thì đó là kết quả retest `PARTIAL`, không phải cớ để sửa bug gốc.
+
+### 4 trạng thái retest
+
+| Trạng thái | Nghĩa |
+|---|---|
+| ✅ **FIXED** | Chạy đúng Steps gốc, Actual khớp hoàn toàn Expected gốc, lặp ≥ 2 lần |
+| ❌ **NOT_FIXED** | Lỗi cũ vẫn tái hiện — mở lại bug này, KHÔNG tạo bug trùng |
+| 🟡 **PARTIAL** | Lỗi gốc hết nhưng hành vi vẫn lệch Expected, hoặc chỉ hết ở một phần trường hợp |
+| ⚠️ **CANNOT_VERIFY** | Không dựng được pre-condition / môi trường lỗi / mất quyền — **KHÔNG** được chấm FIXED |
+
+Chi tiết quy trình: workflow `/retest_fixed_bugs`.
 
 ---
 
@@ -109,6 +130,9 @@ Trước khi bàn giao bug report, verify:
 - [ ] Test data traceable — dev có thể tìm đúng record trong DB
 - [ ] Severity/Priority gán theo bảng chuẩn, không cảm tính
 - [ ] Title đủ thông tin để tìm kiếm sau này (module + hành vi sai)
+- [ ] **Có `Build / Version`** — thiếu thì `/retest_fixed_bugs` không đối chiếu được build mới, retest thành vô nghĩa
+- [ ] **Có `REQ ID liên quan`** (nếu truy được) — thiếu thì retest không chọn được phạm vi regression, phải dò tay
+- [ ] Có mục `Lịch sử retest` (bảng rỗng) sẵn trong file
 
 ---
 

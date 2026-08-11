@@ -1,12 +1,12 @@
 # 🔄 AI Full Flow — Manual Testing
 
-> Quy trình đầy đủ dùng AI cho **Manual Testing**, từ hệ thống chưa có gì → tài liệu → test cases → chạy tay → bug report → ma trận truy vết.
+> Quy trình đầy đủ dùng AI cho **Manual Testing**, từ hệ thống chưa có gì → tài liệu → test cases → chạy tay → bug report → retest → ma trận truy vết → báo cáo release.
 >
 > Áp dụng cho tình huống phổ biến nhất: **hệ thống chỉ có UI, không tài liệu, không bộ test cases**.
 
 ---
 
-## Toàn cảnh 7 chặng
+## Toàn cảnh 8 chặng
 
 ```
 ┌─ CHUẨN BỊ TÀI LIỆU ──────────────────────────────────────────────┐
@@ -23,12 +23,19 @@
 │  4. /execute_test_cases                  → chạy tay, chấm P/F/B/S│  Mỗi đợt kiểm thử
 │  5. /analyze_test_report                 → gom nhóm root cause   │
 │     /create_bug_report                   → bug report chuẩn      │
+│     /retest_fixed_bugs   ←──── dev fix ───┘  → FIXED? regression?│  ↻ lặp tới khi hết bug
 └──────────────────────────────────────────────────────────────────┘
                                   ↓
 ┌─ CHỨNG MINH ĐỘ PHỦ ──────────────────────────────────────────────┐
 │  6. /generate_traceability_matrix        → RTM                   │  Trước release
 └──────────────────────────────────────────────────────────────────┘
+                                  ↓
+┌─ BÁO CÁO & QUYẾT ĐỊNH ───────────────────────────────────────────┐
+│  7. /generate_test_summary_report        → go / no-go có căn cứ  │  Mỗi mốc release
+└──────────────────────────────────────────────────────────────────┘
 ```
+
+> 📋 **Đợt kiểm thử có kế hoạch chính thức** (khách hàng/PM yêu cầu tài liệu duyệt) → chạy `/generate_master_test_plan` **trước chặng 4**. Nó công bố tiêu chí exit mà chặng 7 sẽ chấm lại.
 
 **Mắt xích giữ cả chuỗi là `REQ ID`.** Chặng 1 sinh ra → chặng 2 ghi vào cột `REQ ID` của mỗi TC → chặng 6 dùng để tính coverage. Đứt ở đâu thì từ đó trở đi không chứng minh được "đã test đủ".
 
@@ -190,14 +197,37 @@ Report gồm 6 mục: Tổng kết · Kết quả từng TC · Chi tiết FAIL �
 | **Nhiều TC FAIL**, chưa rõ nguyên nhân | `/analyze_test_report` | [`prompt_11_analyze_test_report.txt`](prompts/prompt_11_analyze_test_report.txt) | **Chạy cái này trước** — 12 TC FAIL thường chỉ là 2 bug |
 | Đã rõ bug, cần báo cáo | `/create_bug_report` | [`prompt_10_create_bug_report.txt`](prompts/prompt_10_create_bug_report.txt) | Tự lấy evidence từ run vừa rồi, tuỳ chọn đẩy Jira |
 | FAIL vì **TC viết sai**, không phải lỗi hệ thống | `/review_testcases` mode FIX | [`prompt_12_review_testcases.txt`](prompts/prompt_12_review_testcases.txt) | Quay lại chặng 3 |
+| **Dev báo đã fix**, cần xác minh | `/retest_fixed_bugs` | [`prompt_23_retest_fixed_bugs.txt`](prompts/prompt_23_retest_fixed_bugs.txt) | Đóng vòng lặp bug — xem dưới |
 
 **Đầu ra:**
 ```
-test_report_analysis.md                          ← gom nhóm theo root cause
+docs/executions/<module>/analysis_<timestamp>.md ← gom nhóm theo root cause (nhánh MANUAL)
 bug_reports/BUG_<module>_<timestamp>.md          ← mỗi bug 1 file
 ```
 
 > Gom nhóm trước rồi mới viết bug report — đỡ tạo 12 bug trùng nhau cho cùng một nguyên nhân.
+
+### Vòng lặp bug — chạy tới khi hết, không phải một chiều
+
+```
+TC FAIL → /create_bug_report → dev fix → /retest_fixed_bugs
+                    ↑                            │
+                    └──── regression mới ────────┘
+```
+
+| Kết quả retest | Nghĩa | Làm gì tiếp |
+|---|---|---|
+| ✅ FIXED | Chạy đúng steps gốc, khớp Expected, lặp ≥ 2 lần | Đề xuất đóng bug |
+| ❌ NOT_FIXED | Lỗi cũ vẫn còn | Mở lại **bug cũ**, không tạo bug trùng |
+| 🟡 PARTIAL | Hết lỗi gốc nhưng vẫn lệch Expected | Giữ bug mở, ghi rõ phần nào còn |
+| ⚠️ CANNOT_VERIFY | Không dựng được pre-condition | **Không** được chấm FIXED |
+
+⚠️ **Hai luật của chặng này:**
+
+1. **Bug Critical/Major luôn chạy mode FULL** — verify xong phải chạy regression quanh vùng fix. Bản fix làm hỏng chỗ khác là chuyện thường xuyên, không phải ngoại lệ.
+2. **TC regression FAIL = bug MỚI**, tách riêng, link về bug gốc. Gộp vào bug cũ là mất dấu vết nguyên nhân.
+
+**Đầu ra:** `docs/executions/<module>/retest_<timestamp>/retest_report.md` + mục `Lịch sử retest` thêm vào bug gốc.
 
 ---
 
@@ -219,6 +249,45 @@ bug_reports/BUG_<module>_<timestamp>.md          ← mỗi bug 1 file
 | ⚪ | Test mồ côi — không map về REQ nào |
 
 > ⚠️ **Đọc mục ⬛ trước mọi con số phần trăm.** Coverage 95% mà còn 3 module chưa ai khảo sát thì con số đó vô nghĩa — nó chỉ tính trên phần đã có tài liệu.
+
+---
+
+## Chặng 7 — Báo cáo tổng hợp & quyết định release
+
+```
+/generate_test_summary_report
+```
+
+📋 Prompt mẫu: [`prompts/prompt_24_generate_test_summary_report.txt`](prompts/prompt_24_generate_test_summary_report.txt)
+
+Gộp **mọi** kết quả của cả đợt — execution report nhiều module + bug đang mở + RTM — thành **một** tài liệu gửi PM/khách hàng, kết thúc bằng khuyến nghị **GO / GO có điều kiện / NO-GO** kèm căn cứ.
+
+**Ba luật của chặng này:**
+
+| Luật | Vì sao |
+|---|---|
+| **QA khuyến nghị, PM quyết định** | QA không nắm áp lực thị trường, hợp đồng, chi phí trễ hạn |
+| **Khuyến nghị GO vẫn phải kèm rủi ro tồn đọng** | GO trơn không nêu tồn đọng là báo cáo vô trách nhiệm — có sự cố thì không ai biết QA đã cảnh báo hay chưa |
+| **Vùng chưa test đứng TRƯỚC mọi tỷ lệ** | Cùng lý do với mục ⬛ của RTM: pass rate đẹp che mất module chưa ai chạm |
+
+**Tiêu chí exit phải chốt TRƯỚC khi nhìn kết quả.** Nhìn số rồi mới đặt ngưỡng là hợp thức hoá kết quả, không phải đánh giá. Đợt có kế hoạch chính thức thì `/generate_master_test_plan` đã công bố bộ tiêu chí này từ đầu — chặng 7 chỉ chấm lại đúng bộ đó.
+
+**Đầu ra:** `docs/executions/test_summary_<mốc>_<timestamp>.md`
+
+---
+
+## Xem kết quả bằng web viewer
+
+Không cần đọc file `.md` thô. Mở [`scripts/execution-viewer/bundle.html`](scripts/execution-viewer/README.md) (double-click, chạy offline), kéo thả file vào:
+
+| Nạp file | Xem được gì |
+|---|---|
+| `execution_report.md` · `retest_report.md` (chặng 4–5) | Thống kê PASS/FAIL/BLOCKED/SKIPPED · **so sánh giữa các lần chạy** (🆕 mới fail · 🔁 fail liên tục · ✅ vừa được fix) · cảnh báo BLOCKED > 20%, nợ kiểm thử, data chưa dọn |
+| `traceability_matrix.md` (chặng 6) | **Độ phủ automation** — REQ nào chưa có TC, TC nào chưa automate, REQ mới automate **một phần**, orphan test |
+
+Xuất **CSV** hoặc **Excel** (nhiều sheet, ô trạng thái tô màu) đúng phần đang hiển thị.
+
+Tương tự, [`scripts/testcases-viewer/bundle.html`](scripts/testcases-viewer/README.md) để duyệt và xuất Excel test case ở chặng 2–3.
 
 ---
 
@@ -253,8 +322,11 @@ Cột **`TC cần xử lý`** trong Nhật ký thay đổi của tài liệu req
 | 4 | `/execute_test_cases` | [`prompt_16`](prompts/prompt_16_execute_test_cases.txt) | Mỗi đợt kiểm thử |
 | 5 | `/analyze_test_report` | [`prompt_11`](prompts/prompt_11_analyze_test_report.txt) | Khi nhiều TC FAIL |
 | 5 | `/create_bug_report` | [`prompt_10`](prompts/prompt_10_create_bug_report.txt) | Mỗi bug cần báo |
+| 5 | `/retest_fixed_bugs` | [`prompt_23`](prompts/prompt_23_retest_fixed_bugs.txt) | **Mỗi lần dev báo đã fix** |
 | 6 | `/generate_traceability_matrix` | [`prompt_13`](prompts/prompt_13_generate_traceability_matrix.txt) | Định kỳ / trước release |
+| 7 | `/generate_test_summary_report` | [`prompt_24`](prompts/prompt_24_generate_test_summary_report.txt) | **Mỗi mốc release / sprint** |
 | ↻ | `/update_requirements_from_ticket` | [`prompt_21`](prompts/prompt_21_update_requirements_from_ticket.txt) | Mỗi ticket sửa yêu cầu |
+| ⊹ | `/generate_master_test_plan` | [`prompt_25`](prompts/prompt_25_generate_master_test_plan.txt) | 1 lần / đợt — khi cần kế hoạch chính thức |
 
 **Biến thể của chặng 1–2** (không nằm trên luồng chính): `/analyze_requirement_document` → [`prompt_20`](prompts/prompt_20_analyze_requirement_document.txt) · `/generate_testcases_from_requirements` → [`prompt_22`](prompts/prompt_22_generate_testcases_quick.txt).
 

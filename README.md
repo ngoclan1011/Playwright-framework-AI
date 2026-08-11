@@ -10,7 +10,7 @@ Bộ Skills này **không chỉ dành riêng cho Automation** — mà được t
 
 > 🔌 **Lần đầu cài đặt?** Đọc **[SETUP_CLAUDE.md](SETUP_CLAUDE.md)** — hướng dẫn add **Playwright MCP** thủ công, kết nối **Atlassian / Slack / GitHub / Claude in Chrome**, và setup **Cowork Schedule** để tự động chạy task theo lịch.
 >
-> 🔄 **Cài xong rồi, chạy cái gì trước?** Đọc **[AI_FULL_FLOW.md](AI_FULL_FLOW.md)** — quy trình 7 chặng cho tình huống phổ biến nhất: hệ thống chỉ có UI, không tài liệu, không bộ test cases. Từ `/discover_system` → requirements → test cases → chạy tay → bug report → ma trận truy vết.
+> 🔄 **Cài xong rồi, chạy cái gì trước?** Đọc **[AI_FULL_FLOW.md](AI_FULL_FLOW.md)** — quy trình 8 chặng cho tình huống phổ biến nhất: hệ thống chỉ có UI, không tài liệu, không bộ test cases. Từ `/discover_system` → requirements → test cases → chạy tay → bug report → retest → ma trận truy vết → báo cáo release.
 
 ---
 
@@ -51,12 +51,13 @@ claude-testing-skills/
 │   ├── manual/              # Quy trình 6 bước sinh Manual Test Cases (AI-RBT)
 │   ├── automation/          # Quy trình 6 bước sinh Automation Scripts
 │   └── cross-module/        # Quy trình phân tích Cross-Module & Ma trận kết hợp
-├── prompts/                 # 26 prompt mẫu dùng nhanh (copy → paste → gửi)
+├── prompts/                 # 29 prompt mẫu dùng nhanh (copy → paste → gửi)
 ├── scripts/
-│   └── testcases-viewer/    # Công cụ web xem/lọc test case
+│   ├── testcases-viewer/    # Công cụ web xem/lọc test case
+│   └── execution-viewer/    # Công cụ web xem kết quả chạy, so sánh các lần chạy & độ phủ automation
 ├── CLAUDE.md                # Rule chung cho AI Agent (Claude Code đọc tự động)
 ├── SETUP_CLAUDE.md          # Hướng dẫn cài Playwright MCP, Connectors & Cowork Schedule
-├── AI_FULL_FLOW.md          # Quy trình 7 chặng Manual Testing — chạy command nào, theo thứ tự nào
+├── AI_FULL_FLOW.md          # Quy trình 8 chặng Manual Testing — chạy command nào, theo thứ tự nào
 │
 │ ══════════ ĐẦU RA — dữ liệu của dự án đang làm ══════════
 ├── docs/
@@ -86,9 +87,9 @@ claude-testing-skills/
 
 | Thư mục         | Vai trò                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `commands/`     | 29 slash commands: `/discover_system`, `/generate_requirements_from_website`, `/update_requirements_from_ticket`, `/generate_testcases_manual_rbt`, `/generate_automation_from_testcases`, `/update_automation_from_impact`, `/run_and_fix_tests`, `/heal_locators`, `/review_automation_code`, `/execute_test_cases`, `/analyze_test_report`, `/create_bug_report`, `/review_testcases`, `/generate_traceability_matrix`, `/generate_api_mocks`... |
+| `commands/`     | 32 slash commands: `/discover_system`, `/generate_requirements_from_website`, `/update_requirements_from_ticket`, `/generate_testcases_manual_rbt`, `/generate_automation_from_testcases`, `/update_automation_from_impact`, `/run_and_fix_tests`, `/heal_locators`, `/review_automation_code`, `/execute_test_cases`, `/retest_fixed_bugs`, `/analyze_test_report`, `/create_bug_report`, `/review_testcases`, `/generate_traceability_matrix`, `/generate_master_test_plan`, `/generate_test_summary_report`, `/generate_api_mocks`... |
 | `rules/`        | 6 quy tắc bắt buộc: automation chung, reporting (Allure), locator strategy, Playwright, Selenium, Appium                                                                                                                                                                                                                                                                                                                                                                |
-| `skills/`       | 17 kỹ năng chuyên biệt: requirements analyzer, automation engineer, manual testing, manual test executor, UI debug, locator healer, test data generator, framework architect, jira integration, bug reporter, test report analyzer, testcase reviewer, automation code reviewer, coverage traceability, api mocking...                                                                                                                              |
+| `skills/`       | 18 kỹ năng chuyên biệt: requirements analyzer, automation engineer, manual testing, manual test executor, UI debug, locator healer, test data generator, framework architect, jira integration, bug reporter, test report analyzer, **test summary reporter**, testcase reviewer, automation code reviewer, coverage traceability, api mocking...                                                                                                                              |
 | `settings.json` | Cấu hình quyền hạn: cho phép/cấm các hành động cụ thể (đọc file, chạy test, push code...). Riêng `settings.local.json` là cấu hình **cục bộ từng máy** — đã gitignore, không commit                                                                                                                                                                                                                                                                 |
 
 > **📌 Lưu ý về cấu trúc:** Trong Claude Code, **workflows** được gọi là **commands** và đặt trong `.claude/commands/`. Tên file dùng dấu gạch dưới (`_`). Ví dụ: `generate_automation_from_testcases.md`.
@@ -138,8 +139,11 @@ Dành cho tác vụ **đơn lẻ**, chỉ cần copy → thay `[...]` bằng d�
 | 20  | `prompt_20_analyze_requirement_document.txt`    | **[Mới]** Phân tích ticket/tài liệu → tài liệu phân tích, KHÔNG sinh TC |
 | 21  | `prompt_21_update_requirements_from_ticket.txt` | **[Mới]** Cập nhật requirements từ ticket (delta mode) + Impact Report  |
 | 22  | `prompt_22_generate_testcases_quick.txt`        | **[Mới]** Sinh manual TCs QUICK mode — 1 lượt, không qua 6 bước RBT     |
+| 23  | `prompt_23_retest_fixed_bugs.txt`               | **[Mới]** Retest bug đã fix + regression quanh vùng fix                 |
+| 24  | `prompt_24_generate_test_summary_report.txt`    | **[Mới]** Báo cáo tổng hợp tại mốc release — khuyến nghị go/no-go       |
+| 25  | `prompt_25_generate_master_test_plan.txt`       | **[Mới]** Master Test Plan — phạm vi, tiêu chí vào/ra, lịch, rủi ro     |
 
-> Danh mục đầy đủ chia theo 5 nhóm tra cứu: [`prompts/README.md`](prompts/README.md)
+> Danh mục đầy đủ chia theo 6 nhóm tra cứu: [`prompts/README.md`](prompts/README.md)
 
 ---
 

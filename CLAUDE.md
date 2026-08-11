@@ -173,7 +173,8 @@ Agent sử dụng skills trong `.claude/skills/` tùy theo nhiệm vụ:
 | `skills-jira-integration`       | Tích hợp Jira/Xray — lấy requirements, đẩy test results                             |
 | `skills-bug-reporter`           | Sinh bug report chuẩn từ test FAIL — evidence, severity/priority, đẩy Jira            |
 | `skills-manual-test-executor`   | Thực thi manual TC trên browser thật qua Playwright MCP — chấm PASS/FAIL/BLOCKED/SKIPPED, xuất execution report |
-| `skills-test-report-analyzer`   | Phân tích test report — gom nhóm failure theo root cause, đề xuất thứ tự xử lý     |
+| `skills-test-report-analyzer`   | Phân tích test report **một lần chạy** — automation lẫn manual, gom nhóm failure theo root cause, đề xuất thứ tự xử lý |
+| `skills-test-summary-reporter`  | Tổng hợp **toàn dự án tại một mốc** — gộp nhiều execution report + bug + RTM, đối chiếu tiêu chí exit, khuyến nghị go/no-go |
 | `skills-testcase-reviewer`      | Review chất lượng manual test cases — rubric 6 tiêu chí, coverage gaps               |
 | `skills-coverage-traceability`  | Sinh ma trận truy vết RTM — Requirements ↔ Test Cases ↔ Automation                    |
 | `skills-api-mocking`            | Sinh mock/stub API (Playwright route, WireMock) — test UI độc lập backend             |
@@ -226,10 +227,27 @@ docs/
 │       └── archive/test_cases_<module>_vN.md  ← phiên bản cũ
 │
 └── executions/                                 ← kết quả thực thi
-    └── <module>/run_<timestamp>/
-        ├── execution_report.md
-        └── evidence/<TC_ID>_<mô_tả>.png
+    ├── test_summary_<mốc>_<timestamp>.md       ← báo cáo tổng hợp, CẮT NGANG mọi module
+    └── <module>/
+        ├── run_<timestamp>/
+        │   ├── execution_report.md
+        │   └── evidence/<TC_ID>_<mô_tả>.png
+        ├── retest_<timestamp>/                 ← /retest_fixed_bugs
+        │   ├── retest_report.md
+        │   └── evidence/*.png
+        └── analysis_<timestamp>.md             ← /analyze_test_report nhánh MANUAL
 ```
+
+> `test_summary_*.md` nằm ở **gốc `executions/`**, không thuộc module nào — nó gộp mọi module tại một mốc release.
+
+### Xem kết quả bằng web viewer
+
+Hai trang tĩnh trong `scripts/`, mở bằng cách double-click, chạy offline, không cần cài gì:
+
+| Trang | Nạp file gì | Dùng khi |
+|---|---|---|
+| `scripts/testcases-viewer/bundle.html` | `test_cases_*.md` · `checklist_*.md` | Duyệt, lọc, xuất Excel test case |
+| `scripts/execution-viewer/bundle.html` | `execution_report.md` · `retest_report.md` · `traceability_matrix.md` | Xem kết quả chạy, so sánh giữa các lần chạy, xem độ phủ automation, xuất CSV/Excel |
 
 ### Quy tắc bất biến
 
@@ -248,6 +266,26 @@ docs/
 | Gộp module vào chung 1 file khám phá **KHÔNG** gộp prefix, **KHÔNG** gộp `requirements_<module>.md` | Gộp là để đọc cho gọn; ranh giới truy vết vẫn là prefix. 3 module chung file khám phá vẫn ra 3 tài liệu requirements riêng |
 
 Chi tiết: skill `skills-requirements-analyzer` mục 2.1 (nối tiếp mã), 5.3 (thư mục), 5.7 (danh mục), 6.9 (nhật ký) · skill `skills-rbt-manual-testing` mục "Quy Tắc Xuất File" phần 2 và 4.
+
+### Mở phiên trên dự án đã có nhiều tài liệu
+
+Dự án lớn dần lên hàng chục module — **agent KHÔNG đọc hết `docs/`**, cũng không cần user paste tài liệu vào chat. Đọc theo **chuỗi 3 tầng**, mở rộng dần theo nhu cầu:
+
+| Tầng | File | Trả lời câu hỏi | Khi nào đọc |
+|---|---|---|---|
+| **1** | `docs/requirements/README.md` | Hệ thống có module nào · prefix đã chiếm · mã REQ kế tiếp · AMB 🔴 còn treo | **Luôn** — mọi tác vụ đụng `docs/` |
+| **2** | `docs/requirements/_discovery/system_map.md` | Module nằm ở route nào · phụ thuộc giữa module · risk · vùng chưa xác minh | Khi cần bối cảnh cấp hệ thống hoặc sắp recon module mới |
+| **3** | `docs/<nhánh>/<module>/<file index>` | Từng field · từng rule · từng message | **Chỉ module đang làm** — 1–2 file, không hơn |
+
+**Quy tắc:** đọc tầng 1 → định vị được module cần → mở thẳng tầng 3 của **đúng module đó**. Không glob toàn bộ `docs/requirements/*/` để "đọc cho chắc" — đó là cách nhanh nhất làm tràn ngữ cảnh và trả lời sai chi tiết.
+
+**Câu mở phiên chuẩn** (dán vào chat khi bắt đầu phiên mới trên dự án đã có tài liệu):
+
+```
+Đọc docs/requirements/README.md và docs/requirements/_discovery/system_map.md để nắm bối cảnh dự án. Liệt kê: module đã có tài liệu / chưa recon / còn ambiguity 🔴 treo. Chưa cần mở file module nào.
+```
+
+Agent nhận câu này thì **chỉ** đọc 2 file tầng 1–2 rồi báo cáo, **không** tự động đi recon hay sinh tài liệu.
 
 ### Chuyển sang dự án mới — dọn gì
 
@@ -353,7 +391,10 @@ Agent sử dụng workflows trong `.claude/commands/` qua slash commands:
 | `/import_test_results_xray`             | Đẩy kết quả test lên Xray                              |
 | `/create_bug_report`                    | Sinh bug report chuẩn từ test FAIL (tùy chọn đẩy Jira)  |
 | `/execute_test_cases`                   | Thực thi manual TC trên browser thật — chấm PASS/FAIL/BLOCKED/SKIPPED, xuất execution report |
-| `/analyze_test_report`                  | Phân tích test report — gom nhóm failure, đề xuất xử lý |
+| `/retest_fixed_bugs`                    | **Đóng vòng lặp bug** — retest bug đã fix trên build mới, chấm FIXED/NOT_FIXED/PARTIAL, chạy regression quanh vùng fix (2 modes: RETEST/FULL) |
+| `/analyze_test_report`                  | Phân tích test report **một lần chạy** — 2 nhánh AUTOMATION / MANUAL, gom nhóm failure, đề xuất xử lý |
+| `/generate_master_test_plan`            | Master Test Plan cấp quản lý — phạm vi & ngoài phạm vi, tiêu chí vào/ra, môi trường, nhân lực, lịch, rủi ro dự án |
+| `/generate_test_summary_report`         | Báo cáo tổng hợp tại một mốc release/sprint — gộp mọi kết quả, đối chiếu tiêu chí exit, **khuyến nghị go/no-go** |
 | `/review_testcases`                     | Review chất lượng manual TCs (2 modes: REVIEW/FIX)         |
 | `/generate_traceability_matrix`         | Sinh ma trận truy vết RTM 3 tầng                          |
 | `/generate_api_mocks`                   | Sinh API mocks + tests cho edge cases                        |

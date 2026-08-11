@@ -64,3 +64,5 @@ skills:
   - Danh sách ⚪ orphan tests
   - Mục ⚠️ mapping suy luận cần xác nhận
 - File `traceability_matrix.csv` (nếu user yêu cầu)
+
+> 📊 **Xem trực quan:** mở `scripts/execution-viewer/bundle.html` rồi kéo thả `traceability_matrix.md` vào → tab **Độ phủ automation**. Trang này tự tính lại chỉ số từ bảng "Ma trận chi tiết" (không đọc bảng Tổng quan), tách riêng trạng thái **automate một phần**, và xuất Excel nhiều sheet. Nhắc user điều này ở bước bàn giao.

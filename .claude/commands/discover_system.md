@@ -105,7 +105,17 @@ Trước khi khám phá bất cứ thứ gì:
    - **Có** → đọc bảng danh mục: module nào đã có, **prefix nào đã bị chiếm**. Lần chạy này là **bổ sung**, không phải khởi tạo lại
    - **Chưa** → sẽ tạo mới ở Bước 6 (skill mục 5.7.1)
 2. `docs/requirements/_discovery/system_map.md` — đã khám phá lần nào chưa? Có thì đọc để **cập nhật delta**, không viết đè
-3. Glob `docs/requirements/*/requirements_*.md` — đối chiếu chéo với danh mục, phát hiện module có tài liệu nhưng chưa vào danh mục
+3. Glob `docs/requirements/*/requirements_*.md` — đối chiếu chéo với danh mục theo bảng dưới. Đây là **thư mục thật vs danh mục khai báo**; lệch ở đây là dấu hiệu một phiên trước đã quên cập nhật
+
+| Điểm lệch | Xử lý ngay ở Bước 1 |
+|---|---|
+| Có tài liệu module nhưng **thiếu dòng** ở danh mục | Bổ sung dòng — prefix · `REQ đã dùng` · `Mã kế tiếp` lấy **từ chính tài liệu module**, không đoán. Trạng thái recon = ✅ |
+| Có dòng danh mục nhưng **không có thư mục** | **KHÔNG xoá dòng** — đưa `Trạng thái recon` về ⬜, ghi lý do ở Nhật ký danh mục. Prefix đã cấp là vĩnh viễn |
+| **Prefix trùng** giữa 2 module | ⛔ **DỪNG, báo user** — agent KHÔNG tự đổi. Đổi prefix là đổi mọi REQ ID của một module và mọi TC map về nó |
+
+Sửa gì thì ghi **1 dòng vào Nhật ký danh mục**. Không lệch → nêu `Danh mục khớp thư mục thực tế` ở Bước 7.
+
+> **Nguyên tắc phân xử:** thư mục + tài liệu module là **nguồn sự thật**, danh mục là bản phái sinh → sửa danh mục theo tài liệu, không ngược lại. Ngoại lệ duy nhất là **prefix** — lệch prefix phải hỏi user.
 
 > ❌ **Tuyệt đối không** ghi đè `README.md` hay `system_map.md` đã có. Prefix đã cấp là **vĩnh viễn** — kể cả khi module đó đổi tên trên UI.
 
@@ -370,6 +380,7 @@ Không có mục này → workflow sau hiểu là bản đồ 1 file và **sẽ 
 - [ ] Ô phân quyền **suy diễn** đều mang dấu ⚠️, không lẫn với ô đã kiểm chứng
 - [ ] Vùng chưa xác minh được liệt kê thật, **không** làm tròn thành "đã khảo sát xong"
 - [ ] `README.md` và `system_map.md` khớp nhau về số module và prefix
+- [ ] **Danh mục khớp thư mục thực tế** — đã chạy đối chiếu ở Bước 1.3; lệch thì đã sửa và ghi Nhật ký danh mục, hoặc đã báo user (trường hợp trùng prefix)
 - [ ] **Nếu đã tách file:** index vẫn tên `system_map.md` · có mục `## Bản đồ tài liệu` · đủ 6 bất biến ở mục **6.5** (prefix giữ nguyên · mỗi module đúng 1 file · tổng khớp · trạng thái recon chỉ ở `README.md` · link 2 chiều · không nhân bản mục cắt ngang)
 - [ ] Tên file gộp **nêu đủ nhóm** module bên trong, không giấu module nào (mục 6.5)
 - [ ] `.env` chứa URL/tài khoản — `docs/` **không** chứa credentials

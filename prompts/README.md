@@ -64,8 +64,18 @@ Thư mục này chứa các prompt mẫu dùng nhanh (copy → paste → gửi) 
 |---|------|-------------------|----------------|----------------------|
 | 07 | `prompt_07_generate_test_data.txt` | `/generate_test_data` | `skills-test-data-generator` | Sinh dữ liệu kiểm thử có cấu trúc |
 | 10 | `prompt_10_create_bug_report.txt` | `/create_bug_report` | `skills-bug-reporter` | Sinh bug report chuẩn từ test FAIL — evidence, severity/priority, tùy chọn đẩy Jira |
-| 11 | `prompt_11_analyze_test_report.txt` | `/analyze_test_report` | `skills-test-report-analyzer` | Phân tích test report — gom nhóm failure theo root cause, so sánh trend, đề xuất thứ tự xử lý |
+| 11 | `prompt_11_analyze_test_report.txt` | `/analyze_test_report` | `skills-test-report-analyzer` | **[Nâng cấp]** Phân tích test report — **2 nhánh AUTOMATION / MANUAL**. Gom nhóm failure theo root cause, so sánh trend, đề xuất thứ tự xử lý |
 | 13 | `prompt_13_generate_traceability_matrix.txt` | `/generate_traceability_matrix` | `skills-coverage-traceability` | Sinh ma trận truy vết RTM 3 tầng — tìm requirement chưa cover, orphan tests |
+| 23 | `prompt_23_retest_fixed_bugs.txt` | `/retest_fixed_bugs` | `skills-manual-test-executor`, `skills-bug-reporter` | **[Mới]** Retest bug đã fix trên build mới — chấm FIXED/NOT_FIXED/PARTIAL/CANNOT_VERIFY, chạy regression quanh vùng fix, ghi Lịch sử retest vào bug gốc. 2 modes RETEST/FULL |
+
+### 📊 Kế Hoạch & Báo Cáo Cấp Quản Lý
+
+| # | File | Command Tương Ứng | Skill Tích Hợp | Mô Tả & Cải Tiến Mới |
+|---|------|-------------------|----------------|----------------------|
+| 25 | `prompt_25_generate_master_test_plan.txt` | `/generate_master_test_plan` | `skills-test-summary-reporter` | **[Mới]** Master Test Plan — phạm vi & **ngoài phạm vi**, tiêu chí vào/ra, môi trường, nhân lực, lịch, rủi ro dự án. Tài liệu để PM/khách duyệt, **không** sinh test scenario |
+| 24 | `prompt_24_generate_test_summary_report.txt` | `/generate_test_summary_report` | `skills-test-summary-reporter` | **[Mới]** Báo cáo tổng hợp tại một mốc — gộp nhiều execution report + bug + RTM, đối chiếu tiêu chí exit, **khuyến nghị go/no-go có căn cứ** |
+
+> 📌 Hai prompt này đi thành cặp: `25` công bố tiêu chí exit **trước** khi test, `24` chấm lại đúng bộ đó **sau** khi test. Dùng lệch bộ tiêu chí là lúc release sẽ cãi nhau về chuẩn.
 
 ## Cách Sử Dụng Trong Claude Code
 
