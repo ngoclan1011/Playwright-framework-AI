@@ -31,8 +31,8 @@ header{background:#fff;border-bottom:1px solid var(--line);padding:12px 20px;dis
 .btn-sm{padding:4px 9px;font-size:12px;font-weight:500}
 
 main{display:flex;align-items:flex-start;gap:16px;padding:16px 20px;max-width:1800px;margin:0 auto}
-aside{width:250px;flex:none;position:sticky;top:72px}
-.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+aside{width:250px;flex:none;position:sticky;top:72px;min-width:0}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;min-width:0;overflow:hidden}
 .panel + .panel{margin-top:12px}
 .panel h3{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:8px}
 section.content{flex:1;min-width:0}
@@ -115,8 +115,35 @@ td.id{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;
 #detail .close{position:absolute;right:14px;top:14px;border:0;background:none;font-size:21px;color:var(--muted);line-height:1}
 .kv{margin-top:14px}
 .kv div{display:grid;grid-template-columns:132px 1fr;gap:10px;padding:7px 0;border-bottom:1px solid #f1f2f4;font-size:13px}
-.kv .k{color:var(--muted);font-weight:600}
-.kv .v{white-space:pre-wrap;word-break:break-word}
+.kv .k{color:var(--muted);font-weight:600;overflow-wrap:anywhere}
+.kv .v{white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere;min-width:0}
+
+/* thông tin lần chạy — nhãn trên, giá trị dưới để chuỗi dài (URL, commit hash) không tràn cột */
+#meta{font-size:12.5px;min-width:0}
+#meta .row{padding:5px 0;border-bottom:1px solid #f1f2f4}
+#meta .row:last-child{border-bottom:0}
+#meta .mk{display:block;color:var(--muted);font-size:11px;line-height:1.35;margin-bottom:1px}
+#meta .mv{display:block;line-height:1.45;overflow-wrap:anywhere;word-break:break-word;hyphens:auto}
+.file .nm{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* lightbox xem ảnh evidence ngay giữa màn hình */
+.ev-chip{display:inline-flex;align-items:center;gap:5px;max-width:100%;margin:2px 5px 2px 0;padding:3px 8px;
+  border:1px solid var(--line);border-radius:7px;background:#fff;font-size:12px;cursor:pointer;
+  overflow-wrap:anywhere;text-align:left;line-height:1.35;font-family:inherit;color:var(--brand-700)}
+.ev-chip:hover{background:var(--brand-50);border-color:var(--brand)}
+.ev-chip.miss{cursor:not-allowed;color:var(--muted);border-style:dashed}
+.ev-chip.miss:hover{background:#fff;border-color:var(--line)}
+.ev-hint{display:block;margin-top:6px;font-size:11.5px;color:var(--muted);line-height:1.5}
+#lightbox{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;
+  background:rgba(16,19,24,.84);padding:28px}
+#lightbox.open{display:flex}
+#lightbox figure{max-width:min(1400px,94vw);max-height:92vh;display:flex;flex-direction:column;gap:10px;margin:0}
+#lightbox img{max-width:100%;max-height:84vh;object-fit:contain;border-radius:8px;background:#fff;
+  box-shadow:0 18px 50px rgba(0,0,0,.4)}
+#lightbox figcaption{color:#e8eaed;font-size:12.5px;text-align:center;overflow-wrap:anywhere}
+#lbClose{position:absolute;right:20px;top:16px;border:0;background:rgba(255,255,255,.14);color:#fff;
+  width:34px;height:34px;border-radius:50%;font-size:21px;line-height:1;cursor:pointer}
+#lbClose:hover{background:rgba(255,255,255,.26)}
 footer{text-align:center;color:var(--muted);font-size:12px;padding:18px}
 </style>
 </head>
@@ -132,7 +159,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:18px}
   <button class="btn" id="btnCsv">↓ CSV</button>
   <button class="btn" id="btnXlsx">↓ Excel</button>
   <button class="btn btn-primary" id="btnAdd">+ Import file .md</button>
-  <input type="file" id="file" accept=".md,.markdown" multiple hidden>
+  <input type="file" id="file" accept=".md,.markdown,.png,.jpg,.jpeg,.gif,.webp,.svg" multiple hidden>
 </header>
 
 <main>
@@ -154,6 +181,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:18px}
       <small>
         Nhận <code>docs/executions/&lt;module&gt;/run_*/execution_report.md</code> và <code>retest_*/retest_report.md</code><br>
         Nạp nhiều file cùng lúc để gộp số liệu và so sánh giữa các lần chạy.<br>
+        <b>Kéo thả nguyên thư mục <code>run_*</code></b> để xem được luôn ảnh evidence — bấm vào ảnh trong ô chi tiết là hiện ngay giữa màn hình.<br>
         Toàn bộ xử lý chạy trong trình duyệt — không gửi dữ liệu đi đâu.
       </small>
     </div>
@@ -239,6 +267,14 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:18px}
   <h2 id="dTitle"></h2>
   <div class="subtitle" id="dSub"></div>
   <div class="kv" id="dKv"></div>
+</div>
+
+<div id="lightbox">
+  <button id="lbClose" title="Đóng (Esc)">×</button>
+  <figure>
+    <img id="lbImg" alt="">
+    <figcaption id="lbCap"></figcaption>
+  </figure>
 </div>
 
 <footer>Anh Tester · claude-testing-skills — dữ liệu lưu trong localStorage của trình duyệt này</footer>
@@ -437,11 +473,92 @@ const $=s=>document.querySelector(s);
 function save(){ try{ localStorage.setItem('execViewer', JSON.stringify(DOCS)); }catch(e){} }
 function load(){ try{ const r=localStorage.getItem('execViewer'); if(r) DOCS=JSON.parse(r); }catch(e){} }
 
-function addFiles(fileList){
-  const jobs=[...fileList].filter(f=>/\.(md|markdown)$/i.test(f.name)).map(f=>
-    f.text().then(t=>{ const d=parseReport(t,f.name); DOCS=DOCS.filter(x=>x.fileName!==d.fileName||x.runId!==d.runId); DOCS.push(d); }));
-  Promise.all(jobs).then(()=>{ save(); render(); });
+/* ---- Ảnh evidence ----------------------------------------------------
+   Trình duyệt không đọc được đường dẫn tương đối trong file .md khi mở bằng
+   file://, nên ảnh phải do người dùng nạp vào. Ta giữ chúng dưới dạng
+   objectURL, tra theo TÊN FILE (không kèm thư mục) để khớp mọi kiểu đường dẫn
+   ghi trong report. Không lưu vào localStorage được — nạp lại trang phải kéo lại. */
+const IMG_RE=/\.(png|jpe?g|gif|webp|svg)$/i;
+const IMAGES=new Map();          // basename (chữ thường) -> objectURL
+const baseName=p=>String(p).split(/[\\/]/).pop().trim();
+
+function addImages(files){
+  let n=0;
+  for(const f of files){
+    if(!IMG_RE.test(f.name)) continue;
+    const k=f.name.toLowerCase();
+    if(IMAGES.has(k)) URL.revokeObjectURL(IMAGES.get(k));
+    IMAGES.set(k, URL.createObjectURL(f)); n++;
+  }
+  return n;
 }
+
+// Kéo thả cả thư mục: dataTransfer.files rỗng với folder, phải duyệt qua entry API.
+function readEntry(entry, out){
+  return new Promise(res=>{
+    if(entry.isFile) return entry.file(f=>{ out.push(f); res(); }, res);
+    if(entry.isDirectory){
+      const rd=entry.createReader(); const all=[];
+      const step=()=>rd.readEntries(batch=>{
+        if(!batch.length) return Promise.all(all.map(e=>readEntry(e,out))).then(res);
+        all.push(...batch); step();
+      }, res);
+      return step();
+    }
+    res();
+  });
+}
+async function filesFromDrop(dt){
+  const items=[...(dt.items||[])].filter(i=>i.kind==='file');
+  const entries=items.map(i=>i.webkitGetAsEntry?.()).filter(Boolean);
+  if(!entries.length) return [...(dt.files||[])];
+  const out=[]; await Promise.all(entries.map(e=>readEntry(e,out)));
+  return out.length?out:[...(dt.files||[])];
+}
+
+function addFiles(fileList){
+  const arr=[...fileList];
+  const nImg=addImages(arr);
+  const jobs=arr.filter(f=>/\.(md|markdown)$/i.test(f.name)).map(f=>
+    f.text().then(t=>{ const d=parseReport(t,f.name); DOCS=DOCS.filter(x=>x.fileName!==d.fileName||x.runId!==d.runId); DOCS.push(d); }));
+  Promise.all(jobs).then(()=>{ save(); render();
+    if(nImg && !jobs.length) toast(`Đã nạp ${nImg} ảnh evidence`); });
+}
+function toast(msg){
+  const el=document.createElement('div');
+  el.textContent=msg;
+  el.style.cssText='position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#101318;color:#fff;'+
+    'padding:9px 16px;border-radius:8px;font-size:13px;z-index:70;box-shadow:0 8px 24px rgba(0,0,0,.3)';
+  document.body.appendChild(el); setTimeout(()=>el.remove(),2600);
+}
+
+/* Biến ô Evidence thành chip bấm được. Chấp nhận cả cú pháp markdown ![](x.png),
+   đường dẫn trần, và nhiều ảnh cách nhau bởi dấu phẩy/xuống dòng. */
+function evidenceHTML(raw){
+  const txt=String(raw||''); const found=[];
+  txt.replace(/!?\[[^\]]*\]\(([^)]+)\)|([^\s,;|)(]+\.(?:png|jpe?g|gif|webp|svg))/gi,
+    (m,a,b)=>{ const p=(a||b||'').trim(); if(p) found.push(p); return m; });
+  if(!found.length) return `<span class="v">${esc(txt)}</span>`;
+  const uniq=[...new Set(found)];
+  const chips=uniq.map(p=>{
+    const bn=baseName(p), has=IMAGES.has(bn.toLowerCase());
+    return has
+      ? `<button type="button" class="ev-chip" data-img="${esc(bn)}" title="Bấm để xem ảnh">🖼 ${esc(bn)}</button>`
+      : `<span class="ev-chip miss" title="Chưa nạp ảnh này vào viewer">🖼 ${esc(bn)}</span>`;
+  }).join('');
+  const missing=uniq.filter(p=>!IMAGES.has(baseName(p).toLowerCase())).length;
+  const hint=missing
+    ? `<span class="ev-hint">Kéo thả thư mục <code>evidence/</code> (hoặc chính các file ảnh) vào trang để xem được ${missing} ảnh còn thiếu.</span>`
+    : '';
+  return `<span class="v">${chips}${hint}</span>`;
+}
+
+function openLightbox(bn){
+  const url=IMAGES.get(String(bn).toLowerCase()); if(!url) return;
+  $('#lbImg').src=url; $('#lbCap').textContent=bn;
+  $('#lightbox').classList.add('open');
+}
+function closeLightbox(){ $('#lightbox').classList.remove('open'); $('#lbImg').removeAttribute('src'); }
 
 /* ============================ DERIVED ============================ */
 const runNum=r=>{ const m=String(r).match(/(\d{6,})/); return m?+m[1]:0; };
@@ -513,7 +630,7 @@ function render(){
   if(vis.length===1 && Object.keys(vis[0].meta||{}).length){
     $('#metaPanel').style.display='block';
     $('#meta').innerHTML=Object.entries(vis[0].meta).slice(0,10)
-      .map(([k,v])=>`<div style="padding:3px 0;border-bottom:1px solid #f1f2f4"><span style="color:var(--muted)">${esc(k)}:</span> ${esc(v)}</div>`).join('');
+      .map(([k,v])=>`<div class="row"><span class="mk">${esc(k)}</span><span class="mv">${esc(v)}</span></div>`).join('');
   } else $('#metaPanel').style.display='none';
 
   // module filter
@@ -651,7 +768,8 @@ function renderCoverage(){
 function openDetail(o,title,sub,fields){
   $('#dTitle').textContent=title; $('#dSub').textContent=sub;
   $('#dKv').innerHTML=fields.filter(([,k])=>o[k]).map(([l,k])=>
-    `<div><span class="k">${l}</span><span class="v">${esc(o[k])}</span></div>`).join('')||'<div style="color:var(--muted)">Report không ghi thêm chi tiết cho mục này.</div>';
+    `<div><span class="k">${l}</span>${k==='evidence'?evidenceHTML(o[k]):`<span class="v">${esc(o[k])}</span>`}</div>`
+  ).join('')||'<div style="color:var(--muted)">Report không ghi thêm chi tiết cho mục này.</div>';
   $('#detail').classList.add('open');
 }
 const TC_FIELDS=[['Kết quả','status'],['Module','module'],['Lần chạy','runId'],['Build','build'],['REQ ID','reqId'],
@@ -806,7 +924,11 @@ $('#covChips').onclick=e=>{ const b=e.target.closest('[data-cov]'); if(!b) retur
 const dz=$('#drop');
 ['dragenter','dragover'].forEach(ev=>document.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('over')}));
 ['dragleave','drop'].forEach(ev=>document.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('over')}));
-document.addEventListener('drop',e=>{ if(e.dataTransfer?.files?.length) addFiles(e.dataTransfer.files); });
+document.addEventListener('drop',async e=>{
+  if(!e.dataTransfer) return;
+  const files=await filesFromDrop(e.dataTransfer);
+  if(files.length) addFiles(files);
+});
 
 $('#files').onclick=e=>{
   const rm=e.target.closest('[data-rm]');
@@ -825,7 +947,17 @@ $('#bugRows').onclick=e=>{ const tr=e.target.closest('[data-b]'); if(!tr) return
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
   tab=b.dataset.tab; document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===b));
   ['tc','trend','bug','cov'].forEach(t=>$('#tab-'+t).style.display=(t===tab)?'block':'none'); });
-document.addEventListener('keydown',e=>{ if(e.key==='Escape') $('#detail').classList.remove('open'); });
+// Esc: đóng lightbox trước, chưa mở lightbox thì mới đóng drawer chi tiết.
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Escape') return;
+  if($('#lightbox').classList.contains('open')) return closeLightbox();
+  $('#detail').classList.remove('open');
+});
+$('#lbClose').onclick=closeLightbox;
+$('#lightbox').addEventListener('click',e=>{ if(e.target.id==='lightbox') closeLightbox(); });
+$('#dKv').addEventListener('click',e=>{
+  const c=e.target.closest('.ev-chip[data-img]'); if(c) openLightbox(c.dataset.img);
+});
 
 load(); render();
 </script>
