@@ -67,11 +67,11 @@ skills-rbt-manual-testing          skills-manual-test-executor          skills-b
 Tuân thủ Browser Rules của dự án:
 
 ```
-navigate → resize(1920×1080) → wait_for(page_load) → snapshot → interact → screenshot(on_fail)
+navigate → wait_for(page_load) → snapshot → interact → screenshot(on_fail)
 ```
 
 - **Headed mode bắt buộc** — tester phải nhìn được agent đang làm gì
-- **LUÔN** gọi `browser_resize(width=1920, height=1080)` ngay sau `browser_navigate` đầu tiên
+- **KHÔNG** gọi `browser_resize` — viewport đã đúng từ `--viewport-size` lúc launch MCP server. Phóng viewport vượt cửa sổ OS làm trang bị cắt bên phải, tester mất tầm nhìn (xem [`.claude/rules/playwright_rules.md`](../../rules/playwright_rules.md) mục 1)
 - **KHÔNG** gọi `browser_navigate` lại nếu đã ở đúng trang — tránh reload làm mất trạng thái đang test
 - Dùng `snapshot` để đọc trạng thái UI và verify; `screenshot` để lưu bằng chứng
 
@@ -154,7 +154,7 @@ Lưu tại: `docs/executions/<module>/<run_id>/evidence/<TC_ID>_<mô_tả>.png`
 
 1. **Xác nhận phạm vi & môi trường** — đọc file TC, lọc TC theo phạm vi user chọn, đếm số TC sẽ chạy, công bố kế hoạch
 2. **Chuẩn bị:** tạo `run_id` (`run_<timestamp>`), tạo thư mục evidence, khởi tạo file report
-3. **Đăng nhập & khởi tạo môi trường:** navigate → resize 1920×1080 → đăng nhập → verify vào được hệ thống. Không vào được → dừng ngay, báo user
+3. **Đăng nhập & khởi tạo môi trường:** navigate → wait_for(page_load) → đăng nhập → verify vào được hệ thống. Không vào được → dừng ngay, báo user
 4. **Chạy từng TC theo thứ tự:**
    - Đọc Pre-Condition → dựng điều kiện; không dựng được → `BLOCKED`
    - Kiểm tra quy tắc Auto-Skip → khớp thì `SKIPPED`, sang TC tiếp

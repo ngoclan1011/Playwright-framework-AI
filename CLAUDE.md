@@ -19,21 +19,43 @@
 
 ### 🖥️ Viewport & Mode
 
-* Tất cả **UI debugging** phải chạy với **desktop viewport**: **`1920x1080`**
+* Tất cả **UI debugging** phải chạy ở **desktop viewport**
 * Bắt buộc **mở browser thật** khi debug (headed mode)
 * **Headless mode** chỉ được sử dụng **sau khi test đã debug PASS trên UI**
 * CI/CD pipeline **được phép chạy headless mặc định**
+
+#### Kích thước viewport theo chế độ
+
+| Chế độ | Viewport | Lý do |
+|---|---|---|
+| **Headed (debug)** | **`1600×750`** — đúng bằng `--viewport-size` lúc khởi chạy | Cửa sổ **không nở được sau khi launch**. Đặt viewport lớn hơn cửa sổ → trang bị **cắt**, tester không nhìn thấy phần bên phải |
+| **Headless (CI)** | `1920×1080` | Không có khung trình duyệt nên đặt bao nhiêu cũng đúng |
+
+> ⚠️ **KHÔNG gọi `browser_resize` để phóng viewport vượt cửa sổ.** `browser_resize` chỉ đổi **viewport**, **không** đổi cửa sổ OS. Ép lên 1920×1080 khi cửa sổ chỉ 1614 → mất **306px bên phải** khỏi tầm nhìn tester (ảnh chụp vẫn đủ, nhưng hỏng mục đích của headed mode). Mặc định **không cần resize** — viewport đã đúng từ lúc launch.
+>
+> 📊 **Số đo thực tế** (Windows, màn hình 1920×1080, Google Chrome): viewport `1600×750` → cửa sổ `1614×885`. Khung chiếm **+135 dọc** (ổn định) và **+14…17 ngang** (dao động theo scrollbar của trang). Muốn cửa sổ vừa màn hình `W×H` → viewport ≈ `(W−17) × (H−135)` — trừ 17 cho chắc.
+>
+> 📌 **Đổi viewport headed ở đâu:** `--viewport-size` của MCP server `playwright` trong **`.mcp.json` ở gốc project** (cấu hình riêng của project này, đè lên `%APPDATA%\Claude\claude_desktop_config.json`). **Phải khởi động lại Claude Code** mới có hiệu lực.
+>
+> 📂 **Vì sao dùng `.mcp.json` riêng:** server khai ở đây chạy với cwd = gốc project, nên snapshot / console log / screenshot rơi đúng vào `.playwright-mcp/` của project. Dùng server global thì cwd bám theo project nào khởi động server trước — evidence sẽ lạc sang project khác. File không chứa đường dẫn tuyệt đối nên mang sang máy khác vẫn chạy.
+>
+> 🚫 Màn hình 1920×1080 **không thể** cho viewport headed 1920×1080 — thanh tab + thanh địa chỉ chiếm mất chiều cao. Cần đúng 1920×1080 thì chạy **headless**.
 
 ### 🔄 Thứ Tự Debug Bắt Buộc (Playwright MCP)
 
 Khi dùng Playwright MCP để debug UI, **LUÔN** tuân theo thứ tự:
 
 ```
-navigate → resize(1920×1080) → wait_for(page_load) → snapshot → interact → screenshot(on_fail)
+navigate → (kiểm viewport) → wait_for(page_load) → snapshot → interact → screenshot(on_fail)
 ```
 
 * **KHÔNG** gọi `browser_navigate` lại nếu đã đang ở đúng trang — tránh reload ngoài ý muốn
-* **LUÔN** gọi `browser_resize(width=1920, height=1080)` ngay sau `browser_navigate`
+* **KHÔNG** gọi `browser_resize` để phóng viewport vượt cửa sổ (xem bảng viewport ở trên). Viewport đã đúng từ `--viewport-size` lúc launch — mặc định **không cần resize**
+* Nếu nghi ngờ lệch, **đo trước khi sửa**:
+  ```js
+  browser_evaluate: () => ({ inner:[innerWidth,innerHeight], outer:[outerWidth,outerHeight] })
+  ```
+  `inner` > `outer` → trang đang bị cắt, phải hạ viewport xuống hoặc sửa `--viewport-size` rồi khởi động lại
 * **LUÔN** verify page đã load xong trước khi lấy snapshot hoặc tương tác
 
 ### 📸 Screenshot & Snapshot

@@ -15,7 +15,7 @@ Chạy bộ manual test cases trực tiếp trên browser thật, đối chiếu
 
 - **Chạy thật, không suy đoán** — mọi PASS/FAIL phải dựa trên quan sát UI qua `snapshot`
 - **TC là chuẩn** — thực tế lệch TC thì ghi FAIL, **TUYỆT ĐỐI KHÔNG sửa TC** cho khớp
-- **Headed mode + viewport 1920×1080** — tester phải nhìn được agent đang thao tác
+- **Headed mode, viewport theo `--viewport-size` lúc launch** (bảng ở `.claude/rules/playwright_rules.md` mục 1) — tester phải nhìn được agent đang thao tác, KHÔNG resize phóng vượt cửa sổ
 - Tất cả output bằng **Tiếng Việt**
 
 ## Input cần thu thập
@@ -47,7 +47,7 @@ Chạy bộ manual test cases trực tiếp trên browser thật, đối chiếu
 
 ### Bước 3: Khởi tạo browser & đăng nhập
 1. `browser_navigate(url)`
-2. `browser_resize(width=1920, height=1080)` — **bắt buộc, không bỏ qua**
+2. **KHÔNG gọi `browser_resize`** — viewport đã đúng từ `--viewport-size` lúc launch MCP server
 3. Chờ trang load xong → `browser_snapshot()`
 4. Đăng nhập, verify đã vào được hệ thống
 5. **Không đăng nhập được → DỪNG NGAY**, báo user, không chạy tiếp

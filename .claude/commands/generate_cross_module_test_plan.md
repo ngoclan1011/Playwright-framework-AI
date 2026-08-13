@@ -109,7 +109,6 @@ Chọn?
 2. **Với mỗi module** trong chuỗi:
    ```
    browser_navigate → URL module
-   browser_resize → 1920 × 1080
    browser_wait_for → page load
    browser_snapshot → thu thập DOM
    ```

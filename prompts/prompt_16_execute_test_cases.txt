@@ -27,6 +27,6 @@
 - Sinh bug report ngay cho TC FAIL? [Có / Không — mặc định Không, chỉ ghi vào execution report]
 
 # GHI CHÚ
-- Agent chạy headed mode, viewport 1920×1080, ghi kết quả sau mỗi TC
+- Agent chạy headed mode (viewport theo `--viewport-size` lúc launch, không resize), ghi kết quả sau mỗi TC
 - Gặp FAIL: chụp screenshot, ghi Actual vs Expected rồi chạy tiếp (không dừng cả buổi)
 - Cuối buổi agent dọn sạch dữ liệu đã tạo và báo cáo đối chiếu số liệu trước/sau

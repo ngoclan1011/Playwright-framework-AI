@@ -22,7 +22,7 @@ Workflow này giúp agent đọc file manual test cases do user cung cấp, tự
 - **Vai trò:** Agent đóng vai Senior Automation Engineer — tuân thủ Clean Code + POM
 - **Tất cả output bằng Tiếng Việt**
 - **TUYỆT ĐỐI KHÔNG ĐOÁN locator** — phải inspect DOM thực tế bằng MCP browser tools
-- **Desktop viewport 1920×1080** cho tất cả UI debugging
+- **Desktop viewport headed theo `--viewport-size` lúc launch** — KHÔNG gọi `browser_resize` (xem `.claude/rules/playwright_rules.md` mục 1)
 - ⚠️ **Rule E3 (CRITICAL):** Khi test FAIL → tự đọc log → phân tích → sửa code → chạy lại. **CẤM hỏi user trong quá trình fix lỗi.** Chỉ hỏi khi gặp business rule mâu thuẫn hoặc hết 5 vòng auto-heal
 - **Artifact `task.md`** — PHẢI tạo để theo dõi tiến độ 6 bước
 
@@ -91,7 +91,6 @@ Nếu user chưa cung cấp đủ → hỏi trước khi bắt đầu.
 1. **Mở browser** bằng MCP và navigate theo test case steps:
    ```
    browser_navigate → URL ứng dụng
-   browser_resize → 1920 × 1080
    browser_wait_for → page load hoàn tất
    browser_snapshot → thu thập DOM
    ```

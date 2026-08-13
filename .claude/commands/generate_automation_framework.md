@@ -158,7 +158,7 @@ Workflow này giúp agent thiết kế, scaffold và triển khai một automati
    - `LoginPage` (hoặc `LoginScreen` cho mobile) với locators + methods thực tế
 
    **Nếu user đã cung cấp URL hệ thống** (khuyến nghị — cho locator dùng được ngay):
-   - Mở browser qua Playwright MCP: `navigate` → `resize(1920×1080)` → `snapshot`
+   - Mở browser qua Playwright MCP: `navigate` → `wait_for(page_load)` → `snapshot`
    - Lấy locator **từ DOM thực tế**, ưu tiên theo `.claude/rules/locator_strategy.md`
    - Locator sinh ra là locator thật, không cần comment REPLACE
 

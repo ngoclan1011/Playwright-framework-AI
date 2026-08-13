@@ -108,7 +108,7 @@ Mỗi mục ghi: `file:line`, đổi gì, có cần mở browser inspect không.
 ### Bước 5: Sửa (Mode APPLY — chỉ sau khi user duyệt)
 
 1. Sửa theo kế hoạch, **chỉ chạm đúng phần đã liệt kê**
-2. Cần locator mới → mở browser headed `1920×1080`, đưa về đúng trạng thái, inspect DOM, verify locator match đúng 1 element
+2. Cần locator mới → mở browser headed (viewport theo `--viewport-size` lúc launch, KHÔNG resize), đưa về đúng trạng thái, inspect DOM, verify locator match đúng 1 element
 3. TC archive → thêm annotation skip kèm lý do và mã ticket:
    ```
    test.skip('CRM_PRJ_TC_031 - Copy Project', ...)   // Gỡ theo TICKET-123, chờ user xác nhận xoá

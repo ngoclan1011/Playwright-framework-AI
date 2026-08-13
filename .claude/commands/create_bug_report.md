@@ -29,7 +29,7 @@ skills:
 
 ### Bước 1: Thu thập & Tái hiện
 1. Đọc test file / mô tả lỗi, error log, screenshot có sẵn
-2. Tái hiện lỗi: chạy lại test HOẶC thao tác trên browser qua Playwright MCP (`navigate → resize 1920x1080 → thao tác → screenshot khi lỗi xuất hiện`)
+2. Tái hiện lỗi: chạy lại test HOẶC thao tác trên browser qua Playwright MCP (`navigate → wait_for(page_load) → thao tác → screenshot khi lỗi xuất hiện`)
 3. Nếu KHÔNG tái hiện được → dừng, báo user và đề xuất `/analyze_flaky_tests`
 
 ### Bước 2: Phân tích & Phân loại

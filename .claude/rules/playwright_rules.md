@@ -4,14 +4,25 @@
 
 ## 1. Thiết Lập Browser (BẮT BUỘC)
 
-- **Viewport debug:** Mọi quá trình debug UI bắt buộc chạy với viewport desktop: **`1920x1080`**.
-- **Playwright MCP — Resize bắt buộc:** Khi sử dụng Playwright MCP để debug UI, **LUÔN LUÔN** gọi `browser_resize(width=1920, height=1080)` **ngay sau khi mở browser** (sau lệnh `browser_navigate` đầu tiên). Đây là bước bắt buộc, không được bỏ qua.
+- **Viewport debug:** Mọi quá trình debug UI bắt buộc chạy ở viewport **desktop**.
+
+  | Chế độ | Viewport | Ghi chú |
+  |---|---|---|
+  | Headed (debug) | **`1600×750`** (theo `--viewport-size` lúc launch) | Cửa sổ không nở được sau khi launch |
+  | Headless (CI) | `1920×1080` | Không vướng khung trình duyệt |
+
+- **Playwright MCP — KHÔNG resize vượt cửa sổ:** `browser_resize` chỉ đổi **viewport**, **không** đổi kích thước cửa sổ OS. Đặt viewport lớn hơn cửa sổ → trang bị **cắt** phần bên phải/dưới, tester không nhìn thấy dù ảnh chụp vẫn đủ.
+
   ```
-  Thứ tự bắt buộc:
+  Thứ tự đúng:
   1. browser_navigate(url) → mở trang
-  2. browser_resize(width=1920, height=1080) → set viewport
+  2. browser_evaluate đo inner/outer → chỉ resize khi thực sự lệch
   3. browser_snapshot() hoặc browser_take_screenshot() → bắt đầu inspect
   ```
+
+  Số đo thực tế (Windows 1920×1080, Google Chrome): viewport `1600×750` → cửa sổ `1614×885`. Khung chiếm **+135 dọc** (ổn định) và **+14…17 ngang** (dao động theo scrollbar của trang). Muốn cửa sổ vừa màn hình `W×H` → `--viewport-size=(W-17),(H-135)` — trừ 17 cho chắc.
+
+  Đổi viewport headed: sửa `--viewport-size` của MCP server `playwright` trong **`.mcp.json` ở gốc project**, rồi **khởi động lại Claude Code**. File này đè cấu hình global ở `%APPDATA%\Claude\claude_desktop_config.json`, và cho server chạy với cwd = gốc project nên mọi output (snapshot, console log, screenshot) rơi đúng vào `.playwright-mcp/` của project. Không dùng đường dẫn tuyệt đối trong file để còn mang sang máy khác được.
 - **Headed mode:** Bắt buộc mở browser có hiển thị (headed) trong quá trình thiết lập và debug test.
 - **Headless mode:** Chỉ được phép sử dụng khi:
   - Test đã debug PASS 100% trên headed mode

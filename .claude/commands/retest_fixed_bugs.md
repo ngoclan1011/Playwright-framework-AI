@@ -64,7 +64,7 @@ Trích từ bug report gốc, **không diễn giải lại**:
 
 ## Bước 2: Chạy lại đúng steps (verify bug)
 
-Theo thứ tự thao tác browser bắt buộc của skill executor: `navigate → resize 1920×1080 → wait → snapshot → interact`.
+Theo thứ tự thao tác browser bắt buộc của skill executor: `navigate → wait → snapshot → interact` (KHÔNG resize).
 
 **Chạy đúng steps gốc, tối thiểu 2 lần** — fix "lúc được lúc không" là dấu hiệu fix chưa triệt để, phải phát hiện ở đây chứ không phải ở production.
 

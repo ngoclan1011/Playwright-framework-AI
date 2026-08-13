@@ -142,11 +142,13 @@ Mỗi framework PHẢI bao gồm các thành phần sau (tùy chỉnh theo stack
 
 ## Browser Setup Rules (BẮT BUỘC)
 
-Áp dụng cho mọi framework Web sinh ra từ skill này — kế thừa từ `CLAUDE.md > Browser Rules`:
+Áp dụng cho mọi framework Web sinh ra từ skill này — kế thừa từ `CLAUDE.md > Browser Rules`.
+
+> ⚠️ **Phân biệt hai loại viewport.** Bảng dưới là viewport của **suite chạy thật** (`playwright.config.ts`, CI) — giữ `1920×1080`. Viewport khi **debug bằng Playwright MCP** là chuyện khác: lấy từ `--viewport-size` lúc launch (mặc định `1600×750` vì cửa sổ headed không nở được sau launch), và **không** gọi `browser_resize`. Xem `.claude/rules/playwright_rules.md` mục 1.
 
 | Quy tắc | Giá trị | Nơi cấu hình |
 |---|---|---|
-| **Viewport mặc định** | `1920 x 1080` | `playwright.config.ts` · `BrowserOptions.java` · `DriverFactory.java` · `conftest.py` |
+| **Viewport mặc định của suite** | `1920 x 1080` | `playwright.config.ts` · `BrowserOptions.java` · `DriverFactory.java` · `conftest.py` |
 | **Headed mode** | Bật khi debug local | Đọc từ biến môi trường `HEADLESS=false` |
 | **Headless mode** | Chỉ khi chạy CI | CI pipeline set `HEADLESS=true` |
 | **Hard sleep** | ❌ CẤM tuyệt đối | Chỉ smart waits — xem bảng Anti-Patterns bên dưới |
@@ -188,7 +190,7 @@ Agent PHẢI tuân thủ các rules chi tiết:
 - `.claude/rules/playwright_rules.md` — Playwright-specific rules
 - `.claude/rules/selenium_rules.md` — Selenium-specific rules
 - `.claude/rules/appium_rules.md` — Appium mobile automation rules
-- `CLAUDE.md` > "Browser Rules" — Viewport 1920×1080, headed/headless
+- `CLAUDE.md` > "Browser Rules" — Bảng viewport headed/headless, quy tắc không resize khi dùng Playwright MCP
 - `CLAUDE.md` > "Cleanup & Delivery" — Definition of Done trước khi bàn giao
 
 ---

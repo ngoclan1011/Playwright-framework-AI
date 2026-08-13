@@ -111,7 +111,7 @@ python -m pytest -m smoke
 
 Sửa theo thứ tự: 🎯 Locator → 📊 Data → 🧪 Script → ⏱️ Flaky.
 
-- **Locator:** mở browser (headed, `1920×1080`), điều hướng đến đúng trạng thái test fail, inspect DOM thực tế, thay locator trong **Page class**. TUYỆT ĐỐI KHÔNG đoán
+- **Locator:** mở browser headed (viewport theo `--viewport-size` lúc launch, KHÔNG resize), điều hướng đến đúng trạng thái test fail, inspect DOM thực tế, thay locator trong **Page class**. TUYỆT ĐỐI KHÔNG đoán
 - **Data:** thay hardcoded bằng random traceable (`prefix_testName_timestamp`), bổ sung cleanup nếu môi trường dùng chung
 - **Script:** sửa cú pháp, import, assertion viết sai — **không** đổi kỳ vọng nghiệp vụ
 - **Flaky:** thay hard sleep bằng smart wait, gỡ phụ thuộc thứ tự chạy

@@ -32,7 +32,7 @@ Workflow này giúp bạn phân tích một module hoặc trang web được cun
    - **Hỏi user có tài liệu nào cho module này không** — spec, ticket, file Excel field, mockup. Có thì xác định mức phủ theo mục **3.3.1** trước khi mở browser.
 
 2. **Khảo sát hệ thống (Recon & Investigation):**
-   - Sử dụng các công cụ duyệt web (Browser tools/MCP) để truy cập vào module trang web được yêu cầu (`navigate → resize 1920x1080 → snapshot`).
+   - Sử dụng các công cụ duyệt web (Browser tools/MCP) để truy cập vào module trang web được yêu cầu (`navigate → wait_for(page_load) → snapshot` — KHÔNG resize, viewport đã đúng từ `--viewport-size` lúc launch).
    - Inspect kỹ lưỡng cấu trúc HTML, DOM, các form nhập liệu, các nút tương tác (buttons, links), và các thông báo lỗi (validation messages — ghi **nguyên văn**).
    - Trigger từng validation để thu thập error messages thực tế.
    - **Bật `browser_network_requests` trong suốt quá trình** (mục **3.1.1**) — bắt buộc khi module không có tài liệu. Thu: schema entity thật · field ẩn trong payload · **validation server-side** · enum trạng thái · endpoint không có UI.

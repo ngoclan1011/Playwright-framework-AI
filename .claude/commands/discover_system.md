@@ -153,7 +153,7 @@ Sửa gì thì ghi **1 dòng vào Nhật ký danh mục**. Không lệch → nê
 Thứ tự bắt buộc (theo `.claude/rules/playwright_rules.md`):
 
 ```
-browser_navigate → browser_resize(1920, 1080) → chờ load → browser_snapshot
+browser_navigate → chờ load → browser_snapshot
 ```
 
 **3.1 — Crawl điều hướng (làm cạn kiệt, không dừng ở tầng 1):**

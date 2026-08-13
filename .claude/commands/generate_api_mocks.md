@@ -30,7 +30,7 @@ skills:
 
 ### Bước 1: Thu thập Response Mẫu
 1. Nếu có Swagger → đọc schema của từng endpoint
-2. Nếu app chạy được → mở browser (Playwright MCP: `navigate → resize 1920x1080`), thao tác UI, capture response thật từ network
+2. Nếu app chạy được → mở browser (Playwright MCP: `navigate → wait_for(page_load)`), thao tác UI, capture response thật từ network
 3. Lưu response mẫu làm baseline cho mock
 
 ### Bước 2: Thiết Kế Bộ Mock (CHECKPOINT)

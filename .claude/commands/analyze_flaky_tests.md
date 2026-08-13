@@ -107,7 +107,7 @@ Agent cần ít nhất **1 trong các input** sau từ user:
    - [ ] Setup/Teardown có đầy đủ không?
 
 3. **Nếu cần inspect DOM thực tế** (locator issue):
-   - Mở browser bằng MCP: `browser_navigate` → `browser_resize(1920, 1080)` → `browser_snapshot`
+   - Mở browser bằng MCP: `browser_navigate` → `browser_wait_for` → `browser_snapshot`
    - So sánh locator trong code vs DOM thực tế
    - Xác định locator thay thế ổn định hơn (dùng skill `skills-smart-locator-agent`)
 

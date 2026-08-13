@@ -45,7 +45,7 @@ Dưới đây là **Manual Test Cases** cần tự động hóa. Trước khi vi
 
 Sử dụng **công cụ trình duyệt** (Playwright MCP / Selenium MCP) để:
 
-1. **Mở browser** với URL đã cung cấp (viewport 1920x1080)
+1. **Mở browser** với URL đã cung cấp (viewport theo `--viewport-size` lúc launch — không resize)
 2. **Điều hướng** theo từng bước trong Test Cases
 3. **Thu thập** tất cả locators cần thiết bằng cách:
    - Đọc Accessibility Tree

@@ -675,7 +675,7 @@ Nhật ký (6.9)  ←→  Trạng thái REQ (6.2)  ←→  Dải mã metadata (6
 
 ### 7.2. Chỉ áp cho nhánh UI Recon (3.1)
 
-- Nếu có Playwright MCP: mở browser thật (`navigate → resize 1920x1080 → snapshot`) để capture giao diện — **KHÔNG đoán field/validation**.
+- Nếu có Playwright MCP: mở browser thật (`navigate → wait_for(page_load) → snapshot`) để capture giao diện — **KHÔNG đoán field/validation**. KHÔNG gọi `browser_resize`; viewport đã đúng từ `--viewport-size` lúc launch.
 - Error messages ghi **nguyên văn từ UI thực tế**, không diễn đạt lại.
 - **Trigger từng validation** để lấy message thật — không chép từ code cũ, không suy ra từ tên field.
 - Cột `Nguồn` ghi `UI thực tế` (chỉ quan sát) hoặc `Kiểm chứng thực tế` (đã tương tác và xác nhận) — **phân biệt rõ hai mức này**. Có tài liệu kèm thì dùng thang 4 mức ở **3.3.1 Bước 3**.

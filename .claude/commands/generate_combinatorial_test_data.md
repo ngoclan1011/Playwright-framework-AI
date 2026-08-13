@@ -209,7 +209,7 @@ Nếu app là **môi trường demo/staging nhiều người dùng chung**:
 1. **Mở browser bằng MCP:**
    ```
    browser_navigate → URL ứng dụng
-   browser_resize → 1920 × 1080
+   browser_wait_for → page load
    ```
 
 2. **Loop qua từng bộ kết hợp:**

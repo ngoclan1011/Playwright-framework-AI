@@ -67,10 +67,12 @@ skills:
    browser_navigate(url=<target_url>)
    ```
 
-5. **Resize viewport (BẮT BUỘC):**
+5. **Chờ page load xong:**
    ```
-   browser_resize(width=1920, height=1080)
+   browser_wait_for(<indicator page đã load>)
    ```
+
+   > ⚠️ **KHÔNG gọi `browser_resize`** — viewport đã đúng từ `--viewport-size` lúc launch MCP server. Phóng viewport vượt cửa sổ OS làm trang bị cắt bên phải.
 
 6. **Capture DOM:**
    ```

@@ -17,7 +17,7 @@ Workflow này giúp agent **thực thi trực tiếp** một chuỗi thao tác U
 - **Tất cả output bằng Tiếng Việt**
 - **TUYỆT ĐỐI KHÔNG ĐOÁN locator** — phải lấy từ DOM thực tế bằng MCP browser tools
 - **Phải chạy từng bước UI trên browser thật** trước khi sinh code
-- **Desktop viewport 1920×1080** cho tất cả UI debugging
+- **Desktop viewport headed theo `--viewport-size` lúc launch** — KHÔNG gọi `browser_resize` (xem `.claude/rules/playwright_rules.md` mục 1)
 - ⚠️ **Rule E3:** Khi test FAIL → tự đọc log → phân tích → sửa → chạy lại. KHÔNG hỏi user
 
 ## Workflow này khác gì `generate_automation_from_testcases`?
@@ -84,7 +84,6 @@ Nếu user chưa cung cấp đủ → hỏi:
 1. **Mở browser bằng MCP** và navigate đến URL:
    ```
    browser_navigate → URL
-   browser_resize → 1920 × 1080
    browser_wait_for → page load hoàn tất
    browser_snapshot → thu thập DOM ban đầu
    ```

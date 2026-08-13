@@ -48,7 +48,7 @@ Hai workflow cùng bắt đầu bằng "khám phá app" nhưng **đi về hai đ
 1. Nhận URL ứng dụng từ user
 2. Sử dụng **MCP browser tools** (Playwright MCP) để mở ứng dụng:
    - `browser_navigate` → URL
-   - `browser_resize(1920, 1080)` → desktop viewport
+   - `browser_wait_for` → chờ page load (KHÔNG resize — viewport đã đúng từ `--viewport-size` lúc launch)
    - `browser_snapshot` → thu thập cấu trúc DOM
 3. Khám phá **navigation menus**, sidebar, header để xác định các modules chính
 4. Lần lượt truy cập từng module chính, dùng `browser_snapshot` để ghi nhận:

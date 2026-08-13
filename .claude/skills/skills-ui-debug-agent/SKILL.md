@@ -41,19 +41,20 @@ Khi sử dụng Playwright MCP để debug UI, **LUÔN** tuân theo thứ tự:
 
 ```
 1. browser_navigate(url)           → Mở trang
-2. browser_resize(1920, 1080)      → Desktop viewport
-3. browser_wait_for(text/time)     → Chờ page load
-4. browser_snapshot()              → Thu thập DOM (dùng để phân tích + tìm locator)
-5. browser_click/type/hover(ref)   → Tương tác (nếu cần)
-6. browser_take_screenshot()       → Chụp ảnh (evidence khi fail hoặc milestone)
+2. browser_wait_for(text/time)     → Chờ page load
+3. browser_snapshot()              → Thu thập DOM (dùng để phân tích + tìm locator)
+4. browser_click/type/hover(ref)   → Tương tác (nếu cần)
+5. browser_take_screenshot()       → Chụp ảnh (evidence khi fail hoặc milestone)
 ```
+
+> ⚠️ **KHÔNG có bước resize.** Viewport đã đúng từ `--viewport-size` lúc launch MCP server. Gọi `browser_resize` phóng viewport vượt cửa sổ OS sẽ làm trang bị **cắt** phần bên phải — xem [`.claude/rules/playwright_rules.md`](../../rules/playwright_rules.md) mục 1.
 
 ### Quy tắc quan trọng:
 
 | Quy tắc | Chi tiết |
 |---|---|
 | **KHÔNG navigate lại** nếu đã ở đúng trang | Tránh reload ngoài ý muốn |
-| **LUÔN resize** ngay sau navigate | `browser_resize(1920, 1080)` — đảm bảo desktop viewport |
+| **KHÔNG resize** sau navigate | Viewport đã đúng từ `--viewport-size` lúc launch. Nghi lệch thì **đo trước**: `browser_evaluate: () => ({ inner:[innerWidth,innerHeight], outer:[outerWidth,outerHeight] })` |
 | **LUÔN wait** trước khi snapshot | Chờ page load hoàn tất |
 | **Dùng snapshot để phân tích** | Snapshot trả về accessibility tree — nhanh, chính xác, có `ref` để tương tác |
 | **Dùng screenshot để báo cáo** | Screenshot là hình ảnh — dùng khi cần evidence visual |
@@ -80,7 +81,6 @@ Khi sử dụng Playwright MCP để debug UI, **LUÔN** tuân theo thứ tự:
 
 ```
 browser_navigate → URL target
-browser_resize → 1920 × 1080
 browser_wait_for → chờ indicator page đã load (text hoặc thời gian)
 ```
 

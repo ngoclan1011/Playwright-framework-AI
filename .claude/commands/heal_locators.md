@@ -28,7 +28,7 @@ Dùng khi **UI vừa đổi** (deploy frontend mới, redesign module) làm loca
 
 - **Tất cả output bằng Tiếng Việt**
 - **TUYỆT ĐỐI KHÔNG ĐOÁN locator** — mọi locator mới phải verify trên DOM thực tế
-- **Thứ tự bắt buộc:** `navigate` → `resize(1920×1080)` → `wait_for(page_load)` → `snapshot` → đối chiếu
+- **Thứ tự bắt buộc:** `navigate` → `wait_for(page_load)` → `snapshot` → đối chiếu (KHÔNG resize — viewport đã đúng từ `--viewport-size` lúc launch)
 - **Headed mode** trong toàn bộ workflow này
 - Locator mới phải match **đúng 1 element** và **đúng element cần thao tác** — match 1 element sai còn tệ hơn không match
 - Tuân thủ thứ tự ưu tiên trong `.claude/rules/locator_strategy.md` — không thay locator gãy bằng XPath vị trí
@@ -70,7 +70,7 @@ Dùng khi **UI vừa đổi** (deploy frontend mới, redesign module) làm loca
 
 ### Bước 2: Mở Browser & Đưa Về Đúng Trạng Thái
 
-1. `browser_navigate(url)` → `browser_resize(1920, 1080)` → chờ page load
+1. `browser_navigate(url)` → chờ page load
 2. Thực hiện các bước tiền đề (đăng nhập, mở modal, chọn tab…) để DOM chứa element cần rà
 3. `browser_snapshot()` lấy DOM thực tế
 
