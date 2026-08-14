@@ -289,6 +289,44 @@ Hai trang tĩnh trong `scripts/`, mở bằng cách double-click, chạy offline
 
 Chi tiết: skill `skills-requirements-analyzer` mục 2.1 (nối tiếp mã), 5.3 (thư mục), 5.7 (danh mục), 6.9 (nhật ký) · skill `skills-rbt-manual-testing` mục "Quy Tắc Xuất File" phần 2 và 4.
 
+### Nhiều hệ thống trong cùng repo — namespace `_<hệ-thống>/`
+
+Mặc định `docs/` phục vụ **một** hệ thống. Khi cần chứa **hệ thống thứ hai** mà không đụng hệ thống đang có, tách bằng namespace có dấu `_` đứng đầu:
+
+```
+docs/requirements/README.md          ← hệ thống MẶC ĐỊNH (hệ thống đầu tiên của repo)
+docs/requirements/login/ ...         ← module của hệ thống mặc định
+docs/requirements/_book-api/         ← HỆ THỐNG THỨ HAI
+├── README.md                        ← danh mục riêng — prefix, TC ID, AMB riêng
+├── _discovery/api_map.md            ← hoặc system_map.md nếu là hệ thống có UI
+└── <module>/requirements_<module>.md
+docs/testcases/_book-api/<module>/test_cases_<module>.md
+```
+
+| Quy tắc | Lý do |
+|---|---|
+| Dấu `_` đầu tên = **không phải module** | Cùng quy ước với `_discovery/`. Workflow quét thư mục module sẽ bỏ qua, không nhầm namespace thành module |
+| Mỗi namespace có **`README.md` danh mục riêng** | Prefix, dải REQ, dải TC ID, AMB của hai hệ thống **không** dùng chung sổ |
+| Mã REQ mang **mã hệ thống**: `REQ-<HỆ_THỐNG>-<MODULE>-<nn>` · TC ID `<HỆ_THỐNG>_<MODULE>_TC_<nnn>` | Grep một mã ra đúng một hệ thống. Hệ thống mặc định giữ dạng cũ `REQ-<MODULE>-<nn>`, không phải đánh lại |
+| Hệ thống mặc định **không bị đụng vào** khi thêm namespace | Thêm hệ thống mới = thêm 1 thư mục, không sửa file nào đang có |
+| Chuyển dự án mới: xoá `docs/` là xoá **tất cả** hệ thống | Muốn giữ một cái thì sao lưu namespace đó trước |
+
+### Nhánh API — hệ thống chỉ có spec, không có UI
+
+Hệ thống REST API dùng đúng cấu trúc trên, khác 3 chỗ:
+
+| | Hệ thống UI | Hệ thống API |
+|---|---|---|
+| File index tầng khám phá | `_discovery/system_map.md` | `_discovery/api_map.md` |
+| Bằng chứng khảo sát | `evidence/*.png` — screenshot | `_discovery/sources/openapi_<ngày>.json` — snapshot spec + request/response nguyên văn chép trong tài liệu |
+| Ranh giới module | Menu điều hướng | `tags` của spec |
+
+Workflow: `/generate_api_tests_from_swagger` — tự lo cả tầng khám phá (Bước 1b kiểm chứng bằng gọi thật, Bước 1c ghi bản đồ) lẫn sinh TC. **Không** cần chạy `/discover_system` trước.
+
+> ⚠️ **Spec không phải hành vi.** Swagger khai `403` không có nghĩa hệ thống trả `403`; khai `required` không có nghĩa server chặn. Bắt buộc gọi thật kiểm chứng trước khi sinh TC — chi tiết ở Bước 1b của workflow.
+>
+> ⚠️ **Test BOLA/IDOR phải tự tạo 2 tài khoản của mình.** CẤM lấy `id` từ API danh sách rồi `PATCH`/`DELETE` — đó là dữ liệu thật của người khác, kể cả khi được cho phép thao tác phá huỷ.
+
 ### Mở phiên trên dự án đã có nhiều tài liệu
 
 Dự án lớn dần lên hàng chục module — **agent KHÔNG đọc hết `docs/`**, cũng không cần user paste tài liệu vào chat. Đọc theo **chuỗi 3 tầng**, mở rộng dần theo nhu cầu:
@@ -403,7 +441,7 @@ Agent sử dụng workflows trong `.claude/commands/` qua slash commands:
 | `/generate_test_data`                   | Sinh test data có cấu trúc                               |
 | `/generate_cross_module_test_plan`    | Phân tích cross-module (2 modes: DOCUMENT/BROWSER), sinh ma trận kết hợp — mặc định Output-Class Coverage, pairwise bằng script |
 | `/generate_combinatorial_test_data`   | Sinh test data cho ma trận kết hợp — offline hoặc pipeline qua browser          |
-| `/generate_api_tests_from_swagger`      | Sinh API tests từ Swagger spec                             |
+| `/generate_api_tests_from_swagger`      | **Điểm vào cho hệ thống API** — snapshot spec, lập ma trận auth theo từng operation, kiểm chứng bằng gọi thật, ghi `api_map.md`, rồi sinh TC (2 modes: SPEC/FULL) |
 | `/update_automation_from_impact`        | **Delta mode cho automation** — từ Impact Report, map TC đã đổi sang script và sửa đúng phần đổi (2 modes: PLAN/APPLY). KHÔNG sinh lại cả module |
 | `/run_and_fix_tests`                    | Chạy suite có sẵn, phân loại failure, tự sửa nhóm sửa được (2 modes: RUN/FIX). KHÔNG sửa test để né bug app |
 | `/heal_locators`                        | Rà & sửa locator trong Page Object sau khi UI đổi (2 modes: SCAN/HEAL) |
