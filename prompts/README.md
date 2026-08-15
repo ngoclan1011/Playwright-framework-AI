@@ -45,6 +45,7 @@ Thư mục này chứa các prompt mẫu dùng nhanh (copy → paste → gửi) 
 | 04 | `prompt_04_generate_script_playwright.txt` | `/generate_automation_from_testcases` | `skills-qa-automation-engineer` | Viết kịch bản tự động Playwright TypeScript theo POM |
 | 04 | `prompt_04_generate_script_selenium.txt` | `/generate_automation_from_testcases` | `skills-qa-automation-engineer` | Viết kịch bản tự động Selenium Java theo POM |
 | 05 | `prompt_05_convert_manual_to_automation.txt` | `/generate_automation_from_testcases` | `skills-qa-automation-engineer` | Chuyển đổi Manual Test Cases sang Automation Script |
+| 26 | `prompt_26_generate_automation_mobile_flow.txt` | `/generate_automation_from_mobile_flow` | `skills-mobile-debug-agent` | **[Mới]** Sinh automation Appium từ flow chạy thật trên device — **Native Android/iOS, Flutter, Hybrid**. Nhận diện loại app trước, thu locator từ UI hierarchy, tách locator theo nền tảng |
 | 09 | `prompt_09_generate_api_tests.txt` | `/generate_api_tests_from_swagger` | `skills-qa-automation-engineer` | **[Nâng cấp mới]** Sinh API tests từ Swagger/OpenAPI cover 12 HTTP Status Codes, OWASP API Security (BOLA/IDOR, Mass Assignment, ReDoS), SLA < 2s & Dynamic Auth Token |
 | 14 | `prompt_14_generate_api_mocks.txt` | `/generate_api_mocks` | `skills-api-mocking` | Sinh API mocks (Playwright route / WireMock) + tests cho edge cases |
 

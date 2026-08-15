@@ -267,19 +267,22 @@ project-root/
 ```text
 project-root/
 ├── pom.xml
-├── testng.xml
+├── testng.xml                    # parallel="tests" — MỖI <test> LÀ MỘT DEVICE
 ├── .env.example
 ├── .gitignore
 ├── README.md
+├── capabilities/
+│   └── devices.json              # caps từng device: udid, systemPort/wdaLocalPort riêng
+│                                 # tách khối riêng cho native vs Flutter — xem CODE_TEMPLATES § 9.1
 ├── src/
 │   ├── main/java/
 │   │   └── com/project/
 │   │       ├── screens/          # Screen Objects (tương đương Page Objects)
-│   │       │   ├── BaseScreen.java       # Base screen — common mobile methods
+│   │       │   ├── BaseScreen.java       # Base screen — common mobile methods + byPlatform()
 │   │       │   ├── LoginScreen.java
 │   │       │   └── HomeScreen.java
 │   │       ├── drivers/          # Appium driver management
-│   │       │   ├── AppiumDriverFactory.java
+│   │       │   ├── AppiumDriverFactory.java   # ThreadLocal — parallel luôn bật
 │   │       │   └── CapabilitiesManager.java
 │   │       ├── config/
 │   │       │   └── AppConfig.java

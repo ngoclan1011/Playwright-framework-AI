@@ -174,7 +174,7 @@ Agent phải tham chiếu quy tắc chi tiết trong `.claude/rules/`:
 - [Chiến lược chọn Locator](.claude/rules/locator_strategy.md) — Thứ tự ưu tiên locator
 - [Quy tắc Playwright](.claude/rules/playwright_rules.md) — Browser setup, locator semantic, wait strategy
 - [Quy tắc Selenium](.claude/rules/selenium_rules.md) — WebDriverWait, TestNG structure
-- [Quy tắc Appium](.claude/rules/appium_rules.md) — Mobile locator, scroll, permission
+- [Quy tắc Appium](.claude/rules/appium_rules.md) — Chọn driver theo loại app · locator Android/iOS · **Flutter (semantics vs flutter-driver)** · WebView · gesture · parallel multi-device
 
 ## 5. Tham Chiếu Skills
 
@@ -186,7 +186,8 @@ Agent sử dụng skills trong `.claude/skills/` tùy theo nhiệm vụ:
 | `skills-rbt-manual-testing`     | Master skill cho manual testing — 3 modes: QUICK (sinh TC nhanh), FULL RBT (6 bước) và CHECKLIST (checklist tick tay) |
 | `skills-framework-architect`     | Thiết kế & scaffold automation framework — project structure, base classes, reporting, CI/CD |
 | `skills-requirements-analyzer`  | Phân tích requirements từ website/tài liệu                                           |
-| `skills-ui-debug-agent`         | Inspect UI/DOM, thu thập locators                                                        |
+| `skills-ui-debug-agent`         | Inspect UI/DOM **web**, thu thập locators                                                |
+| `skills-mobile-debug-agent`     | Inspect app **mobile** thật qua Appium MCP — Native Android/iOS, **Flutter**, Hybrid; nhận diện loại app, thu locator theo nền tảng |
 | `skills-smart-locator-agent`    | Sinh locator mới ổn định                                                              |
 | `skills-locator-healer-agent`   | Sửa locator hỏng                                                                        |
 | `skills-test-data-generator`    | Sinh test data unique, traceable — hỗ trợ multi-step pipeline & combinatorial data       |
@@ -434,7 +435,8 @@ Agent sử dụng workflows trong `.claude/commands/` qua slash commands:
 | `/generate_testcases_from_requirements` | Sinh test cases nhanh từ requirements (QUICK mode)         |
 | `/generate_checklist_test`              | Sinh checklist test tick tay (CHECKLIST mode) — smoke / post-hotfix / regression / release-readiness |
 | `/generate_automation_from_testcases`   | Chuyển manual test cases → automation scripts             |
-| `/generate_automation_from_ui_flow`     | Sinh automation từ UI flow trực tiếp                     |
+| `/generate_automation_from_ui_flow`     | Sinh automation từ UI flow trực tiếp (**web**)            |
+| `/generate_automation_from_mobile_flow` | Sinh automation **Appium** từ flow chạy thật trên device — Native Android/iOS, **Flutter**, Hybrid. Nhận diện loại app trước, thu locator từ UI hierarchy |
 | `/generate_application_test_plan`       | Khám phá app, sinh test plan (Mode PLAN) hoặc full suite (Mode FULL) |
 | `/generate_automation_framework`        | Thiết kế automation framework                             |
 | `/generate_locator`                     | Sinh locator ổn định cho UI element                      |

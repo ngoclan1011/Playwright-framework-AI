@@ -1540,6 +1540,205 @@ public static void quitDriver() {
 
 ---
 
+## 9. Mobile (Appium Java) — Native Android · Native iOS · Flutter
+
+> Quy tắc đầy đủ: [`.claude/rules/appium_rules.md`](../../../rules/appium_rules.md) · Recon & thu locator: [`skills-mobile-debug-agent`](../../skills-mobile-debug-agent/SKILL.md)
+
+### 9.1 Capabilities theo loại app — `capabilities/devices.json`
+
+```json
+{
+  "android_native": {
+    "platformName": "Android",
+    "appium:automationName": "UiAutomator2",
+    "appium:deviceName": "Pixel_7",
+    "appium:udid": "emulator-5554",
+    "appium:systemPort": 8201,
+    "appium:appPackage": "com.application.xyz",
+    "appium:appActivity": "com.application.xyz.MainActivity",
+    "appium:autoGrantPermissions": true,
+    "appium:newCommandTimeout": 120
+  },
+  "ios_native": {
+    "platformName": "iOS",
+    "appium:automationName": "XCUITest",
+    "appium:deviceName": "iPhone 15",
+    "appium:platformVersion": "17.5",
+    "appium:udid": "auto",
+    "appium:wdaLocalPort": 8101,
+    "appium:bundleId": "com.application.xyz",
+    "appium:autoAcceptAlerts": true,
+    "appium:newCommandTimeout": 120
+  },
+  "flutter_android": {
+    "_comment": "Đường A — semantics + UiAutomator2. Chạy được cả bản RELEASE",
+    "platformName": "Android",
+    "appium:automationName": "UiAutomator2",
+    "appium:deviceName": "Pixel_7",
+    "appium:systemPort": 8203,
+    "appium:appPackage": "com.application.flutter",
+    "appium:appActivity": ".MainActivity",
+    "appium:autoGrantPermissions": true
+  },
+  "flutter_ios": {
+    "_comment": "Đường A — semantics + XCUITest",
+    "platformName": "iOS",
+    "appium:automationName": "XCUITest",
+    "appium:deviceName": "iPhone 15",
+    "appium:wdaLocalPort": 8103,
+    "appium:bundleId": "com.application.flutter",
+    "appium:autoAcceptAlerts": true
+  }
+}
+```
+
+> **Real device iOS** thêm: `appium:xcodeOrgId`, `appium:xcodeSigningId`, `appium:updatedWDABundleId`. Chưa ký WDA thì phiên **không mở được** — lỗi này không liên quan gì tới locator.
+
+### 9.2 Screen Object — locator tách theo nền tảng
+
+```java
+package com.project.screens;
+
+import io.appium.java_client.AppiumBy;
+import io.appium.java_client.AppiumDriver;
+import io.qameta.allure.Step;
+import org.openqa.selenium.By;
+
+public class LoginScreen extends BaseScreen {
+
+    // Locator khai theo nền tảng NGAY TRONG Screen class.
+    // KHÔNG rải if (isAndroid) khắp test class.
+    private final By emailInput   = byPlatform(
+            AppiumBy.accessibilityId("email_input"),
+            AppiumBy.accessibilityId("email_input"));
+
+    private final By passwordInput = byPlatform(
+            AppiumBy.accessibilityId("password_input"),
+            AppiumBy.accessibilityId("password_input"));
+
+    private final By loginButton  = byPlatform(
+            AppiumBy.id("com.application.xyz:id/btn_login"),
+            AppiumBy.iOSNsPredicateString(
+                    "type == 'XCUIElementTypeButton' AND name == 'btn_login'"));
+
+    public LoginScreen(AppiumDriver driver) {
+        super(driver);
+    }
+
+    @Step("Đăng nhập bằng tài khoản {email}")
+    public HomeScreen login(String email, String password) {
+        type(emailInput, email);
+        type(passwordInput, password);
+        tap(loginButton);
+        return new HomeScreen(driver);
+    }
+}
+```
+
+**`byPlatform` trong `BaseScreen`** — một chỗ duy nhất phân nhánh nền tảng:
+
+```java
+protected By byPlatform(By android, By ios) {
+    return isAndroid() ? android : ios;
+}
+
+protected boolean isAndroid() {
+    return "android".equalsIgnoreCase(
+            String.valueOf(driver.getCapabilities().getCapability("platformName")));
+}
+```
+
+### 9.3 Flutter — Đường A (semantics), dùng cho stack Java
+
+Dev bọc widget:
+
+```dart
+Semantics(
+  label: 'login_button',      // → content-desc (Android) · accessibility label (iOS)
+  child: ElevatedButton(onPressed: _login, child: const Text('Đăng nhập')),
+)
+```
+
+QA lấy element — **một locator dùng chung cả 2 nền tảng**:
+
+```java
+private final By loginButton = AppiumBy.accessibilityId("login_button");
+```
+
+🚨 **`Key('login_button')` KHÔNG ra `content-desc`.** Chỉ flutter driver (Đường B) thấy `Key`. Dev báo "đã thêm Key" = **chưa dùng được** với Đường A.
+
+**Cuộn trong danh sách Flutter** — item chưa cuộn tới thì chưa render, chưa tồn tại trong semantics tree:
+
+```java
+@Step("Cuộn tới mục {label}")
+protected void scrollToInFlutterList(String label) {
+    By target = AppiumBy.accessibilityId(label);
+    for (int i = 0; i < 10 && driver.findElements(target).isEmpty(); i++) {
+        swipeUp();          // cuộn từng bước rồi TÌM LẠI
+    }
+    waitForVisible(target); // không thấy sau 10 lần cuộn → fail thật, không tăng timeout
+}
+```
+
+### 9.4 Gesture helper — đúng theo nền tảng
+
+```java
+@Step("Cuộn tới element")
+protected void scrollToElement(String textOrLabel) {
+    if (isAndroid()) {
+        driver.findElement(AppiumBy.androidUIAutomator(
+                "new UiScrollable(new UiSelector().scrollable(true))"
+              + ".scrollIntoView(new UiSelector().description(\"" + textOrLabel + "\"))"));
+    } else {
+        driver.executeScript("mobile: scroll", Map.of(
+                "direction", "down",
+                "predicateString", "name == '" + textOrLabel + "'"));
+    }
+}
+
+@Step("Vuốt lên")
+protected void swipeUp() {
+    Dimension size = driver.manage().window().getSize();
+    int startY = (int) (size.height * 0.7);
+    int endY   = (int) (size.height * 0.3);
+    int x      = size.width / 2;
+
+    PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+    Sequence swipe = new Sequence(finger, 1)
+            .addAction(finger.createPointerMove(Duration.ZERO,
+                    PointerInput.Origin.viewport(), x, startY))
+            .addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()))
+            .addAction(finger.createPointerMove(Duration.ofMillis(600),
+                    PointerInput.Origin.viewport(), x, endY))
+            .addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+
+    driver.perform(List.of(swipe));
+}
+```
+
+> Toạ độ ở đây tính **theo tỉ lệ màn hình** — chấp nhận được cho gesture. Nhưng **tap element bằng toạ độ cứng thì cấm** (xem `appium_rules.md` mục 5).
+
+### 9.5 Hybrid — đổi context
+
+```java
+@Step("Thao tác trong WebView")
+protected void inWebView(Runnable actions) {
+    String original = driver.getContext();
+    String webview = driver.getContextHandles().stream()
+            .filter(c -> c.startsWith("WEBVIEW"))
+            .findFirst()
+            .orElseThrow(() -> new IllegalStateException("Không tìm thấy WEBVIEW context"));
+    driver.context(webview);
+    try {
+        actions.run();
+    } finally {
+        driver.context(original);   // BẮT BUỘC — quên là mọi locator native sau đó fail
+    }
+}
+```
+
+---
+
 ## Checklist khi dùng template
 
 - [ ] Đổi `com.project` thành package thật của project

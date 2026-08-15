@@ -1,13 +1,15 @@
 ---
 name: skills-ui-debug-agent
-description: Skill inspect web/mobile applications bằng browser tools, phân tích DOM elements, xác định locators ổn định, debug UI automation failures, và hỗ trợ sinh Page Object classes.
+description: Skill inspect ứng dụng WEB bằng browser tools, phân tích DOM elements, xác định locators ổn định, debug UI automation failures, và hỗ trợ sinh Page Object classes. App mobile (Appium) dùng skills-mobile-debug-agent.
 ---
 
 # UI Debug Agent
 
 ## Description
 
-Skill chuyên biệt giúp agent inspect ứng dụng web/mobile trực tiếp trên browser thật, phân tích DOM, thu thập locators ổn định, và debug các vấn đề UI automation.
+Skill chuyên biệt giúp agent inspect ứng dụng **web** trực tiếp trên browser thật, phân tích DOM, thu thập locators ổn định, và debug các vấn đề UI automation.
+
+> 📱 **App mobile (Android / iOS / Flutter) → dùng [`skills-mobile-debug-agent`](../skills-mobile-debug-agent/SKILL.md).** UI hierarchy của mobile không phải DOM, và app Flutter thì khác cả hai — skill này không xử lý được.
 
 Agent có thể:
 

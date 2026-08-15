@@ -110,8 +110,11 @@
 | Nhánh | Command | Prompt mẫu | Input |
 |---|---|---|---|
 | **Từ manual TC** (đường chính) | `/generate_automation_from_testcases` | [`prompt_05`](prompts/prompt_05_convert_manual_to_automation.txt) · [`prompt_04 PW`](prompts/prompt_04_generate_script_playwright.txt) · [`prompt_04 SE`](prompts/prompt_04_generate_script_selenium.txt) | File TC có cấu trúc (MD/Excel/JSON) |
-| **Từ UI flow** | `/generate_automation_from_ui_flow` | — | Mô tả thao tác bằng lời hoặc chỉ URL |
+| **Từ UI flow (web)** | `/generate_automation_from_ui_flow` | — | Mô tả thao tác bằng lời hoặc chỉ URL |
+| **Từ flow mobile** | `/generate_automation_from_mobile_flow` | — | App (`.apk`/`.ipa`) + flow mô tả — Native Android/iOS, **Flutter**, Hybrid |
 | **API từ Swagger** | `/generate_api_tests_from_swagger` mode FULL | [`prompt_09`](prompts/prompt_09_generate_api_tests.txt) | URL/file OpenAPI spec |
+
+> 📱 **App Flutter:** việc đầu tiên là nhận diện app đã bật **semantics** chưa — chưa bật thì hierarchy chỉ có một node `FlutterView` rỗng và **không có element nào để tìm**. Đây là thoả thuận với dev, không phải việc QA xoay được bằng locator giỏi. Xem [`appium_rules.md`](.claude/rules/appium_rules.md) mục 3.
 
 **AI làm gì (nhánh chính, 6 bước):** đọc & parse TC → mở browser MCP **inspect DOM thật** thu locator → thiết kế POM → sinh test data unique/traceable → sinh test class kèm Allure metadata → chạy + **auto-heal** đến khi PASS **2 lần liên tiếp**.
 
@@ -275,7 +278,8 @@ Chỉ chạy khi dự án dùng Jira/Xray. Cần lấy requirements/ticket từ 
 |---|---|---|---|
 | 0 | `/generate_automation_framework` | [`prompt_03`](prompts/prompt_03_create_framework_playwright.txt) | **1 lần** / dự án (bỏ qua nếu đã có framework) |
 | 1 | `/generate_automation_from_testcases` | [`prompt_05`](prompts/prompt_05_convert_manual_to_automation.txt) | **N lần** = số module |
-| 1' | `/generate_automation_from_ui_flow` | — | Khi chưa có TC |
+| 1' | `/generate_automation_from_ui_flow` | — | Khi chưa có TC (web) |
+| 1'' | `/generate_automation_from_mobile_flow` | — | App mobile — Native / Flutter / Hybrid |
 | 1" | `/generate_api_tests_from_swagger` mode FULL | [`prompt_09`](prompts/prompt_09_generate_api_tests.txt) | Hệ thống API |
 | 2 | `/review_automation_code` | [`prompt_06`](prompts/prompt_06_review_automation_code.txt) | 1 lần / bộ script (+ định kỳ) |
 | 3 | `/run_and_fix_tests` | [`prompt_17`](prompts/prompt_17_run_and_fix_tests.txt) | **Mỗi đợt regression / mỗi build** |
@@ -315,4 +319,4 @@ Script chạy tốt nhưng RTM không map được về TC/REQ → chặng 6 x�
 | [`.claude/rules/locator_strategy.md`](.claude/rules/locator_strategy.md) | Thứ tự ưu tiên locator (mọi framework) |
 | [`.claude/rules/playwright_rules.md`](.claude/rules/playwright_rules.md) · [`selenium`](.claude/rules/selenium_rules.md) · [`appium`](.claude/rules/appium_rules.md) | Quy tắc riêng từng framework |
 | [`plans/automation/QUICK_START.md`](plans/automation/QUICK_START.md) | Luồng 6 bước bản copy-paste — dùng cho AI agent khác không có slash command của bộ này |
-| [`prompts/README.md`](prompts/README.md) | 29 prompt mẫu copy-paste, chia 6 nhóm tra cứu |
+| [`prompts/README.md`](prompts/README.md) | 30 prompt mẫu copy-paste, chia 6 nhóm tra cứu |

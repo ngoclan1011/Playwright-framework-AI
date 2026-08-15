@@ -355,5 +355,5 @@ Xem lại cảnh báo ở chặng 6.
 | [`CLAUDE.md`](CLAUDE.md) | Quy tắc bắt buộc · cấu trúc `docs/` · danh sách đầy đủ workflows |
 | [`README.md`](README.md) | Tổng quan bộ kit · cài đặt |
 | [`SETUP_CLAUDE.md`](SETUP_CLAUDE.md) | Cài Claude Code + Playwright MCP |
-| [`prompts/README.md`](prompts/README.md) | 29 prompt mẫu copy-paste, chia 6 nhóm tra cứu |
+| [`prompts/README.md`](prompts/README.md) | 30 prompt mẫu copy-paste, chia 6 nhóm tra cứu |
 | [`plans/manual/QUICK_START.md`](plans/manual/QUICK_START.md) | Luồng 6 bước AI-RBT bản copy-paste — dùng cho AI agent khác (Codex · Antigravity · Kiro · Cursor) không có slash command của bộ này |
