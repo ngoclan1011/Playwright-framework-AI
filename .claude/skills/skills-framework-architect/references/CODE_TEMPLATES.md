@@ -48,7 +48,8 @@ export default defineConfig({
   expect: { timeout: 10_000 },
   fullyParallel: true,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 4 : undefined,
+  // Parallel LUÔN bật — đổi số luồng ở .env (WORKERS), không sửa file này
+  workers: Number(process.env.WORKERS ?? 5),
   // Mọi output gom vào reports/ — xem reporting_rules.md mục 6
   outputDir: 'reports/test-artifacts',
   reporter: [
@@ -734,6 +735,11 @@ on:
   pull_request:
   workflow_dispatch:
 
+env:
+  # Số luồng song song — hạ xuống 2–3 nếu runner 2 vCPU chạy chập chờn.
+  # Sửa đúng dòng này, KHÔNG đụng playwright.config.ts
+  WORKERS: 5
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -759,7 +765,8 @@ jobs:
 
       - name: Sinh Allure report
         if: always()
-        run: npx allure generate reports/allure-results -o reports/allure-report --clean
+        # CLI đã nằm trong devDependencies (§ 7.5) — CI không cài Allure riêng
+        run: npx allure generate reports/allure-results
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -799,6 +806,11 @@ jobs:
           TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
           TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
         run: mvn clean test -Dheadless=true
+
+      - name: Sinh Allure report
+        if: always()
+        # allure-maven tự tải CLI về project — CI không cài Allure riêng
+        run: mvn allure:report
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -893,6 +905,7 @@ addopts = """
     --allure-no-capture
     --html=reports/html/index.html
     --self-contained-html
+    -n 5
     -v
 """
 testpaths = ["src/tests"]
@@ -1116,21 +1129,414 @@ __pycache__/
 .env
 ```
 
-**Lệnh sinh report**
+**Lệnh sinh report** — chạy bằng CLI **cài trong project**, xem § 7.5
 
 ```bash
-allure generate reports/allure-results -o reports/allure-report --clean
-```
-
-```bash
-allure generate reports/allure-results -o reports/allure-report-single --single-file --clean
-```
-
-```bash
-allure open reports/allure-report
+npm run report        # Node · Python
+mvn allure:serve      # Java + Maven
 ```
 
 > ⚠️ Sau khi chạy test, kiểm tra root project **không** còn `allure-results/` / `test-results/` / `playwright-report/` lạc ra ngoài. Nếu còn nghĩa là config output chưa ăn.
+
+---
+
+### 7.5 Allure CLI cài cục bộ — máy KHÔNG cần cài gì
+
+> **Mục tiêu:** clone project → `npm install` (hoặc `mvn`) → mở được report. Không `scoop install allure`, không `brew install allure`, không tải zip thêm vào `PATH`.
+
+| Stack | Cài vào project | Máy cần sẵn | Cần Java? |
+|---|---|---|---|
+| Node (Playwright TS/JS) | devDependency `allure` — Allure 3, viết bằng TypeScript | Node.js | ❌ Không |
+| Java + Maven | **giải nén hẳn bộ Allure 2 vào `.allure/`** — `maven-dependency-plugin` + `allure-maven` trỏ về đó | JDK | ✅ Đã có sẵn |
+| Python + Pytest | `package.json` tối giản + devDependency `allure` | Node.js | ❌ Không |
+
+**Node/Python — vì sao không dùng `allure-commandline`:** gói npm đó chỉ **bọc** CLI Allure 2 viết bằng Java — máy vẫn phải có JRE. Allure 3 (`allure`) chạy thuần Node và vẫn đọc được `allure-results` do `allure-playwright` / `allure-pytest` / `allure-testng` sinh ra.
+
+**Java — vì sao không để `allure-maven` tự tải:** mặc định nó tải CLI từ Internet lúc chạy goal. Máy không mạng, hoặc sau proxy công ty, là hỏng. Giải nén sẵn từ Maven Central vào `.allure/` thì bộ CLI nằm **hẳn trong project**, gọi được cả khi không qua Maven — xem mục B.
+
+#### A. Node — `package.json`
+
+```json
+{
+  "scripts": {
+    "test": "playwright test",
+    "report": "allure generate reports/allure-results && allure open reports/allure-report",
+    "report:watch": "allure watch reports/allure-results"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.0",
+    "allure-playwright": "^3.10.2",
+    "allure": "^3.15.0"
+  }
+}
+```
+
+> Trong `scripts` gọi thẳng `allure` được — npm tự tìm binary trong `node_modules/.bin`. Gõ ngoài terminal thì dùng `npx allure ...`.
+
+**`allurerc.mjs`** — nơi khai `output`, thay cho cờ `-o` của CLI Allure 2
+
+```js
+import { defineConfig } from "allure";
+
+export default defineConfig({
+  name: "Automation Report",
+  output: "reports/allure-report",
+  plugins: {
+    awesome: {
+      options: {
+        singleFile: false,
+        reportLanguage: "en",
+      },
+    },
+  },
+});
+```
+
+- `singleFile: true` → report gộp **1 file HTML** duy nhất, tiện gửi qua chat/email
+- `reportLanguage` chưa hỗ trợ `vi` — để `en`. Tên test và step vẫn hiện Tiếng Việt vì đó là dữ liệu, không phải giao diện
+
+#### B. Java + Maven — tải hẳn bộ Allure 2 vào thư mục project
+
+Allure 2 CLI được publish trên **Maven Central** như một artifact bình thường: `io.qameta.allure:allure-commandline:<version>:zip` (~30 MB). Dùng `maven-dependency-plugin` giải nén nó vào **`.allure/`** ngay trong project — CLI về theo đúng đường của Maven (dùng được mirror/proxy nội bộ, cache ở `~/.m2`), không phụ thuộc bất kỳ thứ gì cài sẵn trên máy.
+
+**`pom.xml`**
+
+```xml
+<properties>
+  <!-- Một chỗ duy nhất khai version CLI — dùng lại ở cả 2 plugin bên dưới -->
+  <allure.cli.version>2.45.0</allure.cli.version>
+  <allure.home>${project.basedir}/.allure</allure.home>
+</properties>
+
+<build>
+  <plugins>
+    <!-- 1) Tải & giải nén bộ Allure 2 vào .allure/allure-<version>/ -->
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-dependency-plugin</artifactId>
+      <version>3.8.1</version>
+      <executions>
+        <execution>
+          <id>unpack-allure-cli</id>
+          <phase>validate</phase>
+          <goals><goal>unpack</goal></goals>
+          <configuration>
+            <artifactItems>
+              <artifactItem>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-commandline</artifactId>
+                <version>${allure.cli.version}</version>
+                <type>zip</type>
+                <outputDirectory>${allure.home}</outputDirectory>
+              </artifactItem>
+            </artifactItems>
+            <!-- Marker để ngoài target/ → mvn clean KHÔNG bắt giải nén lại -->
+            <markersDirectory>${allure.home}/.markers</markersDirectory>
+          </configuration>
+        </execution>
+      </executions>
+    </plugin>
+
+    <!-- 2) Goal tiện dụng — trỏ về bộ CLI vừa giải nén, KHÔNG tải lại lần nữa -->
+    <plugin>
+      <groupId>io.qameta.allure</groupId>
+      <artifactId>allure-maven</artifactId>
+      <version>2.15.2</version>
+      <configuration>
+        <reportVersion>${allure.cli.version}</reportVersion>
+        <installDirectory>${allure.home}</installDirectory>
+        <resultsDirectory>${project.basedir}/reports/allure-results</resultsDirectory>
+        <reportDirectory>${project.basedir}/reports/allure-report</reportDirectory>
+      </configuration>
+    </plugin>
+  </plugins>
+</build>
+```
+
+`allure-maven` kiểm tra `installDirectory/allure-<reportVersion>/bin/allure` **trước khi** tải. Trỏ đúng vào bộ đã giải nén ở bước 1 thì nó dùng luôn — **không** có bước tải riêng nào nữa. Hai chỗ phải **cùng** `${allure.cli.version}`, lệch version là nó tải lại.
+
+**Cấu trúc sau khi chạy `mvn validate`**
+
+```text
+project-root/
+├── .allure/
+│   ├── .markers/                      # dấu đã giải nén — sống sót qua mvn clean
+│   └── allure-2.45.0/
+│       ├── bin/allure                 # Linux · macOS
+│       ├── bin/allure.bat             # Windows
+│       ├── lib/  config/  plugins/
+└── reports/
+```
+
+**Cách mở report — 2 đường, chọn cái nào cũng được**
+
+```bash
+# Đường 1 — qua Maven
+mvn allure:report            # sinh vào reports/allure-report
+mvn allure:serve             # sinh + mở browser luôn
+
+# Đường 2 — gọi thẳng CLI trong project, không cần Maven
+.allure\allure-2.45.0\bin\allure.bat generate reports\allure-results -o reports\allure-report --clean
+.allure\allure-2.45.0\bin\allure.bat open reports\allure-report
+
+# macOS / Linux — cấp quyền chạy một lần sau khi giải nén
+chmod +x .allure/allure-2.45.0/bin/allure
+./.allure/allure-2.45.0/bin/allure generate reports/allure-results -o reports/allure-report --clean
+```
+
+**Bản 1 file HTML để gửi cho người không cài gì** — `allure-maven` không có tham số single-file, phải gọi thẳng CLI:
+
+```bash
+.allure\allure-2.45.0\bin\allure.bat generate reports\allure-results -o reports\allure-report-single --single-file --clean
+```
+
+**Ghi chú bắt buộc**
+
+- `resultsDirectory` phải trùng `allure.results.directory` đã khai ở surefire (§ 7.3) — lệch là report rỗng
+- `.gitignore` thêm `.allure/` — 30 MB, không commit
+- **Máy không có mạng:** bộ CLI vẫn về được nếu `~/.m2` đã có artifact (copy `~/.m2/repository/io/qameta/allure/allure-commandline/` sang máy đó), hoặc chép nguyên thư mục `.allure/` sang. Cần cam kết chạy được offline tuyệt đối thì **bỏ `.allure/` khỏi `.gitignore` và commit thẳng vào repo** — đổi 30 MB lấy việc clone về là chạy được ngay
+- Thêm **Maven Wrapper** để người khác khỏi cài Maven: `mvn -N wrapper:wrapper` → commit `mvnw`, `mvnw.cmd`, `.mvn/`. Sau đó dùng `./mvnw allure:serve`
+
+#### C. Python + Pytest — `package.json` tối giản
+
+PyPI **không** có gói nào ship Allure CLI (`allure-pytest` chỉ sinh results; `allure-combine` chỉ gộp report đã sinh). Nên dùng CLI Node, đặt cạnh project:
+
+```json
+{
+  "name": "pytest-allure-cli",
+  "private": true,
+  "scripts": {
+    "report": "allure generate reports/allure-results && allure open reports/allure-report"
+  },
+  "devDependencies": {
+    "allure": "^3.15.0"
+  }
+}
+```
+
+Dùng chung `allurerc.mjs` ở mục A. Ghi vào README: `npm install` **một lần**, sau đó `npm run report`.
+
+#### D. Máy người nhận không có JDK — mở report kiểu gì
+
+> **Nói thẳng:** project Java + Maven **không thể chạy test** trên máy không có JDK — Maven cũng chạy trên JVM, và CLI Allure 2 cũng là app Java. Đây là ràng buộc của stack Java, không phải của Allure. **Không** gói JDK vào project: mỗi OS/kiến trúc một bản, ~180 MB, và phải cập nhật bảo mật.
+>
+> Nhưng **xem report thì không cần JDK**. Chọn theo đúng thứ máy người nhận đang có:
+
+| Máy người nhận có | Họ cần làm gì | Cách |
+|---|---|---|
+| **JDK** (bắt buộc nếu muốn chạy test) | Chạy test + mở report | Bộ CLI đã nằm trong `.allure/` (mục B) → `./mvnw allure:serve` hoặc gọi thẳng `bin/allure`. Kèm Maven Wrapper thì khỏi cài cả Maven |
+| **Chỉ có Node**, không có Java | Sinh + mở report từ `reports/allure-results` đã có | `npx allure generate reports/allure-results` — Allure 3 chạy thuần Node và **đọc được results của project Java** (`allure-testng` ghi ra đúng định dạng Allure 2) |
+| **Không có gì**, chỉ có browser | Chỉ xem report | Gửi file **single-file HTML** — mở bằng browser, không cài gì |
+
+**Máy chỉ có Node** — thêm `package.json` nhỏ vào project Java, không đụng gì tới Maven:
+
+```json
+{
+  "name": "allure-viewer",
+  "private": true,
+  "scripts": {
+    "report": "allure generate reports/allure-results && allure open reports/allure-report"
+  },
+  "devDependencies": {
+    "allure": "^3.15.0"
+  }
+}
+```
+
+⚠️ Đường này ra giao diện **Awesome** của Allure 3, không phải giao diện Allure 2 mà `mvn allure:serve` sinh ra. Cùng dữ liệu, khác giao diện — nói trước để người xem khỏi tưởng sai report.
+
+**Người chỉ xem** — sinh 1 file rồi gửi thẳng file đó:
+
+```bash
+.allure\allure-2.45.0\bin\allure.bat generate reports\allure-results -o reports\allure-report-single --single-file --clean
+# → gửi reports/allure-report-single/index.html
+```
+
+⚠️ File này chứa **ảnh chụp hệ thống thật** — thường có dữ liệu khách hàng. Kiểm nội dung trước khi gửi ra ngoài team.
+
+#### E. Kiểm chứng (bắt buộc trước khi bàn giao)
+
+**Node / Python:**
+
+```bash
+npx allure --version                        # in ra version = đạt
+npx allure generate reports/allure-results
+npx allure open reports/allure-report
+```
+
+**Java + Maven** — kiểm đúng thứ tự này:
+
+```bash
+mvn validate                                # phải sinh ra .allure/allure-<version>/
+dir .allure\allure-2.45.0\bin               # ls .allure/allure-2.45.0/bin trên macOS/Linux
+.allure\allure-2.45.0\bin\allure.bat --version
+mvn allure:report                           # KHÔNG được thấy dòng "Downloading allure commandline"
+```
+
+| Dấu hiệu | Nghĩa | Sửa |
+|---|---|---|
+| `.allure/` không sinh ra sau `mvn validate` | execution `unpack-allure-cli` chưa gắn đúng phase | Kiểm lại `<phase>validate</phase>` |
+| Log hiện `Downloading allure commandline` | `allure-maven` không thấy bộ đã giải nén | `reportVersion` lệch `${allure.cli.version}`, hoặc `installDirectory` sai |
+| `allure: command not found` / `is not recognized` | Đang gọi CLI global chứ không phải CLI trong project | Gọi theo đường dẫn `.allure/...`, hoặc `npx allure` với Node |
+| `mvn` báo lỗi `JAVA_HOME` | Máy chưa có JDK | Xem mục D — máy đó không chạy được test Java, chỉ xem report được |
+
+#### F. Ngoại lệ — project Node/Python nhưng team bắt buộc giao diện Allure 2 cổ điển
+
+Allure 3 mặc định render giao diện **Awesome**; plugin `classic` / `allure2` còn thử nghiệm. Bắt buộc dùng đúng giao diện cũ thì đổi sang:
+
+```json
+{ "devDependencies": { "allure-commandline": "^2.43.0" } }
+```
+
+```bash
+npx allure generate reports/allure-results -o reports/allure-report --clean
+npx allure generate reports/allure-results -o reports/allure-report-single --single-file --clean
+npx allure open reports/allure-report
+```
+
+⚠️ Đường này **cần JRE 8+ trên máy** — phải ghi rõ ở đầu README, đừng để user cài xong mới phát hiện.
+
+#### G. `.gitignore` bổ sung
+
+```gitignore
+reports/
+.allure/          # bộ Allure 2 CLI giải nén trong project (~30 MB)
+node_modules/
+```
+
+> Muốn clone về là chạy được **không cần mạng** → **bỏ dòng `.allure/`** và commit thẳng bộ CLI vào repo. Đổi 30 MB dung lượng lấy việc người mới khỏi chờ tải. Repo public thì cân nhắc — 30 MB nằm vĩnh viễn trong lịch sử git.
+
+---
+
+## 8. Parallel Execution — luôn bật, mặc định 5 luồng
+
+> **Nguyên tắc:** parallel bật **từ ngày đầu**, không phải tính năng thêm sau. Suite viết trong chế độ tuần tự rồi mới bật song song thì lộ ra hàng loạt test phụ thuộc nhau — sửa lúc đó đắt hơn nhiều.
+>
+> **Số luồng khai đúng MỘT chỗ** cho mỗi stack. Rải ra nhiều file là lúc cần hạ tải sẽ sửa sót.
+
+| Stack | Khai ở | Mặc định | Đổi lúc chạy |
+|---|---|---|---|
+| Playwright TS | `playwright.config.ts` ← `.env` | `workers: 5` | `WORKERS=2 npx playwright test` |
+| Pytest | `pyproject.toml` → `addopts` | `-n 5` | `pytest -n 2` (cờ dòng lệnh thắng) |
+| TestNG | `testng.xml` | `thread-count="5"` | Sửa `thread-count` |
+| Appium | `testng.xml` | **= số device thật** | Thêm/bớt khối `<test>` |
+
+### 8.1 Playwright + TypeScript
+
+```typescript
+// playwright.config.ts — xem bản đầy đủ ở § 1
+export default defineConfig({
+  fullyParallel: true,                          // song song cả trong 1 file
+  workers: Number(process.env.WORKERS ?? 5),
+});
+```
+
+```bash
+# .env / .env.example
+WORKERS=5
+```
+
+- `fullyParallel: true` → test **trong cùng một file** cũng chạy song song. Bỏ đi thì chỉ song song giữa các file
+- Mỗi worker là **process riêng** với browser riêng → không chia sẻ state, nhưng cũng tốn RAM: 5 worker ≈ 5 Chrome
+- `test.describe.serial()` chỉ dùng khi thật sự có chuỗi phụ thuộc — **mọi lần dùng phải kèm comment lý do**
+
+### 8.2 Pytest + Python (`pytest-xdist`)
+
+```txt
+# requirements.txt
+pytest-xdist>=3.6.0
+```
+
+```toml
+# pyproject.toml → addopts
+-n 5
+```
+
+- Fixture `scope="session"` chạy **một lần mỗi worker**, không phải một lần toàn suite — browser session-scoped ⇒ 5 browser
+- Test cần chạy chung 1 worker → gom vào cùng file và dùng `--dist loadfile`
+- Debug thì tắt song song: `pytest -n 0`
+
+### 8.3 TestNG (Selenium / Playwright Java)
+
+```xml
+<!-- testng.xml — NGUỒN DUY NHẤT của số luồng -->
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Automation Suite" parallel="methods" thread-count="5"
+       data-provider-thread-count="5">
+  <listeners>
+    <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
+  </listeners>
+  <test name="Regression">
+    <packages>
+      <package name="com.project.tests.*"/>
+    </packages>
+  </test>
+</suite>
+```
+
+| `parallel` | Nghĩa | Khi nào dùng |
+|---|---|---|
+| `methods` | Mỗi `@Test` một thread | **Mặc định** — mức song song cao nhất |
+| `classes` | Mỗi class một thread, method trong class chạy tuần tự | Class có `@BeforeClass` nặng dùng chung |
+| `tests` | Mỗi khối `<test>` một thread | Chia theo device/browser |
+
+**Bắt buộc đi kèm** — thiếu là hỏng ngay ở luồng thứ 2:
+
+```java
+// DriverFactory — xem bản đầy đủ ở § 3
+private static final ThreadLocal<WebDriver> DRIVER = new ThreadLocal<>();
+
+public static void quitDriver() {
+    if (DRIVER.get() != null) {
+        DRIVER.get().quit();
+        DRIVER.remove();      // BẮT BUỘC — không remove là rò rỉ sang test sau
+    }
+}
+```
+
+- **KHÔNG** để `WebDriver`, `WebDriverWait`, Page Object làm field static
+- `data-provider-thread-count` điều khiển riêng luồng của `@DataProvider(parallel = true)`
+- Muốn ghi đè số luồng từ dòng lệnh (`-Dparallel`, `-DthreadCount` của surefire): **kiểm chứng trên project thật trước**, tuỳ tổ hợp phiên bản surefire/TestNG mà cấu hình trong `testng.xml` có thể thắng — đừng ghi vào README như sự thật khi chưa thử
+
+### 8.4 Appium — song song = nhiều device, không phải nhiều thread
+
+```xml
+<suite name="Mobile Suite" parallel="tests" thread-count="2">
+  <test name="Pixel_7">
+    <parameter name="deviceName"  value="Pixel_7"/>
+    <parameter name="udid"        value="emulator-5554"/>
+    <parameter name="systemPort"  value="8201"/>
+    <classes><class name="com.project.tests.LoginMobileTest"/></classes>
+  </test>
+  <test name="Pixel_8">
+    <parameter name="deviceName"  value="Pixel_8"/>
+    <parameter name="udid"        value="emulator-5556"/>
+    <parameter name="systemPort"  value="8202"/>
+    <classes><class name="com.project.tests.LoginMobileTest"/></classes>
+  </test>
+</suite>
+```
+
+🚨 **Không thể chạy 5 luồng trên 1 emulator.** `thread-count` = **số device đang chạy thật**. Mỗi device phải có:
+
+| Capability | Nền tảng | Vì sao |
+|---|---|---|
+| `udid` | cả hai | Chỉ đích danh device |
+| `systemPort` | Android | Port của UiAutomator2 — trùng là 2 phiên giẫm nhau |
+| `wdaLocalPort` | iOS | Port của WebDriverAgent — cùng lý do |
+
+### 8.5 Điều kiện để parallel không đẻ ra flaky
+
+| Yêu cầu | Vi phạm điển hình | Hậu quả |
+|---|---|---|
+| Driver/browser **theo thread** | `static WebDriver driver` | Luồng 2 cướp driver của luồng 1 |
+| **Không** static mutable dùng chung | `static String currentUserId` | Test đọc nhầm dữ liệu của test khác |
+| Test data **unique từng test** | 5 test cùng tạo `test@mail.com` | `Duplicate key` — fail ngẫu nhiên |
+| Không sửa/xoá bản ghi dùng chung | 2 test cùng sửa 1 khách hàng | Assert lệch, không tái hiện được |
+| Không phụ thuộc thứ tự | TC02 cần TC01 tạo data trước | Đảo thứ tự là đỏ |
+| Cleanup theo phạm vi test | Xoá sạch bảng ở teardown | Xoá mất data của luồng đang chạy |
+
+> 🚨 **Test đỏ khi bật parallel = test đang sai, không phải parallel sai.** Sửa test data / khử shared state, **KHÔNG** hạ `WORKERS=1` để giấu. Hạ số luồng chỉ hợp lệ khi giới hạn nằm ở **app** (không chịu nổi nhiều phiên) hoặc **hạ tầng** (runner 2 vCPU) — và phải ghi lý do vào README.
 
 ---
 
@@ -1141,3 +1547,10 @@ allure open reports/allure-report
 - [ ] Điền `.env.example` đầy đủ key, `.env` thật **không** commit
 - [ ] Xoá phần code của stack không dùng đến
 - [ ] Chạy build (`npm ci` / `mvn clean compile` / `pip install -r requirements.txt`) xác nhận không lỗi
+- [ ] Allure CLI nằm **trong project** (§ 7.5) — `npx allure --version` / `.allure/allure-<ver>/bin/allure --version` chạy được mà máy chưa cài Allure
+- [ ] Java: `mvn validate` sinh ra `.allure/`, và `mvn allure:report` **không** in dòng `Downloading allure commandline`
+- [ ] README có mục "Mở report", **không** hướng dẫn cài Allure lên máy — có ghi rõ đường cho máy chỉ có Node và cho người chỉ xem (single-file HTML)
+- [ ] **Parallel bật sẵn 5 luồng** (§ 8) — chạy thử thấy nhiều worker/thread trong log
+- [ ] Số luồng khai **đúng 1 chỗ**; driver theo `ThreadLocal`, không có static mutable dùng chung
+- [ ] Appium: `thread-count` = số device thật, mỗi device có `systemPort`/`wdaLocalPort` riêng
+- [ ] `.github/workflows/` có workflow chạy được — headless, `WORKERS` khai ở cấp workflow, upload `reports/` với `if: always()`

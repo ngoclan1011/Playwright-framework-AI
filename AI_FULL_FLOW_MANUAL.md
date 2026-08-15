@@ -162,6 +162,8 @@ Nói *"sửa luôn"* / *"cải thiện giùm"* → AI tự chuyển sang **FIX**
 
 > Chặng này hay bị bỏ qua. Nhưng review 30 phút rẻ hơn nhiều so với chạy tay 50 TC rồi mới phát hiện một nửa viết sai.
 
+> 🤖 **Muốn automate bộ TC này?** Đây là điểm rẽ — bộ TC đã review xong là **đầu vào của** [`AI_FULL_FLOW_AUTOMATION.md`](AI_FULL_FLOW_AUTOMATION.md). Hai flow chạy song song được: automation lo phần regression lặp lại, manual lo phần còn lại.
+
 ---
 
 ## Chặng 4 — Thực thi Manual
@@ -349,8 +351,9 @@ Xem lại cảnh báo ở chặng 6.
 
 | File | Nội dung |
 |---|---|
+| [`AI_FULL_FLOW_AUTOMATION.md`](AI_FULL_FLOW_AUTOMATION.md) | Flow 8 chặng Automation Testing — nối tiếp từ bộ TC của chặng 2–3 |
 | [`CLAUDE.md`](CLAUDE.md) | Quy tắc bắt buộc · cấu trúc `docs/` · danh sách đầy đủ workflows |
 | [`README.md`](README.md) | Tổng quan bộ kit · cài đặt |
 | [`SETUP_CLAUDE.md`](SETUP_CLAUDE.md) | Cài Claude Code + Playwright MCP |
-| [`prompts/README.md`](prompts/README.md) | 26 prompt mẫu copy-paste, chia 5 nhóm tra cứu |
+| [`prompts/README.md`](prompts/README.md) | 29 prompt mẫu copy-paste, chia 6 nhóm tra cứu |
 | [`plans/manual/QUICK_START.md`](plans/manual/QUICK_START.md) | Luồng 6 bước AI-RBT bản copy-paste — dùng cho AI agent khác (Codex · Antigravity · Kiro · Cursor) không có slash command của bộ này |

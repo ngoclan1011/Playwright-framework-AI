@@ -21,6 +21,7 @@
   Ví dụ:  auto_createCustomer_20260402_A3F2@test.com
   ```
 - Hỗ trợ chạy parallel: mỗi test method có data riêng biệt, không conflict.
+- **Parallel là mặc định, không phải tuỳ chọn** — framework sinh ra luôn bật sẵn (mặc định 5 luồng). Test đỏ khi chạy song song là **test sai**, phải sửa test data / khử shared state, KHÔNG hạ số luồng để giấu. Chi tiết: `skills-framework-architect/references/CODE_TEMPLATES.md` § 8.
 
 ## 3. Chất Lượng Code
 

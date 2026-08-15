@@ -14,7 +14,7 @@ Thư mục này chứa các prompt mẫu dùng nhanh (copy → paste → gửi) 
 
 ## Danh Sách Prompt Mẫu
 
-> **Số thứ tự file = ID cố định**, không phải thứ tự chạy. Các nhóm dưới đây chỉ để tra cứu cho nhanh — cần thứ tự chạy thực tế thì xem [`AI_FULL_FLOW.md`](../AI_FULL_FLOW.md).
+> **Số thứ tự file = ID cố định**, không phải thứ tự chạy. Các nhóm dưới đây chỉ để tra cứu cho nhanh — cần thứ tự chạy thực tế thì xem [`AI_FULL_FLOW_MANUAL.md`](../AI_FULL_FLOW_MANUAL.md) (nhánh Manual) hoặc [`AI_FULL_FLOW_AUTOMATION.md`](../AI_FULL_FLOW_AUTOMATION.md) (nhánh Automation).
 
 ### 🔍 Khảo sát & Requirements
 

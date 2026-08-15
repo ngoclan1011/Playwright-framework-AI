@@ -134,16 +134,44 @@ Thư mục con khác (video, trace…) **được phép thêm**, miễn nằm tr
 | **Log file** | Log4j2 / `logging` / winston | Ghi vào `reports/logs/` |
 | **Screenshot lưu đĩa** | `ScreenshotUtil` | Ghi vào `reports/screenshots/` |
 
+### Allure CLI phải cài TRONG project — máy không cài gì
+
+> **Người dùng clone project về, chạy `npm install` (hoặc `mvn`) là mở được report.**
+>
+> 🚫 **CẤM** hướng dẫn cài Allure lên máy: `scoop install allure` · `brew install allure` · `choco install allure` · tải zip thêm vào `PATH`. Cài vào máy thì đổi máy là hỏng, và CI phải cài lại lần nữa.
+
+| Stack | Cài vào project | Cần Java? |
+|---|---|---|
+| **Node** (Playwright TS/JS) | devDependency `allure` (Allure 3 — chạy thuần Node) | ❌ |
+| **Java + Maven** | `maven-dependency-plugin` giải nén `allure-commandline:zip` vào **`.allure/`** + `allure-maven` trỏ `installDirectory` về đó | ✅ đã có sẵn |
+| **Python + Pytest** | `package.json` tối giản + devDependency `allure` | ❌ |
+
+Gói npm `allure-commandline` chỉ **bọc** CLI Allure 2 viết bằng Java → máy vẫn phải có JRE. Chỉ dùng cho project Node khi team bắt buộc giao diện Allure 2 cổ điển, và **phải ghi rõ yêu cầu JRE trong README**.
+
+**Java: KHÔNG dựa vào cơ chế tự tải của `allure-maven`** — nó tải từ Internet lúc chạy goal, máy không mạng / sau proxy là hỏng. Phải giải nén sẵn bộ CLI vào `.allure/` để nó nằm hẳn trong project.
+
+**Máy không có JDK** thì không chạy được test Java (Maven cũng là app Java) — đây là ràng buộc của stack, không phải của Allure. Vẫn **xem** report được bằng: máy có Node → `npx allure generate reports/allure-results`; máy không có gì → gửi bản **single-file HTML**.
+
 ### Lệnh sinh report
 
 ```bash
-allure generate reports/allure-results -o reports/allure-report --clean
-allure generate reports/allure-results -o reports/allure-report-single --single-file --clean
+npm run report        # Node · Python — allure generate + allure open
+mvn allure:serve      # Java + Maven — sinh và mở luôn
 ```
+
+```bash
+# Java — gọi thẳng CLI trong project, không cần Maven
+.allure\allure-2.45.0\bin\allure.bat generate reports\allure-results -o reports\allure-report --clean
+```
+
+Thư mục output khai trong `allurerc.mjs` (`output: "reports/allure-report"`) hoặc trong `<configuration>` của `allure-maven`.
+
+Config đầy đủ từng stack: [`CODE_TEMPLATES.md`](../skills/skills-framework-architect/references/CODE_TEMPLATES.md) § 7.5.
 
 ### Quy tắc kèm theo
 
 - **`.gitignore` PHẢI có dòng `reports/`** — không commit output test lên repo
+- **`.gitignore` cũng phải chặn `.allure/`** — nơi `allure-maven` tải CLI về
 - **CI upload artifact** trỏ vào `reports/` (1 artifact duy nhất, không upload lẻ từng thư mục)
 - **KHÔNG** để thư mục mặc định của tool nằm ở root: `allure-results/`, `test-results/`, `playwright-report/`, `target/surefire-reports/` — phải trỏ lại vào `reports/`
 - Ảnh trong `reports/screenshots/` chụp hệ thống thật, **thường chứa dữ liệu khách hàng** — thêm lý do nữa để không commit
@@ -163,3 +191,4 @@ Trước khi bàn giao script, mở report lên và kiểm:
 - [ ] **Không** có attachment `stdout` / `stderr`
 - [ ] Toàn bộ output nằm trong `reports/` — root project sạch, không có `allure-results/` / `test-results/` / `playwright-report/` lạc ra ngoài
 - [ ] `.gitignore` đã có `reports/`
+- [ ] Mở report bằng CLI **cài trong project** (`npm run report` / `mvn allure:serve`) — máy chưa cài Allure vẫn chạy được

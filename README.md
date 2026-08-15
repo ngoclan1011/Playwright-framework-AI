@@ -10,7 +10,9 @@ Bộ Skills này **không chỉ dành riêng cho Automation** — mà được t
 
 > 🔌 **Lần đầu cài đặt?** Đọc **[SETUP_CLAUDE.md](SETUP_CLAUDE.md)** — hướng dẫn add **Playwright MCP** thủ công, kết nối **Atlassian / Slack / GitHub / Claude in Chrome**, và setup **Cowork Schedule** để tự động chạy task theo lịch.
 >
-> 🔄 **Cài xong rồi, chạy cái gì trước?** Đọc **[AI_FULL_FLOW.md](AI_FULL_FLOW.md)** — quy trình 8 chặng cho tình huống phổ biến nhất: hệ thống chỉ có UI, không tài liệu, không bộ test cases. Từ `/discover_system` → requirements → test cases → chạy tay → bug report → retest → ma trận truy vết → báo cáo release.
+> 🔄 **Cài xong rồi, chạy cái gì trước?** Đọc **[AI_FULL_FLOW_MANUAL.md](AI_FULL_FLOW_MANUAL.md)** — quy trình 8 chặng cho tình huống phổ biến nhất: hệ thống chỉ có UI, không tài liệu, không bộ test cases. Từ `/discover_system` → requirements → test cases → chạy tay → bug report → retest → ma trận truy vết → báo cáo release.
+>
+> 🤖 **Đã có bộ test cases, muốn viết script?** Đọc **[AI_FULL_FLOW_AUTOMATION.md](AI_FULL_FLOW_AUTOMATION.md)** — quy trình 8 chặng Automation nối tiếp: `/generate_automation_framework` → sinh script → review code → chạy & tự sửa → bảo trì khi UI/requirements đổi → RTM → Xray.
 
 ---
 
@@ -57,7 +59,8 @@ claude-testing-skills/
 │   └── execution-viewer/    # Công cụ web xem kết quả chạy, so sánh các lần chạy & độ phủ automation
 ├── CLAUDE.md                # Rule chung cho AI Agent (Claude Code đọc tự động)
 ├── SETUP_CLAUDE.md          # Hướng dẫn cài Playwright MCP, Connectors & Cowork Schedule
-├── AI_FULL_FLOW.md          # Quy trình 8 chặng Manual Testing — chạy command nào, theo thứ tự nào
+├── AI_FULL_FLOW_MANUAL.md      # Quy trình 8 chặng Manual Testing — chạy command nào, theo thứ tự nào
+├── AI_FULL_FLOW_AUTOMATION.md  # Quy trình 8 chặng Automation — nối tiếp từ bộ TC đã review
 │
 │ ══════════ ĐẦU RA — dữ liệu của dự án đang làm ══════════
 ├── docs/

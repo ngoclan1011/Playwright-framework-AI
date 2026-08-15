@@ -79,8 +79,9 @@ Mỗi framework PHẢI bao gồm các thành phần sau (tùy chỉnh theo stack
 
 ### 3. Browser / Driver Management (Mandatory)
 - **Playwright:** playwright.config.ts / conftest.py với browser setup
-- **Selenium:** WebDriverManager hoặc Driver Factory pattern
-- **Appium:** Desired Capabilities factory, Appium server config
+- **Selenium:** WebDriverManager hoặc Driver Factory pattern — **`ThreadLocal`, có `remove()` ở teardown**
+- **Appium:** Desired Capabilities factory, Appium server config — **port riêng từng device**
+- Driver **KHÔNG** được là static dùng chung — parallel luôn bật nên đây là điều kiện đúng/sai, không phải tối ưu
 
 ### 4. Base Classes (Mandatory)
 - Base Page — chứa common methods (wait, click, type, screenshot)
@@ -109,14 +110,25 @@ Mỗi framework PHẢI bao gồm các thành phần sau (tùy chỉnh theo stack
 - **Test Body có step** `Arrange:` / `Act:` / `Assert:` — Base Page dùng step API để sinh sub-step
 - **Screenshot attach cuối MỌI test** — cả PASS lẫn FAIL, không chỉ khi fail
 - **KHÔNG** attachment `stdout` / `stderr`
+- **Allure CLI cài CỤC BỘ trong project** — devDependency `allure` (Node/Python) hoặc giải nén `allure-commandline:zip` vào `.allure/` bằng `maven-dependency-plugin` (Java). User clone về chạy `npm install`/`mvn` là mở được report; **CẤM** bắt cài Allure lên máy qua `scoop`/`brew`/`choco`/`PATH`
 - Test execution summary (pass/fail/skip counts)
 
-> Chi tiết bắt buộc: [`.claude/rules/reporting_rules.md`](../../rules/reporting_rules.md) · Code mẫu: [`references/CODE_TEMPLATES.md`](references/CODE_TEMPLATES.md) § 7
+> Chi tiết bắt buộc: [`.claude/rules/reporting_rules.md`](../../rules/reporting_rules.md) · Code mẫu: [`references/CODE_TEMPLATES.md`](references/CODE_TEMPLATES.md) § 7 (§ 7.5 — cài Allure cục bộ)
 
-### 9. CI/CD Pipeline (Optional — nhưng khuyến khích)
-- GitHub Actions / GitLab CI / Jenkins pipeline template
-- Parallel execution config
-- Artifact upload (reports, screenshots)
+### 9. Parallel Execution (Mandatory — LUÔN bật)
+- **Mặc định 5 luồng**, khai đúng **một chỗ**: `WORKERS` (Playwright) · `-n 5` (pytest-xdist) · `thread-count="5"` (TestNG)
+- Playwright thêm `fullyParallel: true` — song song cả trong cùng một file
+- **Appium là ngoại lệ:** số luồng = **số device thật**, mỗi device có `systemPort`/`wdaLocalPort` riêng
+- Điều kiện đi kèm: driver theo thread · không static mutable dùng chung · test data unique từng test · không phụ thuộc thứ tự chạy
+- 🚨 Test đỏ khi bật parallel = **test sai**, sửa test chứ không hạ số luồng để giấu
+
+### 10. CI/CD Pipeline (Mandatory — luôn sinh GitHub Actions)
+- File `.github/workflows/<framework>.yml`: `push` · `pull_request` · `workflow_dispatch`
+- Chạy **headless + parallel**, số luồng lấy từ `WORKERS` khai ở cấp workflow
+- Sinh report bằng **CLI Allure trong project** — CI không cài Allure riêng
+- Upload **1 artifact** trỏ `reports/` với `if: always()`; secrets từ GitHub Secrets; job có `timeout-minutes`
+
+> Code mẫu: [`references/CODE_TEMPLATES.md`](references/CODE_TEMPLATES.md) § 8 (parallel) · § 6 (GitHub Actions)
 
 ---
 
