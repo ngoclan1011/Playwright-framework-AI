@@ -240,14 +240,15 @@ docs/
 │       ├── requirements_<module>.md           ← INDEX — TÊN FILE BẤT BIẾN
 │       ├── evidence/*.png                     ← bằng chứng khảo sát
 │       ├── stories/story_NN_<slug>.md         ← chỉ khi tài liệu bị tách
-│       └── analysis/analysis_<TICKET-ID>.md   ← phân tích ticket của module này
+│       ├── analysis/analysis_<TICKET-ID>.md   ← phân tích ticket của module này
+│       └── impact/impact_<TICKET-ID>.md       ← Impact Report — input cho tầng test case
 │
 ├── testcases/
 │   ├── README.md                              ← DANH MỤC test cases
 │   └── <module>/
 │       ├── test_cases_<module>.md             ← INDEX — TÊN FILE BẤT BIẾN
 │       ├── parts/part_NN_<slug>.md            ← khi tách (>40 TC)
-│       ├── impact/impact_<TICKET-ID>.md       ← /update_testcases_from_impact
+│       ├── impact/impact_plan_<TICKET-ID>.md  ← /update_testcases_from_impact
 │       └── archive/test_cases_<module>_vN.md  ← phiên bản cũ
 │
 └── executions/                                 ← kết quả thực thi
@@ -285,6 +286,9 @@ Hai trang tĩnh trong `scripts/`, mở bằng cách double-click, chạy offline
 | **KHÔNG đổi / đánh lại TC ID** khi cập nhật TC theo ticket — sửa tại chỗ index, bản cũ vào `archive/`, TC bị gỡ đổi trạng thái 🗑️ Deprecated | TC ID là khoá nối sang `allure.label('testId', ...)` trong script, cột TC ID của RTM và execution report cũ. Đổi là cắt cả ba mối nối, không có cách phát hiện tự động |
 | Mọi thay đổi requirements phải ghi **Nhật ký thay đổi** ở cuối tài liệu module | Bộ nhớ liền mạch giữa các phiên, và là nơi báo TC nào đã stale |
 | Evidence nằm **cùng** tài liệu sinh ra nó (recon → `<module>/evidence/`, execution → `run_*/evidence/`) | Di chuyển/xoá không lạc file; link tương đối không gãy |
+| 🔒 **KHÔNG ghi giá trị bí mật thật vào `docs/`** — mật khẩu, token, cookie xác thực, session id, API key. Ghi **hình thái** (`<16 ký tự hex>`) thay cho giá trị | `docs/` được commit và **lịch sử git không xoá được bằng cách sửa file**. Credentials sống ở `.env` (đã `.gitignore`); tài liệu chỉ mô tả *hình dạng* |
+| 📸 **Evidence chụp đúng phạm vi đối tượng cần chứng minh, không chụp thừa** — đối tượng nằm trọn trong viewport thì chụp viewport, đừng full-page kéo theo cả trang dữ liệu nghiệp vụ | Ảnh full-page của màn hình nghiệp vụ kéo theo tên khách hàng, số tiền, nhật ký hoạt động — không liên quan gì tới REQ mà vẫn bị commit |
+| 🔍 **Chụp xong phải mở lại ảnh xác nhận đúng trạng thái** trước khi ghi vào Danh mục Evidence | Thao tác mở dropdown/tab có thể thất bại âm thầm. Dòng danh mục sai **nguy hiểm hơn không có ảnh** — nó tạo cảm giác REQ đã có bằng chứng |
 | Thêm module = thêm thư mục + 1 dòng ở `README.md` danh mục | Không đụng gì khác trong repo |
 | `_discovery/` **không được** chứa mã `REQ-XXX-NN` — chỉ cấp **prefix** | Tầng khám phá chưa mở form, chưa trigger validation; cấp số REQ ở đó là chắc chắn phải đánh lại |
 | Bản đồ khám phá tách file thì index **vẫn** là `_discovery/system_map.md` + có mục `## Bản đồ tài liệu` | Cùng hợp đồng đọc với `requirements_<module>.md` — workflow sau chỉ nhớ một đường dẫn |

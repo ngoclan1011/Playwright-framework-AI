@@ -194,7 +194,7 @@ docs/testcases/
 └── <module>/
     ├── test_cases_<module>.md                  ← INDEX — TÊN FILE BẤT BIẾN
     ├── parts/part_NN_<slug>.md                 ← khi tách (>40 TC)
-    ├── impact/impact_<TICKET-ID>.md            ← Mode DELTA: kế hoạch sửa theo từng ticket
+    ├── impact/impact_plan_<TICKET-ID>.md       ← Mode DELTA: kế hoạch sửa theo từng ticket
     └── archive/test_cases_<module>_vN.md       ← phiên bản cũ, giữ để truy vết
 ```
 
@@ -877,7 +877,7 @@ Vì vậy Mode DELTA đặt việc **bảo toàn TC ID** lên trên mọi mục 
 
 | Output | Mô tả |
 |--------|--------|
-| `impact/impact_<TICKET-ID>.md` | Bảng ánh xạ REQ → TC (✅ chắc chắn / ⚠️ suy luận / ❓ chưa có TC) + kế hoạch sửa từng TC + tác động lan toả |
+| `impact/impact_plan_<TICKET-ID>.md` | Bảng ánh xạ REQ → TC (✅ chắc chắn / ⚠️ suy luận / ❓ chưa có TC) + kế hoạch sửa từng TC + tác động lan toả |
 | `test_cases_<module>.md` đã sửa | Sửa **tại chỗ**, tên file không đổi, TC ID giữ nguyên |
 | `archive/test_cases_<module>_v<N>.md` | Bản trước khi sửa — để đối chiếu |
 | Nhật ký thay đổi | Bảng ở cuối file TC: ngày · ticket · TC bị ảnh hưởng · thay đổi · bản sao lưu |

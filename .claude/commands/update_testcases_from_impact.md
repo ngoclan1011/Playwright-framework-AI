@@ -63,7 +63,7 @@ Hai workflow trả lời **hai câu hỏi khác nhau**. Chạy sai cái là bỏ
 
 | Input | Bắt buộc? | Ghi chú |
 |---|---|---|
-| **Impact Report** | ⭐ Bắt buộc (hoặc thay bằng danh sách REQ dưới) | Từ `/update_requirements_from_ticket` — dán trực tiếp hoặc file path |
+| **Impact Report** | ⭐ Bắt buộc (hoặc thay bằng danh sách REQ dưới) | `docs/requirements/<module>/impact/impact_<TICKET-ID>.md` — do `/update_requirements_from_ticket` ghi ra. Hoặc dán trực tiếp nội dung |
 | **Danh sách REQ đã đổi** | Thay thế cho Impact Report | Khi user tự biết REQ nào đổi: REQ ID + đổi cái gì |
 | **Tài liệu requirements hiện hành** | ⭐ Bắt buộc | `docs/requirements/<module>/requirements_<module>.md` — nguồn sự thật của kỳ vọng **mới** |
 | **File test cases hiện hành** | ⭐ Bắt buộc | `docs/testcases/<module>/test_cases_<module>.md` (+ `parts/` nếu có) |
@@ -121,7 +121,7 @@ Mỗi mục ghi: `file:dòng`, TC ID, sửa ô nào, có cần mở evidence kh�
 
 ### Bước 4: Báo Cáo & Xin Duyệt (CHECKPOINT)
 
-1. Xuất `docs/testcases/<module>/impact/impact_<TICKET-ID>.md`:
+1. Xuất `docs/testcases/<module>/impact/impact_plan_<TICKET-ID>.md`:
    - Bảng ánh xạ REQ → TC (tách riêng mapping ✅ chắc chắn / ⚠️ suy luận / ❓ chưa có TC)
    - Kế hoạch sửa từng TC, đánh dấu mục cần mở evidence
    - Tác động lan toả phát hiện ở Bước 3
@@ -185,7 +185,9 @@ Kiểm đủ 6 mục, thiếu mục nào là chưa xong:
 ## Output
 
 ### Mode PLAN
-- `docs/testcases/<module>/impact/impact_<TICKET-ID>.md`: bảng ánh xạ REQ → TC, kế hoạch sửa từng TC, tác động lan toả, danh sách ngoài phạm vi
+- `docs/testcases/<module>/impact/impact_plan_<TICKET-ID>.md`: bảng ánh xạ REQ → TC, kế hoạch sửa từng TC, tác động lan toả, danh sách ngoài phạm vi
+
+> Phân biệt hai file cùng gắn với một ticket: `requirements/<module>/impact/impact_<TICKET-ID>.md` là **báo cáo** — nói *cái gì đã đổi*. `testcases/<module>/impact/impact_plan_<TICKET-ID>.md` là **kế hoạch** — nói *sẽ sửa TC nào, sửa gì*.
 
 ### Mode APPLY
 - Tất cả output Mode PLAN, cộng thêm:

@@ -7,12 +7,14 @@
 # DELTA — TEST CASE ĐÃ ĐỔI
 [Chọn 1 trong 2 cách:]
 
-## Cách 1: Impact Report (từ /update_requirements_from_ticket)
-- File path: [VD: docs/requirements/project/analysis/analysis_TICKET-123.md]
-- Hoặc dán bảng "Test case cần xử lý" vào đây:
+## Cách 1: Delta TC List (từ /update_testcases_from_impact) — KHUYẾN NGHỊ
+- File path: [VD: docs/testcases/project/impact/impact_plan_TICKET-123.md]
+- Hoặc dán bảng "Delta TC List" vào đây:
 ```
-[DÁN BẢNG IMPACT REPORT]
+[DÁN BẢNG DELTA TC LIST]
 ```
+> Chưa chạy /update_testcases_from_impact thì làm nó TRƯỚC — TC còn mô tả hành vi cũ
+> thì script sửa xong vẫn sai kỳ vọng, mà test vẫn xanh nên không ai phát hiện.
 
 ## Cách 2: Tự liệt kê TC đã đổi
 | TC ID | Đổi cái gì |

@@ -7,12 +7,12 @@
 | Tên trên UI | Login |
 | Bí danh | Đăng nhập, Xác thực |
 | Prefix | `LOGIN` |
-| Route | `/admin/authentication` · `/admin/authentication/forgot_password` · `/admin/authentication/logout` |
+| Route | `/admin/authentication` · `/admin/authentication/forgot_password` · `/admin/authentication/logout` · `/admin/authentication/reset_password/<id>/<key>` *(phát hiện thêm khi recon chi tiết)* |
 | Loại màn hình | Form |
 | CRUD | Không áp dụng |
-| Status flow | Không có |
+| Status flow | Không có ở mức entity — nhưng **phiên đăng nhập** có vòng đời trạng thái (phát hiện khi recon chi tiết) |
 | Số tab | 0 |
-| Ước độ lớn | 2 form · 5 field · ~12–18 REQ |
+| Ước độ lớn | 2 form · 5 field · ~12–18 REQ — ⚠️ **ước sai: thực tế 40 REQ** (gấp ~2,5 lần). Nguyên nhân: tầng khám phá chỉ đếm form và field, không lường được lượng REQ sinh từ bảo vệ phiên, CSRF, vòng đời cookie ghi nhớ và điều hướng |
 | Risk | 🔴 Cao — cổng vào toàn hệ thống, mọi module khác phụ thuộc; sai là chặn toàn bộ đợt test |
 
 ## Màn hình quan sát được
@@ -31,7 +31,7 @@
 
 ## Vùng chưa xác minh
 
-> ✅ **Đã recon chi tiết ngày 2026-08-14** → [../../login/requirements_login.md](../../login/requirements_login.md) (35 REQ). Phần dưới đây giữ nguyên trạng lúc khám phá; những gì đã được giải quyết ghi ở cột ghi chú.
+> ✅ **Đã recon chi tiết ngày 2026-08-14, rà soát và kiểm chứng lại 2026-08-18** → [../../login/requirements_login.md](../../login/requirements_login.md) (**40 REQ**). Phần dưới đây giữ nguyên trạng lúc khám phá; những gì đã được giải quyết ghi ở cột ghi chú.
 
 | Vùng | Trạng thái sau recon |
 |---|---|
@@ -40,6 +40,14 @@
 | Cơ chế khoá tài khoản sau N lần sai | ❌ **Vẫn chưa xác minh** — cố ý không thử (`AMB-02`, `RISK-03`) |
 | Thông báo lỗi nguyên văn | ✅ Đã thu đủ — xem mục 5 của tài liệu module |
 | Vai trò thật của `admin@example.com` | ❌ **Vẫn chưa xác minh** — màn hình Roles 403 (`AMB-01`) |
+| Cookie ghi nhớ có tự đăng nhập không | ⚠️ **Một nửa** — đã xác minh **không** tự đăng nhập sau khi đăng xuất chủ động (`REQ-LOGIN-39`); còn trường hợp phiên hết hạn tự nhiên thì chưa (`REQ-LOGIN-40` ⚪, `AMB-15`) |
+| Lối đăng xuất ở viewport mobile | ❌ **Chưa xác minh** — recon chỉ chạy ở desktop `1600×750`, nơi lối đăng xuất trong `mobile-navbar` bị `display:none` (`AMB-16`) |
+
+## Nhật ký khám phá
+
+| Ngày | Ghi nhận |
+|---|---|
+| 2026-08-18 | Rà soát chất lượng tài liệu module phát hiện **ước độ lớn sai đáng kể** (12–18 → 40 REQ) và bổ sung route `reset_password` mà tầng khám phá bỏ sót. Phiên đăng nhập có vòng đời trạng thái, khác với ghi nhận ban đầu "Status flow: Không có" |
 
 ## Evidence
 

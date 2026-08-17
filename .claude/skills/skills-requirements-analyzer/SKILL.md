@@ -300,6 +300,118 @@ Với mỗi risk, ghi: **Mã · Tên rủi ro · Mô tả · Mitigation** (cách
 
 ---
 
+## 4.3. Cổng Tự Soát REQ (BẮT BUỘC — chạy trước khi ghi file)
+
+> **Vì sao có mục này.** Ambiguity (4.1) bắt cái **tài liệu/hệ thống không nói rõ**. Mục này bắt cái **chính agent vừa viết sai** — loại lỗi nguy hiểm hơn vì nó *trông như* đã kiểm chứng, có số liệu DOM hẳn hoi, và không workflow nào phía sau phát hiện được. Test case sinh ra từ một AC sai sẽ đỏ mà không ai biết lỗi nằm ở tài liệu.
+>
+> Rà **từng REQ** qua 9 câu hỏi dưới. Câu nào trả lời "không" → sửa REQ, không phải mở AMB.
+
+### 4.3.1. Tên REQ và AC phải là **cùng một mệnh đề**
+
+Tên REQ là thứ người viết test case đọc trước tiên — và nhiều người chỉ đọc tên. Tên hứa một đằng, AC đo một nẻo là lỗi nặng nhất của tài liệu requirements.
+
+| ❌ Sai | Vì sao | ✅ Sửa |
+|---|---|---|
+| Tên: *"Không giữ lại email sau khi đăng nhập lỗi"* · AC: *"HTML trả về không có thuộc tính `value`"* | Người dùng **vẫn thấy** email vì trình duyệt tự điền. Tên mô tả hành vi người dùng, AC đo tầng HTML — hai thứ khác nhau | Đổi tên thành *"Máy chủ không trả lại giá trị email…"* và ghi rõ **cấm** assert ô rỗng trên màn hình |
+| Tên: *"Hai lối đăng xuất"* · AC: *"tồn tại 2 phần tử `li.header-logout`"* | Đếm node DOM ≠ người dùng dùng được 2 lối | Kiểm khả dụng thật (4.3.5) rồi đặt tên theo kết quả |
+
+**Luật:** đọc tên REQ, tự hỏi *"AC này có chứng minh đúng câu vừa đọc không?"* Không → sửa **tên** hoặc sửa **AC**, không để lệch.
+
+### 4.3.2. Khẳng định phủ định phải kiểm bằng **trạng thái sạch**
+
+Mệnh đề dạng *"không sinh X"* · *"không gửi Y"* · *"không lưu Z"* **không** chứng minh được bằng cách quan sát "giá trị không đổi".
+
+```
+❌ SAI:  Đăng nhập lần 2 → giá trị cookie không đổi → kết luận "không cấp cookie mới"
+         (không phân biệt được: không cấp · cấp lại trùng giá trị · không đụng tới cái cũ)
+
+✅ ĐÚNG: (1) xoá sạch tác tạo → (2) xác nhận đã sạch → (3) thực hiện hành động
+         → (4) kiểm tác tạo có xuất hiện không
+```
+
+AC phải ghi **đủ 4 bước theo thứ tự**, để người khác chạy lại được. Thiếu bước (2) là phép thử vô hiệu — trạng thái sót từ lần chạy trước sẽ làm nhiễu.
+
+### 4.3.3. AC không được chứa giá trị **biến thiên theo phiên**
+
+Token · session id · CSRF token · id bản ghi vừa tạo · timestamp · số thứ tự tự tăng — chép giá trị cụ thể vào AC gây **hai** hậu quả:
+
+1. Test case sinh ra hardcode giá trị đó → hỏng ngay lần chạy sau
+2. Nếu là giá trị bí mật → **phát tán credential** (xem 7.1)
+
+**Luật:** ghi **hình thái**, không ghi giá trị. `<16 ký tự hex>` · `a:2:{s:7:"user_id";s:1:"<id>";…}` · `độ dài = 32`. Cần khẳng định tính duy nhất thì mô tả **quan hệ** (*"khác giá trị trước đó"*), không chép cả hai giá trị.
+
+### 4.3.4. Một REQ = **một** rule kiểm được độc lập
+
+Dấu hiệu nhận biết REQ đang gộp: tên chứa **"và"**, **"hoặc"**, dấu phẩy nối hai mệnh đề; hoặc AC dùng **một** input để kiểm **nhiều** rule cùng lúc.
+
+```
+❌ "Email không phân biệt hoa thường VÀ bỏ qua khoảng trắng"
+   AC: nhập "  ADMIN@Example.COM  " → đăng nhập được
+   → fail thì không biết rule nào hỏng
+
+✅ REQ-a: không phân biệt hoa thường  → input "ADMIN@Example.COM"
+   REQ-b: bỏ qua khoảng trắng đầu/cuối → input "  admin@example.com  "
+```
+
+Tách ra thì **giữ nguyên mã cũ** cho rule ở lại, cấp mã mới cho phần tách (mục 2.1) — không đánh lại cả cụm.
+
+### 4.3.5. Tồn tại trong DOM ≠ **người dùng dùng được**
+
+Đây là cái bẫy lớn nhất khi recon bằng `browser_evaluate`. `querySelectorAll(...).length === 2` **không** có nghĩa người dùng có 2 lựa chọn: phần tử có thể bị ẩn theo responsive, bị `display:none` ở tổ tiên, nằm ngoài luồng bố cục, hoặc bị phần tử khác che.
+
+**Trước khi khai một phần tử là "người dùng thao tác được", BẮT BUỘC đọc thêm:**
+
+| Kiểm | Cách đọc | Ý nghĩa khi sai |
+|---|---|---|
+| Có được render không | `el.offsetParent === null` | `null` → **không** render (hoặc `position:fixed`) |
+| Kích thước thật | `getBoundingClientRect()` | `0×0` → không bấm được |
+| Tổ tiên nào ẩn | Duyệt ngược `parentElement`, đọc `getComputedStyle().display` | Chỉ ra **lý do** ẩn: responsive · quyền · trạng thái |
+| Viewport đang đo | `innerWidth × innerHeight` | Kết luận chỉ đúng với **viewport đó** — phải ghi vào AC |
+
+Phần tử chỉ hiện ở viewport khác → **không** kết luận thay cho viewport đó. Mở một `AMB-XX` yêu cầu recon riêng, đừng suy diễn.
+
+**Kèm theo — bẫy locator do cấu trúc lồng:** trước khi ghi *"mục cuối cùng của X"*, đếm phần tử **lồng bên trong**. `X li:last-child` bắt cả `<li>` lồng ở submenu; `X > li:last-child` mới là con trực tiếp. Ghi rõ dấu `>` vào AC, kèm số phần tử lồng đếm được.
+
+### 4.3.6. Chuỗi do **trình duyệt / hệ điều hành** sinh không phải hành vi ứng dụng
+
+Thông báo validation mặc định của HTML5, tiêu đề trang lỗi mặc định, hộp thoại `alert/confirm` gốc, định dạng ngày theo locale — tất cả **đổi theo trình duyệt, phiên bản và ngôn ngữ hệ điều hành**.
+
+**Luật:** được phép ghi lại nguyên văn để tham khảo, nhưng **phải** kèm tên + phiên bản trình duyệt đã quan sát, và **ghi rõ cấm dùng làm assertion**. AC chỉ được assert phần ứng dụng kiểm soát (`checkValidity() === false`, request có được gửi đi không).
+
+Bảng metadata của tài liệu (6.1) **phải** có dòng **Trình duyệt khảo sát** ghi rõ tên + viewport.
+
+### 4.3.7. Không assert khớp tuyệt đối lên giá trị có **phần động**
+
+`document.title` mang tiền tố đếm thông báo · `body.className` mang token theo trình duyệt hoặc theo cấu hình · id sinh động · text có chèn số đếm.
+
+**Luật:** đọc **giá trị đầy đủ** rồi tự hỏi *"phần nào có thể đổi giữa hai lần chạy hoặc hai môi trường?"* AC ghi `**chứa** <phần bất biến>` kèm ghi chú phần nào là động và vì sao. Ghi `= "<giá trị hôm nay>"` là bẫy cho lượt sinh TC.
+
+### 4.3.8. Tính năng sinh ra **tác tạo** phải kiểm chứng tác tạo **có tác dụng**
+
+Cookie ghi nhớ · email gửi đi · tệp xuất ra · bản ghi lịch sử · thông báo đẩy — recon rất dễ dừng ở *"đã được tạo ra"* rồi coi là xong. Nhưng **giá trị nghiệp vụ nằm ở chỗ nó dùng được**, và đó mới là thứ có thể hỏng âm thầm.
+
+**Luật:** mỗi tác tạo cần **tối thiểu 2 REQ** — một cho *được tạo đúng hình thái*, một cho *dùng được đúng mục đích*. Không kiểm chứng được vế thứ hai thì vẫn **phải** cấp REQ ở trạng thái ⚪ kèm `AMB-XX`, tuyệt đối không im lặng bỏ qua. Im lặng bỏ qua khiến cả tính năng không có test case nào mà bảng độ phủ vẫn báo xanh.
+
+### 4.3.9. Mã trạng thái / hành vi kỹ thuật bất thường phải **nghi ngờ nhất quán**
+
+Mã HTTP lệch quy ước (chuyển hướng xác thực trả `307` thay vì `302/303`; body ghi `419` nhưng header trả `403`), phản hồi rỗng, `500` ở luồng người dùng chạm tới — đều là dấu hiệu.
+
+**Luật:** đã mở AMB cho một bất thường thì **mọi** bất thường cùng loại trong tài liệu cũng phải được đối xử như vậy. Nghi ngờ chỗ này mà chép nguyên chỗ kia là mâu thuẫn nội tại. Chưa loại trừ được khả năng do **công cụ đo** ghi nhận sai thì AC không được assert giá trị đó — assert cái quan sát được chắc chắn (điểm dừng, nội dung hiển thị).
+
+### 4.3.10. Bảng kiểm nhanh trước khi ghi file
+
+- [ ] Mỗi REQ: tên và AC **cùng một mệnh đề** (4.3.1)
+- [ ] Mọi khẳng định phủ định có **phép thử trạng thái sạch đủ 4 bước** (4.3.2)
+- [ ] Không AC nào chứa token / id / timestamp **cụ thể** (4.3.3)
+- [ ] Không REQ nào có "và"/"hoặc" nối hai rule trong tên (4.3.4)
+- [ ] Mọi phần tử khai là "dùng được" đã đọc `offsetParent` + kích thước + viewport (4.3.5)
+- [ ] Mọi chuỗi của trình duyệt đã ghi tên trình duyệt + đánh dấu cấm assert (4.3.6)
+- [ ] Mọi giá trị có phần động dùng `chứa`, không dùng `=` (4.3.7)
+- [ ] Mọi tác tạo có đủ REQ *tạo ra* **và** REQ *dùng được* (4.3.8)
+- [ ] Bất thường kỹ thuật được nghi ngờ nhất quán trong toàn tài liệu (4.3.9)
+
+---
+
 ## 5. Quy Mô Tài Liệu & Quy Tắc Tách File (Scaling Rule)
 
 Module lớn sinh ra tài liệu dài, khó review và khó chia việc. Ngược lại, tách quá sớm sẽ **làm vỡ các hạng mục cắt ngang** (ma trận phân quyền, ma trận trạng thái, AMB/RISK liên module). Quy tắc dưới đây quyết định dựa trên **số REQ**, không dựa trên dung lượng file.
@@ -337,8 +449,10 @@ docs/requirements/
 │   ├── stories/                           ← CHỈ khi tài liệu bị tách (ngưỡng mục 5.1)
 │   │   ├── story_01_<slug>.md
 │   │   └── story_02_<slug>.md
-│   └── analysis/                          ← phân tích ticket của RIÊNG module này
-│       └── analysis_<TICKET-ID>.md
+│   ├── analysis/                          ← phân tích ticket của RIÊNG module này
+│   │   └── analysis_<TICKET-ID>.md
+│   └── impact/                            ← Impact Report của /update_requirements_from_ticket
+│       └── impact_<TICKET-ID>.md          ← input BẮT BUỘC cho /update_testcases_from_impact
 ```
 
 **Quy tắc thư mục — bất biến:**
@@ -501,9 +615,11 @@ Bản đồ khám phá **không mang mã REQ** (mục 5.8), nên tách/gộp l�
 > | `/analyze_requirement_document` | **Template 10 mục của chính command đó** | Đầu ra là `analysis_<TICKET-ID>.md` — tài liệu phân tích ticket, KHÁC tài liệu đặc tả module |
 > | `/discover_system` | **Template của chính command đó** (Bước 6) | Đầu ra là `_discovery/system_map.md` + `README.md` — cấp hệ thống, **KHÔNG có mã REQ**. Xem mục **5.8** |
 >
-> Nhánh `/analyze_requirement_document` chỉ **mượn** từ skill các mục: **2 + 2.1** (đánh mã), **3.2** (quy trình trích xuất), **4** (AMB/RISK), **5** (scaling), **7.1 + 7.3** (strict rules) — **KHÔNG** dùng cấu trúc mục 6.
+> Nhánh `/analyze_requirement_document` chỉ **mượn** từ skill các mục: **2 + 2.1** (đánh mã), **3.2** (quy trình trích xuất), **4 + 4.3** (AMB/RISK + Cổng Tự Soát REQ), **5** (scaling), **7.1 + 7.3** (strict rules) — **KHÔNG** dùng cấu trúc mục 6.
 >
-> Nhánh `/discover_system` mượn: **2** (quy ước prefix), **3.1 + 3.1.1** (crawl UI + network), **3.1.2** (phân quyền sơ bộ), **5.3 + 5.7 + 5.8** (thư mục, danh mục, tầng khám phá), **7.1 + 7.2** — **KHÔNG** dùng mục 6 và **KHÔNG** cấp số REQ.
+> ⚠️ **Mục 4.3 áp cho MỌI nhánh sinh REQ, không có ngoại lệ.** REQ sinh từ tài liệu cũng lệch tên/AC, cũng gộp nhiều rule vào một mã, cũng chép giá trị biến thiên — y hệt REQ sinh từ UI.
+>
+> Nhánh `/discover_system` mượn: **2** (quy ước prefix), **3.1 + 3.1.1** (crawl UI + network), **3.1.2** (phân quyền sơ bộ), **5.3 + 5.7 + 5.8** (thư mục, danh mục, tầng khám phá), **7.1 + 7.2 + 7.2.1** — **KHÔNG** dùng mục 6 và **KHÔNG** cấp số REQ. Không sinh REQ nên không chạy 4.3, nhưng **vẫn phải** theo luật evidence (7.2.1) và luật cấm ghi giá trị bí mật (7.1).
 >
 > Riêng 2 dòng metadata `Dải mã đã dùng` / `Mã kế tiếp` ở mục 6.1 là **bắt buộc với cả hai template**, vì quy tắc nối tiếp mã (2.1) cần chúng để hoạt động.
 
@@ -517,6 +633,14 @@ Mở đầu tài liệu bằng bảng metadata, trong đó **BẮT BUỘC** có 
 | **Dải mã đã dùng** | `REQ-PRJ-01` → `REQ-PRJ-65` · `AMB-01` → `AMB-12` · `RISK-01` → `RISK-12` |
 | **Mã kế tiếp**     | Đợt phân tích sau bắt đầu từ `REQ-PRJ-66` · `AMB-13` · `RISK-13` — **KHÔNG đánh lại từ 01** |
 ```
+
+Với **nhánh UI Recon**, bảng metadata còn **BẮT BUỘC** thêm một dòng nữa:
+
+```markdown
+| **Trình duyệt khảo sát** | Google Chrome (Playwright MCP), viewport `1600×750`. Mọi AC dựa trên thông báo mặc định của trình duyệt **chỉ đúng với trình duyệt này** |
+```
+
+Thiếu dòng này thì không ai biết AC nào phụ thuộc trình duyệt, và mọi kết luận về hiển thị/responsive mất ngữ cảnh viewport — xem mục **4.3.6** và **4.3.5**.
 
 Sau bảng metadata: mô tả tóm tắt tính năng, mục đích, phạm vi module (trong phạm vi / ngoài phạm vi).
 
@@ -570,10 +694,13 @@ Bảng chi tiết từng field — phần cốt lõi cho Tester:
 
 **Dòng tổng bắt buộc đặt ngay dưới bảng:**
 ```
-Đã kiểm chứng: 12 ô · Suy diễn: 5 ô · Chưa rõ: 3 ô — role Staff/Guest chưa có account (AMB-07)
+Tổng 21 ô = Đã kiểm chứng 13 · Suy diễn 0 · Chưa rõ 7 · Không áp dụng 1
+Ô "không áp dụng" là [<hành động> × <role>] — <lý do>. Role Staff/Guest chưa có account (AMB-07)
 ```
 
 Không có dòng tổng thì người đọc không biết ma trận này tin được bao nhiêu phần. Ô `❔` **không được** làm tròn thành `❌`.
+
+⚠️ **Các nhóm phải cộng lại đúng bằng `số hàng × số cột`.** Ô đánh `—` (không áp dụng) cũng là một nhóm phải đếm và **phải giải thích lý do** — bỏ nó ra ngoài khiến tổng không khớp, và người đọc không phân biệt được "đã cân nhắc, không liên quan" với "quên mất".
 
 ### 6.5.1. Bản đồ phủ tài liệu — bắt buộc khi có tài liệu bán phần (mục 3.3.1)
 
@@ -619,10 +746,20 @@ Chiếu toàn bộ REQ sang cấu trúc backlog để chia việc, **không thay
 |---|---|---|---|---|---|
 | STORY-PRJ-01 | Danh sách & lọc | REQ-PRJ-01 → REQ-PRJ-13 | 13 | RISK-05 | ... |
 
-Kèm theo bảng trên, **BẮT BUỘC** có đủ 3 phần:
-1. **Dòng tổng kiểm chứng:** `Tổng: N Story / M REQ — mọi REQ thuộc đúng một Story, không mồ côi, không trùng`
-2. **Hạng mục cấp Epic:** liệt kê những phần cắt ngang cố ý không gán vào Story nào (ma trận phân quyền, ma trận trạng thái, NFR…) **kèm lý do**
-3. **Thứ tự triển khai đề xuất:** xếp theo phụ thuộc và rủi ro, **không** theo thứ tự đánh số. Đánh dấu rõ Story nào đang `BLOCKED` bởi AMB nào
+Kèm theo bảng trên, **BẮT BUỘC** có đủ 4 phần:
+1. **Dòng tổng kiểm chứng:** `Tổng: N Story / M REQ — mọi REQ thuộc đúng một Story, không mồ côi, không trùng`, kèm phép cộng hiện rõ (`7+5+7+6+6+9 = 40 ✔`)
+2. **Bảng đối chiếu AMB/RISK:** **mọi** mã AMB và RISK phải xuất hiện ở đúng một trong hai chỗ — gắn vào một Story, hoặc nằm trong Hạng mục cấp Epic. Trình bày thành bảng để tự kiểm:
+
+   | Nhóm | Mã | Nằm ở đâu |
+   |---|---|---|
+   | AMB thuộc Story | AMB-02…17 | phân bổ ở bảng Story |
+   | AMB cấp Epic | AMB-01 | Ma trận Phân quyền |
+   | RISK thuộc Story | RISK-01…05, 07 | phân bổ ở bảng Story |
+   | RISK cấp Epic | RISK-06 | rủi ro mức module |
+
+   Mã không xuất hiện ở đâu cả = **không ai chịu trách nhiệm xử lý**. Đây là lỗi hay bị bỏ sót vì bảng Story chỉ được kiểm tổng REQ, không kiểm tổng AMB/RISK.
+3. **Hạng mục cấp Epic:** liệt kê những phần cắt ngang cố ý không gán vào Story nào (ma trận phân quyền, ma trận trạng thái, NFR, RISK mức module…) **kèm lý do**
+4. **Thứ tự triển khai đề xuất:** xếp theo phụ thuộc và rủi ro, **không** theo thứ tự đánh số. Đánh dấu rõ Story nào đang `BLOCKED` bởi AMB nào
 
 ### 6.9. Nhật ký Thay đổi (Changelog) — BẮT BUỘC ở mọi tài liệu module
 
@@ -672,6 +809,10 @@ Nhật ký (6.9)  ←→  Trạng thái REQ (6.2)  ←→  Dải mã metadata (6
 - **KHÔNG BAO GIỜ xoá dòng REQ** khỏi tài liệu — tính năng bị gỡ thì đổi trạng thái sang 🔴 Deprecated (mục 6.2). Xoá dòng là mất dấu vết và làm vỡ RTM.
 - **Mọi thay đổi tài liệu đều phải ghi Nhật ký thay đổi** (mục 6.9), kèm cột `TC cần xử lý` — đây là mắt xích duy nhất báo cho tester biết test case nào đã stale.
 - **Ba nơi phải luôn khớp nhau:** Nhật ký (6.9) ↔ Trạng thái REQ (6.2) ↔ Dải mã metadata (6.1).
+- **Chạy Cổng Tự Soát REQ (mục 4.3) TRƯỚC KHI ghi file** — 9 câu hỏi bắt lỗi do chính agent viết sai. Bỏ qua bước này thì lỗi chỉ lộ ra ở tầng test case, khi đã quá muộn để truy nguồn.
+- 🔒 **CẤM ghi giá trị bí mật thật vào bất kỳ tệp nào trong `docs/`** — mật khẩu, token, cookie xác thực, session id, API key, chuỗi ký của liên kết đặt lại mật khẩu. Ghi **hình thái** thay cho giá trị (mục 4.3.3). Lý do: `docs/` được commit, và lịch sử git **không xoá được bằng cách sửa file**. Credentials sống ở `.env` (đã `.gitignore`), tài liệu chỉ mô tả *hình dạng* của chúng.
+- 🔒 **Trước khi ghi tài liệu đầu tiên của dự án, kiểm `docs/` có bị `.gitignore` chặn không.** Không chặn (mặc định nên vậy — tài liệu cần được commit) thì **mọi** thứ đưa vào `docs/` là công khai với người có quyền đọc repo: cân nhắc lại từng ảnh evidence và từng giá trị chép vào AC.
+- **AMB và RISK cũng không được mồ côi.** Mục 6.8 đã buộc mọi REQ thuộc đúng một Story; áp cùng nguyên tắc cho AMB/RISK — mỗi mã hoặc gắn vào một Story, hoặc nằm trong bảng **Hạng mục cấp Epic** kèm lý do. Mã không xuất hiện ở đâu cả nghĩa là không ai chịu trách nhiệm xử lý nó.
 
 ### 7.2. Chỉ áp cho nhánh UI Recon (3.1)
 
@@ -695,13 +836,16 @@ Evidence là **nguồn sự thật** cho mọi workflow phía sau (`/generate_te
 
 | Quy tắc | Chi tiết |
 |---|---|
-| **Chụp full-page, KHÔNG chụp viewport** | Playwright MCP: `browser_take_screenshot(fullPage=true)`. Ảnh chỉ có phần trên màn hình là **không đạt** — form dài luôn bị cắt mất nút Save, checkbox cuối, editor |
+| **Ảnh phải chứa trọn đối tượng cần chứng minh** | Mặc định `browser_take_screenshot(fullPage=true)`, vì form dài chụp viewport luôn bị cắt mất nút Save, checkbox cuối, editor. **Mục đích của luật là không cắt cụt đối tượng — không phải chụp càng nhiều càng tốt.** Đối tượng là một widget nằm trọn trong viewport (thanh đầu trang, dropdown, hộp thoại) thì chụp viewport/element là **đủ và đúng phạm vi** — xem luật vệ sinh dữ liệu bên dưới |
 | **Chụp theo trạng thái, không chỉ trạng thái mặc định** | Mỗi trạng thái động = 1 ảnh riêng: dropdown **đang mở** (thấy đủ options), field sau khi **đổi giá trị điều khiển** (Billing Type → Total Rate hiện), checkbox **disabled vs enabled**, form **sau khi submit lỗi** (thấy message inline) |
+| **🔍 BẮT BUỘC mở lại ảnh xác nhận trước khi ghi danh mục** | Chụp xong phải **`Read` lại chính tệp đó** và xác nhận nó thật sự thể hiện trạng thái sắp khai. Rất hay gặp: bấm mở dropdown nhưng ảnh chụp trước khi menu kịp render, hoặc thao tác mở thất bại mà không ai biết → danh mục ghi *"menu đang mở"* trong khi ảnh là menu đóng. Dòng danh mục sai **nguy hiểm hơn không có ảnh**, vì nó tạo cảm giác REQ đã có bằng chứng |
 | **Chụp đủ mọi tab** | Form/trang nhiều tab → mỗi tab 1 ảnh full-page. Tab chưa active thì nội dung bên trong **không render đúng** |
 | **Bảng danh sách chụp cả phần điều khiển** | Phải thấy: toàn bộ hàng tiêu đề, dropdown page size, mọi nút thanh công cụ (kể cả nút icon không nhãn), ô tìm kiếm, khu vực phân trang |
-| **Đặt tên nêu rõ trạng thái** | `<màn_hình>_<trạng_thái>_fullpage.png` — VD `project_new_form_default_fullpage.png`, `project_new_form_billing_fixedrate_fullpage.png`, `project_settings_tab_fullpage.png` |
+| **Đặt tên nêu rõ trạng thái VÀ phạm vi chụp** | `<màn_hình>_<trạng_thái>_<fullpage\|viewport>.png` — VD `project_new_form_default_fullpage.png`, `dashboard_logout_menu_open_viewport.png`. Hậu tố phải khớp cách chụp thật; đặt `_fullpage` cho ảnh viewport là khai sai |
+| **🔒 Vệ sinh dữ liệu — evidence là tệp sẽ được commit** | Ảnh chụp hệ thống thật thường kéo theo **dữ liệu không liên quan tới REQ**: tên khách hàng, số tiền, email, nhật ký hoạt động, nội dung công việc. Luật: **chụp đúng phạm vi đối tượng cần chứng minh, không chụp thừa.** Đối tượng nằm trong viewport mà ảnh full-page kéo theo cả trang dữ liệu nghiệp vụ → **chụp viewport**, và ghi một dòng lý do trong Danh mục Evidence. Buộc phải full-page mà không tránh được dữ liệu nhạy cảm → báo user trước khi commit |
 | **Ghi bảng Danh mục Evidence vào tài liệu** | Mỗi ảnh 1 dòng: tên tệp · màn hình · trạng thái · REQ mà nó làm bằng chứng. REQ không có ảnh nào chống lưng thì cột `Nguồn` **không được** ghi `Kiểm chứng thực tế` |
 | **Ảnh KHÔNG thay được việc đọc DOM** | Ảnh không cho biết `disabled` hay chỉ là `không tick`, không đếm được option nào `selected`, không đọc được `value` / `data-*`. Những dữ kiện này **bắt buộc đọc bằng `browser_evaluate`** và **chép nguyên số liệu vào Acceptance Criteria** — vì ảnh lưu lại cũng không kiểm chứng lại được |
+| **DOM cũng KHÔNG thay được ảnh** | Chiều ngược lại cũng đúng: đếm được phần tử trong DOM **không** chứng minh người dùng nhìn thấy nó. Hai nguồn bổ sung cho nhau, không thay thế nhau — xem mục **4.3.5** |
 
 **Dữ kiện bắt buộc đọc từ DOM (ảnh không thể hiện được):**
 
@@ -713,8 +857,15 @@ Evidence là **nguồn sự thật** cho mọi workflow phía sau (`/generate_te
 | `value` của option (ánh xạ nhãn ↔ giá trị) | Không bao giờ hiện trên UI, nhưng automation phải chọn theo `value` |
 | Thứ tự focus thật của form | Bố cục nhiều cột làm thứ tự Tab khác thứ tự đọc từ trên xuống |
 | Phần tử ẩn bằng class nhưng vẫn trong DOM | Ảnh chỉ cho biết "không thấy", không cho biết "không tồn tại" |
+| `offsetParent` + `getBoundingClientRect()` của **mọi** phần tử khai là "dùng được" | Đếm được node **không** nghĩa là người dùng bấm được — node có thể bị tổ tiên `display:none` (responsive, quyền, trạng thái). Bắt buộc theo mục **4.3.5** |
+| Số phần tử **lồng bên trong** khi khai vị trí ("mục cuối cùng", "dòng đầu") | `X li:last-child` bắt cả `<li>` ở submenu; phải dùng `X > li:last-child`. Sai chỗ này thì locator trong TC trỏ nhầm phần tử |
+| Giá trị **đầy đủ** của `document.title` và `body.className` | Thường có phần động (số đếm thông báo, token theo trình duyệt/cấu hình) — chép thiếu là AC assert khớp tuyệt đối sẽ đỏ. Xem mục **4.3.7** |
+| Viewport đang đo (`innerWidth × innerHeight`) | Mọi kết luận về hiển thị **chỉ đúng với viewport đó** — phải ghi vào AC, và phần tử responsive cần recon riêng ở viewport khác |
 
-**Checklist trước khi đóng recon:** mọi REQ có cột `Nguồn` = `UI thực tế` / `Kiểm chứng thực tế` đều phải truy được về ít nhất 1 ảnh trong Danh mục Evidence **hoặc 1 lần đọc DOM có ghi số liệu trong Acceptance Criteria**. Không truy được → hạ về `Chưa kiểm chứng` + mở `AMB-XX`.
+**Checklist trước khi đóng recon:**
+- Mọi REQ có cột `Nguồn` = `UI thực tế` / `Kiểm chứng thực tế` đều phải truy được về ít nhất 1 ảnh trong Danh mục Evidence **hoặc 1 lần đọc DOM có ghi số liệu trong Acceptance Criteria**. Không truy được → hạ về `Chưa kiểm chứng` + mở `AMB-XX`.
+- **Mọi ảnh trong Danh mục Evidence đã được `Read` lại** và xác nhận đúng trạng thái đang khai.
+- **Đã chạy Cổng Tự Soát REQ (mục 4.3)** trên toàn bộ REQ vừa sinh.
 
 ### 7.3. Chỉ áp cho nhánh Document Analysis (3.2)
 

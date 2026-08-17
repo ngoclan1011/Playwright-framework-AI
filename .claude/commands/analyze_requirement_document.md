@@ -30,6 +30,22 @@ Workflow này phân tích requirement documents (Jira tickets, .doc files, user 
 
 > **KHÔNG dùng workflow này khi** nguồn sự thật là hệ thống đang chạy (không có tài liệu) → dùng `/generate_requirements_from_website`.
 
+### ⛔ Bước 0 — Chốt chặn đầu vào (BẮT BUỘC, làm TRƯỚC mọi thứ khác)
+
+Workflow này nhận **tài liệu nguồn** (ticket, spec, user story) và sinh ra **tài liệu phân tích**. Rất hay gặp tình huống người dùng truyền nhầm một **sản phẩm đầu ra của workflow khác** vào đây. Chạy tiếp sẽ sinh ra bản diễn đạt lại của tài liệu đã có, không mã ticket, và có nguy cơ cấp trùng dải REQ.
+
+**Mở tệp được truyền vào và kiểm 3 dấu hiệu. Trúng bất kỳ dấu hiệu nào → DỪNG, báo user, hỏi ý định thật:**
+
+| Dấu hiệu tệp là ĐẦU RA, không phải đầu vào | Thuộc workflow nào | Route đúng |
+|---|---|---|
+| Tên khớp `requirements_<module>.md`, hoặc có bảng `REQ ID`/`Dải mã đã dùng`/`Nhật ký thay đổi` | `/generate_requirements_from_website` | Cập nhật theo ticket → `/update_requirements_from_ticket` · Sinh TC → `/generate_testcases_*` |
+| Tên khớp `system_map.md` / `api_map.md`, hoặc nằm trong `_discovery/` | `/discover_system` | Recon chi tiết một module → `/generate_requirements_from_website` |
+| Tên khớp `analysis_<TICKET-ID>.md`, `impact_<TICKET-ID>.md`, `test_cases_<module>.md` | chính workflow này hoặc tầng test case | Hỏi user muốn làm gì với nó |
+
+**Không xác định được ticket ID** từ tệp đầu vào cũng là dấu hiệu đủ để dừng — đầu ra bắt buộc đặt tên theo `analysis_<TICKET-ID>.md`, không có ID thì không đặt tên được.
+
+❌ **Không "cố suy ra" một ticket ID** từ tên module hay ngày tháng để chạy tiếp. Dừng và hỏi.
+
 ## Đầu vào (Input)
 
 Agent cần thu thập từ user:
@@ -287,6 +303,7 @@ Agent PHẢI xuất artifact theo cấu trúc sau:
 ### Cấm (❌)
 
 - **KHÔNG sinh test cases** — workflow này chỉ phân tích, không tạo TC
+- **KHÔNG chạy khi đầu vào là sản phẩm đầu ra của workflow khác** (`requirements_<module>.md`, `system_map.md`, `analysis_*.md`, `test_cases_*.md`) — xem **Bước 0**. Dừng và hỏi ý định thật, tuyệt đối không sinh một bản diễn đạt lại của tài liệu đã có
 - **KHÔNG tự viết AC thay PO/BA.** Ticket thiếu AC → ghi nhận đúng thực trạng + `AMB-XX` 🔴 High. Đây là luật tương đương "không đoán locator" của nhánh UI — vi phạm là tài liệu mất giá trị hoàn toàn
 - **KHÔNG đánh lại mã REQ từ `01`** nếu module đã có tài liệu — luôn đánh tiếp từ số cuối (mục 2.1 của skill). Đụng mã là vỡ toàn bộ RTM
 - **KHÔNG đọc file nhị phân bằng `Read`** (`.docx`/`.xlsx`/`.pdf`/`.pptx`) — ủy quyền đúng skill. Đọc không được thì **dừng và báo user**, không suy đoán từ tên file
@@ -297,6 +314,7 @@ Agent PHẢI xuất artifact theo cấu trúc sau:
 
 ### Bắt buộc (✅)
 
+- **PHẢI chạy Cổng Tự Soát REQ (mục 4.3 của skill) trước khi ghi file** — 9 câu hỏi bắt lỗi do chính agent viết sai: tên REQ lệch AC, gộp nhiều rule vào một mã, chép giá trị biến thiên theo phiên, assert khớp tuyệt đối lên giá trị có phần động. REQ sinh từ tài liệu mắc y hệt các lỗi này như REQ sinh từ UI
 - **PHẢI trích dẫn nguyên văn** mọi rule, message, giá trị ngưỡng — cấm diễn đạt lại rồi gán REQ
 - **PHẢI ghi vị trí nguồn cụ thể** ở cột `Nguồn`, đủ để người review mở đúng chỗ đối chiếu:
   ```

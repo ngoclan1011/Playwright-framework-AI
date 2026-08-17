@@ -100,7 +100,11 @@ Sửa **tại chỗ** `requirements_<module>.md`, theo đúng thứ tự:
 
 ### Bước 6: Xuất Impact Report (giá trị cao nhất của workflow)
 
-Báo cáo riêng cho tester — **hiển thị trong chat**, đồng thời là cột `TC cần xử lý` trong Nhật ký:
+Báo cáo riêng cho tester. **PHẢI ghi ra file** `docs/requirements/<module>/impact/impact_<TICKET-ID>.md`, đồng thời hiển thị trong chat và là cột `TC cần xử lý` trong Nhật ký.
+
+> 🚨 **Không được để Impact Report chỉ nằm trong chat.** Nó là input **bắt buộc** của `/update_testcases_from_impact` và `/update_automation_from_impact` — hai workflow này thường chạy ở phiên khác, có khi hôm sau. Đóng phiên là mất, và không có cách nào dựng lại ngoài chạy lại cả workflow.
+
+Nội dung file:
 
 ```markdown
 ## Impact Report — <TICKET-ID> · <ngày>
@@ -153,7 +157,8 @@ Báo cáo riêng cho tester — **hiển thị trong chat**, đồng thời là 
 - **PHẢI ghi Nhật ký thay đổi** — mọi thay đổi, kể cả biên tập câu chữ (`✏️ Biên tập`)
 - **PHẢI giữ 4 nơi khớp nhau:** Nhật ký (6.9) ↔ Trạng thái REQ (6.2) ↔ Dải mã metadata (6.1) ↔ **Danh mục `docs/requirements/README.md`**
 - **PHẢI kiểm tra lại dòng tổng của Phân rã Epic/Story** sau khi thêm/bỏ REQ
-- **PHẢI xuất Impact Report** kể cả khi không có TC nào bị ảnh hưởng (ghi rõ "không tác động")
+- **PHẢI xuất Impact Report ra file** `docs/requirements/<module>/impact/impact_<TICKET-ID>.md` — kể cả khi không có TC nào bị ảnh hưởng (ghi rõ "không tác động")
+- **PHẢI báo đường dẫn file Impact Report** ở cuối, kèm command kế tiếp `/update_testcases_from_impact`
 - **PHẢI đối chiếu ticket với AMB đang treo** (Bước 4) — đây là chỗ hay bị bỏ sót nhất
 - **PHẢI viết bằng Tiếng Việt**, format Markdown
 
