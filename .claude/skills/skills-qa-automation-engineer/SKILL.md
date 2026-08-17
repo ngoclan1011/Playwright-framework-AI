@@ -231,6 +231,8 @@ Triggers when user asks:
 
 Use workflow: `update_automation_from_impact`
 
+> Mắt xích **cuối** của chuỗi delta 3 tầng: `update_requirements_from_ticket` → `update_testcases_from_impact` → workflow này. Bỏ tầng giữa là sửa script theo kỳ vọng cũ — TC còn mô tả hành vi cũ thì script sửa xong vẫn sai mà vẫn xanh.
+>
 > Requirements/TC đổi → sửa **đúng phần đổi** trong script đã có. 2 modes: PLAN (kế hoạch) và APPLY (sửa + chạy lại).
 >
 > ⚠️ Rule bất biến: **KHÔNG sinh lại cả module** (đó là `generate_automation_from_testcases`), **KHÔNG xoá file** cho TC bị archive, **KHÔNG bịa mapping** TC ↔ script.
@@ -367,6 +369,8 @@ Triggers when user asks:
 Use workflow: `update_requirements_from_ticket`
 
 > Cập nhật tài liệu requirements **đã có** — nhận diện THÊM/SỬA/BỎ, giữ nguyên REQ ID, ghi Nhật ký thay đổi, xuất Impact Report cho test cases.
+>
+> Bước kế tiếp là `update_testcases_from_impact` (đồng bộ TC, giữ nguyên TC ID), rồi mới tới `update_automation_from_impact`.
 
 Triggers when user asks:
 

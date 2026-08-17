@@ -57,7 +57,7 @@
 ┌─ BẢO TRÌ ────────────────────────────────────────────────────────┐
 │  5. /heal_locators               (UI đổi)                        │  Khi có tín hiệu
 │     /analyze_flaky_tests         (lúc pass lúc fail)             │  tương ứng
-│     /update_automation_from_impact (requirements đổi)            │
+│     /update_automation_from_impact (TC đã đồng bộ)               │
 └──────────────────────────────────────────────────────────────────┘
                                   ↓
 ┌─ CHỨNG MINH & BÁO CÁO ───────────────────────────────────────────┐
@@ -217,7 +217,7 @@ Ba workflow, **ba tín hiệu khác nhau**. Chọn sai là chữa nhầm bệnh:
 |---|---|---|---|
 | **UI vừa deploy bản mới**, locator gãy đồng loạt (chưa cần chạy test cũng biết) | `/heal_locators` | [`prompt_18`](prompts/prompt_18_heal_locators.txt) | SCAN → HEAL |
 | **Test lúc pass lúc fail**, code không đổi | `/analyze_flaky_tests` | [`prompt_08`](prompts/prompt_08_analyze_flaky_tests.txt) | ANALYZE → FIX |
-| **Requirements đổi** — có Impact Report từ `/update_requirements_from_ticket` | `/update_automation_from_impact` | [`prompt_19`](prompts/prompt_19_update_automation_from_impact.txt) | PLAN → APPLY |
+| **Requirements đổi** — TC đã đồng bộ bằng `/update_testcases_from_impact` | `/update_automation_from_impact` | [`prompt_19`](prompts/prompt_19_update_automation_from_impact.txt) | PLAN → APPLY |
 
 ### `/heal_locators` — UI đổi
 
@@ -227,7 +227,15 @@ Chạy **headed** toàn bộ. Locator mới phải match **đúng 1 element** v�
 
 ### `/update_automation_from_impact` — requirements đổi
 
-Mắt xích delta: `/update_requirements_from_ticket` → Impact Report → **workflow này**.
+Mắt xích **cuối** của chuỗi delta 3 tầng:
+
+```
+/update_requirements_from_ticket   → Impact Report
+/update_testcases_from_impact      → Delta TC List   ← BẮT BUỘC chạy trước
+/update_automation_from_impact     ← workflow này
+```
+
+> ⚠️ **Bỏ tầng giữa là sửa script theo kỳ vọng cũ.** File test cases là nguồn sự thật của kỳ vọng mới; TC còn mô tả hành vi cũ thì script sửa xong vẫn sai — và test vẫn **xanh**, nên không ai phát hiện.
 
 | Luật | Vì sao |
 |---|---|
@@ -287,7 +295,7 @@ Chỉ chạy khi dự án dùng Jira/Xray. Cần lấy requirements/ticket từ 
 | 4 | `/create_bug_report` | [`prompt_10`](prompts/prompt_10_create_bug_report.txt) | Mỗi bug app |
 | 5 | `/heal_locators` | [`prompt_18`](prompts/prompt_18_heal_locators.txt) | **Mỗi lần UI đổi** |
 | 5 | `/analyze_flaky_tests` | [`prompt_08`](prompts/prompt_08_analyze_flaky_tests.txt) | Khi test chập chờn |
-| 5 | `/update_automation_from_impact` | [`prompt_19`](prompts/prompt_19_update_automation_from_impact.txt) | Mỗi Impact Report |
+| 5 | `/update_automation_from_impact` | [`prompt_19`](prompts/prompt_19_update_automation_from_impact.txt) | Mỗi Impact Report — **sau** `/update_testcases_from_impact` |
 | 6 | `/generate_traceability_matrix` | [`prompt_13`](prompts/prompt_13_generate_traceability_matrix.txt) | Định kỳ / trước release |
 | 7 | `/import_test_results_xray` | — | Mỗi lần cần đồng bộ Xray |
 | ⊹ | `/generate_test_data` | [`prompt_07`](prompts/prompt_07_generate_test_data.txt) | Khi cần bộ data nhiều biến thể |
@@ -319,4 +327,4 @@ Script chạy tốt nhưng RTM không map được về TC/REQ → chặng 6 x�
 | [`.claude/rules/locator_strategy.md`](.claude/rules/locator_strategy.md) | Thứ tự ưu tiên locator (mọi framework) |
 | [`.claude/rules/playwright_rules.md`](.claude/rules/playwright_rules.md) · [`selenium`](.claude/rules/selenium_rules.md) · [`appium`](.claude/rules/appium_rules.md) | Quy tắc riêng từng framework |
 | [`plans/automation/QUICK_START.md`](plans/automation/QUICK_START.md) | Luồng 6 bước bản copy-paste — dùng cho AI agent khác không có slash command của bộ này |
-| [`prompts/README.md`](prompts/README.md) | 30 prompt mẫu copy-paste, chia 6 nhóm tra cứu |
+| [`prompts/README.md`](prompts/README.md) | 31 prompt mẫu copy-paste, chia 6 nhóm tra cứu |

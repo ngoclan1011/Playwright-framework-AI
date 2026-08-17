@@ -102,7 +102,7 @@ Với **từng** TC FAIL, đọc Expected vs Actual rồi gán category:
 |---|---|---|
 | Expected có căn cứ REQ ID không? | Có, và app làm khác | 🐛 Bug ứng dụng → `/create_bug_report` |
 | | Không — Expected là suy đoán của người viết TC | 📝 TC viết sai → `/review_testcases` |
-| App làm đúng logic **mới**, TC theo logic **cũ**? | Đúng vậy | 📄 Requirement lệch → `/update_requirements_from_ticket` |
+| App làm đúng logic **mới**, TC theo logic **cũ**? | Đúng vậy | 📄 Requirement lệch → `/update_requirements_from_ticket` → `/update_testcases_from_impact` |
 
 Báo nhầm "TC viết sai" thành bug là gửi dev đi sửa thứ không hỏng — mất uy tín của cả bảng báo cáo.
 

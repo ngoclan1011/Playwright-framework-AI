@@ -163,8 +163,9 @@ Báo cáo riêng cho tester — **hiển thị trong chat**, đồng thời là 
 |---|---|
 | Trước đó — tạo tài liệu module lần đầu | `/generate_requirements_from_website` |
 | Trước đó — phân tích ticket độc lập, chưa merge vào module | `/analyze_requirement_document` |
+| Sau đó — **cập nhật TC bị ảnh hưởng (🟡) + archive TC bị gỡ (🗑️)** | `/update_testcases_from_impact` ⭐ mắt xích kế tiếp |
 | Sau đó — sinh TC cho REQ mới (🟢) | `/generate_testcases_manual_rbt` hoặc `/generate_testcases_from_requirements` |
-| Sau đó — rà soát TC bị ảnh hưởng (🟡) | `/review_testcases` |
+| Sau đó — chấm chất lượng bộ TC **sau khi** đã đồng bộ | `/review_testcases` |
 | Sau đó — cập nhật ma trận truy vết | `/generate_traceability_matrix` |
 | Sau đó — cập nhật automation script **đã có** theo Impact Report | `/update_automation_from_impact` |
 | Sau đó — automate TC mới hoàn toàn (chưa có script) | `/generate_automation_from_testcases` |

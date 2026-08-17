@@ -53,7 +53,7 @@ claude-testing-skills/
 │   ├── manual/              # Quy trình 6 bước sinh Manual Test Cases (AI-RBT)
 │   ├── automation/          # Quy trình 6 bước sinh Automation Scripts
 │   └── cross-module/        # Quy trình phân tích Cross-Module & Ma trận kết hợp
-├── prompts/                 # 30 prompt mẫu dùng nhanh (copy → paste → gửi)
+├── prompts/                 # 31 prompt mẫu dùng nhanh (copy → paste → gửi)
 ├── scripts/
 │   ├── testcases-viewer/    # Công cụ web xem/lọc test case
 │   └── execution-viewer/    # Công cụ web xem kết quả chạy, so sánh các lần chạy & độ phủ automation
@@ -90,7 +90,7 @@ claude-testing-skills/
 
 | Thư mục         | Vai trò                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `commands/`     | 33 slash commands: `/discover_system`, `/generate_automation_from_mobile_flow`, `/generate_requirements_from_website`, `/update_requirements_from_ticket`, `/generate_testcases_manual_rbt`, `/generate_automation_from_testcases`, `/update_automation_from_impact`, `/run_and_fix_tests`, `/heal_locators`, `/review_automation_code`, `/execute_test_cases`, `/retest_fixed_bugs`, `/analyze_test_report`, `/create_bug_report`, `/review_testcases`, `/generate_traceability_matrix`, `/generate_master_test_plan`, `/generate_test_summary_report`, `/generate_api_mocks`... |
+| `commands/`     | 34 slash commands: `/discover_system`, `/generate_automation_from_mobile_flow`, `/generate_requirements_from_website`, `/update_requirements_from_ticket`, `/generate_testcases_manual_rbt`, `/update_testcases_from_impact`, `/generate_automation_from_testcases`, `/update_automation_from_impact`, `/run_and_fix_tests`, `/heal_locators`, `/review_automation_code`, `/execute_test_cases`, `/retest_fixed_bugs`, `/analyze_test_report`, `/create_bug_report`, `/review_testcases`, `/generate_traceability_matrix`, `/generate_master_test_plan`, `/generate_test_summary_report`, `/generate_api_mocks`... |
 | `rules/`        | 6 quy tắc bắt buộc: automation chung, reporting (Allure), locator strategy, Playwright, Selenium, Appium                                                                                                                                                                                                                                                                                                                                                                |
 | `skills/`       | 19 kỹ năng chuyên biệt: requirements analyzer, automation engineer, manual testing, manual test executor, UI debug (web), **mobile debug (Appium — Native/Flutter/Hybrid)**, locator healer, test data generator, framework architect, jira integration, bug reporter, test report analyzer, **test summary reporter**, testcase reviewer, automation code reviewer, coverage traceability, api mocking...                                                                                                                              |
 | `settings.json` | Cấu hình quyền hạn: cho phép/cấm các hành động cụ thể (đọc file, chạy test, push code...). Riêng `settings.local.json` là cấu hình **cục bộ từng máy** — đã gitignore, không commit                                                                                                                                                                                                                                                                 |
@@ -145,6 +145,8 @@ Dành cho tác vụ **đơn lẻ**, chỉ cần copy → thay `[...]` bằng d�
 | 23  | `prompt_23_retest_fixed_bugs.txt`               | **[Mới]** Retest bug đã fix + regression quanh vùng fix                 |
 | 24  | `prompt_24_generate_test_summary_report.txt`    | **[Mới]** Báo cáo tổng hợp tại mốc release — khuyến nghị go/no-go       |
 | 25  | `prompt_25_generate_master_test_plan.txt`       | **[Mới]** Master Test Plan — phạm vi, tiêu chí vào/ra, lịch, rủi ro     |
+| 26  | `prompt_26_generate_automation_mobile_flow.txt` | **[Mới]** Sinh automation Appium từ flow chạy thật — Native/Flutter/Hybrid |
+| 27  | `prompt_27_update_testcases_from_impact.txt`    | **[Mới]** Cập nhật TC đã có theo Impact Report (delta mode), giữ TC ID  |
 
 > Danh mục đầy đủ chia theo 6 nhóm tra cứu: [`prompts/README.md`](prompts/README.md)
 

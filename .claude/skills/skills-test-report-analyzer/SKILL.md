@@ -95,7 +95,7 @@ Phân loại dựa trên **Expected vs Actual**, vì không có stack trace:
 |---|---|---|
 | 🐛 **Bug ứng dụng** | Actual lệch Expected, Expected có căn cứ REQ, tái hiện được | `/create_bug_report` |
 | 📝 **TC viết sai / mơ hồ** | Expected không đo được, TC không nói rõ pre-condition, 2 TC cùng ID | `/review_testcases` — **KHÔNG** báo bug |
-| 📄 **Requirement đã lệch** | App chạy đúng logic mới, TC dựa trên requirement cũ | `/update_requirements_from_ticket` rồi cập nhật TC |
+| 📄 **Requirement đã lệch** | App chạy đúng logic mới, TC dựa trên requirement cũ | `/update_requirements_from_ticket` → `/update_testcases_from_impact` (**KHÔNG** dùng `/review_testcases` — rubric không bắt được TC stale) |
 | 🌐 **Môi trường / pre-condition** | Phần lớn BLOCKED, cùng lý do "không dựng được pre-condition", "không đăng nhập được" | Sửa môi trường trước, **KHÔNG** kết luận gì về chất lượng app |
 | 📊 **Test data** | "không tìm thấy bản ghi", data bị người khác sửa (môi trường dùng chung) | Sinh lại data, cân nhắc `/generate_test_data` |
 | 🔁 **Regression sau fix** | Xuất hiện trong `retest_report.md` mục "Regression phát sinh do fix" | Bug mới, priority cao — fix đã gây hỏng chỗ khác |

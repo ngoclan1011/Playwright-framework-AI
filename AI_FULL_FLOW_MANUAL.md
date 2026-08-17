@@ -92,6 +92,7 @@ docs/requirements/_discovery/doc_inventory.md  ← chỉ khi có tài liệu
 |---|---|---|
 | Có ticket Jira thay vì UI | `/analyze_requirement_document` | [`prompt_20`](prompts/prompt_20_analyze_requirement_document.txt) |
 | Tài liệu đã có, ticket sửa đổi | `/update_requirements_from_ticket` | [`prompt_21`](prompts/prompt_21_update_requirements_from_ticket.txt) |
+| Tài liệu vừa đổi, **bộ TC đã có cần đồng bộ** | `/update_testcases_from_impact` | [`prompt_27`](prompts/prompt_27_update_testcases_from_impact.txt) |
 
 **AI làm gì:** đọc bản đồ chặng 0 (khỏi dò đường) → mở từng form → **trigger từng validation lấy message nguyên văn** → đọc DOM bằng `browser_evaluate` → bắt network lấy validation server-side → chụp evidence full-page → sinh `REQ-<PREFIX>-NN`.
 
@@ -300,13 +301,16 @@ Hệ thống đang phát triển thì ticket sẽ liên tục sửa yêu cầu. 
 ```
 /update_requirements_from_ticket
         ↓  Impact Report — TC nào stale
-   ┌────┴────────────────────────────────┐
-   ↓                                     ↓
-REQ mới → /generate_testcases_*     TC phải sửa → /review_testcases mode FIX
-   └────────────────┬────────────────────┘
-                    ↓
-        /execute_test_cases  (chạy lại phần bị ảnh hưởng)
+   ┌────┴──────────────────────────────────────────┐
+   ↓                                               ↓
+REQ mới (🟢) → /generate_testcases_*     TC phải sửa (🟡) + TC bị gỡ (🗑️)
+                                              → /update_testcases_from_impact
+   └────────────────────┬─────────────────────────┘
+                        ↓
+            /execute_test_cases  (chạy lại phần bị ảnh hưởng)
 ```
+
+> 🚨 **Không dùng `/review_testcases` mode FIX cho nhánh 🟡.** Nó chấm rubric chất lượng, không đối chiếu với REQ mới — TC viết rất tốt về hành vi **cũ** vẫn đạt 12/12 điểm. Nó cũng sinh file `_improved` lạc tên index. Đồng bộ bằng `/update_testcases_from_impact` trước, chấm chất lượng bằng `/review_testcases` sau.
 
 Cột **`TC cần xử lý`** trong Nhật ký thay đổi của tài liệu requirements là **mắt xích cảnh báo duy nhất** cho tester biết TC nào đã lỗi thời. Bỏ qua nó là chạy test trên bộ TC sai mà không biết.
 
@@ -328,6 +332,7 @@ Cột **`TC cần xử lý`** trong Nhật ký thay đổi của tài liệu req
 | 6 | `/generate_traceability_matrix` | [`prompt_13`](prompts/prompt_13_generate_traceability_matrix.txt) | Định kỳ / trước release |
 | 7 | `/generate_test_summary_report` | [`prompt_24`](prompts/prompt_24_generate_test_summary_report.txt) | **Mỗi mốc release / sprint** |
 | ↻ | `/update_requirements_from_ticket` | [`prompt_21`](prompts/prompt_21_update_requirements_from_ticket.txt) | Mỗi ticket sửa yêu cầu |
+| ↻ | `/update_testcases_from_impact` | [`prompt_27`](prompts/prompt_27_update_testcases_from_impact.txt) | **Mỗi Impact Report** — ngay sau command trên |
 | ⊹ | `/generate_master_test_plan` | [`prompt_25`](prompts/prompt_25_generate_master_test_plan.txt) | 1 lần / đợt — khi cần kế hoạch chính thức |
 
 **Biến thể của chặng 1–2** (không nằm trên luồng chính): `/analyze_requirement_document` → [`prompt_20`](prompts/prompt_20_analyze_requirement_document.txt) · `/generate_testcases_from_requirements` → [`prompt_22`](prompts/prompt_22_generate_testcases_quick.txt).
@@ -355,5 +360,5 @@ Xem lại cảnh báo ở chặng 6.
 | [`CLAUDE.md`](CLAUDE.md) | Quy tắc bắt buộc · cấu trúc `docs/` · danh sách đầy đủ workflows |
 | [`README.md`](README.md) | Tổng quan bộ kit · cài đặt |
 | [`SETUP_CLAUDE.md`](SETUP_CLAUDE.md) | Cài Claude Code + Playwright MCP |
-| [`prompts/README.md`](prompts/README.md) | 30 prompt mẫu copy-paste, chia 6 nhóm tra cứu |
+| [`prompts/README.md`](prompts/README.md) | 31 prompt mẫu copy-paste, chia 6 nhóm tra cứu |
 | [`plans/manual/QUICK_START.md`](plans/manual/QUICK_START.md) | Luồng 6 bước AI-RBT bản copy-paste — dùng cho AI agent khác (Codex · Antigravity · Kiro · Cursor) không có slash command của bộ này |

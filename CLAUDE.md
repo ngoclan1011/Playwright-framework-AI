@@ -183,7 +183,7 @@ Agent sử dụng skills trong `.claude/skills/` tùy theo nhiệm vụ:
 | Skill                      | Vai trò                                                                                  |
 | -------------------------- | ----------------------------------------------------------------------------------------- |
 | `skills-qa-automation-engineer` | Master skill cho automation — điều phối toàn bộ quy trình                          |
-| `skills-rbt-manual-testing`     | Master skill cho manual testing — 3 modes: QUICK (sinh TC nhanh), FULL RBT (6 bước) và CHECKLIST (checklist tick tay) |
+| `skills-rbt-manual-testing`     | Master skill cho manual testing — 4 modes: QUICK (sinh TC nhanh), FULL RBT (6 bước), CHECKLIST (checklist tick tay) và **DELTA** (cập nhật bộ TC đã có theo Impact Report, giữ nguyên TC ID) |
 | `skills-framework-architect`     | Thiết kế & scaffold automation framework — project structure, base classes, reporting, CI/CD |
 | `skills-requirements-analyzer`  | Phân tích requirements từ website/tài liệu                                           |
 | `skills-ui-debug-agent`         | Inspect UI/DOM **web**, thu thập locators                                                |
@@ -247,6 +247,7 @@ docs/
 │   └── <module>/
 │       ├── test_cases_<module>.md             ← INDEX — TÊN FILE BẤT BIẾN
 │       ├── parts/part_NN_<slug>.md            ← khi tách (>40 TC)
+│       ├── impact/impact_<TICKET-ID>.md       ← /update_testcases_from_impact
 │       └── archive/test_cases_<module>_vN.md  ← phiên bản cũ
 │
 └── executions/                                 ← kết quả thực thi
@@ -281,6 +282,7 @@ Hai trang tĩnh trong `scripts/`, mở bằng cách double-click, chạy offline
 | Mỗi module một prefix **duy nhất** (`LOGIN`, `CUST`, `PRJ`…) | Chống trùng mã giữa các module — tra ở danh mục trước khi đặt |
 | **KHÔNG đánh lại mã REQ từ `01`** khi module đã có tài liệu | Đụng mã là vỡ toàn bộ traceability |
 | **KHÔNG xoá dòng REQ** — tính năng gỡ thì đổi trạng thái 🔴 Deprecated | Xoá dòng là mất dấu vết |
+| **KHÔNG đổi / đánh lại TC ID** khi cập nhật TC theo ticket — sửa tại chỗ index, bản cũ vào `archive/`, TC bị gỡ đổi trạng thái 🗑️ Deprecated | TC ID là khoá nối sang `allure.label('testId', ...)` trong script, cột TC ID của RTM và execution report cũ. Đổi là cắt cả ba mối nối, không có cách phát hiện tự động |
 | Mọi thay đổi requirements phải ghi **Nhật ký thay đổi** ở cuối tài liệu module | Bộ nhớ liền mạch giữa các phiên, và là nơi báo TC nào đã stale |
 | Evidence nằm **cùng** tài liệu sinh ra nó (recon → `<module>/evidence/`, execution → `run_*/evidence/`) | Di chuyển/xoá không lạc file; link tương đối không gãy |
 | Thêm module = thêm thư mục + 1 dòng ở `README.md` danh mục | Không đụng gì khác trong repo |
@@ -434,6 +436,7 @@ Agent sử dụng workflows trong `.claude/commands/` qua slash commands:
 | `/generate_testcases_manual_rbt`        | Sinh manual test cases theo AI-RBT 6 bước (FULL RBT mode) |
 | `/generate_testcases_from_requirements` | Sinh test cases nhanh từ requirements (QUICK mode)         |
 | `/generate_checklist_test`              | Sinh checklist test tick tay (CHECKLIST mode) — smoke / post-hotfix / regression / release-readiness |
+| `/update_testcases_from_impact`         | **Delta mode cho test cases** — mắt xích giữa của chuỗi delta 3 tầng: từ Impact Report sửa TC stale tại chỗ, giữ nguyên TC ID, đánh dấu 🗑️ Deprecated TC bị gỡ, xuất Delta TC List (2 modes: PLAN/APPLY). KHÔNG sinh lại cả module |
 | `/generate_automation_from_testcases`   | Chuyển manual test cases → automation scripts             |
 | `/generate_automation_from_ui_flow`     | Sinh automation từ UI flow trực tiếp (**web**)            |
 | `/generate_automation_from_mobile_flow` | Sinh automation **Appium** từ flow chạy thật trên device — Native Android/iOS, **Flutter**, Hybrid. Nhận diện loại app trước, thu locator từ UI hierarchy |

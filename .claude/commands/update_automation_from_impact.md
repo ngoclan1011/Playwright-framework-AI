@@ -14,7 +14,17 @@ skills:
 > - **`skills-qa-automation-engineer`** (`.claude/skills/skills-qa-automation-engineer/SKILL.md`) — quy tắc automation chung
 > - **`skills-ui-debug-agent`** (`.claude/skills/skills-ui-debug-agent/SKILL.md`) — inspect DOM khi thay đổi kéo theo UI mới
 
-Mắt xích nối tiếp `/update_requirements_from_ticket`: requirements đổi → Impact Report chỉ ra TC stale → **workflow này** chỉ ra script nào phải sửa và sửa đúng chỗ đó.
+Mắt xích **cuối** của chuỗi delta 3 tầng: requirements đổi → TC được đồng bộ → **workflow này** chỉ ra script nào phải sửa và sửa đúng chỗ đó.
+
+```
+/update_requirements_from_ticket   → Impact Report
+        ↓
+/update_testcases_from_impact      → Delta TC List (kỳ vọng MỚI đã nằm trong TC)
+        ↓
+/update_automation_from_impact     ← WORKFLOW NÀY
+```
+
+> ⚠️ **Chạy workflow này khi TC chưa được đồng bộ là sửa script theo kỳ vọng cũ.** File test cases là nguồn sự thật của kỳ vọng mới — TC còn mô tả hành vi cũ thì script sửa xong vẫn sai. Chưa chạy `/update_testcases_from_impact` thì làm nó trước.
 
 ## Workflow này khác gì `generate_automation_from_testcases`?
 
@@ -151,6 +161,7 @@ Cập nhật `reports/automation_impact_plan.md`:
 | Tình huống | Command |
 |---|---|
 | Trước đó — cập nhật requirements từ ticket | `/update_requirements_from_ticket` |
+| Trước đó — **đồng bộ TC theo Impact Report** (nguồn kỳ vọng mới) | `/update_testcases_from_impact` ⭐ |
 | Trước đó — chưa có nguồn map TC ↔ script | `/generate_traceability_matrix` |
 | TC mới hoàn toàn, chưa có script | `/generate_automation_from_testcases` |
 | Sau khi sửa — locator gãy diện rộng | `/heal_locators` |

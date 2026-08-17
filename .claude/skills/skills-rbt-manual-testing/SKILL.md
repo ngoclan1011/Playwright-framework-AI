@@ -1,19 +1,22 @@
 ---
 name: skills-rbt-manual-testing
-description: Skill sinh manual test cases với 3 modes — QUICK (sinh nhanh từ requirements), FULL RBT (quy trình AI-RBT 6 bước có đánh giá rủi ro) và CHECKLIST (checklist rà soát ngắn để tick tay — smoke/regression/release). Master skill cho mọi tác vụ manual test case.
+description: Skill sinh và cập nhật manual test cases với 4 modes — QUICK (sinh nhanh từ requirements), FULL RBT (quy trình AI-RBT 6 bước có đánh giá rủi ro), CHECKLIST (checklist rà soát ngắn để tick tay — smoke/regression/release) và DELTA (cập nhật bộ TC đã có theo Impact Report, giữ nguyên TC ID). Master skill cho mọi tác vụ manual test case.
 ---
 
 # RBT Manual Testing
 
 ## Description
 
-Đây là **Master Skill** cho mọi tác vụ sinh manual test cases. Skill cung cấp **3 chế độ hoạt động** (modes) để phù hợp với mọi quy mô yêu cầu:
+Đây là **Master Skill** cho mọi tác vụ sinh và cập nhật manual test cases. Skill cung cấp **4 chế độ hoạt động** (modes) để phù hợp với mọi quy mô yêu cầu:
 
 | Mode | Khi nào dùng | Output | Thời gian |
 |------|-------------|--------|-----------|
 | **QUICK** | Module đơn giản, cần TC nhanh, requirements rõ ràng | TC chi tiết có steps | 1 lượt (không chờ user) |
 | **FULL RBT** | Module phức tạp, cần phân tích rủi ro, hệ thống lớn | TC chi tiết + Risk Level + RTM | 6 bước tuần tự (có checkpoint) |
 | **CHECKLIST** | Cần danh sách rà soát ngắn để tick tay — smoke trước release, bàn giao tester, rà nhanh sau hotfix | Checklist 1 dòng/mục, có ô tick | 1 lượt (không chờ user) |
+| **DELTA** | **Bộ TC đã có**, requirements vừa đổi theo ticket — chỉ sửa phần bị ảnh hưởng | TC sửa tại chỗ + Nhật ký thay đổi + Delta TC List | 1 lượt (1 checkpoint duyệt) |
+
+> **3 mode đầu SINH TC mới. Mode DELTA SỬA TC đã có.** Dùng QUICK/FULL RBT trên module đã có TC là sinh trùng và đánh lại TC ID — vỡ truy vết sang automation.
 
 **Nguyên tắc cốt lõi:**
 - **Human Strategy:** Con người xác định chiến lược, mức độ rủi ro và tiêu chuẩn
@@ -34,6 +37,7 @@ Sử dụng skill này khi:
 - Chuẩn hóa test cases sang bảng Markdown (Jira/Excel format)
 - Sinh test cases nhanh từ requirements đơn giản
 - Sinh checklist rà soát ngắn để tick tay (smoke / regression / release-readiness / post-hotfix)
+- **Cập nhật bộ TC đã có** khi requirements đổi theo ticket (Mode DELTA)
 
 **KHÔNG** sử dụng skill này khi:
 
@@ -74,19 +78,30 @@ Kích hoạt khi:
 
 > Phân biệt: user cần **chạy tay nhanh và tick** → CHECKLIST. User cần **bộ TC lưu trữ, giao cho automation, import Jira/TestRail** → QUICK hoặc FULL RBT.
 
+### → Mode DELTA
+
+Kích hoạt khi:
+- User dùng command `/update_testcases_from_impact`
+- User đưa **Impact Report** (từ `/update_requirements_from_ticket`) hoặc danh sách REQ đã đổi
+- User nói: "cập nhật TC theo ticket", "requirement đổi rồi, sửa TC", "TC nào bị ảnh hưởng", "đồng bộ lại bộ TC"
+- Module **đã có** `docs/testcases/<module>/test_cases_<module>.md` và yêu cầu vừa thay đổi
+
+> 🚨 **Dấu hiệu bắt buộc kiểm trước khi chọn QUICK/FULL RBT:** module đã có file TC chưa? Đã có mà vẫn chạy QUICK/FULL RBT là sinh bộ TC thứ hai, TC ID đánh lại từ `001`, và mọi `testId` trong automation trỏ về hư không.
+
 ### → Khi không rõ
 
 Nếu không xác định được mode, agent **hỏi user**:
 ```
-Bạn muốn sinh theo chế độ nào?
-1. QUICK — Test cases chi tiết, sinh nhanh từ requirements (không qua bước phân tích)
-2. FULL RBT — Quy trình 6 bước đầy đủ (phân tích → phân rã → RBT → sinh TC)
-3. CHECKLIST — Danh sách rà soát ngắn để tick tay (smoke / release / hotfix)
+Bạn muốn làm gì với test cases?
+1. QUICK — Sinh TC chi tiết nhanh từ requirements (không qua bước phân tích)
+2. FULL RBT — Sinh TC theo quy trình 6 bước đầy đủ (phân tích → phân rã → RBT → sinh TC)
+3. CHECKLIST — Sinh danh sách rà soát ngắn để tick tay (smoke / release / hotfix)
+4. DELTA — Cập nhật bộ TC ĐÃ CÓ theo ticket vừa đổi requirements
 ```
 
 ---
 
-## Quy Tắc Đối Chiếu Evidence (BẮT BUỘC — áp dụng cả 3 modes, chạy TRƯỚC batch đầu tiên)
+## Quy Tắc Đối Chiếu Evidence (BẮT BUỘC — áp dụng cả 4 modes, chạy TRƯỚC batch đầu tiên)
 
 Tài liệu requirements là **mô tả bằng chữ**; ảnh trong `docs/requirements/<module>/evidence/` là **bằng chứng**. Sinh TC chỉ từ chữ dẫn tới bịa bố cục, nhãn, thứ tự tab, định dạng hiển thị — và không ai phát hiện được vì TC đọc vẫn rất thuyết phục.
 
@@ -155,7 +170,7 @@ Checkbox **xám mờ = disabled**, khác hoàn toàn **không tick**. Phát hi�
 
 ---
 
-## Quy Tắc Xuất File & Theo Dõi Tiến Độ (BẮT BUỘC — áp dụng cả 3 modes)
+## Quy Tắc Xuất File & Theo Dõi Tiến Độ (BẮT BUỘC — áp dụng cả 4 modes)
 
 Bộ TC thường dài 70–100+ dòng bảng. In toàn bộ ra chat khiến user phải chờ render lâu và không thấy được tiến độ. Agent **BẮT BUỘC** tuân thủ quy tắc sau.
 
@@ -179,6 +194,7 @@ docs/testcases/
 └── <module>/
     ├── test_cases_<module>.md                  ← INDEX — TÊN FILE BẤT BIẾN
     ├── parts/part_NN_<slug>.md                 ← khi tách (>40 TC)
+    ├── impact/impact_<TICKET-ID>.md            ← Mode DELTA: kế hoạch sửa theo từng ticket
     └── archive/test_cases_<module>_vN.md       ← phiên bản cũ, giữ để truy vết
 ```
 
@@ -191,6 +207,7 @@ docs/testcases/
 | Tên index **luôn** `test_cases_<module>.md` | Mọi workflow phía sau (`/execute_test_cases`, `/review_testcases`, `/generate_automation_from_testcases`, `/generate_traceability_matrix`) đọc theo mẫu `docs/testcases/<module>/test_cases_<module>.md`. Đổi tên là vỡ chuỗi |
 | **KHÔNG** nhét số phiên bản vào tên index (`_v2`, `_new`…) | Phiên bản mới **thay thế** index; bản cũ chuyển vào `archive/` |
 | Part đặt trong `parts/`, đặt tên `part_NN_<slug>.md` | `NN` có số 0 đứng đầu để sắp xếp đúng; slug mô tả nhóm chức năng |
+| Mode DELTA sửa **tại chỗ** index/part, bản trước khi sửa copy vào `archive/` | Giữ đúng một nguồn sự thật. Sinh `_improved` / `_v2` ở ngoài `archive/` là để lại hai bộ TC mà không ai biết bộ nào đang dùng |
 
 **Ngưỡng tách:**
 
@@ -310,7 +327,7 @@ Sinh test cases **nhanh, đủ chất lượng** từ requirements/user stories 
 > - **Auto Type:** `UI` / `API` / `Unit` / `N/A` (Loại automation phù hợp)
 > - **Tags:** `@Smoke`, `@Regression`, `@CriticalPath`, `@Security`, `@Boundary`
 
-## Quy Tắc Trình Bày Test Steps (BẮT BUỘC — áp dụng QUICK & FULL RBT)
+## Quy Tắc Trình Bày Test Steps (BẮT BUỘC — áp dụng QUICK, FULL RBT & DELTA)
 
 > Mode CHECKLIST KHÔNG dùng steps đánh số — xem Quy Tắc Viết Mục Checklist ở Mode 3.
 
@@ -327,7 +344,7 @@ Sinh test cases **nhanh, đủ chất lượng** từ requirements/user stories 
 | Mở trang login rồi nhập email và password hợp lệ sau đó bấm đăng nhập | Đăng nhập thành công |
 ```
 
-## Quy tắc Test Data (áp dụng cho cả 3 modes)
+## Quy tắc Test Data (áp dụng cho cả 4 modes)
 
 ```
 ❌ Sai: "Nhập mã số hợp lệ"
@@ -718,7 +735,62 @@ Trước khi xuất, agent **BẮT BUỘC** tự rà:
 
 ---
 
-## Anti-Patterns (NGHIÊM CẤM — áp dụng cho cả 3 modes)
+# Mode 4: DELTA — Cập Nhật Bộ TC Đã Có
+
+## Mục đích
+
+Đồng bộ bộ TC **đã tồn tại** với requirements vừa đổi theo ticket. Chỉ chạm phần bị ảnh hưởng, giữ nguyên mọi thứ còn lại.
+
+Command: `/update_testcases_from_impact` — quy trình 7 bước chi tiết nằm trong command đó. Mục này là **bộ quy tắc bất biến** mà mọi lần chạy DELTA phải tuân thủ.
+
+## Nguyên tắc gốc: TC ID là khoá, không phải nhãn
+
+TC ID xuất hiện ở **ba nơi ngoài file TC**: `allure.label('testId', ...)` trong script automation · cột TC ID của RTM · execution report của các lần chạy trước. Đổi hoặc đánh lại TC ID là cắt cả ba mối nối cùng lúc, và không có cách nào phát hiện tự động — chỉ thấy coverage tự nhiên tụt mà không rõ vì sao.
+
+Vì vậy Mode DELTA đặt việc **bảo toàn TC ID** lên trên mọi mục tiêu khác, kể cả trên sự gọn gàng của tài liệu.
+
+## 5 Quy tắc bắt buộc
+
+| # | Quy tắc | Vì sao |
+|---|---|---|
+| 1 | **Sửa tại chỗ** trong `test_cases_<module>.md` / `parts/part_NN_*.md` — tên file không đổi | Mọi workflow sau (`/execute_test_cases`, `/update_automation_from_impact`, `/generate_traceability_matrix`) đọc theo mẫu đường dẫn cố định |
+| 2 | **Sao lưu trước khi sửa** vào `archive/test_cases_<module>_v<N>.md` | Sửa tại chỗ không có bản đối chiếu thì không ai kiểm được agent đã đổi gì |
+| 3 | **Giữ nguyên TC ID.** TC mới cấp số tiếp dải hiện có, KHÔNG chèn vào giữa | Xem nguyên tắc gốc ở trên |
+| 4 | **KHÔNG xoá dòng TC.** Chức năng gỡ → `🗑️ Deprecated (TICKET-XXX)` | Đối xứng quy tắc "KHÔNG xoá dòng REQ". Xoá dòng là mất dấu vết TC từng tồn tại, và script tương ứng thành orphan |
+| 5 | **Đọc REQ đã đổi, không suy từ tên TC** | Tên TC không chứa kỳ vọng. Sửa theo suy đoán tạo ra TC nghe hợp lý nhưng sai kỳ vọng mới — loại lỗi khó phát hiện nhất |
+
+## Bảng ánh xạ: REQ đổi gì → TC sửa gì
+
+| Delta của REQ | Hành động với TC |
+|---|---|
+| Đổi expected result / message | Sửa cột Expected Result, ghi message **nguyên văn** từ UI |
+| Field tuỳ chọn → **bắt buộc** | Sửa TC happy path + **thêm TC negative** để trống field |
+| Đổi luật validation (độ dài, định dạng, dải) | Sửa lại **cả 3 mốc** boundary: dưới / đúng / trên ngưỡng |
+| Đổi steps / luồng | Sửa Steps + kiểm Precondition còn đúng không |
+| Đổi phân quyền | Sửa TC phân quyền + kiểm ma trận role |
+| REQ 🔴 bị gỡ | TC → `🗑️ Deprecated`, giữ dòng |
+| REQ 🟢 mới | ❌ Ngoài phạm vi DELTA → QUICK / FULL RBT |
+
+## Tác động lan toả — 3 câu phải tự hỏi
+
+Đây là phần Mode DELTA dễ làm hụt nhất, vì Impact Report chỉ liệt kê TC **map trực tiếp** với REQ đã đổi:
+
+1. Field đổi thành bắt buộc → **TC nào khác dùng field đó ở bước phụ** mà giờ sẽ fail?
+2. TC vừa Deprecated → **TC nào lấy nó làm precondition**?
+3. Thêm TC mới có làm file **vượt ngưỡng 40 TC** → phải tách `parts/`?
+
+## Quality Gate DELTA (6 tiêu chí)
+
+- [ ] **1.** Mọi TC ID giữ nguyên — không TC nào bị đổi số hay đánh lại từ `001`
+- [ ] **2.** Tên file index không đổi — không có `_improved` / `_v2` ngoài `archive/`
+- [ ] **3.** Không dòng TC nào bị xoá — TC gỡ đều ở trạng thái 🗑️ Deprecated kèm mã ticket
+- [ ] **4.** Bảng Đối Soát Coverage khớp lại — mọi REQ 🟡/🟢 active có ≥1 TC active
+- [ ] **5.** Số TC ở index khớp tổng các `parts/`
+- [ ] **6.** Có **Nhật ký thay đổi** ở cuối file TC + **Delta TC List** xuất ra chat cho automation dùng tiếp
+
+---
+
+## Anti-Patterns (NGHIÊM CẤM — áp dụng cho cả 4 modes)
 
 - ❌ Gộp nhiều bước chạy 1 lần trong FULL RBT (PHẢI tuần tự)
 - ❌ Tự đoán business logic khi chưa hỏi user (Bước 2 - FULL RBT)
@@ -754,6 +826,16 @@ Trước khi xuất, agent **BẮT BUỘC** tự rà:
 - ❌ Thấy tài liệu và ảnh mâu thuẫn nhưng **tự chọn một bên rồi im lặng** — phải viết theo ảnh, ghi `ASM-XX` và báo user
 - ❌ Đọc checkbox **xám mờ (disabled)** thành "không tick" — bỏ sót nguyên một business rule phụ thuộc
 - ❌ Xuất bộ TC mà không kèm **Bảng Đối Soát Evidence** (tiêu chí 7 Quality Gate)
+- ❌ **Chạy QUICK/FULL RBT trên module đã có file TC** — sinh bộ thứ hai, TC ID đánh lại từ `001`, vỡ truy vết sang automation. Đã có TC thì dùng Mode DELTA
+- ❌ DELTA sinh lại cả file/module TC thay vì sửa đúng dòng bị ảnh hưởng
+- ❌ DELTA đổi TC ID, đánh lại số, hoặc chèn số mới vào giữa dải đang dùng
+- ❌ DELTA xoá dòng TC của chức năng bị gỡ (phải đổi trạng thái 🗑️ Deprecated kèm mã ticket)
+- ❌ DELTA sinh file `_improved` / `_v2` / `_new` ngoài `archive/` — index có tên bất biến
+- ❌ DELTA sửa tại chỗ mà **không sao lưu** bản cũ vào `archive/` trước
+- ❌ DELTA sửa TC theo suy đoán từ tên TC, không đọc nội dung REQ sau khi đổi
+- ❌ DELTA tự viết TC cho REQ mới (🟢) — ngoài phạm vi, phải route sang QUICK / FULL RBT
+- ❌ DELTA bỏ qua tác động lan toả (TC dùng field ở bước phụ · TC lấy TC vừa Deprecated làm precondition)
+- ❌ DELTA xong mà không ghi **Nhật ký thay đổi** và không xuất **Delta TC List** — tầng automation mất input
 
 ---
 
@@ -790,5 +872,16 @@ Trước khi xuất, agent **BẮT BUỘC** tự rà:
 | Bảng ký nhận | Môi trường · Build/Version · Người thực hiện · Ngày · Kết quả |
 
 > File output khuyến nghị: `docs/checklists/checklist_<loại>_<module>.md`
+
+### Mode DELTA
+
+| Output | Mô tả |
+|--------|--------|
+| `impact/impact_<TICKET-ID>.md` | Bảng ánh xạ REQ → TC (✅ chắc chắn / ⚠️ suy luận / ❓ chưa có TC) + kế hoạch sửa từng TC + tác động lan toả |
+| `test_cases_<module>.md` đã sửa | Sửa **tại chỗ**, tên file không đổi, TC ID giữ nguyên |
+| `archive/test_cases_<module>_v<N>.md` | Bản trước khi sửa — để đối chiếu |
+| Nhật ký thay đổi | Bảng ở cuối file TC: ngày · ticket · TC bị ảnh hưởng · thay đổi · bản sao lưu |
+| **Delta TC List** | Hiển thị trong chat — input trực tiếp cho `/update_automation_from_impact` |
+| Danh sách ngoài phạm vi | REQ 🟢 chưa có TC + command tiếp theo |
 
 Tất cả output phải bằng **Tiếng Việt**, format **Markdown**, và tuân thủ **Quy Tắc Xuất File & Theo Dõi Tiến Độ**: ghi thẳng vào file (`docs/testcases/` hoặc `docs/checklists/`), chat chỉ hiện tiến độ + Bảng Đối Soát Coverage + tóm tắt đường dẫn file.

@@ -18,6 +18,16 @@ Sử dụng skill này khi:
 - Sau khi sinh TC bằng `skills-rbt-manual-testing` và cần một vòng kiểm tra độc lập
 - Onboard bộ TC cũ từ dự án khác
 
+**KHÔNG** sử dụng skill này khi:
+
+- **Requirements vừa đổi theo ticket, cần đồng bộ TC** → dùng `skills-rbt-manual-testing` **Mode DELTA** qua command `/update_testcases_from_impact`
+
+> 🚨 **Phân biệt rõ:** skill này chấm **chất lượng cách viết** theo rubric — một TC mô tả rất tốt về hành vi **đã bị thay đổi** vẫn đạt 12/12 điểm, vì rubric không đối chiếu với REQ mới. Nó **không bắt được TC stale**.
+>
+> Ngoài ra Mode FIX của skill này sinh file `<tên>_improved.md` — **lạc tên index** `test_cases_<module>.md` mà các workflow phía sau đọc theo mẫu. Dùng nó để cập nhật theo ticket là vừa bỏ sót TC stale, vừa để lại hai bộ TC không ai biết bộ nào đang dùng.
+>
+> Thứ tự đúng: `/update_testcases_from_impact` đồng bộ nội dung **trước** → skill này chấm chất lượng **sau**.
+
 ---
 
 ## Review Rubric (6 tiêu chí)
