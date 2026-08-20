@@ -8,15 +8,12 @@
 
 ## Điểm nối với flow Manual
 
-```
-        AI_FULL_FLOW_MANUAL.md                    AI_FULL_FLOW_AUTOMATION.md (file này)
-┌──────────────────────────────────┐      ┌──────────────────────────────────────────┐
-│ chặng 1  requirements → REQ ID   │      │  chặng 1  script mang label testId       │
-│ chặng 2  test cases → TC ID      │─────▶│  chặng 6  RTM nối REQ → TC → script      │
-│ chặng 3  review TC               │      │                                          │
-└──────────────────────────────────┘      └──────────────────────────────────────────┘
-         REQ ID là mắt xích              TC ID là mắt xích
-```
+| `AI_FULL_FLOW_MANUAL.md` | | `AI_FULL_FLOW_AUTOMATION.md` (file này) |
+|---|:---:|---|
+| chặng 1 — requirements → REQ ID | | chặng 1 — sinh POM + test class, PASS 2 lần |
+| chặng 2 — test cases → TC ID | ──▶ | chặng 2 — review automation code |
+| chặng 3 — review TC | | chặng 6 — RTM nối REQ → TC → script |
+| **REQ ID là mắt xích** | | **TC ID là mắt xích** |
 
 **Automation nối vào chuỗi truy vết bằng `TC ID`**, không phải bằng tên file test. Mỗi script phải mang label `testId` đúng mã TC gốc (`allure.label('testId', 'CRM_LOGIN_TC_001')`). Đứt mắt xích này thì chặng 6 không map được script về requirement — coverage automation trở thành số đoán.
 
