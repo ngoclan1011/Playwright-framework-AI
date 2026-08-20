@@ -205,7 +205,7 @@ Report gồm 6 mục: Tổng kết · Kết quả từng TC · Chi tiết FAIL �
 **Đầu ra:**
 ```
 docs/executions/<module>/analysis_<timestamp>.md ← gom nhóm theo root cause (nhánh MANUAL)
-bug_reports/BUG_<module>_<timestamp>.md          ← mỗi bug 1 file
+docs/bugs/<module>/BUG_<module>_<timestamp>.md   ← mỗi bug 1 file
 ```
 
 > Gom nhóm trước rồi mới viết bug report — đỡ tạo 12 bug trùng nhau cho cùng một nguyên nhân.

@@ -48,6 +48,8 @@ Hai workflow trả lời **hai câu hỏi khác nhau**. Chạy sai cái là bỏ
 - **KHÔNG tự viết TC cho REQ mới (nhóm ➕)** — ngoài phạm vi, route sang `/generate_testcases_manual_rbt` hoặc `/generate_testcases_from_requirements`
 - **KHÔNG sửa TC theo suy đoán từ tên TC** — phải đọc **nội dung REQ sau khi đổi** trong tài liệu requirements. Tên TC không chứa đủ thông tin để biết kỳ vọng mới là gì
 - **KHÔNG bịa mapping REQ ↔ TC.** Không map được thì ghi vào mục "cần xác nhận", KHÔNG đoán rồi sửa nhầm TC
+- 🚨 **Bám đúng độ hạt của bộ TC đang có.** Bộ TC viết ở độ hạt GỘP (có Bảng biến thể) thì TC bổ sung cũng phải gộp, và sửa một biến thể là sửa **dòng biến thể** chứ không tách nó ra thành TC mới. Bộ TC viết ở độ hạt TÁCH thì mỗi case mới là một TC. Trộn hai độ hạt trong cùng một file làm hỏng cách đếm và cách giao việc — xem mục **Độ Hạt Test Case** trong skill
+- 🚨 **CẤM đổi độ hạt của cả bộ TC trong chế độ DELTA.** Đổi độ hạt là đánh lại toàn bộ TC ID, mâu thuẫn trực tiếp với quy tắc giữ nguyên TC ID ở trên. Muốn đổi thì phải là quyết định riêng, có xác nhận của user, và chỉ làm được khi chưa có script / execution report / RTM nào trỏ vào bộ TC
 - ⚠️ Sau khi user duyệt kế hoạch → agent tự sửa hết, KHÔNG hỏi lại giữa chừng
 
 ## 2 Chế độ (Mode)

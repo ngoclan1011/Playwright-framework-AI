@@ -41,7 +41,7 @@ Thu thập những gì **đã có**, để buổi hỏi user ngắn nhất có t
 | `docs/requirements/_discovery/system_map.md` | Phụ thuộc giữa module · risk đã ghi nhận |
 | `docs/testcases/README.md` | Module nào đã có TC, bao nhiêu TC |
 | `traceability_matrix.md` (nếu có) | Độ phủ hiện tại |
-| `bug_reports/` | Bug đang mở — ảnh hưởng tiêu chí vào |
+| `docs/bugs/` | Bug đang mở — ảnh hưởng tiêu chí vào. Đọc `docs/bugs/README.md` trước để nắm danh mục |
 
 > Chưa chạy `/discover_system` → plan sẽ thiếu phần phạm vi đáng tin. Đề nghị user chạy khám phá trước, hoặc chấp nhận plan có phạm vi tạm và ghi rõ điều đó.
 
@@ -207,7 +207,7 @@ Kiểm thử đợt <mốc> nhằm xác nhận <mục tiêu nghiệp vụ>, đ�
 | Tài liệu requirements | `docs/requirements/<module>/` | `/generate_requirements_from_website` |
 | Test cases | `docs/testcases/<module>/` | `/generate_testcases_manual_rbt` |
 | Execution report | `docs/executions/<module>/run_*/` | `/execute_test_cases` |
-| Bug report | `bug_reports/` | `/create_bug_report` |
+| Bug report | `docs/bugs/<module>/` | `/create_bug_report` |
 | Ma trận truy vết | `traceability_matrix.md` | `/generate_traceability_matrix` |
 | **Báo cáo tổng hợp** | `docs/executions/test_summary_*.md` | `/generate_test_summary_report` |
 

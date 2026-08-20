@@ -77,14 +77,16 @@ claude-testing-skills/
 │   │       ├── test_cases_<module>.md         # INDEX — tên file bất biến
 │   │       ├── parts/                         # khi > 40 TC
 │   │       └── archive/                       # phiên bản TC cũ
-│   └── executions/
-│       └── <module>/run_<timestamp>/
-│           ├── execution_report.md
-│           └── evidence/*.png
-└── bug_reports/             # Bug report sinh từ TC FAIL
+│   ├── executions/
+│   │   └── <module>/run_<timestamp>/
+│   │       ├── execution_report.md
+│   │       └── evidence/*.png
+│   └── bugs/                                  # Bug report sinh từ TC FAIL
+│       ├── README.md                          # DANH MỤC bug
+│       └── <module>/BUG_<module>_<ts>.md
 ```
 
-> **Chuyển sang dự án mới:** chỉ cần xoá phần **ĐẦU RA** — `rm -rf docs bug_reports .playwright-mcp task.md .claude/settings.local.json`. Agent tự tạo lại cấu trúc `docs/` ở lần chạy workflow đầu tiên. Chi tiết xem [CLAUDE.md](CLAUDE.md) mục 6b.
+> **Chuyển sang dự án mới:** chỉ cần xoá phần **ĐẦU RA** — `rm -rf docs .playwright-mcp task.md .claude/settings.local.json`. Agent tự tạo lại cấu trúc `docs/` ở lần chạy workflow đầu tiên. Chi tiết xem [CLAUDE.md](CLAUDE.md) mục 6b.
 
 ### `.claude/` — Bộ não của AI Agent trên Claude Code
 

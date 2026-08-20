@@ -251,19 +251,25 @@ docs/
 │       ├── impact/impact_plan_<TICKET-ID>.md  ← /update_testcases_from_impact
 │       └── archive/test_cases_<module>_vN.md  ← phiên bản cũ
 │
-└── executions/                                 ← kết quả thực thi
-    ├── test_summary_<mốc>_<timestamp>.md       ← báo cáo tổng hợp, CẮT NGANG mọi module
-    └── <module>/
-        ├── run_<timestamp>/
-        │   ├── execution_report.md
-        │   └── evidence/<TC_ID>_<mô_tả>.png
-        ├── retest_<timestamp>/                 ← /retest_fixed_bugs
-        │   ├── retest_report.md
-        │   └── evidence/*.png
-        └── analysis_<timestamp>.md             ← /analyze_test_report nhánh MANUAL
+├── executions/                                 ← kết quả thực thi
+│   ├── test_summary_<mốc>_<timestamp>.md       ← báo cáo tổng hợp, CẮT NGANG mọi module
+│   └── <module>/
+│       ├── run_<timestamp>/
+│       │   ├── execution_report.md
+│       │   └── evidence/<TC_ID>_<mô_tả>.png
+│       ├── retest_<timestamp>/                 ← /retest_fixed_bugs
+│       │   ├── retest_report.md
+│       │   └── evidence/*.png
+│       └── analysis_<timestamp>.md             ← /analyze_test_report nhánh MANUAL
+│
+└── bugs/                                       ← bug sinh từ TC FAIL
+    ├── README.md                               ← DANH MỤC bug
+    └── <module>/BUG_<module>_<timestamp>.md    ← mỗi bug 1 file
 ```
 
 > `test_summary_*.md` nằm ở **gốc `executions/`**, không thuộc module nào — nó gộp mọi module tại một mốc release.
+>
+> `docs/bugs/` là **mắt xích thứ tư** của chuỗi truy vết `requirements → testcases → executions → bugs`. Evidence của bug **không** nhân bản sang đây — bug report chỉ **link tới** ảnh trong `executions/<module>/run_*/evidence/`, giữ đúng một nguồn sự thật.
 
 ### Xem kết quả bằng web viewer
 
@@ -289,6 +295,8 @@ Hai trang tĩnh trong `scripts/`, mở bằng cách double-click, chạy offline
 | 🔒 **KHÔNG ghi giá trị bí mật thật vào `docs/`** — mật khẩu, token, cookie xác thực, session id, API key. Ghi **hình thái** (`<16 ký tự hex>`) thay cho giá trị | `docs/` được commit và **lịch sử git không xoá được bằng cách sửa file**. Credentials sống ở `.env` (đã `.gitignore`); tài liệu chỉ mô tả *hình dạng* |
 | 📸 **Evidence chụp đúng phạm vi đối tượng cần chứng minh, không chụp thừa** — đối tượng nằm trọn trong viewport thì chụp viewport, đừng full-page kéo theo cả trang dữ liệu nghiệp vụ | Ảnh full-page của màn hình nghiệp vụ kéo theo tên khách hàng, số tiền, nhật ký hoạt động — không liên quan gì tới REQ mà vẫn bị commit |
 | 🔍 **Chụp xong phải mở lại ảnh xác nhận đúng trạng thái** trước khi ghi vào Danh mục Evidence | Thao tác mở dropdown/tab có thể thất bại âm thầm. Dòng danh mục sai **nguy hiểm hơn không có ảnh** — nó tạo cảm giác REQ đã có bằng chứng |
+| Bug report sống ở **`docs/bugs/<module>/`**, KHÔNG ở gốc repo | Bug là mắt xích thứ tư của chuỗi truy vết; để ngoài `docs/` thì lệnh dọn dự án bỏ sót, để lại bug mồ côi trỏ vào TC/REQ đã đổi nghĩa |
+| Bug **phải trỏ về TC ID và REQ ID đang có hiệu lực**; evidence chỉ **link** tới `executions/`, không nhân bản | Bug trỏ vào mã đã đổi nghĩa còn tệ hơn không trỏ — người đọc tin nhầm. Nhân bản ảnh là tạo hai nguồn sự thật |
 | Thêm module = thêm thư mục + 1 dòng ở `README.md` danh mục | Không đụng gì khác trong repo |
 | `_discovery/` **không được** chứa mã `REQ-XXX-NN` — chỉ cấp **prefix** | Tầng khám phá chưa mở form, chưa trigger validation; cấp số REQ ở đó là chắc chắn phải đánh lại |
 | Bản đồ khám phá tách file thì index **vẫn** là `_discovery/system_map.md` + có mục `## Bản đồ tài liệu` | Cùng hợp đồng đọc với `requirements_<module>.md` — workflow sau chỉ nhớ một đường dẫn |
@@ -357,15 +365,15 @@ Agent nhận câu này thì **chỉ** đọc 2 file tầng 1–2 rồi báo cáo
 ### Chuyển sang dự án mới — dọn gì
 
 ```bash
-rm -rf docs bug_reports .playwright-mcp task.md .claude/settings.local.json
+rm -rf docs .playwright-mcp task.md .claude/settings.local.json
 ```
 
 | | |
 |---|---|
-| **Xoá** | `docs/` · `bug_reports/` · `.playwright-mcp/` · `task.md` · `.claude/settings.local.json` |
+| **Xoá** | `docs/` (gồm cả `docs/bugs/`) · `.playwright-mcp/` · `task.md` · `.claude/settings.local.json` |
 | **Giữ nguyên** | `.claude/` (trừ `settings.local.json`) · `plans/` · `prompts/` · `scripts/` · `CLAUDE.md` · `README.md` · `.gitignore` — khung dùng lại được, không hardcode hệ thống nào |
 
-⚠️ **`bug_reports/` nằm ngoài `docs/`** — xoá `docs/` thôi là còn sót bug report của dự án cũ.
+✅ **Bug report nằm trong `docs/bugs/`** — xoá `docs/` là xoá luôn, không còn sót như cấu trúc `bug_reports/` ở gốc trước đây.
 
 ⚠️ **`.claude/settings.local.json`** là permission tích luỹ theo từng máy/phiên, thường chứa đường dẫn tuyệt đối của dự án cũ. Đã đưa vào `.gitignore` — nếu file còn bị git theo dõi từ trước, gỡ bằng: `git rm --cached .claude/settings.local.json`
 

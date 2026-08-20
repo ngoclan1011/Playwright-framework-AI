@@ -117,7 +117,7 @@ docs/
 | Sinh API test cases | `/generate_api_tests_from_swagger` (Mode SPEC) | `docs/testcases/_book-api/<module>/` |
 | Sinh cả automation script | `/generate_api_tests_from_swagger` (Mode FULL) | Như trên + source code |
 | Spec đổi phiên bản | Snapshot spec mới vào `_discovery/sources/`, so sánh với bản cũ | Nhật ký khám phá ở `api_map.md` |
-| Báo lỗi bảo mật F-01…F-07 | `/create_bug_report` | `bug_reports/` |
+| Báo lỗi bảo mật F-01…F-07 | `/create_bug_report` | `docs/bugs/_book-api/<module>/` |
 
 **Thứ tự đề xuất:** `AUTH → USER → BOOK → CAT → PROMO → FILE → ADDR → SYS`
 `AUTH` đi đầu vì mọi module còn lại cần token. `SYS` để cuối vì là tiện ích test, không phải nghiệp vụ.

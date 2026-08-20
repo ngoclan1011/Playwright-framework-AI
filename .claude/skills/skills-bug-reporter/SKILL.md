@@ -115,7 +115,7 @@ Chi tiết quy trình: workflow `/retest_fixed_bugs`.
 3. **Isolate** — Rút gọn steps to reproduce về mức tối thiểu
 4. **Classify** — Gán Severity/Priority theo bảng chuẩn
 5. **Write** — Điền template, đính kèm evidence
-6. **Deliver** — Lưu file `bug_reports/BUG_<module>_<timestamp>.md`; nếu user yêu cầu → đẩy lên Jira qua `skills-jira-integration`
+6. **Deliver** — Lưu file `docs/bugs/<module>/BUG_<module>_<timestamp>.md` và cập nhật danh mục `docs/bugs/README.md`; nếu user yêu cầu → đẩy lên Jira qua `skills-jira-integration`
 
 ---
 

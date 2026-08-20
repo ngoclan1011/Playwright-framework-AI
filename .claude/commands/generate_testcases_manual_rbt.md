@@ -29,8 +29,9 @@ Thực hiện theo hướng dẫn chi tiết trong skill `skills-rbt-manual-test
 
 ### Bước 1: Khởi tạo ngữ cảnh (Context & Role-play)
 1. Yêu cầu user cung cấp: tên dự án, mô tả hệ thống, mục tiêu MVP, tài liệu yêu cầu
-2. Đọc kỹ tài liệu, xác nhận hiểu bối cảnh
-3. **Chờ user xác nhận** → sang Bước 2
+2. **Chốt độ hạt test case `GỘP` / `TÁCH`** — mặc định `GỘP`. Nêu rõ trong phần xác nhận bối cảnh kèm số TC ước tính theo từng độ hạt, để user chặn lại được ngay ở Bước 1 thay vì sau khi đã sinh xong. Quy tắc đầy đủ ở mục **Độ Hạt Test Case — GỘP / TÁCH** trong skill
+3. Đọc kỹ tài liệu, xác nhận hiểu bối cảnh
+4. **Chờ user xác nhận** → sang Bước 2
 
 ### Bước 2: Phân tích yêu cầu (Analysis & QnA)
 1. Xác định Happy Path, Alternate Paths, Exception Paths
@@ -55,7 +56,7 @@ Thực hiện theo hướng dẫn chi tiết trong skill `skills-rbt-manual-test
    - Liệt kê tất cả input fields trên form/UI đang test.
    - Sinh validation TCs **riêng cho TỪNG trường** (Text, Email, Phone, Date, Number, Dropdown, Checkbox/Radio, File Upload, Password, Textarea, OTP/MFA, Date Range, Rich Text, Multi-Select, Range Slider).
    - Tham chiếu **Bảng Field-Level Validation Checklist** trong skill `skills-rbt-manual-testing`.
-   - **KHÔNG** gộp validation nhiều trường vào 1 TC.
+   - **KHÔNG** gộp validation của **các trường khác nhau** vào 1 TC. Biến thể **cùng một trường** thì gộp hay tách theo độ hạt đã chốt ở Bước 1.
 5. **Bao phủ Component-Level Checklist** (trong skill): Data Table/List, CRUD Lifecycle, Permission/Role (đối chiếu Ma trận Phân quyền), Modal/Dialog, Notification, Status Flow (đối chiếu Ma trận Trạng thái).
 6. **Bao phủ Scenarios Chuyên Sâu & Non-Functional:**
    - Double Submit / Race Condition (click liên tiếp nút submit, concurrent edit).
@@ -73,9 +74,9 @@ Thực hiện theo hướng dẫn chi tiết trong skill `skills-rbt-manual-test
 ### Bước 6: Chuẩn hóa Format & Metadata (Template Mapping)
 1. Đóng gói toàn bộ test cases vào bảng Markdown chuẩn đầy đủ metadata cho Automation:
    `| TC ID | REQ ID | Module | Risk Level | Test Title | Pre-Condition | Test Steps | Expected Result | Priority | Test Data | Automatable | Auto Type | Tags |`
-2. **Chạy Self-Quality Gate (7 tiêu chí):** Unique TC ID, 1-to-1 Step-Expected matching (steps đánh số rõ từng bước), Concrete Test Data, Field Validation Coverage, Automation Metadata Ready, **Requirement Coverage** (mọi REQ có ≥1 TC — xuất Bảng Đối Soát Coverage; REQ nào 0 TC phải sinh bổ sung trước khi xuất), và **Evidence-verified** (đã mở 100% ảnh trong `evidence/` — xuất Bảng Đối Soát Evidence; vùng không có ảnh thì TC gắn `@NeedsVerify`).
+2. **Chạy Self-Quality Gate (9 tiêu chí):** **Độ hạt nhất quán** (toàn bộ theo một độ hạt đã chốt ở Bước 1; nếu GỘP thì mọi biến thể có mã riêng, không TC nào quá 6 biến thể, không vi phạm bảng CẤM gộp), Unique TC ID, 1-to-1 Step-Expected matching (steps đánh số rõ từng bước), Concrete Test Data, Field Validation Coverage, Automation Metadata Ready, **Requirement Coverage** (mọi REQ có ≥1 TC — xuất Bảng Đối Soát Coverage; REQ nào 0 TC phải sinh bổ sung trước khi xuất), **Evidence-verified** (đã mở 100% ảnh trong `evidence/` — xuất Bảng Đối Soát Evidence; vùng không có ảnh thì TC gắn `@NeedsVerify`), và **Ngôn ngữ kiểm chứng** (phần TC chính không còn `document.` / `querySelector` / `checkValidity` / `className` / selector CSS-XPath / mã HTTP; phần cấp kỹ thuật nằm dưới `🔧 Ghi chú kỹ thuật (cần DevTools):` và TC mang tag `@TechCheck`).
 3. ⚠️ **Kiểm tra `docs/testcases/README.md`** — chưa tồn tại (dự án mới) thì **tạo file danh mục trước** với bảng rỗng, để biết prefix TC ID nào đã bị chiếm và có chỗ theo dõi độ phủ REQ↔TC.
-4. Ghi file `docs/testcases/<module>/test_cases_<module>.md` — **tách vào `<module>/parts/part_NN_<slug>.md` khi >40 TC** (cắt tại ranh giới nhóm chức năng); có ≥2 part thì `test_cases_<module>.md` trở thành **index** (giữ nguyên tên). Mỗi module một thư mục riêng. Xong thì **bổ sung/cập nhật dòng của module** trong danh mục.
+4. Ghi file `docs/testcases/<module>/test_cases_<module>.md` — **tách vào `<module>/parts/part_NN_<slug>.md` khi vượt ngưỡng** (>40 TC ở độ hạt TÁCH · >50 TC ở độ hạt GỘP) (cắt tại ranh giới nhóm chức năng); có ≥2 part thì `test_cases_<module>.md` trở thành **index** (giữ nguyên tên). Mỗi module một thư mục riêng. Xong thì **bổ sung/cập nhật dòng của module** trong danh mục.
 5. Dự kiến **>30 TC** → tạo `task.md` (hoặc dùng task list của Claude Code), cập nhật sau mỗi batch.
 6. Chat chỉ hiện: kế hoạch batch → tiến độ từng batch → Bảng Đối Soát Coverage + tóm tắt đường dẫn file.
 
@@ -84,4 +85,4 @@ Thực hiện theo hướng dẫn chi tiết trong skill `skills-rbt-manual-test
 - Bảng Test Cases Markdown hoàn chỉnh (có cột **REQ ID**) kèm Automation Metadata (`Automatable`, `Auto Type`, `Tags`), sẵn sàng copy sang Excel/Jira/TestRail hoặc sync trực tiếp vào Google Sheets
 - Traceability Matrix + **Bảng Đối Soát Coverage** (REQ × số TC × đủ Positive/Negative/Boundary)
 - Danh sách Ambiguities đã giải quyết
-- Báo cáo Self-Quality Gate Verification (7 tiêu chí)
+- Báo cáo Self-Quality Gate Verification (9 tiêu chí)

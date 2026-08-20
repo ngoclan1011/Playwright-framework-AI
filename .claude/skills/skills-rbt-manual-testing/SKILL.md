@@ -170,6 +170,89 @@ Checkbox **xám mờ = disabled**, khác hoàn toàn **không tick**. Phát hi�
 
 ---
 
+## Quy Tắc Ngôn Ngữ Kiểm Chứng (BẮT BUỘC — áp dụng cả 4 modes)
+
+> 🚨 Mục trên vừa nói **DOM là nguồn chính xác** — đúng, nhưng đó là luật cho khâu **khảo sát**. Mục này là luật cho khâu **viết TC**, và hai khâu đó KHÔNG dùng chung ngôn ngữ. Agent đọc DOM để **biết sự thật**; TC viết ra để **người khác kiểm chứng lại sự thật đó**.
+
+Người chạy manual TC là **tester**, không phải người viết automation. Họ chấm PASS/FAIL bằng thứ **nhìn thấy trên màn hình**. Một Expected Result kiểu `body.className` chứa `user-id-2` bắt tester mở DevTools, gõ lệnh, đọc chuỗi — và tệ hơn: nó **không phát biểu được yêu cầu nghiệp vụ nào**. Người dùng đâu quan tâm class của thẻ `body`; họ quan tâm mình có vào được Dashboard không.
+
+### 1. Câu hỏi bắt buộc trước khi viết mỗi dòng Expected Result
+
+> **"Người dùng thật sẽ thấy điều này bằng cách nào?"**
+
+Trả lời được bằng mắt thường → viết đúng cái nhìn thấy. Không trả lời được → thuộc nhóm ẩn, xử lý theo mục 3.
+
+### 2. Bảng chuyển ngữ — DOM ❌ → Quan sát được ✅
+
+| ❌ Ngôn ngữ DOM / DevTools | ✅ Viết trong manual TC |
+|---|---|
+| `document.title` chứa `Dashboard` · `body.className` chứa `user-id-2` | Vào được trang Dashboard, thanh tiêu đề trình duyệt ghi `Dashboard` |
+| `input#email.checkValidity()` = `false` | Trình duyệt hiện cảnh báo ngay cạnh ô Email, biểu mẫu **không** gửi đi (trang không nạp lại, dữ liệu đã nhập còn nguyên) |
+| Có `input#email[type=email]`, `input#password[type=password]`, `button[type=submit]` | Thấy đủ ô `Email Address`, ô `Password` (gõ vào hiện dấu chấm che), nút `Login` |
+| `document.activeElement.id` = `email` | Con trỏ nhấp nháy sẵn trong ô Email, gõ được ngay không cần bấm chuột |
+| `offsetParent` = `null`, hộp `0×0` | Không nhìn thấy trên màn hình |
+| Đếm `.g-recaptcha` = `0`, `iframe[src*=recaptcha]` = `0` | Trên trang không có ô "Tôi không phải người máy", không có ảnh đố |
+| `POST` trả `303`, header `location: /admin/` | Trang tự chuyển sang Dashboard |
+| Thân request chứa 4 tham số `csrf_token_name`, `email`… | *(→ nhóm ẩn, xem mục 3)* |
+
+**Nguyên tắc rút ra:** mã HTTP, header, thuộc tính DOM, selector, tab Network **là phương tiện agent dùng lúc khảo sát để chốt sự thật** — không phải ngôn ngữ để giao việc cho tester.
+
+### 3. Nhóm ẩn — tách xuống `Ghi chú kỹ thuật`, gắn `@TechCheck`
+
+Có những yêu cầu **thật sự không có biểu hiện nhìn thấy được**: cookie `autologin`, mã chống CSRF, header `Strict-Transport-Security`, chuyển hướng HTTP→HTTPS, mã `500` thân rỗng. Bỏ đi là mất vết kiểm bảo mật. Cách xử lý:
+
+1. **Expected Result chính** vẫn viết bằng ngôn ngữ quan sát được — phát biểu **hệ quả nghiệp vụ** của cơ chế ẩn đó
+2. Phần cấp kỹ thuật tách xuống một dòng riêng mở đầu bằng **`🔧 Ghi chú kỹ thuật (cần DevTools):`**
+3. TC gắn tag **`@TechCheck`** để tester biết cần công cụ, và người lập bộ chạy biết TC này giao cho ai
+
+```markdown
+✅ Đúng:
+| Expected Result |
+| 3. Đăng nhập thành công, vào Dashboard<br>4. Đóng hẳn trình duyệt rồi mở lại `crm.anhtester.com/admin/` → **vẫn đang đăng nhập**, không phải nhập lại<br><br>🔧 Ghi chú kỹ thuật (cần DevTools): tồn tại cookie `autologin` khớp hình thái `a:2:{s:7:"user_id";...;s:3:"key";s:16:"<16 ký tự hex>";}`. 🔒 Chỉ ghi hình thái, KHÔNG chép giá trị thật |
+
+❌ Sai (bắt tester đọc cookie mà không nói để làm gì):
+| 6. Tồn tại cookie `autologin` khớp hình thái `a:2:{...}` — phần `key` dài đúng 16 ký tự hex |
+```
+
+> **Thước đo:** che dòng `🔧 Ghi chú kỹ thuật` đi, TC **vẫn phải chạy và chấm được**. Không chấm được nghĩa là chưa tìm ra hệ quả nghiệp vụ — quay lại tìm, đừng để phần kỹ thuật gánh cả TC.
+
+### 4. Test Steps cũng theo luật này
+
+Steps viết bằng **thao tác người dùng làm được**, không phải lệnh console.
+
+| ❌ | ✅ |
+|---|---|
+| `5. Đọc mã trạng thái và header location của POST /admin/authentication` | `5. Quan sát trang sau khi bấm Login` |
+| `1. Xác nhận $(".started-timers-top").find("li.timer").length > 0` | `1. Xác nhận trên thanh đầu trang đang hiện ít nhất 1 bộ đếm giờ chạy` |
+| `4. Đọc document.querySelector('#email').getAttribute('value')` | `4. Nhìn ô Email sau khi trang nạp lại`<br>+ `🔧 Ghi chú kỹ thuật`: xem HTML máy chủ trả về (View Source), thẻ `input#email` phải mang `value=...` |
+
+### 5. Ngoại lệ hợp lệ — được dùng ngôn ngữ kỹ thuật ở TC chính
+
+| Trường hợp | Vì sao |
+|---|---|
+| `Auto Type` = `API` | TC gốc đã ở tầng giao thức, người chạy là người gọi API |
+| Mode CHECKLIST mục dành riêng cho DevOps / security review | Người tick là kỹ sư, không phải tester nghiệp vụ |
+| Tên nguyên văn của **nhãn hiển thị** (`Invalid email or password`, nút `Login`, tiêu đề `Forgot Password`) | Đây là thứ tester **đọc trên màn hình**, không phải DOM — vẫn bắt buộc ghi nguyên văn |
+| URL đầy đủ (`https://crm.anhtester.com/admin/`) | Tester đọc được trên thanh địa chỉ |
+
+### 6. Selector CSS/XPath — KHÔNG thuộc về manual TC
+
+Selector là tài sản của tầng automation, sống trong Page Object. Nhét `.dropdown-menu > li.header-logout` vào manual TC gây hai hại: tester không dùng được, và khi UI đổi thì selector sai nằm rải trong tài liệu TC không ai đi sửa.
+
+- Thông tin selector thu được lúc recon → ghi vào **`docs/requirements/<module>/requirements_<module>.md`** (mục kỹ thuật), workflow automation đọc từ đó
+- Manual TC chỉ mô tả **vị trí nhìn thấy**: "mục `Logout` cuối cùng trong menu ảnh đại diện góc trên bên phải"
+
+### 7. Self-Quality Gate — tiêu chí bổ sung
+
+Trước khi xuất, agent rà lại **toàn bộ** cột `Test Steps` và `Expected Result`:
+
+- [ ] Không còn `document.`, `querySelector`, `checkValidity`, `offsetParent`, `className`, `getAttribute`, `$(`, `input#`, `[type=` ở phần TC chính
+- [ ] Không còn mã HTTP / tên header ở phần TC chính (trừ `Auto Type` = `API`)
+- [ ] Mọi phần kỹ thuật còn lại nằm dưới `🔧 Ghi chú kỹ thuật (cần DevTools):` và TC đó có tag `@TechCheck`
+- [ ] Che hết dòng `🔧 Ghi chú kỹ thuật` → mọi TC vẫn chạy và chấm được
+
+---
+
 ## Quy Tắc Xuất File & Theo Dõi Tiến Độ (BẮT BUỘC — áp dụng cả 4 modes)
 
 Bộ TC thường dài 70–100+ dòng bảng. In toàn bộ ra chat khiến user phải chờ render lâu và không thấy được tiến độ. Agent **BẮT BUỘC** tuân thủ quy tắc sau.
@@ -213,12 +296,14 @@ docs/testcases/
 
 | Điều kiện | Xử lý |
 |---|---|
-| ≤ 40 TC | 1 file `test_cases_<module>.md`, không cần `parts/` |
-| Vượt **40 TC** | Tách vào `parts/part_01_<slug>.md`, `part_02_...` — mỗi part ≤ 40 TC, **cắt tại ranh giới nhóm chức năng**, không cắt giữa nhóm |
+| ≤ 40 TC ở độ hạt TÁCH · ≤ 50 TC ở độ hạt GỘP | 1 file `test_cases_<module>.md`, không cần `parts/` |
+| Vượt ngưỡng trên | Tách vào `parts/part_01_<slug>.md`, `part_02_...` — mỗi part dưới ngưỡng, **cắt tại ranh giới nhóm chức năng**, không cắt giữa nhóm |
 | Nhiều module | Mỗi module một thư mục riêng, KHÔNG gộp chung |
 | Có ≥2 part | File `test_cases_<module>.md` trở thành **index** (xem mục 4), TC chi tiết nằm hết trong `parts/` |
 
-> 40 TC ≈ 25–30 KB — mở nhanh, review được trong 1 lượt.
+> Ngưỡng đếm theo **số TC**, không theo dung lượng — người review đọc lần lượt từng TC, nên số TC mới là thứ quyết định một lượt review có kham nổi không.
+>
+> Tham khảo dung lượng thực tế với kiểu TC của repo này (steps đánh số + expected khớp 1-1): **~1 KB / TC ở độ hạt TÁCH**, **~1,8 KB / TC ở độ hạt GỘP** (dày hơn vì có Bảng biến thể, nhưng bù lại chỉ còn một nửa số TC). Đừng dùng dung lượng làm ngưỡng tách — file 70 KB gồm 41 TC gộp vẫn dễ review hơn file 40 KB gồm 40 TC vụn.
 
 ### 3. Chạy theo batch — không dừng hỏi giữa chừng
 
@@ -226,10 +311,11 @@ docs/testcases/
 - Agent **chạy thẳng hết mọi batch trong 1 lượt**, KHÔNG dừng hỏi "có tiếp tục không" sau mỗi batch
 - Trước khi sinh, agent công bố kế hoạch batch để user biết tổng khối lượng:
   ```
-  Kế hoạch: 4 batch · ~76 TC · 2 file
-  1. Validation form (≈24 TC)   2. Data table & filter (≈18 TC)
-  3. CRUD & phân quyền (≈22 TC) 4. Non-functional (≈12 TC)
+  Kế hoạch: 4 batch · ~46 TC · 1 file · độ hạt GỘP (mặc định)
+  1. Validation form (≈14 TC)   2. Data table & filter (≈11 TC)
+  3. CRUD & phân quyền (≈13 TC) 4. Non-functional (≈8 TC)
   ```
+  Dòng kế hoạch **BẮT BUỘC** nêu độ hạt đang dùng — user đọc một dòng là biết sẽ nhận ~46 TC hay ~85 TC và chặn lại được ngay nếu không hợp ý.
 - Ngoại lệ được phép dừng: phát hiện requirement mâu thuẫn nghiêm trọng làm sai hàng loạt TC phía sau
 
 ### 4. File index (khi có ≥2 part)
@@ -274,6 +360,84 @@ Khi tổng TC dự kiến **>30** hoặc có **≥2 module**, agent **BẮT BU�
 
 ---
 
+## Độ Hạt Test Case — GỘP / TÁCH (BẮT BUỘC chốt TRƯỚC batch đầu tiên, áp dụng QUICK · FULL RBT · DELTA)
+
+Cùng một module, cùng một mức bao phủ, số TC có thể chênh nhau **gấp đôi** chỉ vì độ hạt. Một module đăng nhập viết ở độ hạt vụn ra 80+ TC, viết ở độ hạt gộp ra ~40 TC — **độ phủ REQ y hệt nhau**. Đây là **lựa chọn trình bày**, không phải lựa chọn chất lượng, và phải được chốt trước khi ghi dòng TC đầu tiên.
+
+> Mode CHECKLIST không có tuỳ chọn này — bản thân nó đã là dạng gộp tối đa.
+
+### Hai độ hạt
+
+| | **GỘP** (consolidated) — ⭐ mặc định | **TÁCH** (granular) |
+|---|---|---|
+| Nguyên tắc | Các biến thể cùng nhóm nằm chung 1 TC, liệt kê trong **Bảng biến thể** | 1 biến thể = 1 TC |
+| Số TC điển hình (module cỡ login) | 35–45 | 75–90 |
+| Đọc & review | Nhanh — nhìn 1 TC thấy cả nhóm rủi ro | Chậm — phải lướt hàng chục dòng gần giống nhau |
+| Chạy tay | Nhanh — mở form 1 lần, chạy hết biến thể | Chậm — lặp lại setup cho từng TC |
+| Báo cáo khi FAIL | Phải ghi rõ **biến thể nào** fail | Tự động chỉ đúng TC fail |
+| Sang automation | Map thành **test data-driven** (`@DataProvider` · `test.each` · `parametrize`) | Map thành **1 test method / TC** |
+| Đếm pass-rate | Thô hơn — 1 biến thể đỏ là cả TC đỏ | Chi tiết từng biến thể |
+
+**Chọn TÁCH khi có ít nhất một trong các điều kiện sau** — ngoài ra luôn dùng GỘP:
+
+- Khách hàng / quy trình yêu cầu **mỗi TC là một dòng** trong Jira, TestRail, Xray (tính công theo số TC, hoặc gán người thực hiện theo từng TC)
+- Cần **pass-rate theo từng biến thể** để báo cáo chất lượng
+- Module thuộc diện **kiểm định / audit** cần vết thực thi rời cho từng case
+- User yêu cầu rõ
+
+### Hai kiểu gộp được phép
+
+**Kiểu A — Gộp biến thể dữ liệu** (dùng cho validation, đây là kiểu chiếm phần lớn số TC cắt được):
+
+Điều kiện: các case **cùng chuỗi thao tác** và **cùng loại phản hồi**, chỉ khác **giá trị đầu vào** (và có thể khác precondition, miễn ghi rõ trong bảng).
+
+```markdown
+| TC ID | ... | Test Steps | Bảng biến thể | Priority | ... |
+| CRM_LOGIN_TC_012 | ... | 1. Mở /admin/authentication<br>2. Nhập Email theo biến thể<br>3. Nhập Password `Abc12345`<br>4. Bấm `Login`<br>5. Quan sát ô Email và trạng thái trang | **Mọi biến thể cho cùng kết quả:** trình duyệt hiện cảnh báo ngay cạnh ô Email · trang **không** nạp lại, vẫn ở trang đăng nhập · dữ liệu đã nhập ở cả hai ô còn nguyên<br><br>`a` Thiếu `@` → `abc`<br>`b` Thiếu tên miền → `abc@`<br>`c` Thiếu phần trước `@` → `@example.com`<br>`d` Nhiều `@` → `a@b@example.com`<br>`e` Chuỗi tiêm SQL → `admin@example.com' OR '1'='1` | High | ... |
+```
+
+**Kiểu B — Gộp kiểm tra tĩnh cùng màn hình** (dùng cho TC cấu trúc / hiển thị):
+
+Điều kiện: cùng precondition, **mọi mục đều là quan sát không làm thay đổi trạng thái** (nhìn màn hình). Mỗi mục là một dòng trong **Bảng kiểm**, có đánh số và ghi REQ tương ứng.
+
+```markdown
+| CRM_LOGIN_TC_002 | REQ-LOGIN-02, REQ-LOGIN-03 | ... | 1. Mở /admin/authentication, KHÔNG nhập gì<br>2. Đối chiếu từng mục trong Bảng kiểm | **Bảng kiểm — mọi mục phải đạt:**<br>`1` (REQ-02) Thấy đủ ô `Email Address`, ô `Password`, ô tích `Remember me`, nút `Login`, liên kết `Forgot Password?`<br>`2` (REQ-02) Gõ vào ô Password thì hiện dấu chấm che, không hiện chữ<br>`3` (REQ-03) Con trỏ nhấp nháy sẵn trong ô Email — gõ được ngay, không cần bấm chuột | ... |
+```
+
+> Kiểu B **KHÔNG** áp dụng cho hành vi (bấm, gửi, điều hướng) — chỉ cho quan sát tĩnh. Một mục làm đổi trạng thái là phải tách thành TC riêng.
+
+### CẤM gộp — bất kể độ hạt nào đang dùng
+
+| Trường hợp | Vì sao |
+|---|---|
+| **Khác trường nhập liệu** (Email với Password, Ngày với Số tiền) | FAIL không chỉ ra được trường nào hỏng — mất luôn giá trị chẩn đoán. *Ngoại lệ duy nhất:* TC mục đích là **độ bền** (hệ thống không sập với dữ liệu bất thường), không phải validate trường — khi đó dấu hiệu FAIL là HTTP 500 và bảng biến thể chỉ ngay ra input gây lỗi |
+| **Khác LOẠI phản hồi** (một biến thể bị trình duyệt chặn, một biến thể tới máy chủ rồi báo lỗi; một cái lỗi, một cái thành công) | Hai cơ chế khác nhau, gộp lại thì expected result không còn phát biểu được thành một câu |
+| Gộp TC `@Smoke` / `Critical` với TC thuộc **nhóm hành vi khác** | Bộ smoke cần vết thực thi rời cho từng luồng sống còn — đây là thứ chạy đầu tiên khi có sự cố. *Được phép:* gộp các **biến thể của cùng một hành vi** (VD cùng phép chặn URL, khác URL) — khi đó bảng biến thể phải ghi rõ biến thể nào thuộc bộ smoke |
+| **TC được thiết kế để FAIL** (bám REQ ghi kỳ vọng đúng trong khi hệ thống đang lỗi) | Mỗi TC loại này gắn với **một** bug riêng; gộp là mất ánh xạ TC ↔ bug |
+| **Khác REQ ID mà mỗi REQ chỉ có đúng TC đó** | Gộp xong REQ vẫn "có TC" nhưng không còn TC nào **chỉ** kiểm nó → Bảng Đối Soát Coverage mất ý nghĩa. Được gộp khi REQ liên quan còn TC khác chống lưng, và Bảng kiểm ghi rõ REQ ở từng dòng |
+| **Khác nhóm chức năng / khác màn hình** | Gộp xuyên nhóm làm hỏng ranh giới tách `parts/` và ranh giới giao việc |
+
+### Ràng buộc bắt buộc khi dùng GỘP
+
+- **Mỗi biến thể có mã riêng** (`a`, `b`, `c`…) — báo cáo FAIL phải ghi được `CRM_LOGIN_TC_012-c`, nếu không thì gộp là mất truy vết
+- **Cột `REQ ID` liệt kê đủ mọi REQ** mà TC chạm tới, phân cách `,`
+- **Trần 6 biến thể / TC.** Vượt thì tách theo nhóm rủi ro — 12 dòng biến thể trong một ô bảng là không ai đọc nổi
+- **Bảng Đối Soát Coverage vẫn tính theo REQ**, không tính theo TC — mọi REQ trong phạm vi vẫn phải có ≥1 TC
+- Số TC giảm **không được** kéo theo giảm số **case** kiểm. Gộp là đổi cách trình bày; biến thể bị bỏ đi là **giảm độ phủ** — vi phạm Quality Gate
+
+### Đổi độ hạt của bộ TC đã có
+
+Đổi độ hạt là **đánh lại toàn bộ TC ID**. Vì vậy:
+
+| Tình huống | Cách làm |
+|---|---|
+| Bộ TC vừa sinh, **chưa** có automation / execution report / RTM nào trỏ vào | Sinh lại ở độ hạt mới, TC ID đánh lại từ `001`, bản cũ chuyển vào `archive/`. Ghi lý do vào Nhật ký thay đổi |
+| Đã có script `allure.label('testId', ...)`, execution report hoặc RTM trỏ vào | 🚫 **KHÔNG đổi độ hạt.** Đổi là cắt cả ba mối nối cùng lúc và không có cách phát hiện tự động. Muốn gọn hơn thì sinh **checklist** (Mode CHECKLIST) để chạy tay, giữ nguyên bộ TC làm nguồn cho automation |
+
+> 📌 Vì vậy **chốt độ hạt ở lượt sinh đầu tiên** là rẻ nhất. Agent phải nêu rõ độ hạt đang dùng ngay ở dòng kế hoạch batch đầu ra chat.
+
+---
+
 # Mode 1: QUICK — Sinh Test Cases Nhanh
 
 ## Mục đích
@@ -304,7 +468,8 @@ Sinh test cases **nhanh, đủ chất lượng** từ requirements/user stories 
 6. **Validation chuyên biệt từng trường (Field-Level Validation):**
    - Liệt kê **tất cả input fields** trên form/UI
    - Sinh validation test cases **riêng cho TỪNG trường** dựa theo Bảng Checklist 15 loại field
-   - **KHÔNG** gộp validation của nhiều trường vào 1 test case
+   - **KHÔNG** gộp validation của **các trường khác nhau** vào 1 test case (xem CẤM gộp ở mục Độ Hạt)
+   - Ở độ hạt **GỘP** (mặc định): các biến thể **cùng một trường** cho cùng loại phản hồi thì nằm chung 1 TC dưới dạng Bảng biến thể (Kiểu A). Ở độ hạt **TÁCH**: mỗi biến thể một TC
 7. **Bao phủ Component-Level Checklist:** Data Table/List, CRUD Lifecycle, Permission/Role, Modal/Dialog, Notification (xem bảng riêng bên dưới)
 8. **Bao phủ các Scenarios Chuyên sâu & Non-Functional:**
    - Race Condition & Double Submit
@@ -313,7 +478,7 @@ Sinh test cases **nhanh, đủ chất lượng** từ requirements/user stories 
    - Keyboard Accessibility (A11y)
    - HTTP Status Codes (cho API TCs)
 9. **Xuất ra bảng Markdown** chuẩn có đầy đủ metadata cho Automation, sẵn sàng sync vào Google Sheets hoặc Jira/TestRail.
-10. **Chạy Self-Quality Gate (7 Tiêu chí):** Rà soát lại 100% test cases + đối soát coverage + đối soát evidence trước khi xuất kết quả.
+10. **Chạy Self-Quality Gate (8 Tiêu chí):** Rà soát lại 100% test cases + đối soát coverage + đối soát evidence + **rà ngôn ngữ kiểm chứng** (tiêu chí 8) trước khi xuất kết quả.
 
 ## Bảng Output Standard (chuẩn hóa đầy đủ Metadata)
 
@@ -326,6 +491,8 @@ Sinh test cases **nhanh, đủ chất lượng** từ requirements/user stories 
 > - **Automatable:** `Yes` / `No` / `Partial` (Độ khả thi để viết script tự động)
 > - **Auto Type:** `UI` / `API` / `Unit` / `N/A` (Loại automation phù hợp)
 > - **Tags:** `@Smoke`, `@Regression`, `@CriticalPath`, `@Security`, `@Boundary`
+>
+> **Ở độ hạt GỘP:** cột `Test Data` (Kiểu A) hoặc `Expected Result` (Kiểu B) chứa **Bảng biến thể / Bảng kiểm** — mỗi dòng một mã (`a`, `b`, `c`…), phân cách bằng `<br>`. Số cột của bảng **không đổi**, chỉ nội dung ô dày hơn. Xem mẫu ở mục Độ Hạt Test Case.
 
 ## Quy Tắc Trình Bày Test Steps (BẮT BUỘC — áp dụng QUICK, FULL RBT & DELTA)
 
@@ -455,7 +622,8 @@ Agent phải tích hợp thêm các tình huống kiểm thử nâng cao khi ph�
 
 ## 🛡️ AI Self-Quality Gate (Quy trình Tự Kiểm Định Chất Lượng)
 
-Trước khi xuất kết quả cuối cùng cho user, Agent **BẮT BUỘC** tự rà soát qua 7 tiêu chí:
+Trước khi xuất kết quả cuối cùng cho user, Agent **BẮT BUỘC** tự rà soát qua 8 tiêu chí:
+- [ ] **0. Độ hạt nhất quán:** Đã chốt GỘP hay TÁCH **trước** batch đầu và nêu ra chat. Toàn bộ bộ TC theo **một** độ hạt, không nửa gộp nửa tách. Nếu GỘP: mọi biến thể có mã riêng (`a`, `b`…), không TC nào quá 6 biến thể, không TC nào vi phạm bảng CẤM gộp.
 - [ ] **1. Unique TC ID:** Đảm bảo không trùng mã TC ID và đúng quy tắc dự án (`PROJECT_MODULE_TC_001`).
 - [ ] **2. 1-to-1 Step-Expected Matching:** Các bước `Test Steps` đánh số rõ ràng (1,2,3 — mỗi bước 1 hành động) và khớp 1-1 với `Expected Result` đánh số tương ứng.
 - [ ] **3. Concrete Test Data:** 100% test data chứa giá trị cụ thể, không còn từ ngữ mơ hồ ("hợp lệ", "dữ liệu đúng").
@@ -481,6 +649,8 @@ Trước khi xuất kết quả cuối cùng cho user, Agent **BẮT BUỘC** t�
 | (không có) | Form tạo — dropdown Customer đang mở | TC_060→063 | 🔴 THIẾU — TC gắn @NeedsVerify |
 ```
 > Có dòng 🔴 → **vẫn xuất được** bộ TC, nhưng phải nêu rõ ở tóm tắt cuối và đề xuất recon bổ sung. KHÔNG được im lặng bỏ qua.
+
+- [ ] **8. Ngôn ngữ kiểm chứng (theo [Quy Tắc Ngôn Ngữ Kiểm Chứng](#quy-tắc-ngôn-ngữ-kiểm-chứng-bắt-buộc--áp-dụng-cả-4-modes)):** grep toàn file, phần TC chính **không còn** `document.`, `querySelector`, `checkValidity`, `offsetParent`, `className`, `getAttribute`, `$(`, `input#`, `[type=`, mã HTTP, tên header, selector CSS/XPath (trừ TC có `Auto Type` = `API`). Mọi nội dung cấp kỹ thuật còn lại nằm dưới `🔧 Ghi chú kỹ thuật (cần DevTools):` và TC đó mang tag `@TechCheck`. **Phép thử cuối:** che hết dòng `🔧 Ghi chú kỹ thuật` → mọi TC vẫn chạy và chấm PASS/FAIL được.
 
 ---
 
@@ -601,7 +771,7 @@ Quy trình bài bản, tuần tự cho module phức tạp. Bao gồm phân tíc
 5. **Validation chuyên biệt từng trường (Field-Level Validation):**
    - Liệt kê **tất cả input fields** trên form/UI đang test
    - Sinh validation TCs **riêng cho TỪNG trường** theo đặc tính riêng (15 loại input field types)
-   - **KHÔNG** gộp validation nhiều trường vào 1 TC
+   - **KHÔNG** gộp validation của **các trường khác nhau** vào 1 TC — biến thể **cùng một trường** thì gộp theo độ hạt đã chốt (xem mục Độ Hạt Test Case)
 6. **Bao phủ Component-Level Checklist:** Data Table/List, CRUD Lifecycle, Permission/Role (đối chiếu Ma trận Phân quyền), Modal/Dialog, Notification, Status Flow (đối chiếu Ma trận Trạng thái)
 7. **Tích hợp Scenarios Chuyên Sâu & Non-Functional:** Race Condition/Double Submit, Session/Network Resilience, Localization/UTF-8/Emoji, Keyboard Accessibility (A11y), HTTP Status Codes.
 8. Nếu scenarios quá nhiều → sinh từng Module một, hỏi user để tiếp tục
@@ -627,7 +797,7 @@ Quy trình bài bản, tuần tự cho module phức tạp. Bao gồm phân tíc
    - Test Steps đánh số `1. 2. 3.` (mỗi bước 1 hành động), Expected Result đánh số khớp 1-1, dùng `<br>` xuống dòng trong cell
    - Gắn đầy đủ metadata `Automatable` (`Yes`/`No`/`Partial`), `Auto Type` (`UI`/`API`/`Unit`/`N/A`), và `@Tags` (`@Smoke`, `@Regression`, `@CriticalPath`...)
    - **TUYỆT ĐỐI không được bỏ sót** bất kỳ test case nào đã sinh ở Bước 5
-3. **Chạy Self-Quality Gate (7 Tiêu chí):** Kiểm định lại — bao gồm **Bảng Đối Soát Coverage** (tiêu chí 6: mọi REQ có ≥1 TC) và **Bảng Đối Soát Evidence** (tiêu chí 7) — trước khi xuất Artifact (`test_cases_<module>.md`).
+3. **Chạy Self-Quality Gate (8 Tiêu chí):** Kiểm định lại — bao gồm **Bảng Đối Soát Coverage** (tiêu chí 6: mọi REQ có ≥1 TC), **Bảng Đối Soát Evidence** (tiêu chí 7) và **rà ngôn ngữ kiểm chứng** (tiêu chí 8) — trước khi xuất Artifact (`test_cases_<module>.md`).
 
 **Output:** Bảng Test Cases Markdown hoàn chỉnh kèm Metadata Automation.
 
@@ -800,8 +970,15 @@ Vì vậy Mode DELTA đặt việc **bảo toàn TC ID** lên trên mọi mục 
 - ❌ Sinh tất cả test cases 1 lần cho hệ thống lớn (phải chia module)
 - ❌ Chỉ có Happy Path, thiếu Negative/Boundary cases (QUICK)
 - ❌ Test Steps mơ hồ, không ghi rõ dữ liệu nhập
-- ❌ Gộp validation nhiều trường vào 1 test case → mỗi trường phải có TC validation riêng
+- ❌ Gộp validation của **các trường khác nhau** vào 1 test case → FAIL không chỉ ra được trường nào hỏng
 - ❌ Dùng chung 1 bộ validation cho tất cả fields (Email ≠ Phone ≠ Date ≠ Text)
+- ❌ **Ghi dòng TC đầu tiên khi chưa chốt độ hạt GỘP/TÁCH** và chưa nêu ra chat
+- ❌ Gộp mà **cắt bớt biến thể** — gộp là đổi cách trình bày, bỏ case là giảm độ phủ
+- ❌ Gộp mà biến thể **không có mã riêng** (`a`, `b`, `c`…) → báo cáo FAIL không truy được về case nào
+- ❌ Gộp TC `@Smoke` / `Critical`, hoặc gộp TC được thiết kế để FAIL (mỗi cái gắn 1 bug riêng)
+- ❌ Gộp các biến thể **khác loại phản hồi** (trình duyệt chặn với máy chủ báo lỗi; lỗi với thành công)
+- ❌ Nhồi **quá 6 biến thể** vào một TC → ô bảng không ai đọc nổi, phải tách theo nhóm rủi ro
+- ❌ **Đổi độ hạt của bộ TC đã có script / execution report / RTM trỏ vào** — cắt cả ba mối nối cùng lúc. Cần gọn thì sinh checklist, giữ nguyên bộ TC
 - ❌ Bỏ qua security validation (XSS, SQL injection) cho text/textarea fields
 - ❌ Không liệt kê danh sách fields trước khi sinh validation TCs
 - ❌ Xuất TC không có cột `REQ ID` hoặc có REQ 0 TC mà không bổ sung (vi phạm tiêu chí 6 Quality Gate)

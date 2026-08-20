@@ -43,7 +43,7 @@ Glob theo bảng Input của skill, **ghi lại đường dẫn từng file** đ
 
 1. `docs/executions/*/run_*/execution_report.md` — kết quả manual từng module
 2. `docs/executions/*/retest_*/retest_report.md` — bug đã verify + regression phát sinh
-3. `bug_reports/BUG_*.md` — đọc `Severity`, `Lịch sử retest` để biết bug nào còn mở
+3. `docs/bugs/README.md` (danh mục) rồi `docs/bugs/<module>/BUG_*.md` — đọc `Severity`, `Lịch sử retest` để biết bug nào còn mở
 4. `docs/requirements/README.md` — **bắt buộc**, lấy module còn ⬜/🟨/⏸️
 5. `traceability_matrix.md` — nếu có
 6. `reports/` — kết quả automation, nếu có
@@ -53,7 +53,7 @@ Glob theo bảng Input của skill, **ghi lại đường dẫn từng file** đ
 | Tình huống | Xử lý |
 |---|---|
 | Module trong phạm vi nhưng **không có execution report** | Ghi vào mục 2 "chưa được kiểm thử" — **KHÔNG** bỏ qua im lặng |
-| Không có `bug_reports/` (đội dùng Jira) | Lấy qua `skills-jira-integration`. Không lấy được → ghi rõ "không đối chiếu được tình hình bug", và **hạ mức tin cậy của khuyến nghị** |
+| Không có `docs/bugs/` (đội dùng Jira) | Lấy qua `skills-jira-integration`. Không lấy được → ghi rõ "không đối chiếu được tình hình bug", và **hạ mức tin cậy của khuyến nghị** |
 | Không có `docs/requirements/README.md` | ⚠️ Không xác định được vùng mù → ghi rõ: *"chưa khảo sát cấp hệ thống, không kết luận được đã phủ hết hệ thống hay chưa"* |
 | Nhiều run cùng một module | Lấy **run mới nhất** làm số chính; nêu trend ở phần ghi chú nếu có khác biệt đáng kể |
 

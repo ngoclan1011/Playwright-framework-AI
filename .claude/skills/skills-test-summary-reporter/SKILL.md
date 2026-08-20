@@ -71,12 +71,12 @@ Mỗi tiêu chí chấm **Đạt / Không đạt / Không áp dụng**, kèm s�
 |---|---|---|
 | `docs/executions/*/run_*/execution_report.md` | PASS/FAIL/BLOCKED/SKIPPED từng module | ✅ |
 | `docs/executions/*/retest_*/retest_report.md` | Bug đã verify fix · regression phát sinh | Nếu có |
-| `bug_reports/BUG_*.md` | Bug đang mở theo Severity · Lịch sử retest | ✅ |
+| `docs/bugs/README.md` + `docs/bugs/<module>/BUG_*.md` | Bug đang mở theo Severity · Lịch sử retest | ✅ |
 | `docs/requirements/README.md` | **Module chưa recon** — vùng mù, mục 1 của báo cáo | ✅ |
 | `traceability_matrix.md` | Độ phủ REQ ↔ TC ↔ Automation | Nếu có |
 | Report automation trong `reports/` | Kết quả suite tự động | Nếu có |
 
-> Thiếu `bug_reports/` (đội dùng Jira) → lấy qua `skills-jira-integration`, đừng bỏ trống mục bug.
+> Thiếu `docs/bugs/` (đội dùng Jira) → lấy qua `skills-jira-integration`, đừng bỏ trống mục bug.
 
 ---
 

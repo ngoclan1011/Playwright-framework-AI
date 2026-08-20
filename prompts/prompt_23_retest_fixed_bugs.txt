@@ -8,8 +8,8 @@
 
 # BUG CẦN RETEST (chọn 1 cách)
 [Xoá dòng không dùng:]
-- File bug report: [VD: bug_reports/BUG_CUST_1785612000.md]
-- Nhiều bug: [VD: bug_reports/BUG_CUST_1785612000.md, bug_reports/BUG_CUST_1785620000.md]
+- File bug report: [VD: docs/bugs/customers/BUG_CUST_1785612000.md]
+- Nhiều bug: [VD: docs/bugs/customers/BUG_CUST_1785612000.md, docs/bugs/customers/BUG_CUST_1785620000.md]
 - Jira key: [VD: CRM-482]
 
 # MODE (bắt buộc chọn 1)

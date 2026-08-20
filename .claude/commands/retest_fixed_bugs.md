@@ -33,7 +33,7 @@ Workflow này đóng **vòng lặp cuối** của quy trình kiểm thử: dev b
 
 | Cần có | Nguồn | Bắt buộc |
 |---|---|---|
-| Bug cần retest | File `bug_reports/BUG_*.md`, hoặc Jira key qua `/fetch_jira_requirements` | ✅ |
+| Bug cần retest | File `docs/bugs/<module>/BUG_*.md`, hoặc Jira key qua `/fetch_jira_requirements` | ✅ |
 | **Build / version mới** | User cung cấp | ✅ |
 | Môi trường + tài khoản | `.env` hoặc user | ✅ |
 | Môi trường dùng chung? | User — bật quy tắc auto-skip của skill executor | ✅ |
@@ -191,7 +191,7 @@ Evidence: `docs/executions/<module>/retest_<timestamp>/evidence/`
 
 ## Bước 5: Cập nhật bug report gốc
 
-Thêm mục **Lịch sử retest** vào cuối file `bug_reports/BUG_*.md` (template ở `skills-bug-reporter`). **Thêm dòng mới lên đầu bảng**, không sửa nội dung cũ:
+Thêm mục **Lịch sử retest** vào cuối file `docs/bugs/<module>/BUG_*.md` (template ở `skills-bug-reporter`). **Thêm dòng mới lên đầu bảng**, không sửa nội dung cũ:
 
 ```markdown
 ## Lịch sử retest
