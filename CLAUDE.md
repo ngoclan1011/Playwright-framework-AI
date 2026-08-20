@@ -264,7 +264,7 @@ docs/
 │
 └── bugs/                                       ← bug sinh từ TC FAIL
     ├── README.md                               ← DANH MỤC bug
-    └── <module>/BUG_<module>_<timestamp>.md    ← mỗi bug 1 file
+    └── <module>/BUG_<module>_<timestamp>_<TC_ID>.md  ← mỗi bug 1 file, hậu tố TC_ID để nhìn tên biết ngay thuộc TC nào
 ```
 
 > `test_summary_*.md` nằm ở **gốc `executions/`**, không thuộc module nào — nó gộp mọi module tại một mốc release.
@@ -273,12 +273,13 @@ docs/
 
 ### Xem kết quả bằng web viewer
 
-Hai trang tĩnh trong `scripts/`, mở bằng cách double-click, chạy offline, không cần cài gì:
+Ba trang tĩnh trong `scripts/`, mở bằng cách double-click, chạy offline, không cần cài gì:
 
 | Trang | Nạp file gì | Dùng khi |
 |---|---|---|
 | `scripts/testcases-viewer/bundle.html` | `test_cases_*.md` · `checklist_*.md` | Duyệt, lọc, xuất Excel test case |
 | `scripts/execution-viewer/bundle.html` | `execution_report.md` · `retest_report.md` · `traceability_matrix.md` | Xem kết quả chạy, so sánh giữa các lần chạy, xem độ phủ automation, xuất CSV/Excel |
+| `scripts/bugs-viewer/bundle.html` | `docs/bugs/README.md` (danh mục) · `docs/bugs/<module>/BUG_*.md` | Lọc bug theo Severity/Priority/Trạng thái, xem Lịch sử retest, xuất CSV/Excel |
 
 ### Quy tắc bất biến
 

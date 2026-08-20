@@ -37,7 +37,7 @@ Sử dụng skill này khi:
 # [BUG] <Tóm tắt ngắn gọn — module + hành vi sai>
 
 ## Thông tin chung
-- **ID:** BUG_<module>_<timestamp>
+- **ID:** BUG_<module>_<timestamp>_<TC_ID> — VD `BUG_login_1787226513_TC004`. `timestamp` = epoch giây lúc sinh (chống trùng mã), `TC_ID` = mã TC ngắn không dấu gạch dưới thừa (VD `TC004`, không phải `CRM_LOGIN_TC_004`) để nhìn tên file biết ngay thuộc TC nào. Liên quan nhiều TC thì lấy TC đầu tiên/quan trọng nhất làm hậu tố, TC còn lại ghi ở dòng "Test case liên quan" bên dưới và ở danh mục
 - **Severity:** 🔴 Critical / 🟠 Major / 🟡 Minor / 🟢 Trivial
 - **Priority:** P1 / P2 / P3
 - **Môi trường:** <env> | <browser + version> | <OS> | <resolution>
@@ -45,6 +45,7 @@ Sử dụng skill này khi:
 - **Test case liên quan:** <TC ID hoặc test file path>
 - **REQ ID liên quan:** <mã REQ — dùng để chọn phạm vi regression khi retest>
 - **Test data đã dùng:** <email/username/id — traceable>
+- **Ngày phát hiện:** <YYYY-MM-DD>
 
 ## Steps to Reproduce
 1. ...
@@ -58,14 +59,14 @@ Sử dụng skill này khi:
 <Hành vi thực tế quan sát được>
 
 ## Evidence
-- Screenshot: <path/link>
+- Screenshot: [<tên file>.png](<path/link>) — BẮT BUỘC viết đúng cú pháp link Markdown `[]()` nếu ảnh còn xem được; `bugs-viewer` chỉ nhận diện ảnh viết theo cú pháp này làm evidence bấm-xem-được. Ảnh cũ đã mất (không còn truy cập) thì ghi tên file bằng code span `` `tên_file.png` `` (KHÔNG bọc trong `[]()`) để không hiện nhầm thành ảnh "chưa nạp, kéo vào là được"
 - Error log / Stack trace: (code block)
 - Console / Network log: (nếu liên quan)
 
 ## Ghi chú thêm
-- Tần suất tái hiện: Luôn luôn / Thỉnh thoảng (x/y lần)
-- Workaround (nếu có):
-- Nghi ngờ root cause (nếu phân tích được):
+- **Tần suất tái hiện:** Luôn luôn / Thỉnh thoảng (x/y lần)
+- **Workaround (nếu có):** ...
+- **Nghi ngờ root cause (nếu phân tích được):** ...
 
 ## Lịch sử retest
 <!-- Do /retest_fixed_bugs ghi. Dòng mới thêm LÊN ĐẦU bảng. Bảng rỗng = chưa retest lần nào -->
@@ -115,7 +116,7 @@ Chi tiết quy trình: workflow `/retest_fixed_bugs`.
 3. **Isolate** — Rút gọn steps to reproduce về mức tối thiểu
 4. **Classify** — Gán Severity/Priority theo bảng chuẩn
 5. **Write** — Điền template, đính kèm evidence
-6. **Deliver** — Lưu file `docs/bugs/<module>/BUG_<module>_<timestamp>.md` và cập nhật danh mục `docs/bugs/README.md`; nếu user yêu cầu → đẩy lên Jira qua `skills-jira-integration`
+6. **Deliver** — Lưu file `docs/bugs/<module>/BUG_<module>_<timestamp>_<TC_ID>.md` và cập nhật danh mục `docs/bugs/README.md`; nếu user yêu cầu → đẩy lên Jira qua `skills-jira-integration`
 
 ---
 

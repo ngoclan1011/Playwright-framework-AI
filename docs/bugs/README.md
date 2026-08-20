@@ -7,8 +7,8 @@
 | Mục | Giá trị |
 |---|---|
 | Hệ thống | Perfex CRM — Anh Tester Demo (`https://crm.anhtester.com`) |
-| Quy ước mã bug | `BUG_<module>_<timestamp>` — `timestamp` là epoch giây lúc sinh, đảm bảo không trùng |
-| Đường dẫn file | `docs/bugs/<module>/BUG_<module>_<timestamp>.md` |
+| Quy ước mã bug | `BUG_<module>_<timestamp>_<TC_ID>` — `timestamp` epoch giây lúc sinh (đảm bảo không trùng), `TC_ID` là mã TC ngắn (VD `TC004`) để nhìn tên là biết ngay thuộc TC nào, không phải mở file/tra bảng |
+| Đường dẫn file | `docs/bugs/<module>/BUG_<module>_<timestamp>_<TC_ID>.md` |
 | Ngày cập nhật | 2026-08-20 |
 
 ---
@@ -17,19 +17,14 @@
 
 | Mã bug | Module | Tiêu đề ngắn | Severity | Priority | Trạng thái | TC liên quan | Ngày phát hiện |
 |---|---|---|---|---|---|---|---|
-| [BUG_login_1785678750](login/BUG_login_1785678750.md) | `LOGIN` | Trang đăng nhập phục vụ được qua HTTP thuần, không ép chuyển sang HTTPS, không có HSTS | 🔴 Critical | P1 | ⚠️ **Cần rà lại** | `CRM_LOGIN_TC_039` *(xem ghi chú)* | 2026-08-02 |
+| [BUG_login_1785678750_TC039](login/BUG_login_1785678750_TC039.md) | `LOGIN` | Trang đăng nhập phục vụ được qua HTTP thuần, không ép chuyển sang HTTPS, không có HSTS | 🔴 Critical | P1 | 🔴 **Đang mở** | `CRM_LOGIN_TC_039` | 2026-08-02 |
+| [BUG_login_1787226513_TC004](login/BUG_login_1787226513_TC004.md) | `LOGIN` | Bấm logo không dẫn về trang chủ công khai (root URL luôn redirect sang cổng đăng nhập khách hàng) | 🟡 Minor | P3 | 🔴 **Đang mở** | `CRM_LOGIN_TC_004` | 2026-08-20 |
+| [BUG_login_1787226514_TC016](login/BUG_login_1787226514_TC016.md) | `LOGIN` | Ô Email không giữ lại giá trị sau khi đăng nhập thất bại | 🟡 Minor | P2 | 🔴 **Đang mở** | `CRM_LOGIN_TC_016` | 2026-08-20 |
+| [BUG_login_1787226515_TC018](login/BUG_login_1787226515_TC018.md) | `LOGIN` | Email quá dài (260 ký tự) trả thông báo lỗi khác thông báo chuẩn `Invalid email or password` | 🟢 Trivial | P3 | 🔴 **Đang mở** | `CRM_LOGIN_TC_018-a` | 2026-08-20 |
+| [BUG_login_1787226516_TC028](login/BUG_login_1787226516_TC028.md) | `LOGIN` | Bỏ trống email ở Quên mật khẩu báo sai bản chất lỗi (`Email not found` thay vì trường bắt buộc) | 🟡 Minor | P2 | 🔴 **Đang mở** | `CRM_LOGIN_TC_028` | 2026-08-20 |
+| [BUG_login_1787226517_TC029](login/BUG_login_1787226517_TC029.md) | `LOGIN` | Ô Email ở Quên mật khẩu không tự reset sau khi submit email không tồn tại | 🟢 Trivial | P3 | 🔴 **Đang mở** | `CRM_LOGIN_TC_029` | 2026-08-20 |
 
-### ⚠️ Bug cần rà lại trước khi dùng
-
-`BUG_login_1785678750` là **di sản của đợt kiểm thử trước**, cần xử lý trước khi coi là nguồn tin cậy:
-
-| Vấn đề | Chi tiết |
-|---|---|
-| Tham chiếu TC đã lệch nghĩa | File ghi `CRM_LOGIN_TC_004`, nhưng ở bộ TC hiện tại mã đó là *"Logo dẫn về trang chủ"*. Nội dung bug thực chất khớp với **`CRM_LOGIN_TC_039`** |
-| Tham chiếu REQ đã lệch nghĩa | File ghi `REQ-LOGIN-24 — Truyền tải an toàn HTTPS`, nhưng ở tài liệu hiện tại `REQ-LOGIN-24` là *"Trang Quên mật khẩu không có lối quay lại đăng nhập"*. Nội dung khớp với **`REQ-LOGIN-01`** |
-| Evidence đã mất | Link trỏ tới `docs/executions/login/run_1785678326/` — thư mục này **không còn tồn tại** (bị xoá khi dọn dự án cũ) |
-
-**Cần làm:** đo lại hành vi HTTP→HTTPS trên hệ thống hiện tại (chạy `CRM_LOGIN_TC_039`), rồi hoặc cập nhật tham chiếu + chụp lại evidence, hoặc đóng bug cũ và mở bug mới bằng `/create_bug_report`.
+> `BUG_login_1785678750_TC039` đã được **rà lại và sửa xong** ngày 2026-08-20: tham chiếu TC ID/REQ ID lệch nghĩa đã sửa đúng (`CRM_LOGIN_TC_039` / `REQ-LOGIN-01`), evidence gốc đã mất được bổ sung evidence xác nhận lại từ `run_1787215085`, và đã ghi 1 dòng Lịch sử retest (`❌ NOT_FIXED` — lỗi vẫn còn). Xem chi tiết trong file bug.
 
 ---
 
@@ -37,19 +32,10 @@
 
 | Trạng thái | Số lượng | Ý nghĩa |
 |---|---|---|
-| 🔴 Đang mở | 0 | Đã xác nhận, chưa fix |
+| 🔴 Đang mở | 6 | Đã xác nhận, chưa fix |
 | 🟡 Đã fix, chờ retest | 0 | Dev báo fix xong → chạy `/retest_fixed_bugs` |
 | 🟢 Đã đóng | 0 | Retest FIXED |
-| ⚠️ Cần rà lại | 1 | Tham chiếu lệch hoặc evidence mất — chưa dùng được |
-
-### Bug dự kiến sẽ mở (TC thiết kế để FAIL, chưa chạy)
-
-| TC | REQ | Nội dung | Ambiguity |
-|---|---|---|---|
-| `CRM_LOGIN_TC_016` | REQ-LOGIN-16 | Máy chủ không trả lại email đã nhập sau khi đăng nhập lỗi | `AMB-10` ✅ PO xác nhận là lỗi |
-| `CRM_LOGIN_TC_028` | REQ-LOGIN-25 | Bỏ trống email ở Quên mật khẩu trả `Email not found` thay vì báo trường bắt buộc | `AMB-05` ✅ PO xác nhận là lỗi |
-
-> Hai TC này **chắc chắn FAIL** khi chạy — đó là kết quả đúng. Chạy xong thì mở bug bằng `/create_bug_report` và bổ sung vào danh mục trên.
+| ⚠️ Cần rà lại | 0 | Tham chiếu lệch hoặc evidence mất — chưa dùng được |
 
 ---
 
@@ -59,7 +45,7 @@
 docs/bugs/
 ├── README.md                                   ← FILE NÀY — danh mục toàn hệ thống
 └── <module>/
-    └── BUG_<module>_<timestamp>.md             ← mỗi bug 1 file
+    └── BUG_<module>_<timestamp>_<TC_ID>.md     ← mỗi bug 1 file
 ```
 
 **Quy tắc bất biến:**
@@ -67,9 +53,11 @@ docs/bugs/
 | Quy tắc | Lý do |
 |---|---|
 | Mỗi bug **một file**, đặt trong thư mục của **module phát sinh** | Dự án nhiều module thì thư mục phẳng dồn hàng trăm file, không tra được |
-| Mã bug mang **timestamp epoch giây**, không đánh số tuần tự | Nhiều người sinh bug song song không đụng mã nhau |
+| Mã bug mang **timestamp epoch giây** + **hậu tố TC ID**, không đánh số tuần tự | Timestamp đảm bảo nhiều người sinh bug song song không đụng mã nhau; hậu tố TC ID (VD `_TC004`) để nhìn tên file là biết ngay thuộc TC nào, không phải mở file hay tra bảng danh mục |
+| Bug liên quan **nhiều TC cùng lúc** thì hậu tố lấy TC ID **đầu tiên/quan trọng nhất**, TC còn lại ghi ở cột "TC liên quan" trong danh mục | Hậu tố chỉ để nhận diện nhanh, không phải danh sách đầy đủ |
 | **KHÔNG xoá file bug** — bug đóng thì đổi trạng thái trong file và trong danh mục | Lịch sử bug là bằng chứng chất lượng qua các đợt; xoá là mất dấu vết |
-| Bug **phải trỏ về TC ID và REQ ID** đang có hiệu lực | Đây là mắt xích cuối của chuỗi truy vết. Trỏ vào mã đã đổi nghĩa còn tệ hơn không trỏ — xem `BUG_login_1785678750` ở mục 1 |
+| **KHÔNG đổi hậu tố TC ID** sau khi đã bàn giao, kể cả khi bug hoá ra liên quan TC khác nữa | Đổi tên file là gãy mọi link đã trỏ tới (danh mục, execution report, TC doc) — thêm TC liên quan vào cột danh mục thay vì đổi tên |
+| Bug **phải trỏ về TC ID và REQ ID** đang có hiệu lực | Đây là mắt xích cuối của chuỗi truy vết. Trỏ vào mã đã đổi nghĩa còn tệ hơn không trỏ — xem `BUG_login_1785678750_TC039` ở mục 1 |
 | Retest thì **thêm dòng lên đầu** mục "Lịch sử retest", không sửa nội dung cũ | So sánh được giữa các lần retest |
 | Evidence của bug nằm ở **`docs/executions/<module>/run_*/evidence/`**, bug report chỉ **link tới** | Ảnh sinh ra từ lần chạy nào thì ở cùng lần chạy đó; nhân bản ảnh sang `docs/bugs/` là tạo hai nguồn sự thật |
 
@@ -92,4 +80,5 @@ docs/bugs/
 
 | Ngày | Thay đổi |
 |---|---|
+| 2026-08-20 | `/create_bug_report` sau lần chạy `run_1787215085` (regression đầy đủ module Login): mở 5 bug mới (`TC_004`, `TC_016`, `TC_018-a`, `TC_028`, `TC_029`) và **rà lại xong** `BUG_login_1785678750` — sửa tham chiếu TC/REQ lệch nghĩa, bổ sung evidence mới, ghi Lịch sử retest xác nhận lỗi vẫn còn (`NOT_FIXED`). Tổng 6 bug đang mở |
 | 2026-08-20 | **Chuyển `bug_reports/` ở gốc repo vào `docs/bugs/<module>/`.** Lý do: bug là mắt xích thứ tư của chuỗi truy vết, ba tầng còn lại đều nằm trong `docs/` và đều có danh mục — riêng bug đứng ngoài nên không có danh mục và **bị sót khi dọn dự án** (`rm -rf docs` không chạm tới nó). Chính lỗ hổng đó để lại `BUG_login_1785678750` mồ côi với tham chiếu TC/REQ đã lệch nghĩa. Khởi tạo file danh mục này |

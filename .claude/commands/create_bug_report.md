@@ -38,7 +38,7 @@ skills:
 3. Gán Severity/Priority theo bảng trong skill `skills-bug-reporter`
 
 ### Bước 3: Viết Bug Report (CHECKPOINT)
-1. Điền đầy đủ template trong skill, lưu file `docs/bugs/<module>/BUG_<module>_<timestamp>.md`
+1. Điền đầy đủ template trong skill, lưu file `docs/bugs/<module>/BUG_<module>_<timestamp>_<TC_ID>.md`
 2. **⏸️ DỪNG LẠI** — trình bày cho user review, hỏi: "Nội dung bug report đã chính xác chưa? Có cần đẩy lên Jira không?"
 
 ### Bước 4: Đẩy lên Jira (tùy chọn — chỉ khi user xác nhận)
@@ -46,6 +46,6 @@ skills:
 
 ## Output
 
-- File `docs/bugs/<module>/BUG_<module>_<timestamp>.md` theo template chuẩn
+- File `docs/bugs/<module>/BUG_<module>_<timestamp>_<TC_ID>.md` theo template chuẩn
 - Bổ sung/cập nhật dòng của bug trong danh mục `docs/bugs/README.md` — chưa tồn tại thì tạo mới với bảng rỗng
 - Jira issue key (nếu user chọn đẩy lên Jira)

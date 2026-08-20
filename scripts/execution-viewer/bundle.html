@@ -38,7 +38,7 @@ aside{width:250px;flex:none;position:sticky;top:72px;min-width:0}
 section.content{flex:1;min-width:0}
 
 /* drop zone */
-#drop{border:2px dashed var(--brand);border-radius:12px;background:var(--brand-50);padding:44px 20px;text-align:center;color:var(--brand-700)}
+#drop{border:2px dashed var(--brand);border-radius:12px;background:var(--brand-50);padding:44px 20px;text-align:center;color:var(--brand-700);cursor:pointer}
 #drop.over{background:var(--brand-100)}
 #drop b{display:block;font-size:16px;margin-bottom:6px}
 #drop small{color:var(--muted);display:block;margin-top:10px;line-height:1.7}
@@ -158,8 +158,11 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:18px}
   <div class="spacer"></div>
   <button class="btn" id="btnCsv">↓ CSV</button>
   <button class="btn" id="btnXlsx">↓ Excel</button>
-  <button class="btn btn-primary" id="btnAdd">+ Import file .md</button>
+  <button class="btn" id="btnAdd">+ Import file .md</button>
+  <button class="btn btn-primary" id="btnAddFolder">+ Import thư mục</button>
+  <button class="btn" id="btnReset" style="display:none">Xoá tất cả</button>
   <input type="file" id="file" accept=".md,.markdown,.png,.jpg,.jpeg,.gif,.webp,.svg" multiple hidden>
+  <input type="file" id="folder" webkitdirectory mozdirectory directory multiple hidden>
 </header>
 
 <main>
@@ -176,12 +179,12 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:18px}
 
   <section class="content">
     <div id="drop">
-      <b>Kéo thả file report vào đây</b>
-      Hoặc bấm <strong>+ Import file .md</strong> ở góc trên
+      <b>Kéo thả file/thư mục report vào đây</b>
+      Hoặc bấm <strong>+ Import thư mục</strong> / <strong>+ Import file .md</strong> ở góc trên — 2 nút đó vẫn còn sau khi đã nạp dữ liệu, bấm thêm được bất cứ lúc nào
       <small>
         Nhận <code>docs/executions/&lt;module&gt;/run_*/execution_report.md</code> và <code>retest_*/retest_report.md</code><br>
-        Nạp nhiều file cùng lúc để gộp số liệu và so sánh giữa các lần chạy.<br>
-        <b>Kéo thả nguyên thư mục <code>run_*</code></b> để xem được luôn ảnh evidence — bấm vào ảnh trong ô chi tiết là hiện ngay giữa màn hình.<br>
+        Nạp nhiều file cùng lúc để gộp số liệu và so sánh giữa các lần chạy — muốn so sánh nhiều lần chạy thì nạp nhiều thư mục <code>run_*</code>, mỗi thư mục 1 lần chạy.<br>
+        <b>Kéo thả</b> thì chọn được nhiều thư mục cùng lúc (Ctrl+chọn trong Explorer rồi kéo cả cụm vào); <b>bấm + Import thư mục</b> thì hộp thoại hệ điều hành chỉ cho chọn <b>1 thư mục mỗi lần</b> — muốn nạp thêm thư mục <code>run_*</code> khác thì bấm nút đó lại, dữ liệu cộng dồn chứ không ghi đè. Nạp nguyên thư mục <code>run_*</code> là có luôn cả report lẫn ảnh evidence — bấm vào ảnh trong ô chi tiết là hiện ngay giữa màn hình.<br>
         Toàn bộ xử lý chạy trong trình duyệt — không gửi dữ liệu đi đâu.
       </small>
     </div>
@@ -534,10 +537,13 @@ function toast(msg){
 
 /* Biến ô Evidence thành chip bấm được. Chấp nhận cả cú pháp markdown ![](x.png),
    đường dẫn trần, và nhiều ảnh cách nhau bởi dấu phẩy/xuống dòng. */
+// CHỈ nhận ảnh viết đúng cú pháp link Markdown ![]() hoặc []() — tên file nhắc tới trong văn xuôi
+// (không bọc link) KHÔNG được coi là evidence xem được, tránh hiện chip "chưa nạp" cho ảnh
+// không thật sự là evidence (VD tên file bị nhắc tới trong ghi chú).
 function evidenceHTML(raw){
   const txt=String(raw||''); const found=[];
-  txt.replace(/!?\[[^\]]*\]\(([^)]+)\)|([^\s,;|)(]+\.(?:png|jpe?g|gif|webp|svg))/gi,
-    (m,a,b)=>{ const p=(a||b||'').trim(); if(p) found.push(p); return m; });
+  txt.replace(/!?\[[^\]]*\]\(([^)]+)\)/gi,
+    (m,a)=>{ const p=(a||'').trim(); if(p && IMG_RE.test(p)) found.push(p); return m; });
   if(!found.length) return `<span class="v">${esc(txt)}</span>`;
   const uniq=[...new Set(found)];
   const chips=uniq.map(p=>{
@@ -615,6 +621,7 @@ function render(){
   const has=DOCS.length>0;
   $('#drop').style.display=has?'none':'block';
   $('#app').style.display=has?'block':'none';
+  $('#btnReset').style.display=has?'':'none';
   if(!has){ $('#files').innerHTML='<div style="color:var(--muted);font-size:12.5px">Chưa có file nào</div>'; $('#metaPanel').style.display='none'; return; }
 
   // sidebar
@@ -912,8 +919,22 @@ function toXlsx(){
 }
 
 /* ============================ EVENTS ============================ */
+$('#btnReset').onclick=()=>{
+  DOCS=[]; activeFile=''; tab='tc'; sortKey='id'; sortDir=1; offStatus.clear(); offCov.clear();
+  for(const url of IMAGES.values()) URL.revokeObjectURL(url);
+  IMAGES.clear();
+  $('#q').value=''; $('#covQ').value='';
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.dataset.tab==='tc'));
+  ['tc','trend','bug','cov'].forEach(t=>$('#tab-'+t).style.display=(t==='tc')?'block':'none');
+  try{ localStorage.removeItem('execViewer'); }catch(e){}
+  $('#detail').classList.remove('open');
+  render();
+};
 $('#btnAdd').onclick=()=>$('#file').click();
+$('#btnAddFolder').onclick=()=>$('#folder').click();
 $('#file').onchange=e=>{ addFiles(e.target.files); e.target.value=''; };
+$('#folder').onchange=e=>{ addFiles(e.target.files); e.target.value=''; };
+$('#drop').onclick=()=>$('#folder').click();
 $('#btnCsv').onclick=toCsv; $('#btnXlsx').onclick=toXlsx;
 $('#btnClose').onclick=()=>$('#detail').classList.remove('open');
 $('#q').oninput=render; $('#fModule').onchange=render;

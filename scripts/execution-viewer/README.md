@@ -11,7 +11,7 @@ Dùng để đọc output của:
 
 Mở [`bundle.html`](bundle.html) bằng trình duyệt — double-click là được. Không cần build, không cần `node_modules`, chạy offline.
 
-Kéo thả (hoặc bấm **+ Import file .md**) các file report vào, ví dụ:
+Kéo thả, hoặc bấm **+ Import thư mục** / **+ Import file .md** ở góc trên (hai nút này luôn hiện, kể cả sau khi đã nạp dữ liệu — bấm thêm được bất cứ lúc nào), ví dụ:
 
 ```
 docs/executions/customers/run_1785700456/execution_report.md
@@ -19,7 +19,9 @@ docs/executions/customers/retest_1785700999/retest_report.md
 traceability_matrix.md
 ```
 
-Nạp **nhiều file cùng lúc** để gộp số liệu và so sánh giữa các lần chạy.
+Nạp **nhiều file/thư mục** để gộp số liệu và so sánh giữa các lần chạy — mỗi thư mục `run_*` là 1 lần chạy.
+
+> ⚠️ **Hộp thoại "+ Import thư mục" chỉ chọn được 1 thư mục mỗi lần** — giới hạn của chính hộp thoại hệ điều hành. Muốn so sánh nhiều lần chạy (nhiều thư mục `run_*`) thì bấm nút đó lại cho từng thư mục — dữ liệu cộng dồn chứ không ghi đè. Muốn chọn nhiều thư mục trong 1 lần thì dùng kéo-thả: chọn nhiều thư mục cùng lúc trong Explorer (giữ Ctrl) rồi kéo cả cụm vào trang.
 
 > Toàn bộ xử lý chạy trong trình duyệt, không gửi dữ liệu đi đâu. File đã import lưu vào `localStorage` nên lần mở sau vẫn còn.
 
@@ -29,9 +31,10 @@ Nạp **nhiều file cùng lúc** để gộp số liệu và so sánh giữa c�
 
 | Nhóm | Chi tiết |
 |---|---|
-| **Import** | Kéo thả hoặc chọn file `.md` · nạp nhiều file · import lại cùng Run ID sẽ ghi đè |
+| **Import** | Kéo thả, hoặc 2 nút cố định **+ Import thư mục** (nạp được luôn ảnh evidence trong `run_*`) / **+ Import file .md** — luôn hiện, bấm thêm được bất cứ lúc nào · import lại cùng Run ID sẽ ghi đè |
 | **Thống kê** | PASS / FAIL / BLOCKED / SKIPPED · tổng TC · **pass rate = PASS / (PASS + FAIL + BLOCKED)** — SKIPPED không nằm ở mẫu số |
 | **Cảnh báo tự động** | 4 loại — xem mục dưới |
+| **Xoá tất cả** | Nút **Xoá tất cả** cạnh **+ Import file .md** (chỉ hiện khi đã nạp ít nhất 1 file) — xoá hết report + ảnh evidence đã nạp (kể cả trong `localStorage`), quay về màn hình kéo thả trống |
 | **Sidebar** | Danh sách report đã nạp kèm nhãn `RUN` / `RETEST`; click để xem riêng một lần chạy, `×` để gỡ |
 | **Lọc** | Theo trạng thái (chip) · theo module · tìm toàn văn trên TC ID, kịch bản, ghi chú, nguyên nhân chặn, Expected/Actual |
 | **Sort** | Click header — TC ID sort theo số tự nhiên (`TC_002` trước `TC_010`) |
