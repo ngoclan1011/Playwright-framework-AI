@@ -209,18 +209,18 @@ Các bộ prompt template sẵn dùng trong `plans/`:
 - **`plans/manual/`** — Quy trình sinh Manual Test Cases (2 modes: QUICK + FULL RBT)
 
   - Xem `plans/manual/QUICK_START.md` để bắt đầu nhanh
-  - Workflow QUICK: `/generate_testcases_from_requirements`
-  - Workflow FULL RBT: `/generate_testcases_manual_rbt`
+  - Workflow QUICK: `/generate-testcases-from-requirements`
+  - Workflow FULL RBT: `/generate-testcases-manual-rbt`
 - **`plans/automation/`** — Quy trình 6 bước sinh Automation Scripts
 
   - Xem `plans/automation/QUICK_START.md` để bắt đầu nhanh
   - One-click: Copy `plans/automation/prompt_automation.txt`
-  - Workflow: `/generate_automation_from_testcases`
+  - Workflow: `/generate-automation-from-testcases`
 - **`plans/cross-module/`** — Quy trình phân tích Cross-Module & Ma trận kết hợp
 
   - Xem `plans/cross-module/QUICK_START.md` để bắt đầu nhanh
-  - Workflow phân tích: `/generate_cross_module_test_plan`
-  - Workflow sinh data: `/generate_combinatorial_test_data`
+  - Workflow phân tích: `/generate-cross-module-test-plan`
+  - Workflow sinh data: `/generate-combinatorial-test-data`
 
 ## 6b. Cấu Trúc Thư Mục `docs/` (BẮT BUỘC)
 
@@ -248,7 +248,7 @@ docs/
 │   └── <module>/
 │       ├── test_cases_<module>.md             ← INDEX — TÊN FILE BẤT BIẾN
 │       ├── parts/part_NN_<slug>.md            ← khi tách (>40 TC)
-│       ├── impact/impact_plan_<TICKET-ID>.md  ← /update_testcases_from_impact
+│       ├── impact/impact_plan_<TICKET-ID>.md  ← /update-testcases-from-impact
 │       └── archive/test_cases_<module>_vN.md  ← phiên bản cũ
 │
 ├── executions/                                 ← kết quả thực thi
@@ -257,10 +257,10 @@ docs/
 │       ├── run_<timestamp>/
 │       │   ├── execution_report.md
 │       │   └── evidence/<TC_ID>_<mô_tả>.png
-│       ├── retest_<timestamp>/                 ← /retest_fixed_bugs
+│       ├── retest_<timestamp>/                 ← /retest-fixed-bugs
 │       │   ├── retest_report.md
 │       │   └── evidence/*.png
-│       └── analysis_<timestamp>.md             ← /analyze_test_report nhánh MANUAL
+│       └── analysis_<timestamp>.md             ← /analyze-test-report nhánh MANUAL
 │
 └── bugs/                                       ← bug sinh từ TC FAIL
     ├── README.md                               ← DANH MỤC bug
@@ -337,7 +337,7 @@ Hệ thống REST API dùng đúng cấu trúc trên, khác 3 chỗ:
 | Bằng chứng khảo sát | `evidence/*.png` — screenshot | `_discovery/sources/openapi_<ngày>.json` — snapshot spec + request/response nguyên văn chép trong tài liệu |
 | Ranh giới module | Menu điều hướng | `tags` của spec |
 
-Workflow: `/generate_api_tests_from_swagger` — tự lo cả tầng khám phá (Bước 1b kiểm chứng bằng gọi thật, Bước 1c ghi bản đồ) lẫn sinh TC. **Không** cần chạy `/discover_system` trước.
+Workflow: `/generate-api-tests-from-swagger` — tự lo cả tầng khám phá (Bước 1b kiểm chứng bằng gọi thật, Bước 1c ghi bản đồ) lẫn sinh TC. **Không** cần chạy `/discover-system` trước.
 
 > ⚠️ **Spec không phải hành vi.** Swagger khai `403` không có nghĩa hệ thống trả `403`; khai `required` không có nghĩa server chặn. Bắt buộc gọi thật kiểm chứng trước khi sinh TC — chi tiết ở Bước 1b của workflow.
 >
@@ -394,7 +394,7 @@ Không cần dọn gì thêm. Agent tự tạo lại `docs/` và 2 file danh m�
 
 > **Không có file hồ sơ dự án để điền tay.** Ngữ cảnh dự án nằm trong `docs/` do agent tự sinh — xem `skills-requirements-analyzer` mục 5.7.1.
 
-📌 **Hệ thống mới, chỉ có UI, chưa biết có module nào → chạy `/discover_system` trước tiên.** Workflow đó chốt luôn 5 mục trong bảng trên (prefix module · tiền tố TC ID · URL/tài khoản · môi trường dùng chung · business rules ẩn) và sinh sẵn `docs/requirements/README.md` + `_discovery/system_map.md`. QA có sẵn **một phần** tài liệu thì đưa vào cùng — chạy mode HYBRID, workflow sẽ lập Bản đồ phủ tài liệu để biết vùng nào tin được từ spec, vùng nào phải recon.
+📌 **Hệ thống mới, chỉ có UI, chưa biết có module nào → chạy `/discover-system` trước tiên.** Workflow đó chốt luôn 5 mục trong bảng trên (prefix module · tiền tố TC ID · URL/tài khoản · môi trường dùng chung · business rules ẩn) và sinh sẵn `docs/requirements/README.md` + `_discovery/system_map.md`. QA có sẵn **một phần** tài liệu thì đưa vào cùng — chạy mode HYBRID, workflow sẽ lập Bản đồ phủ tài liệu để biết vùng nào tin được từ spec, vùng nào phải recon.
 
 ## 7. Test Data
 
@@ -442,37 +442,37 @@ Agent sử dụng workflows trong `.claude/commands/` qua slash commands:
 
 | Workflow                                  | Mô tả                                                     |
 | ----------------------------------------- | ----------------------------------------------------------- |
-| `/discover_system`                      | **Bước đầu tiên khi hệ thống không có tài liệu** — crawl navigation, lập bản đồ module, gán prefix, khởi tạo danh mục (3 modes: UI/HYBRID/DOC). KHÔNG sinh REQ ID |
-| `/generate_requirements_from_website`   | Sinh requirements từ website/module (nhánh UI Recon)        |
-| `/analyze_requirement_document`         | Phân tích requirement document (Jira/.docx/.pdf/.xlsx/.csv) — sinh tài liệu phân tích, KHÔNG sinh TC |
-| `/update_requirements_from_ticket`      | **Delta mode** — cập nhật tài liệu requirements đã có từ ticket mới: nhận diện THÊM/SỬA/BỎ, giữ nguyên REQ ID, ghi Nhật ký thay đổi, xuất Impact Report cho test cases |
-| `/generate_testcases_manual_rbt`        | Sinh manual test cases theo AI-RBT 6 bước (FULL RBT mode) |
-| `/generate_testcases_from_requirements` | Sinh test cases nhanh từ requirements (QUICK mode)         |
-| `/generate_checklist_test`              | Sinh checklist test tick tay (CHECKLIST mode) — smoke / post-hotfix / regression / release-readiness |
-| `/update_testcases_from_impact`         | **Delta mode cho test cases** — mắt xích giữa của chuỗi delta 3 tầng: từ Impact Report sửa TC stale tại chỗ, giữ nguyên TC ID, đánh dấu 🗑️ Deprecated TC bị gỡ, xuất Delta TC List (2 modes: PLAN/APPLY). KHÔNG sinh lại cả module |
-| `/generate_automation_from_testcases`   | Chuyển manual test cases → automation scripts             |
-| `/generate_automation_from_ui_flow`     | Sinh automation từ UI flow trực tiếp (**web**)            |
-| `/generate_automation_from_mobile_flow` | Sinh automation **Appium** từ flow chạy thật trên device — Native Android/iOS, **Flutter**, Hybrid. Nhận diện loại app trước, thu locator từ UI hierarchy |
-| `/generate_application_test_plan`       | Khám phá app, sinh test plan (Mode PLAN) hoặc full suite (Mode FULL) |
-| `/generate_automation_framework`        | Thiết kế automation framework                             |
-| `/generate_locator`                     | Sinh locator ổn định cho UI element                      |
-| `/generate_test_data`                   | Sinh test data có cấu trúc                               |
-| `/generate_cross_module_test_plan`    | Phân tích cross-module (2 modes: DOCUMENT/BROWSER), sinh ma trận kết hợp — mặc định Output-Class Coverage, pairwise bằng script |
-| `/generate_combinatorial_test_data`   | Sinh test data cho ma trận kết hợp — offline hoặc pipeline qua browser          |
-| `/generate_api_tests_from_swagger`      | **Điểm vào cho hệ thống API** — snapshot spec, lập ma trận auth theo từng operation, kiểm chứng bằng gọi thật, ghi `api_map.md`, rồi sinh TC (2 modes: SPEC/FULL) |
-| `/update_automation_from_impact`        | **Delta mode cho automation** — từ Impact Report, map TC đã đổi sang script và sửa đúng phần đổi (2 modes: PLAN/APPLY). KHÔNG sinh lại cả module |
-| `/run_and_fix_tests`                    | Chạy suite có sẵn, phân loại failure, tự sửa nhóm sửa được (2 modes: RUN/FIX). KHÔNG sửa test để né bug app |
-| `/heal_locators`                        | Rà & sửa locator trong Page Object sau khi UI đổi (2 modes: SCAN/HEAL) |
-| `/review_automation_code`               | Review chất lượng automation code theo Definition of Done (2 modes: REVIEW/FIX) |
-| `/analyze_flaky_tests`                  | Phân tích và khắc phục flaky tests                     |
-| `/fetch_jira_requirements`              | Lấy requirements/user stories từ Jira                     |
-| `/import_test_results_xray`             | Đẩy kết quả test lên Xray                              |
-| `/create_bug_report`                    | Sinh bug report chuẩn từ test FAIL (tùy chọn đẩy Jira)  |
-| `/execute_test_cases`                   | Thực thi manual TC trên browser thật — chấm PASS/FAIL/BLOCKED/SKIPPED, xuất execution report |
-| `/retest_fixed_bugs`                    | **Đóng vòng lặp bug** — retest bug đã fix trên build mới, chấm FIXED/NOT_FIXED/PARTIAL, chạy regression quanh vùng fix (2 modes: RETEST/FULL) |
-| `/analyze_test_report`                  | Phân tích test report **một lần chạy** — 2 nhánh AUTOMATION / MANUAL, gom nhóm failure, đề xuất xử lý |
-| `/generate_master_test_plan`            | Master Test Plan cấp quản lý — phạm vi & ngoài phạm vi, tiêu chí vào/ra, môi trường, nhân lực, lịch, rủi ro dự án |
-| `/generate_test_summary_report`         | Báo cáo tổng hợp tại một mốc release/sprint — gộp mọi kết quả, đối chiếu tiêu chí exit, **khuyến nghị go/no-go** |
-| `/review_testcases`                     | Review chất lượng manual TCs (2 modes: REVIEW/FIX)         |
-| `/generate_traceability_matrix`         | Sinh ma trận truy vết RTM 3 tầng                          |
-| `/generate_api_mocks`                   | Sinh API mocks + tests cho edge cases                        |
+| `/discover-system`                      | **Bước đầu tiên khi hệ thống không có tài liệu** — crawl navigation, lập bản đồ module, gán prefix, khởi tạo danh mục (3 modes: UI/HYBRID/DOC). KHÔNG sinh REQ ID |
+| `/generate-requirements-from-website`   | Sinh requirements từ website/module (nhánh UI Recon)        |
+| `/analyze-requirement-document`         | Phân tích requirement document (Jira/.docx/.pdf/.xlsx/.csv) — sinh tài liệu phân tích, KHÔNG sinh TC |
+| `/update-requirements-from-ticket`      | **Delta mode** — cập nhật tài liệu requirements đã có từ ticket mới: nhận diện THÊM/SỬA/BỎ, giữ nguyên REQ ID, ghi Nhật ký thay đổi, xuất Impact Report cho test cases |
+| `/generate-testcases-manual-rbt`        | Sinh manual test cases theo AI-RBT 6 bước (FULL RBT mode) |
+| `/generate-testcases-from-requirements` | Sinh test cases nhanh từ requirements (QUICK mode)         |
+| `/generate-checklist-test`              | Sinh checklist test tick tay (CHECKLIST mode) — smoke / post-hotfix / regression / release-readiness |
+| `/update-testcases-from-impact`         | **Delta mode cho test cases** — mắt xích giữa của chuỗi delta 3 tầng: từ Impact Report sửa TC stale tại chỗ, giữ nguyên TC ID, đánh dấu 🗑️ Deprecated TC bị gỡ, xuất Delta TC List (2 modes: PLAN/APPLY). KHÔNG sinh lại cả module |
+| `/generate-automation-from-testcases`   | Chuyển manual test cases → automation scripts             |
+| `/generate-automation-from-ui-flow`     | Sinh automation từ UI flow trực tiếp (**web**)            |
+| `/generate-automation-from-mobile-flow` | Sinh automation **Appium** từ flow chạy thật trên device — Native Android/iOS, **Flutter**, Hybrid. Nhận diện loại app trước, thu locator từ UI hierarchy |
+| `/generate-application-test-plan`       | Khám phá app, sinh test plan (Mode PLAN) hoặc full suite (Mode FULL) |
+| `/generate-automation-framework`        | Thiết kế automation framework                             |
+| `/generate-locator`                     | Sinh locator ổn định cho UI element                      |
+| `/generate-test-data`                   | Sinh test data có cấu trúc                               |
+| `/generate-cross-module-test-plan`    | Phân tích cross-module (2 modes: DOCUMENT/BROWSER), sinh ma trận kết hợp — mặc định Output-Class Coverage, pairwise bằng script |
+| `/generate-combinatorial-test-data`   | Sinh test data cho ma trận kết hợp — offline hoặc pipeline qua browser          |
+| `/generate-api-tests-from-swagger`      | **Điểm vào cho hệ thống API** — snapshot spec, lập ma trận auth theo từng operation, kiểm chứng bằng gọi thật, ghi `api_map.md`, rồi sinh TC (2 modes: SPEC/FULL) |
+| `/update-automation-from-impact`        | **Delta mode cho automation** — từ Impact Report, map TC đã đổi sang script và sửa đúng phần đổi (2 modes: PLAN/APPLY). KHÔNG sinh lại cả module |
+| `/run-and-fix-tests`                    | Chạy suite có sẵn, phân loại failure, tự sửa nhóm sửa được (2 modes: RUN/FIX). KHÔNG sửa test để né bug app |
+| `/heal-locators`                        | Rà & sửa locator trong Page Object sau khi UI đổi (2 modes: SCAN/HEAL) |
+| `/review-automation-code`               | Review chất lượng automation code theo Definition of Done (2 modes: REVIEW/FIX) |
+| `/analyze-flaky-tests`                  | Phân tích và khắc phục flaky tests                     |
+| `/fetch-jira-requirements`              | Lấy requirements/user stories từ Jira                     |
+| `/import-test-results-xray`             | Đẩy kết quả test lên Xray                              |
+| `/create-bug-report`                    | Sinh bug report chuẩn từ test FAIL (tùy chọn đẩy Jira)  |
+| `/execute-test-cases`                   | Thực thi manual TC trên browser thật — chấm PASS/FAIL/BLOCKED/SKIPPED, xuất execution report |
+| `/retest-fixed-bugs`                    | **Đóng vòng lặp bug** — retest bug đã fix trên build mới, chấm FIXED/NOT_FIXED/PARTIAL, chạy regression quanh vùng fix (2 modes: RETEST/FULL) |
+| `/analyze-test-report`                  | Phân tích test report **một lần chạy** — 2 nhánh AUTOMATION / MANUAL, gom nhóm failure, đề xuất xử lý |
+| `/generate-master-test-plan`            | Master Test Plan cấp quản lý — phạm vi & ngoài phạm vi, tiêu chí vào/ra, môi trường, nhân lực, lịch, rủi ro dự án |
+| `/generate-test-summary-report`         | Báo cáo tổng hợp tại một mốc release/sprint — gộp mọi kết quả, đối chiếu tiêu chí exit, **khuyến nghị go/no-go** |
+| `/review-testcases`                     | Review chất lượng manual TCs (2 modes: REVIEW/FIX)         |
+| `/generate-traceability-matrix`         | Sinh ma trận truy vết RTM 3 tầng                          |
+| `/generate-api-mocks`                   | Sinh API mocks + tests cho edge cases                        |

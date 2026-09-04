@@ -39,7 +39,7 @@ Sử dụng thủ công từng file `prompt.txt` (01 → 06):
 
 ### Cách 2: One-Click Auto Workflow (Đề xuất)
 
-Gọi workflow `/generate_automation_from_testcases` + đính kèm Test Cases:
+Gọi workflow `/generate-automation-from-testcases` + đính kèm Test Cases:
 - Agent tự: Đọc TC → Mở Browser → Lấy Locator → Sinh POM → Sinh Script → Chạy Test → Sửa Bug → Đến khi PASS
 - **Ưu điểm:** Toàn bộ tự động sau 1 lệnh duy nhất
 

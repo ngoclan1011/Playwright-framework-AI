@@ -13,7 +13,7 @@ skills:
 > - Tài liệu phủ **đầy đủ** module → chạy 3.2 trước, 3.1 sau, đối chiếu theo mục **3.3**
 > - Tài liệu chỉ phủ **một phần** (phổ biến nhất) → chạy mục **3.3.1** — lập Bản đồ phủ tài liệu rồi recon theo chiến lược riêng từng vùng
 >
-> ⚠️ **Chưa biết hệ thống có module nào** → chạy `/discover_system` trước, đừng bắt đầu ở đây.
+> ⚠️ **Chưa biết hệ thống có module nào** → chạy `/discover-system` trước, đừng bắt đầu ở đây.
 
 Workflow này giúp bạn phân tích một module hoặc trang web được cung cấp và sinh ra tài liệu Yêu cầu (Requirements) chi tiết, chuẩn xác, **có mã REQ ID truy vết được**, phục vụ cho quá trình kiểm thử hoặc phát triển.
 
@@ -79,7 +79,7 @@ Workflow này giúp bạn phân tích một module hoặc trang web được cun
    - **Nếu đã có `_discovery/system_map.md`:** ghi 1 dòng vào Nhật ký khám phá khi phát hiện lệch so với bản đồ (module lớn hơn/nhỏ hơn dự kiến, có tab con là entity riêng nên phải tách, route đổi). Bản đồ sai mà không sửa thì module sau lại đi nhầm đường.
    - Nếu tài liệu bị tách nhiều file: file index **vẫn phải là** `requirements_<module>.md` và **BẮT BUỘC** chứa mục `## Bản đồ tài liệu` liệt kê file con kèm dải REQ.
    - **Checklist trước khi bàn giao:** đối chiếu đủ 6 mục bất biến tại **mục 5.4** của skill (REQ ID giữ nguyên · mỗi REQ thuộc đúng 1 Story · tổng REQ khớp · AMB/RISK đánh số toàn module · không nhân bản hạng mục cắt ngang · link 2 chiều index ↔ story).
-   - Nhắc user: tài liệu này (với REQ ID) là input chuẩn cho `/generate_testcases_manual_rbt`, `/generate_testcases_from_requirements` và `/generate_traceability_matrix`.
+   - Nhắc user: tài liệu này (với REQ ID) là input chuẩn cho `/generate-testcases-manual-rbt`, `/generate-testcases-from-requirements` và `/generate-traceability-matrix`.
 
 ---
 

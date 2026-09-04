@@ -1,4 +1,4 @@
-/generate_api_tests_from_swagger
+/generate-api-tests-from-swagger
 
 # CONTEXT
 - Base URL: [Ví dụ: https://api.anhtester.com/v1]

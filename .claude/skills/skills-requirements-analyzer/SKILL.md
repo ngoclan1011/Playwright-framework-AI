@@ -27,7 +27,7 @@ Kỹ năng này cung cấp các hướng dẫn chi tiết để AI (Claude Code)
 **Quy tắc:**
 - Mỗi yêu cầu **đủ nhỏ để test được độc lập** — nếu 1 câu chứa nhiều rule, tách thành nhiều REQ
 - REQ ID **không đổi** sau khi đã phát hành tài liệu (chỉ thêm mới, không đánh lại số)
-- Test cases sinh ra ở bước sau **PHẢI ghi REQ ID** vào cột `REQ ID` — đây là mắt xích để kiểm chứng "đủ case" và chạy `/generate_traceability_matrix`
+- Test cases sinh ra ở bước sau **PHẢI ghi REQ ID** vào cột `REQ ID` — đây là mắt xích để kiểm chứng "đủ case" và chạy `/generate-traceability-matrix`
 
 **Phân vai REQ vs STORY (quan trọng):**
 - `REQ` là **lớp truy vết duy nhất** — bất biến, mọi test case / automation / RTM đều neo vào đây
@@ -36,7 +36,7 @@ Kỹ năng này cung cấp các hướng dẫn chi tiết để AI (Claude Code)
 
 ### 2.1. Nối tiếp mã REQ giữa các lần chạy (BẮT BUỘC — chống đụng mã)
 
-Cùng một module có thể được phân tích **nhiều lần bằng nhiều workflow khác nhau** (`/generate_requirements_from_website` từ UI, `/analyze_requirement_document` từ Jira ticket, `/fetch_jira_requirements`…). Nếu mỗi lần đều đánh lại từ `01`, các dải mã sẽ đụng nhau và **RTM map sai hoàn toàn**.
+Cùng một module có thể được phân tích **nhiều lần bằng nhiều workflow khác nhau** (`/generate-requirements-from-website` từ UI, `/analyze-requirement-document` từ Jira ticket, `/fetch-jira-requirements`…). Nếu mỗi lần đều đánh lại từ `01`, các dải mã sẽ đụng nhau và **RTM map sai hoàn toàn**.
 
 **Quy trình bắt buộc TRƯỚC KHI gán REQ ID đầu tiên:**
 
@@ -80,7 +80,7 @@ Skill có **2 nhánh trích xuất** tuỳ theo nguồn đầu vào. Xác địn
 | Có cả hai, tài liệu phủ **đầy đủ** module | Chạy **3.2 trước** (nắm ý định) → **3.1 sau** (đối chiếu thực tế) | Mọi lệch pha giữa 2 nguồn là ambiguity, xem 3.3 |
 | Có cả hai nhưng tài liệu **chỉ phủ một phần** | **3.3.1 — Tài liệu bán phần** | Tình huống phổ biến nhất ở hệ thống thiếu tài liệu. Phải chia vùng trước khi recon |
 
-> ⚠️ **Chưa biết hệ thống có những module nào** → đây chưa phải việc của skill này. Chạy `/discover_system` trước để có bản đồ hệ thống + prefix, rồi mới recon từng module (xem mục **5.8**).
+> ⚠️ **Chưa biết hệ thống có những module nào** → đây chưa phải việc của skill này. Chạy `/discover-system` trước để có bản đồ hệ thống + prefix, rồi mới recon từng module (xem mục **5.8**).
 
 ### 3.1. Nhánh UI Recon — phân tích website/ứng dụng thực tế
 
@@ -170,7 +170,7 @@ Mỗi định dạng có cách đọc riêng. **KHÔNG** dùng `Read` thẳng ch
 | `.pdf` | **Ủy quyền cho skill `pdf`** |
 | `.pptx` | **Ủy quyền cho skill `pptx`** |
 | Ảnh (mockup, screenshot) | `Read` — công cụ hiển thị ảnh trực tiếp |
-| URL Jira/Confluence | **KHÔNG tự fetch.** Route sang `/fetch_jira_requirements` + `skills-jira-integration`. Nếu MCP chưa authorize → **dừng và báo user**, tuyệt đối không bịa nội dung ticket |
+| URL Jira/Confluence | **KHÔNG tự fetch.** Route sang `/fetch-jira-requirements` + `skills-jira-integration`. Nếu MCP chưa authorize → **dừng và báo user**, tuyệt đối không bịa nội dung ticket |
 
 > ⚠️ Nếu không đọc được file bằng bất kỳ cách nào → **báo user và dừng**. Không suy đoán nội dung từ tên file.
 
@@ -195,7 +195,7 @@ File bảng đính kèm thường **giá trị hơn cả phần mô tả**. Tìm
 | Bảng thông báo lỗi / message key | **Validation Messages** (mục 6.4) |
 | Ma trận role × chức năng | **Ma trận Phân quyền** (mục 6.5) |
 | Bảng trạng thái × hành động | **Ma trận Trạng thái** (mục 6.6) |
-| Data mẫu / test data | Đầu vào cho `/generate_test_data` — ghi chú lại, không đưa vào requirements |
+| Data mẫu / test data | Đầu vào cho `/generate-test-data` — ghi chú lại, không đưa vào requirements |
 
 Khi trích từ file bảng, **ghi rõ vị trí nguồn**: `<tên file> · sheet <tên> · dòng <n>`.
 
@@ -275,7 +275,7 @@ Sai lầm hay gặp là xử lý cả module theo **một** cách: hoặc tin t�
 - ❌ Vùng ⬜ Trắng **không** được rút gọn recon với lý do "module này chắc giống module kia"
 - ✅ **Bản đồ phủ tài liệu phải nằm trong tài liệu đầu ra** (một mục ngay sau Tổng quan) — người đọc cần biết phần nào tin được từ spec, phần nào do agent quan sát
 - ✅ Tài liệu ⚠️ nghi lỗi thời mà **khớp** UI → nâng lên `Tài liệu + kiểm chứng thực tế`; **lệch** → `AMB-XX` kèm nguyên văn cả hai bên
-- ✅ Khi `/discover_system` đã chạy: đọc `docs/requirements/_discovery/doc_inventory.md` — Bản đồ phủ tài liệu cấp hệ thống đã có sẵn ở đó, chỉ cần chi tiết hoá xuống cấp vùng chức năng
+- ✅ Khi `/discover-system` đã chạy: đọc `docs/requirements/_discovery/doc_inventory.md` — Bản đồ phủ tài liệu cấp hệ thống đã có sẵn ở đó, chỉ cần chi tiết hoá xuống cấp vùng chức năng
 
 ---
 
@@ -451,8 +451,8 @@ docs/requirements/
 │   │   └── story_02_<slug>.md
 │   ├── analysis/                          ← phân tích ticket của RIÊNG module này
 │   │   └── analysis_<TICKET-ID>.md
-│   └── impact/                            ← Impact Report của /update_requirements_from_ticket
-│       └── impact_<TICKET-ID>.md          ← input BẮT BUỘC cho /update_testcases_from_impact
+│   └── impact/                            ← Impact Report của /update-requirements-from-ticket
+│       └── impact_<TICKET-ID>.md          ← input BẮT BUỘC cho /update-testcases-from-impact
 ```
 
 **Quy tắc thư mục — bất biến:**
@@ -491,7 +491,7 @@ docs/requirements/
 
 ### 5.5. Hợp đồng đọc cho các workflow phía sau (Consumer Contract)
 
-Tách file **không được** làm vỡ chuỗi `/generate_testcases_manual_rbt` → `/generate_traceability_matrix` → `/generate_automation_from_testcases`. Vì vậy:
+Tách file **không được** làm vỡ chuỗi `/generate-testcases-manual-rbt` → `/generate-traceability-matrix` → `/generate-automation-from-testcases`. Vì vậy:
 
 - **Đường dẫn index LUÔN là:**
   ```
@@ -534,7 +534,7 @@ File danh mục là **điểm vào cấp hệ thống**, phải được cập n
 | Mục | Nội dung |
 |---|---|
 | **1. Bảng danh mục module** | `Module · Prefix · Trạng thái recon · Mức phủ tài liệu · Tài liệu · REQ đã dùng · Mã kế tiếp · AMB treo · Story · Cập nhật` |
-| **Trạng thái recon** | `⬜ Chưa khảo sát` · `🟨 Đang khảo sát` · `✅ Đã có tài liệu` · `⏸️ Hoãn` · `⚪ Chưa implement` — module do `/discover_system` phát hiện vào danh mục ngay ở mức ⬜, chưa cần có tài liệu |
+| **Trạng thái recon** | `⬜ Chưa khảo sát` · `🟨 Đang khảo sát` · `✅ Đã có tài liệu` · `⏸️ Hoãn` · `⚪ Chưa implement` — module do `/discover-system` phát hiện vào danh mục ngay ở mức ⬜, chưa cần có tài liệu |
 | **Danh sách prefix đã chiếm** | Module mới **phải** chọn prefix chưa có trong danh sách — chống trùng mã giữa các module |
 | **2. Trạng thái REQ toàn hệ thống** | Tổng hợp 🟢/🟡/🔴/⚪ theo từng module |
 | **3. Ambiguity 🔴 High còn treo** | Danh sách chặn tiến độ, gom từ mọi module — để đưa PO một lần thay vì hỏi lẻ tẻ |
@@ -549,11 +549,11 @@ File danh mục là **điểm vào cấp hệ thống**, phải được cập n
 
 ### 5.8. Tầng khám phá — `docs/requirements/_discovery/`
 
-Skill này làm việc ở **cấp module**: đã biết module tên gì, ở đâu, thì recon và sinh REQ. Nhưng với hệ thống **không có tài liệu**, câu hỏi đầu tiên lại là *"hệ thống này có những module nào?"* — đó là việc của tầng khám phá, do workflow `/discover_system` đảm nhiệm.
+Skill này làm việc ở **cấp module**: đã biết module tên gì, ở đâu, thì recon và sinh REQ. Nhưng với hệ thống **không có tài liệu**, câu hỏi đầu tiên lại là *"hệ thống này có những module nào?"* — đó là việc của tầng khám phá, do workflow `/discover-system` đảm nhiệm.
 
 ```
 docs/requirements/
-├── README.md              ← danh mục (5.7) — do /discover_system khởi tạo
+├── README.md              ← danh mục (5.7) — do /discover-system khởi tạo
 ├── _discovery/            ← TẦNG KHÁM PHÁ — cấp hệ thống
 │   ├── system_map.md      ← INDEX BẤT BIẾN — bản đồ module · entity · phụ thuộc · risk
 │   ├── modules/           ← chỉ khi > 8 module (xem 5.8.1)
@@ -566,7 +566,7 @@ docs/requirements/
 
 **Phân vai — không được lấn:**
 
-| | Tầng khám phá (`/discover_system`) | Tầng module (skill này) |
+| | Tầng khám phá (`/discover-system`) | Tầng module (skill này) |
 |---|---|---|
 | Đơn vị làm việc | Cả hệ thống | Một module |
 | Cấp mã | **Prefix** (`CUST`) | **Số REQ** (`REQ-CUST-01`) |
@@ -583,11 +583,11 @@ docs/requirements/
 3. Prefix **lấy từ danh mục**, không tự đặt lại — kể cả khi thấy prefix cũ đặt chưa hay
 4. Recon xong → cập nhật cột `Trạng thái recon` trong `README.md` sang ✅, và ghi 1 dòng vào Nhật ký khám phá của `system_map.md` nếu phát hiện lệch so với bản đồ
 
-**Không có `_discovery/` thì sao?** Vẫn recon module bình thường — tầng khám phá là bước tăng tốc, không phải điều kiện bắt buộc. Nhưng nếu user hỏi *"hệ thống có gì"* thay vì *"module X có gì"* → **route sang `/discover_system`**, đừng tự crawl rồi sinh REQ lẫn lộn hai tầng.
+**Không có `_discovery/` thì sao?** Vẫn recon module bình thường — tầng khám phá là bước tăng tốc, không phải điều kiện bắt buộc. Nhưng nếu user hỏi *"hệ thống có gì"* thay vì *"module X có gì"* → **route sang `/discover-system`**, đừng tự crawl rồi sinh REQ lẫn lộn hai tầng.
 
 #### 5.8.1. Bản đồ khám phá bị tách file — cách đọc
 
-Hệ thống > 8 module thì `/discover_system` tách bản đồ thành nhiều file. Quy tắc đọc **giống hệt** hợp đồng ở mục 5.5:
+Hệ thống > 8 module thì `/discover-system` tách bản đồ thành nhiều file. Quy tắc đọc **giống hệt** hợp đồng ở mục 5.5:
 
 - **Điểm vào luôn là `docs/requirements/_discovery/system_map.md`** — tên bất biến, dù tách hay không
 - Index có mục `## Bản đồ tài liệu` → đọc tiếp file trong `modules/` để lấy chi tiết module cần recon. Không có mục đó → hiểu là bản đồ 1 file
@@ -611,15 +611,15 @@ Bản đồ khám phá **không mang mã REQ** (mục 5.8), nên tách/gộp l�
 >
 > | Workflow | Template dùng | Ghi chú |
 > |---|---|---|
-> | `/generate_requirements_from_website` | **Mục 6 này** — tài liệu đặc tả module | Đầu ra là `requirements_<module>.md` |
-> | `/analyze_requirement_document` | **Template 10 mục của chính command đó** | Đầu ra là `analysis_<TICKET-ID>.md` — tài liệu phân tích ticket, KHÁC tài liệu đặc tả module |
-> | `/discover_system` | **Template của chính command đó** (Bước 6) | Đầu ra là `_discovery/system_map.md` + `README.md` — cấp hệ thống, **KHÔNG có mã REQ**. Xem mục **5.8** |
+> | `/generate-requirements-from-website` | **Mục 6 này** — tài liệu đặc tả module | Đầu ra là `requirements_<module>.md` |
+> | `/analyze-requirement-document` | **Template 10 mục của chính command đó** | Đầu ra là `analysis_<TICKET-ID>.md` — tài liệu phân tích ticket, KHÁC tài liệu đặc tả module |
+> | `/discover-system` | **Template của chính command đó** (Bước 6) | Đầu ra là `_discovery/system_map.md` + `README.md` — cấp hệ thống, **KHÔNG có mã REQ**. Xem mục **5.8** |
 >
-> Nhánh `/analyze_requirement_document` chỉ **mượn** từ skill các mục: **2 + 2.1** (đánh mã), **3.2** (quy trình trích xuất), **4 + 4.3** (AMB/RISK + Cổng Tự Soát REQ), **5** (scaling), **7.1 + 7.3** (strict rules) — **KHÔNG** dùng cấu trúc mục 6.
+> Nhánh `/analyze-requirement-document` chỉ **mượn** từ skill các mục: **2 + 2.1** (đánh mã), **3.2** (quy trình trích xuất), **4 + 4.3** (AMB/RISK + Cổng Tự Soát REQ), **5** (scaling), **7.1 + 7.3** (strict rules) — **KHÔNG** dùng cấu trúc mục 6.
 >
 > ⚠️ **Mục 4.3 áp cho MỌI nhánh sinh REQ, không có ngoại lệ.** REQ sinh từ tài liệu cũng lệch tên/AC, cũng gộp nhiều rule vào một mã, cũng chép giá trị biến thiên — y hệt REQ sinh từ UI.
 >
-> Nhánh `/discover_system` mượn: **2** (quy ước prefix), **3.1 + 3.1.1** (crawl UI + network), **3.1.2** (phân quyền sơ bộ), **5.3 + 5.7 + 5.8** (thư mục, danh mục, tầng khám phá), **7.1 + 7.2 + 7.2.1** — **KHÔNG** dùng mục 6 và **KHÔNG** cấp số REQ. Không sinh REQ nên không chạy 4.3, nhưng **vẫn phải** theo luật evidence (7.2.1) và luật cấm ghi giá trị bí mật (7.1).
+> Nhánh `/discover-system` mượn: **2** (quy ước prefix), **3.1 + 3.1.1** (crawl UI + network), **3.1.2** (phân quyền sơ bộ), **5.3 + 5.7 + 5.8** (thư mục, danh mục, tầng khám phá), **7.1 + 7.2 + 7.2.1** — **KHÔNG** dùng mục 6 và **KHÔNG** cấp số REQ. Không sinh REQ nên không chạy 4.3, nhưng **vẫn phải** theo luật evidence (7.2.1) và luật cấm ghi giá trị bí mật (7.1).
 >
 > Riêng 2 dòng metadata `Dải mã đã dùng` / `Mã kế tiếp` ở mục 6.1 là **bắt buộc với cả hai template**, vì quy tắc nối tiếp mã (2.1) cần chúng để hoạt động.
 
@@ -827,8 +827,8 @@ Nhật ký (6.9)  ←→  Trạng thái REQ (6.2)  ←→  Dải mã metadata (6
 - **Ô `❔` không được làm tròn thành `❌`** — "chưa kiểm chứng" khác hẳn "không có quyền".
 - **Có tài liệu bán phần → lập Bản đồ phủ tài liệu TRƯỚC khi mở browser** (mục 3.3.1) và đưa vào tài liệu đầu ra ở mục 6.5.1. Không được recon cả module theo một chiến lược duy nhất.
 - **Không dùng tài liệu của vùng này để suy ra vùng khác** — spec form tạo mới không nói gì về form sửa, dù hai form trông giống nhau.
-- **Đọc `docs/requirements/_discovery/` trước khi recon nếu đã chạy `/discover_system`** (mục 5.8) — lấy route, prefix, bản đồ phủ tài liệu; **không tự đặt lại prefix**.
-- **User hỏi "hệ thống có gì" (chưa biết module nào) → route sang `/discover_system`**, không tự crawl rồi sinh REQ lẫn hai tầng.
+- **Đọc `docs/requirements/_discovery/` trước khi recon nếu đã chạy `/discover-system`** (mục 5.8) — lấy route, prefix, bản đồ phủ tài liệu; **không tự đặt lại prefix**.
+- **User hỏi "hệ thống có gì" (chưa biết module nào) → route sang `/discover-system`**, không tự crawl rồi sinh REQ lẫn hai tầng.
 
 #### 7.2.1. Chuẩn Evidence (BẮT BUỘC) — evidence thiếu thì bước sinh TC sẽ bịa
 
@@ -880,4 +880,4 @@ Evidence là **nguồn sự thật** cho mọi workflow phía sau (`/generate_te
 - **KHÔNG bỏ qua comments** — comment thường là quyết định mới nhất và **đè lên** phần mô tả gốc.
 - **Xung đột giữa các nguồn KHÔNG được tự giải quyết im lặng** — luôn thành `AMB-XX`, kể cả khi đã áp thứ tự ưu tiên ở mục 3.2 Bước 3.
 - Phân biệt **"Không đề cập trong tài liệu"** (tài liệu thiếu → cần hỏi) với **"Không áp dụng"** (đã cân nhắc và xác định không liên quan). Hai câu này nghĩa khác hẳn nhau.
-- **KHÔNG tự fetch URL Jira/Confluence** — route sang `/fetch_jira_requirements`. MCP chưa authorize thì báo user, tuyệt đối không bịa nội dung ticket.
+- **KHÔNG tự fetch URL Jira/Confluence** — route sang `/fetch-jira-requirements`. MCP chưa authorize thì báo user, tuyệt đối không bịa nội dung ticket.

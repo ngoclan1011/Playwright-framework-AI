@@ -21,7 +21,7 @@ Sử dụng skill này khi:
 - Sau nhiều vòng auto-heal, muốn kiểm code còn sạch không
 - Định kỳ rà suite trước release
 
-**KHÔNG dùng khi:** test đang FAIL (→ `/run_and_fix_tests`), test chập chờn (→ `/analyze_flaky_tests`), locator gãy hàng loạt (→ `/heal_locators`). Skill này soi **chất lượng code**, không sửa lỗi chạy.
+**KHÔNG dùng khi:** test đang FAIL (→ `/run-and-fix-tests`), test chập chờn (→ `/analyze-flaky-tests`), locator gãy hàng loạt (→ `/heal-locators`). Skill này soi **chất lượng code**, không sửa lỗi chạy.
 
 ---
 

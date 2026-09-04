@@ -22,7 +22,7 @@ Command này sử dụng **Mode QUICK** của skill `skills-rbt-manual-testing` 
 Truyền kèm đường dẫn requirements, ví dụ:
 
 ```
-/generate_testcases_from_requirements docs/requirements/login/requirements_login.md TÁCH
+/generate-testcases-from-requirements docs/requirements/login/requirements_login.md TÁCH
 ```
 
 | Giá trị | Ý nghĩa | Số TC điển hình (module cỡ login) |

@@ -19,7 +19,7 @@ Workflow dành cho **suite đã tồn tại** — chạy regression/smoke hằng
 
 ## Workflow này khác gì các workflow lân cận?
 
-| | Workflow này | `analyze_test_report` | `generate_automation_from_testcases` |
+| | Workflow này | `analyze-test-report` | `generate-automation-from-testcases` |
 |---|---|---|---|
 | **Điểm bắt đầu** | Suite code có sẵn, chưa chạy | Report **đã có** | Manual TC, chưa có code |
 | **Có chạy test không** | ✅ Chạy, và chạy lại sau khi sửa | ❌ Chỉ đọc report | ✅ Chạy trong lúc sinh code |
@@ -29,7 +29,7 @@ Workflow dành cho **suite đã tồn tại** — chạy regression/smoke hằng
 ## ⚠️ Nguyên tắc thực thi
 
 - **Tất cả output bằng Tiếng Việt**
-- 🚨 **CẤM tuyệt đối: sửa test cho xanh khi nguyên nhân là bug của app.** Không nới lỏng assertion, không đổi expected value theo actual, không thêm retry để né, không `skip`/`.only`/`@Ignore` để giấu. Nhóm 🐛 App Bug **luôn** giữ nguyên đỏ và chuyển sang `/create_bug_report`
+- 🚨 **CẤM tuyệt đối: sửa test cho xanh khi nguyên nhân là bug của app.** Không nới lỏng assertion, không đổi expected value theo actual, không thêm retry để né, không `skip`/`.only`/`@Ignore` để giấu. Nhóm 🐛 App Bug **luôn** giữ nguyên đỏ và chuyển sang `/create-bug-report`
 - **KHÔNG đoán category** — phải đọc error message + stack trace thực tế của từng test fail
 - Lỗi 🌐 Environment → **DỪNG, báo user**. Không sửa test để né môi trường hỏng
 - ⚠️ Sau khi user duyệt danh sách sửa → agent tự sửa + verify, KHÔNG hỏi lại giữa chừng (tối đa 3 vòng)
@@ -89,7 +89,7 @@ python -m pytest -m smoke
 | Category | Sửa được trong workflow này? | Hướng xử lý |
 |---|---|---|
 | 🌐 **Environment** | ❌ **DỪNG NGAY** | Báo user, không đụng code. Toàn suite đỏ thường là đây |
-| 🐛 **Application Bug** | ❌ **KHÔNG sửa test** | Giữ nguyên đỏ → `/create_bug_report` |
+| 🐛 **Application Bug** | ❌ **KHÔNG sửa test** | Giữ nguyên đỏ → `/create-bug-report` |
 | 🎯 **Locator gãy** | ✅ | Skill `skills-locator-healer-agent` (Bước 5) |
 | ⏱️ **Flaky / Timing** | ✅ | Skill `skills-flaky-test-analyzer` |
 | 📊 **Test data** | ✅ | Sửa data generation — random + traceable |
@@ -135,7 +135,7 @@ Mỗi thay đổi ghi vào báo cáo dạng `file:line` + code cũ → code mớ
 Cập nhật `reports/run_and_fix_report.md` thêm:
 - Bảng trước/sau: pass rate baseline → pass rate cuối
 - Danh sách file đã sửa + tóm tắt từng thay đổi
-- Nhóm 🐛 App Bug còn đỏ → gợi ý chạy `/create_bug_report`
+- Nhóm 🐛 App Bug còn đỏ → gợi ý chạy `/create-bug-report`
 - Nhóm không sửa được + lý do
 
 ## Output
@@ -153,7 +153,7 @@ Cập nhật `reports/run_and_fix_report.md` thêm:
 
 | Tình huống sau khi chạy | Command |
 |---|---|
-| Còn bug app cần báo dev | `/create_bug_report` |
-| Locator gãy diện rộng do UI đổi | `/heal_locators` |
-| Test xanh nhưng nghi ngờ chất lượng code | `/review_automation_code` |
-| Cần đối chiếu TC nào chưa automate | `/generate_traceability_matrix` |
+| Còn bug app cần báo dev | `/create-bug-report` |
+| Locator gãy diện rộng do UI đổi | `/heal-locators` |
+| Test xanh nhưng nghi ngờ chất lượng code | `/review-automation-code` |
+| Cần đối chiếu TC nào chưa automate | `/generate-traceability-matrix` |

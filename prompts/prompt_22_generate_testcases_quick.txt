@@ -1,4 +1,4 @@
-/generate_testcases_from_requirements
+/generate-testcases-from-requirements
 
 # CONTEXT
 - Module: [Tên module cần test — VD: Customers]
@@ -19,6 +19,6 @@
 
 # GHI CHÚ
 - Command này chạy QUICK mode — 1 lượt duy nhất, KHÔNG dừng hỏi giữa chừng
-- Requirements mơ hồ / scope >3 module / logic chồng chéo → agent tự đề xuất chuyển sang /generate_testcases_manual_rbt (FULL RBT 6 bước)
-- Chỉ cần checklist tick tay, không cần steps chi tiết → dùng /generate_checklist_test
+- Requirements mơ hồ / scope >3 module / logic chồng chéo → agent tự đề xuất chuyển sang /generate-testcases-manual-rbt (FULL RBT 6 bước)
+- Chỉ cần checklist tick tay, không cần steps chi tiết → dùng /generate-checklist-test
 - Agent BẮT BUỘC mở hết ảnh trong `docs/requirements/<module>/evidence/` trước khi viết TC đầu tiên

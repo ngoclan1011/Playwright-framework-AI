@@ -1,4 +1,4 @@
-/generate_master_test_plan
+/generate-master-test-plan
 
 # CONTEXT
 - Mốc: [VD: Release v2.4 / Sprint 12]
@@ -39,11 +39,11 @@
 
 # TIÊU CHÍ EXIT
 [Xoá dòng không dùng:]
-- Dùng bộ mặc định của skill (khớp với /generate_test_summary_report)
+- Dùng bộ mặc định của skill (khớp với /generate-test-summary-report)
 - Dự án có bộ riêng: [dán vào đây]
 
 # GHI CHÚ
 - Agent tự đọc docs/requirements/README.md để lấy danh sách module, trạng thái recon, ambiguity treo
 - Thông tin nào chưa có thì agent để ❓ và liệt kê ở đầu tài liệu — KHÔNG điền số cho đủ chỗ
-- Đây là tài liệu quản lý, KHÔNG sinh test scenario (việc đó là /generate_application_test_plan)
+- Đây là tài liệu quản lý, KHÔNG sinh test scenario (việc đó là /generate-application-test-plan)
 - URL và tài khoản để ở .env, KHÔNG ghi vào plan

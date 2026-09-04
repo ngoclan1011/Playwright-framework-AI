@@ -2,7 +2,7 @@
 
 Trang web nhỏ gọn để **xem và lọc bug report** — thống kê theo Severity/Priority/Trạng thái, xem evidence, xuất Excel.
 
-Dùng để đọc output của `/create_bug_report` (`docs/bugs/<module>/BUG_*.md`) và danh mục `docs/bugs/README.md`.
+Dùng để đọc output của `/create-bug-report` (`docs/bugs/<module>/BUG_*.md`) và danh mục `docs/bugs/README.md`.
 
 ---
 

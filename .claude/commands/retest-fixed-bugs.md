@@ -33,7 +33,7 @@ Workflow này đóng **vòng lặp cuối** của quy trình kiểm thử: dev b
 
 | Cần có | Nguồn | Bắt buộc |
 |---|---|---|
-| Bug cần retest | File `docs/bugs/<module>/BUG_*.md`, hoặc Jira key qua `/fetch_jira_requirements` | ✅ |
+| Bug cần retest | File `docs/bugs/<module>/BUG_*.md`, hoặc Jira key qua `/fetch-jira-requirements` | ✅ |
 | **Build / version mới** | User cung cấp | ✅ |
 | Môi trường + tài khoản | `.env` hoặc user | ✅ |
 | Môi trường dùng chung? | User — bật quy tắc auto-skip của skill executor | ✅ |
@@ -99,13 +99,13 @@ Fix là **thay đổi code** — mà mọi thay đổi code đều có thể là
 
 ⚠️ **Phải có giới hạn.** Regression không phải chạy lại cả suite:
 
-- **Trần mặc định: 15 TC.** Vượt → báo user, đề nghị chạy `/execute_test_cases` cho cả module thay vì nhét vào retest
+- **Trần mặc định: 15 TC.** Vượt → báo user, đề nghị chạy `/execute-test-cases` cho cả module thay vì nhét vào retest
 - Vòng 3 chỉ mở khi fix **thực sự** đụng thành phần dùng chung — suy đoán "biết đâu ảnh hưởng" thì không mở
 - Ghi rõ trong report: đã chọn bao nhiêu TC, theo vòng nào, **và cố ý bỏ những gì**
 
 Chạy nhóm TC đã chọn theo đúng quy trình `skills-manual-test-executor` — chấm PASS/FAIL/BLOCKED/SKIPPED như bình thường.
 
-🔴 **TC regression FAIL = regression do fix gây ra** → đây là **bug MỚI**, không phải bug cũ. Tạo bug riêng bằng `/create_bug_report`, ghi rõ ở mục Ghi chú: *"phát sinh sau khi fix BUG_xxx"*.
+🔴 **TC regression FAIL = regression do fix gây ra** → đây là **bug MỚI**, không phải bug cũ. Tạo bug riêng bằng `/create-bug-report`, ghi rõ ở mục Ghi chú: *"phát sinh sau khi fix BUG_xxx"*.
 
 ---
 
@@ -230,7 +230,7 @@ Bug **đẩy lên Jira** → cập nhật trạng thái tương ứng qua `skill
 | Chấm FIXED vì "thử qua thấy ổn" | Chạy **đúng** steps gốc, đủ số lần, đối chiếu Expected gốc |
 | Sửa Expected trong bug gốc cho khớp hành vi mới | Hành vi mới lệch Expected = `PARTIAL`, giữ bug mở |
 | Gộp regression mới vào bug cũ rồi mở lại bug cũ | Regression là **bug mới** — tạo report riêng, link về bug gốc |
-| Chạy lại cả suite cho "chắc ăn" | Regression có trần 15 TC; vượt thì dùng `/execute_test_cases` |
+| Chạy lại cả suite cho "chắc ăn" | Regression có trần 15 TC; vượt thì dùng `/execute-test-cases` |
 | Bỏ regression vì "chỉ sửa một dòng" | Một dòng vẫn đủ làm hỏng luồng khác — đó là lý do có Mode FULL |
 | Retest trên đúng build đã log bug | Dừng, hỏi user build mới |
 
@@ -239,9 +239,9 @@ Bug **đẩy lên Jira** → cập nhật trạng thái tương ứng qua `skill
 ## Mối quan hệ với workflows khác
 
 ```
-/execute_test_cases  ──FAIL──→  /create_bug_report  ──dev fix──→  /retest_fixed_bugs
+/execute-test-cases  ──FAIL──→  /create-bug-report  ──dev fix──→  /retest-fixed-bugs
                                         ↑                               │
                                         └────── regression mới ─────────┘
                                                                         │
-                                                        ✅ FIXED hết ────┴──→  /generate_test_summary_report
+                                                        ✅ FIXED hết ────┴──→  /generate-test-summary-report
 ```

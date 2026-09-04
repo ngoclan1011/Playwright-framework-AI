@@ -25,7 +25,7 @@ Hai nguồn report khác nhau về bản chất; chọn nhầm nhánh là phân 
 | Nhánh | Nguồn | Nhận biết |
 |---|---|---|
 | **AUTOMATION** | Playwright JSON · Allure · JUnit/Surefire XML · TestNG XML | File trong `reports/`, đuôi `.json` / `.xml` / `.html` |
-| **MANUAL** | `/execute_test_cases` · `/retest_fixed_bugs` | File `.md` trong `docs/executions/<module>/run_*/` hoặc `retest_*/` |
+| **MANUAL** | `/execute-test-cases` · `/retest-fixed-bugs` | File `.md` trong `docs/executions/<module>/run_*/` hoặc `retest_*/` |
 
 > User đưa **cả hai** loại → chạy hai nhánh riêng, xuất **hai file phân tích riêng**. Cộng số PASS của manual vào automation là sai: hai bên đo hai phạm vi khác nhau, con số gộp không có ý nghĩa.
 
@@ -58,8 +58,8 @@ Hai nguồn report khác nhau về bản chất; chọn nhầm nhánh là phân 
 
 **Bước 4: Báo Cáo**
 1. Xuất `test_report_analysis.md` theo template trong skill
-2. Thứ tự xử lý: Environment → App Bugs (`/create_bug_report`) → Locator (`/heal_locators`) → Flaky (`/analyze_flaky_tests`)
-3. User muốn **sửa luôn cho suite xanh lại** thay vì chỉ đọc report → chuyển sang `/run_and_fix_tests`
+2. Thứ tự xử lý: Environment → App Bugs (`/create-bug-report`) → Locator (`/heal-locators`) → Flaky (`/analyze-flaky-tests`)
+3. User muốn **sửa luôn cho suite xanh lại** thay vì chỉ đọc report → chuyển sang `/run-and-fix-tests`
 
 ---
 
@@ -100,9 +100,9 @@ Với **từng** TC FAIL, đọc Expected vs Actual rồi gán category:
 
 | Câu hỏi | Nếu… | Kết luận |
 |---|---|---|
-| Expected có căn cứ REQ ID không? | Có, và app làm khác | 🐛 Bug ứng dụng → `/create_bug_report` |
-| | Không — Expected là suy đoán của người viết TC | 📝 TC viết sai → `/review_testcases` |
-| App làm đúng logic **mới**, TC theo logic **cũ**? | Đúng vậy | 📄 Requirement lệch → `/update_requirements_from_ticket` → `/update_testcases_from_impact` |
+| Expected có căn cứ REQ ID không? | Có, và app làm khác | 🐛 Bug ứng dụng → `/create-bug-report` |
+| | Không — Expected là suy đoán của người viết TC | 📝 TC viết sai → `/review-testcases` |
+| App làm đúng logic **mới**, TC theo logic **cũ**? | Đúng vậy | 📄 Requirement lệch → `/update-requirements-from-ticket` → `/update-testcases-from-impact` |
 
 Báo nhầm "TC viết sai" thành bug là gửi dev đi sửa thứ không hỏng — mất uy tín của cả bảng báo cáo.
 
@@ -138,8 +138,8 @@ Xuất `docs/executions/<module>/analysis_<timestamp>.md`:
 
 | Category | Số TC | TC ID | Hành động | Command |
 |---|---|---|---|---|
-| 🐛 Bug ứng dụng | 2 | TC_011 · TC_024 | Báo bug | `/create_bug_report` |
-| 📝 TC viết sai | 1 | TC_017 | Sửa TC | `/review_testcases` |
+| 🐛 Bug ứng dụng | 2 | TC_011 · TC_024 | Báo bug | `/create-bug-report` |
+| 📝 TC viết sai | 1 | TC_017 | Sửa TC | `/review-testcases` |
 
 ## 3. TC BLOCKED — gom theo nguyên nhân chặn
 
@@ -177,5 +177,5 @@ Xuất `docs/executions/<module>/analysis_<timestamp>.md`:
 
 **Bước tiếp theo gợi ý cho user:**
 
-- Cần gộp nhiều module thành báo cáo gửi PM/khách → `/generate_test_summary_report`
+- Cần gộp nhiều module thành báo cáo gửi PM/khách → `/generate-test-summary-report`
 - Muốn xem trực quan, lọc/sắp xếp trên web → mở `scripts/execution-viewer/bundle.html` rồi kéo thả các file report vào

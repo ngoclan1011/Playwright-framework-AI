@@ -11,7 +11,7 @@ skills:
 >
 > Tham khảo **`skills-ui-debug-agent`** cho thao tác inspect DOM.
 
-Workflow này chạy **trước tất cả**, khi bạn mở một hệ thống lên mà **chưa biết nó có những module nào**. Đầu ra là **bản đồ hệ thống** + **danh mục module đã gán prefix** — nền tảng để chạy `/generate_requirements_from_website` cho từng module về sau.
+Workflow này chạy **trước tất cả**, khi bạn mở một hệ thống lên mà **chưa biết nó có những module nào**. Đầu ra là **bản đồ hệ thống** + **danh mục module đã gán prefix** — nền tảng để chạy `/generate-requirements-from-website` cho từng module về sau.
 
 ---
 
@@ -23,7 +23,7 @@ Workflow này chạy **trước tất cả**, khi bạn mở một hệ thống 
 | Gán **prefix** cho từng module (`LOGIN`, `CUST`…) và đăng ký chống trùng | ❌ Sinh Field Spec, validation message, ma trận phân quyền chi tiết |
 | Ghi nhận độ sâu tài liệu QA cung cấp (nếu có) | ❌ Sinh test case |
 | Đánh giá risk sơ bộ + đề xuất thứ tự khảo sát | ❌ Trigger validation từng field (việc của recon cấp module) |
-| Khởi tạo `docs/requirements/README.md` | ❌ Thay thế `/generate_requirements_from_website` |
+| Khởi tạo `docs/requirements/README.md` | ❌ Thay thế `/generate-requirements-from-website` |
 
 > **Vì sao tách bạch:** mã REQ là lớp truy vết **bất biến** (skill mục 2). Gán mã ở tầng khám phá — khi chưa mở từng form, chưa trigger validation — chắc chắn sẽ phải đánh lại số ở bước sau. Tầng khám phá **chỉ cấp prefix**, không cấp số.
 
@@ -124,7 +124,7 @@ Sửa gì thì ghi **1 dòng vào Nhật ký danh mục**. Không lệch → nê
 > Mode UI → bỏ qua, sang Bước 3.
 
 1. **Đọc đúng cách theo định dạng** — theo bảng ở skill mục **3.2 Bước 0**:
-   `.docx` → skill `docx` · `.xlsx/.csv` → skill `xlsx` · `.pdf` → skill `pdf` · URL Jira → `/fetch_jira_requirements`
+   `.docx` → skill `docx` · `.xlsx/.csv` → skill `xlsx` · `.pdf` → skill `pdf` · URL Jira → `/fetch-jira-requirements`
    ⚠️ Không đọc được → **báo user và dừng**, không suy đoán từ tên file
 2. **Lưu bản gốc** vào `docs/requirements/_discovery/sources/` — giữ nguyên tên file, để người review mở đối chiếu được
 3. **Lập Bản đồ phủ tài liệu** — đây là sản phẩm chính của bước này:
@@ -281,7 +281,7 @@ Tách ngay kể cả khi ≤ 8 module, nếu gặp **bất kỳ** dấu hiệu:
 
 | Ký hiệu | Nghĩa | Hành động tiếp theo |
 |---|---|---|
-| ⬜ | **Chưa khảo sát** — mới chỉ phát hiện tên | Chạy `/generate_requirements_from_website` |
+| ⬜ | **Chưa khảo sát** — mới chỉ phát hiện tên | Chạy `/generate-requirements-from-website` |
 | 🟨 | **Đang khảo sát** — recon dở dang | Tiếp tục, nêu rõ đang dở ở đâu |
 | ✅ | **Đã có tài liệu** — `requirements_<module>.md` đã phát hành | Sẵn sàng sinh test case |
 | ⏸️ | **Hoãn** — user chốt ngoài phạm vi đợt này | Ghi lý do, giữ prefix |
@@ -299,7 +299,7 @@ Nguyên tắc: **cái gì cắt ngang nhiều module thì ở index, cái gì th
 | 4. Bản đồ entity & phụ thuộc | **Index** | Bản chất là quan hệ **giữa** các module |
 | 5. Ma trận phân quyền **sơ bộ** cấp module | **Index** | Cắt ngang mọi module |
 | 6. Thứ tự khảo sát đã chốt + module `BLOCKED` | **Index** | Kế hoạch cấp đợt |
-| 7. Nhật ký khám phá | **Index** | Một dòng cho mỗi lần chạy `/discover_system` |
+| 7. Nhật ký khám phá | **Index** | Một dòng cho mỗi lần chạy `/discover-system` |
 | **Bản đồ tài liệu** (khi tách) | **Index** | Xem 6.3 — bắt buộc |
 | Chi tiết từng module — route · loại màn hình · CRUD · status flow · số tab · số field ước lượng · risk kèm lý do | **File module** | Đơn vị chia việc |
 | Phát hiện tầng network **của riêng module** — endpoint · field ẩn · enum trạng thái | **File module** | Gắn với module đó |
@@ -391,7 +391,7 @@ Không có mục này → workflow sau hiểu là bản đồ 1 file và **sẽ 
 - Danh sách vùng chưa xác minh (cần thêm quyền / thêm account / thêm dữ liệu)
 - **Lệnh kế tiếp**, theo đúng thứ tự đã chốt:
   ```
-  /generate_requirements_from_website <module đầu tiên>
+  /generate-requirements-from-website <module đầu tiên>
   ```
   Nhắc: mỗi module chạy xong nhớ cập nhật cột `Trạng thái recon` trong danh mục.
 

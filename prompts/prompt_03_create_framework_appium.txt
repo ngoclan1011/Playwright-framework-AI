@@ -1,4 +1,4 @@
-/generate_automation_framework
+/generate-automation-framework
 
 # CONTEXT
 Tôi cần xây dựng Mobile Automation Framework từ đầu.

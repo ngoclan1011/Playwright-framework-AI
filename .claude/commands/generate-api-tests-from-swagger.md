@@ -203,7 +203,7 @@ Cập nhật `README.md` danh mục hệ thống (tạo mới nếu chưa có): 
    docs/testcases/_<hệ-thống>/<module>/parts/part_NN_<slug>.md   ← khi > 40 TC
    ```
 
-   **Một file mỗi module**, không gộp 35 endpoint vào một file khổng lồ. Tên file bám đúng mẫu để `/generate_traceability_matrix` map được RTM.
+   **Một file mỗi module**, không gộp 35 endpoint vào một file khổng lồ. Tên file bám đúng mẫu để `/generate-traceability-matrix` map được RTM.
 
 2. Cấu trúc mỗi file:
    - **Tổng quan** — Base URL, Version, Auth method, số endpoint của module, link ngược về `_discovery/api_map.md`
@@ -238,7 +238,7 @@ Cập nhật `README.md` danh mục hệ thống (tạo mới nếu chưa có): 
 1. **Chạy test** bằng tool `Bash` (hoặc `PowerShell` trên Windows) — `npm test`, `mvn test`, `pytest`…
 2. **Test chạy lâu** → `run_in_background: true`, nhận thông báo khi xong. **KHÔNG** poll bằng `sleep`.
 3. **Auto-Heal:** Nếu FAIL → tự đọc log, sửa code và chạy lại (tối đa 5 lần) mà KHÔNG làm phiền user.
-4. **⚠️ Chỉ sửa test, KHÔNG sửa kỳ vọng để né bug app.** Test FAIL vì hệ thống sai (như phát hiện `F-nn` ở Bước 1b) → giữ nguyên assertion, đánh dấu TC là **đang phơi bug**, đề xuất `/create_bug_report`. Hạ assertion cho xanh báo cáo là **cấm**.
+4. **⚠️ Chỉ sửa test, KHÔNG sửa kỳ vọng để né bug app.** Test FAIL vì hệ thống sai (như phát hiện `F-nn` ở Bước 1b) → giữ nguyên assertion, đánh dấu TC là **đang phơi bug**, đề xuất `/create-bug-report`. Hạ assertion cho xanh báo cáo là **cấm**.
 5. **Dọn dữ liệu** sau lần chạy cuối. Báo cáo rõ: tạo bao nhiêu bản ghi, dọn bao nhiêu, còn sót gì.
 
 ## Output

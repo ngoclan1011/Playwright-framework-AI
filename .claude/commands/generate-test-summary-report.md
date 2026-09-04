@@ -118,15 +118,15 @@ Nhắc user: file này gửi ra ngoài được — kiểm lại lần cuối kh
 ## Mối quan hệ với workflows khác
 
 ```
-/execute_test_cases ──┐
-/retest_fixed_bugs  ──┤
-/create_bug_report  ──┼──→  /generate_test_summary_report  ──→  PM / PO / khách hàng
-/generate_traceability_matrix ──┘                │
+/execute-test-cases ──┐
+/retest-fixed-bugs  ──┤
+/create-bug-report  ──┼──→  /generate-test-summary-report  ──→  PM / PO / khách hàng
+/generate-traceability-matrix ──┘                │
                                                  └──→ mở scripts/execution-viewer/bundle.html để xem trực quan
 ```
 
 | Nhầm lẫn thường gặp | Workflow đúng |
 |---|---|
-| *"Phân tích giúp lần chạy vừa rồi fail vì sao"* | `/analyze_test_report` — một phạm vi chạy |
+| *"Phân tích giúp lần chạy vừa rồi fail vì sao"* | `/analyze-test-report` — một phạm vi chạy |
 | *"Tổng hợp cho tôi báo cáo gửi khách"* | **Workflow này** — toàn dự án tại một mốc |
-| *"Requirement nào chưa có test"* | `/generate_traceability_matrix` |
+| *"Requirement nào chưa có test"* | `/generate-traceability-matrix` |

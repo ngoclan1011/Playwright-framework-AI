@@ -149,8 +149,8 @@ node scripts/integrations/jira/xray_importer.js --format junit --file ./junit-re
 
 | Workflow | Mô tả |
 |----------|--------|
-| `/fetch_jira_requirements` | Lấy requirements từ Jira ticket và lưu thành file |
-| `/import_test_results_xray` | Đẩy kết quả test lên Xray |
+| `/fetch-jira-requirements` | Lấy requirements từ Jira ticket và lưu thành file |
+| `/import-test-results-xray` | Đẩy kết quả test lên Xray |
 
 ---
 

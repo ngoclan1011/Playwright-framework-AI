@@ -1,4 +1,4 @@
-/update_testcases_from_impact
+/update-testcases-from-impact
 
 # CONTEXT
 - Mode: [PLAN (chỉ lập kế hoạch) / APPLY (sửa TC + ghi Nhật ký)]
@@ -7,7 +7,7 @@
 # DELTA — REQUIREMENT ĐÃ ĐỔI
 [Chọn 1 trong 2 cách:]
 
-## Cách 1: Impact Report (từ /update_requirements_from_ticket)
+## Cách 1: Impact Report (từ /update-requirements-from-ticket)
 - File path: [VD: docs/requirements/project/impact/impact_TICKET-123.md]
 - Hoặc dán bảng "Test case cần xử lý" vào đây:
 ```
@@ -35,4 +35,4 @@
 - Sao lưu bản cũ vào archive/ TRƯỚC khi sửa
 - GIỮ NGUYÊN mọi TC ID. TC mới cấp số tiếp dải hiện có
 - TC của chức năng bị gỡ: đổi trạng thái 🗑️ Deprecated, KHÔNG xoá dòng
-- Xuất Delta TC List ở cuối để chạy tiếp /update_automation_from_impact
+- Xuất Delta TC List ở cuối để chạy tiếp /update-automation-from-impact

@@ -1,4 +1,4 @@
-/review_testcases
+/review-testcases
 
 # CONTEXT
 - Module/Tính năng: [Tên module của bộ TC]

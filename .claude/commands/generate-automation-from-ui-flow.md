@@ -20,7 +20,7 @@ Workflow này giúp agent **thực thi trực tiếp** một chuỗi thao tác U
 - **Desktop viewport headed theo `--viewport-size` lúc launch** — KHÔNG gọi `browser_resize` (xem `.claude/rules/playwright_rules.md` mục 1)
 - ⚠️ **Rule E3:** Khi test FAIL → tự đọc log → phân tích → sửa → chạy lại. KHÔNG hỏi user
 
-## Workflow này khác gì `generate_automation_from_testcases`?
+## Workflow này khác gì `generate-automation-from-testcases`?
 
 | | `from_testcases` | `from_ui_flow` (workflow này) |
 |---|---|---|

@@ -1,4 +1,4 @@
-/update_automation_from_impact
+/update-automation-from-impact
 
 # CONTEXT
 - Mode: [PLAN (chỉ lập kế hoạch) / APPLY (sửa code + chạy lại)]
@@ -7,13 +7,13 @@
 # DELTA — TEST CASE ĐÃ ĐỔI
 [Chọn 1 trong 2 cách:]
 
-## Cách 1: Delta TC List (từ /update_testcases_from_impact) — KHUYẾN NGHỊ
+## Cách 1: Delta TC List (từ /update-testcases-from-impact) — KHUYẾN NGHỊ
 - File path: [VD: docs/testcases/project/impact/impact_plan_TICKET-123.md]
 - Hoặc dán bảng "Delta TC List" vào đây:
 ```
 [DÁN BẢNG DELTA TC LIST]
 ```
-> Chưa chạy /update_testcases_from_impact thì làm nó TRƯỚC — TC còn mô tả hành vi cũ
+> Chưa chạy /update-testcases-from-impact thì làm nó TRƯỚC — TC còn mô tả hành vi cũ
 > thì script sửa xong vẫn sai kỳ vọng, mà test vẫn xanh nên không ai phát hiện.
 
 ## Cách 2: Tự liệt kê TC đã đổi

@@ -1,4 +1,4 @@
-/analyze_flaky_tests
+/analyze-flaky-tests
 
 # CONTEXT
 - Môi trường: [Local / CI/CD pipeline]

@@ -17,7 +17,7 @@ Dùng khi **UI vừa đổi** (deploy frontend mới, redesign module) làm loca
 
 ## Workflow này khác gì các workflow lân cận?
 
-| | Workflow này | `analyze_flaky_tests` | `generate_locator` |
+| | Workflow này | `analyze-flaky-tests` | `generate-locator` |
 |---|---|---|---|
 | **Trigger** | UI đổi, locator gãy đồng loạt | Test lúc pass lúc fail | Cần locator cho element mới |
 | **Input** | Page Object có sẵn + URL | Test file + error log | Element trên DOM |
@@ -105,7 +105,7 @@ Cho mọi mục 🔴/⚠️, dùng `skills-smart-locator-agent` sinh locator m�
 3. Chạy các test có dùng Page Object vừa sửa:
    - Xanh → xong
    - Còn đỏ vì locator → quay lại Bước 3 với element đó (**tối đa 3 vòng**)
-   - Đỏ vì lý do khác (bug app, data) → ghi nhận, KHÔNG sửa ở workflow này → chuyển `/run_and_fix_tests`
+   - Đỏ vì lý do khác (bug app, data) → ghi nhận, KHÔNG sửa ở workflow này → chuyển `/run-and-fix-tests`
 4. Test phải PASS **2 lần liên tiếp**
 
 ## Output

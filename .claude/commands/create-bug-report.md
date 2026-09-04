@@ -13,7 +13,7 @@ skills:
 ## ⚠️ Nguyên tắc thực thi
 
 - **Tất cả output bằng Tiếng Việt**
-- **Phải tái hiện lỗi ít nhất 1 lần** trước khi viết bug — nếu không tái hiện được → nghi flaky → đề xuất chạy `/analyze_flaky_tests` thay vì báo bug
+- **Phải tái hiện lỗi ít nhất 1 lần** trước khi viết bug — nếu không tái hiện được → nghi flaky → đề xuất chạy `/analyze-flaky-tests` thay vì báo bug
 - **KHÔNG bịa evidence** — chỉ đính kèm screenshot/log thực tế thu thập được
 - Đẩy lên Jira chỉ khi user xác nhận nội dung bug report
 
@@ -30,7 +30,7 @@ skills:
 ### Bước 1: Thu thập & Tái hiện
 1. Đọc test file / mô tả lỗi, error log, screenshot có sẵn
 2. Tái hiện lỗi: chạy lại test HOẶC thao tác trên browser qua Playwright MCP (`navigate → wait_for(page_load) → thao tác → screenshot khi lỗi xuất hiện`)
-3. Nếu KHÔNG tái hiện được → dừng, báo user và đề xuất `/analyze_flaky_tests`
+3. Nếu KHÔNG tái hiện được → dừng, báo user và đề xuất `/analyze-flaky-tests`
 
 ### Bước 2: Phân tích & Phân loại
 1. Rút gọn steps to reproduce về mức tối thiểu

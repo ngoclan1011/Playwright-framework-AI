@@ -1,4 +1,4 @@
-/run_and_fix_tests
+/run-and-fix-tests
 
 # CONTEXT
 - Mode: [RUN (chạy + báo cáo) / FIX (chạy + sửa + chạy lại)]

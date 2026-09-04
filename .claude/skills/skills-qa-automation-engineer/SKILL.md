@@ -50,7 +50,7 @@ Typical prompts include:
 - Generate Selenium automation from test case
 - Generate automation from UI steps
 - Generate API tests from Swagger
-- Generate regression suite → _(redirect sang `generate_application_test_plan` hoặc `generate_testcases_manual_rbt`)_
+- Generate regression suite → _(redirect sang `generate-application-test-plan` hoặc `generate-testcases-manual-rbt`)_
 - Generate test data
 - Analyze flaky test
 - Generate locator for element
@@ -66,7 +66,7 @@ When the user request matches a specific task, select the appropriate workflow f
 
 > **Delegate:** Tác vụ này thuộc skill **`skills-rbt-manual-testing`** — không phải `skills-qa-automation-engineer`.
 
-Use workflow: `generate_testcases_from_requirements` (QUICK mode), `generate_testcases_manual_rbt` (FULL RBT mode) hoặc `generate_checklist_test` (CHECKLIST mode).
+Use workflow: `generate-testcases-from-requirements` (QUICK mode), `generate-testcases-manual-rbt` (FULL RBT mode) hoặc `generate-checklist-test` (CHECKLIST mode).
 
 Triggers when user asks:
 
@@ -80,7 +80,7 @@ Triggers when user asks:
 
 ### Generate automation from manual test case
 
-Use workflow: `generate_automation_from_testcases`
+Use workflow: `generate-automation-from-testcases`
 
 Triggers when user asks:
 
@@ -92,7 +92,7 @@ Triggers when user asks:
 
 ### Generate automation from UI steps
 
-Use workflow: `generate_automation_from_ui_flow`
+Use workflow: `generate-automation-from-ui-flow`
 
 Triggers when user asks:
 
@@ -104,7 +104,7 @@ Triggers when user asks:
 
 ### Generate API tests
 
-Use workflow: `generate_api_tests_from_swagger`
+Use workflow: `generate-api-tests-from-swagger`
 
 Triggers when user provides:
 
@@ -115,7 +115,7 @@ Triggers when user provides:
 
 ### Generate test data
 
-Use workflow: `generate_test_data`
+Use workflow: `generate-test-data`
 
 Triggers when user asks:
 
@@ -126,7 +126,7 @@ Triggers when user asks:
 
 ### Analyze cross-module feature & generate combinatorial matrix
 
-Use workflow: `generate_cross_module_test_plan`
+Use workflow: `generate-cross-module-test-plan`
 
 > Workflow dành cho **tính năng phức tạp đi qua nhiều modules nối tiếp**. Sinh Data Flow Map + Ma trận kết hợp đa chiều (Output-Class Coverage mặc định / Pairwise / Full Cartesian).
 >
@@ -146,7 +146,7 @@ Triggers when user asks:
 
 ### Generate combinatorial test data (multi-module pipeline)
 
-Use workflow: `generate_combinatorial_test_data`
+Use workflow: `generate-combinatorial-test-data`
 
 > Sinh test data cho ma trận kết hợp. Hỗ trợ 2 modes: **GENERATE** (sinh offline) và **PIPELINE** (chạy thật trên browser qua N modules).
 
@@ -162,7 +162,7 @@ Triggers when user asks:
 
 ### Generate regression suite
 
-> **Không có workflow riêng.** Dùng `generate_application_test_plan` (Mode PLAN) hoặc `generate_testcases_manual_rbt` (FULL RBT) tùy theo input.
+> **Không có workflow riêng.** Dùng `generate-application-test-plan` (Mode PLAN) hoặc `generate-testcases-manual-rbt` (FULL RBT) tùy theo input.
 
 Triggers when user asks:
 
@@ -175,7 +175,7 @@ Triggers when user asks:
 
 > **Delegate:** Tác vụ này sử dụng skill **`skills-framework-architect`** để thiết kế framework.
 
-Use workflow: `generate_automation_framework`
+Use workflow: `generate-automation-framework`
 
 Triggers when user asks:
 
@@ -190,7 +190,7 @@ Triggers when user asks:
 
 ### Explore application and generate test plan
 
-Use workflow: `generate_application_test_plan`
+Use workflow: `generate-application-test-plan`
 
 > Workflow này có **2 modes**: PLAN (mặc định — chỉ test plan) và FULL (test plan + automation skeleton).
 > Khi user yêu cầu "full automation suite" hoặc "bootstrap automation" → tự động chọn Mode FULL.
@@ -209,11 +209,11 @@ Triggers when user asks:
 
 > **Delegate:** skill **`skills-test-report-analyzer`** để phân loại failure.
 
-Use workflow: `run_and_fix_tests`
+Use workflow: `run-and-fix-tests`
 
 > Dành cho suite **đã có code**. 2 modes: RUN (chạy + báo cáo) và FIX (chạy + sửa + chạy lại).
 >
-> 🚨 Rule bất biến: **KHÔNG sửa test cho xanh khi nguyên nhân là bug của app.** Nhóm 🐛 giữ nguyên đỏ → `create_bug_report`. Nhóm 🌐 Environment → dừng, báo user.
+> 🚨 Rule bất biến: **KHÔNG sửa test cho xanh khi nguyên nhân là bug của app.** Nhóm 🐛 giữ nguyên đỏ → `create-bug-report`. Nhóm 🌐 Environment → dừng, báo user.
 
 Triggers when user asks:
 
@@ -229,13 +229,13 @@ Triggers when user asks:
 
 > **Delegate:** skill **`skills-coverage-traceability`** để map TC ID ↔ script.
 
-Use workflow: `update_automation_from_impact`
+Use workflow: `update-automation-from-impact`
 
-> Mắt xích **cuối** của chuỗi delta 3 tầng: `update_requirements_from_ticket` → `update_testcases_from_impact` → workflow này. Bỏ tầng giữa là sửa script theo kỳ vọng cũ — TC còn mô tả hành vi cũ thì script sửa xong vẫn sai mà vẫn xanh.
+> Mắt xích **cuối** của chuỗi delta 3 tầng: `update-requirements-from-ticket` → `update-testcases-from-impact` → workflow này. Bỏ tầng giữa là sửa script theo kỳ vọng cũ — TC còn mô tả hành vi cũ thì script sửa xong vẫn sai mà vẫn xanh.
 >
 > Requirements/TC đổi → sửa **đúng phần đổi** trong script đã có. 2 modes: PLAN (kế hoạch) và APPLY (sửa + chạy lại).
 >
-> ⚠️ Rule bất biến: **KHÔNG sinh lại cả module** (đó là `generate_automation_from_testcases`), **KHÔNG xoá file** cho TC bị archive, **KHÔNG bịa mapping** TC ↔ script.
+> ⚠️ Rule bất biến: **KHÔNG sinh lại cả module** (đó là `generate-automation-from-testcases`), **KHÔNG xoá file** cho TC bị archive, **KHÔNG bịa mapping** TC ↔ script.
 
 Triggers when user asks:
 
@@ -251,7 +251,7 @@ Triggers when user asks:
 
 > **Delegate:** skill **`skills-locator-healer-agent`**.
 
-Use workflow: `heal_locators`
+Use workflow: `heal-locators`
 
 > Dành cho **UI vừa đổi** làm locator gãy hàng loạt — rà chủ động, KHÔNG cần error log. 2 modes: SCAN (báo cáo) và HEAL (sửa + verify).
 
@@ -269,7 +269,7 @@ Triggers when user asks:
 
 > **Delegate:** skill **`skills-automation-code-reviewer`**.
 
-Use workflow: `review_automation_code`
+Use workflow: `review-automation-code`
 
 > Soi code automation **đã có** theo Definition of Done: hard sleep, locator inline, thiếu Allure metadata/screenshot, assertion yếu (pass giả). 2 modes: REVIEW và FIX.
 
@@ -285,7 +285,7 @@ Triggers when user asks:
 
 ### Analyze flaky tests
 
-Use workflow: `analyze_flaky_tests`
+Use workflow: `analyze-flaky-tests`
 
 Triggers when user asks:
 
@@ -296,7 +296,7 @@ Triggers when user asks:
 
 ### Generate stable locators
 
-Use workflow: `generate_locator`
+Use workflow: `generate-locator`
 
 Triggers when user asks:
 
@@ -308,7 +308,7 @@ Triggers when user asks:
 
 ### Generate requirements from website
 
-Use workflow: `generate_requirements_from_website`
+Use workflow: `generate-requirements-from-website`
 
 Triggers when user asks:
 
@@ -322,7 +322,7 @@ Triggers when user asks:
 
 > **Delegate:** Tác vụ này sử dụng skill **`skills-requirements-analyzer`** để phân tích requirement documents.
 
-Use workflow: `analyze_requirement_document`
+Use workflow: `analyze-requirement-document`
 
 > Workflow chỉ **phân tích** requirement — KHÔNG sinh test cases. Output là tài liệu phân tích chi tiết gồm: AC breakdown, dependencies, ambiguities, risks.
 
@@ -338,7 +338,7 @@ Triggers when user asks:
 
 ### Fetch requirements from Jira
 
-Use workflow: `fetch_jira_requirements`
+Use workflow: `fetch-jira-requirements`
 
 Triggers when user asks:
 
@@ -351,7 +351,7 @@ Triggers when user asks:
 
 ### Import test results to Xray
 
-Use workflow: `import_test_results_xray`
+Use workflow: `import-test-results-xray`
 
 Triggers when user asks:
 
@@ -366,11 +366,11 @@ Triggers when user asks:
 
 > **Delegate:** skill **`skills-requirements-analyzer`**.
 
-Use workflow: `update_requirements_from_ticket`
+Use workflow: `update-requirements-from-ticket`
 
 > Cập nhật tài liệu requirements **đã có** — nhận diện THÊM/SỬA/BỎ, giữ nguyên REQ ID, ghi Nhật ký thay đổi, xuất Impact Report cho test cases.
 >
-> Bước kế tiếp là `update_testcases_from_impact` (đồng bộ TC, giữ nguyên TC ID), rồi mới tới `update_automation_from_impact`.
+> Bước kế tiếp là `update-testcases-from-impact` (đồng bộ TC, giữ nguyên TC ID), rồi mới tới `update-automation-from-impact`.
 
 Triggers when user asks:
 
@@ -385,7 +385,7 @@ Triggers when user asks:
 
 > **Delegate:** skill **`skills-testcase-reviewer`**.
 
-Use workflow: `review_testcases`
+Use workflow: `review-testcases`
 
 > 2 modes: REVIEW (chỉ báo cáo) và FIX (báo cáo + sửa TC).
 
@@ -402,7 +402,7 @@ Triggers when user asks:
 
 > **Delegate:** skill **`skills-manual-test-executor`**.
 
-Use workflow: `execute_test_cases`
+Use workflow: `execute-test-cases`
 
 > Chạy manual TC trên browser thật qua Playwright MCP, chấm PASS/FAIL/BLOCKED/SKIPPED. **KHÔNG** sinh code automation.
 
@@ -419,7 +419,7 @@ Triggers when user asks:
 
 > **Delegate:** skill **`skills-test-report-analyzer`**.
 
-Use workflow: `analyze_test_report`
+Use workflow: `analyze-test-report`
 
 Triggers when user asks:
 
@@ -434,7 +434,7 @@ Triggers when user asks:
 
 > **Delegate:** skill **`skills-bug-reporter`**.
 
-Use workflow: `create_bug_report`
+Use workflow: `create-bug-report`
 
 Triggers when user asks:
 
@@ -449,7 +449,7 @@ Triggers when user asks:
 
 > **Delegate:** skill **`skills-coverage-traceability`**.
 
-Use workflow: `generate_traceability_matrix`
+Use workflow: `generate-traceability-matrix`
 
 Triggers when user asks:
 
@@ -464,7 +464,7 @@ Triggers when user asks:
 
 > **Delegate:** skill **`skills-api-mocking`**.
 
-Use workflow: `generate_api_mocks`
+Use workflow: `generate-api-mocks`
 
 Triggers when user asks:
 
@@ -477,7 +477,7 @@ Triggers when user asks:
 
 # Automation Framework
 
-Default stack theo platform — dùng khi user **không chỉ định**. Bảng này là nguồn duy nhất; workflow `generate_automation_framework` (Bước 1) tuân theo đúng bảng này.
+Default stack theo platform — dùng khi user **không chỉ định**. Bảng này là nguồn duy nhất; workflow `generate-automation-framework` (Bước 1) tuân theo đúng bảng này.
 
 | Platform | Framework mặc định | Ngôn ngữ | Runner | Report |
 |---|---|---|---|---|
@@ -542,7 +542,7 @@ Skill này **không** kèm file hồ sơ dự án để user điền sẵn. Agen
 
 | Cần biết | Lấy ở đâu | Ghi vào đâu |
 |---|---|---|
-| **Hệ thống có những module nào** (chưa biết gì về hệ thống) | `/discover_system` — crawl navigation cấp hệ thống | `docs/requirements/_discovery/system_map.md` + `README.md` |
+| **Hệ thống có những module nào** (chưa biết gì về hệ thống) | `/discover-system` — crawl navigation cấp hệ thống | `docs/requirements/_discovery/system_map.md` + `README.md` |
 | Module X làm gì, luồng nào, field nào | **Recon UI thực tế** qua Playwright MCP | `docs/requirements/<module>/requirements_<module>.md` |
 | Prefix module, mã REQ/TC kế tiếp | Đọc danh mục hiện có | `docs/requirements/README.md` · `docs/testcases/README.md` |
 | Business rules ẩn, known issues (CAPTCHA, OTP…) | Gặp khi recon / chạy test → ghi lại ngay | Mục "Ghi chú" của tài liệu module + Nhật ký thay đổi |

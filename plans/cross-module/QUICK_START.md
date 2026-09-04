@@ -9,7 +9,7 @@
 #### Mode DOCUMENT (mặc định) — Có tài liệu/spec
 
 ```
-/generate_cross_module_test_plan
+/generate-cross-module-test-plan
 
 Tính năng: [Tên tính năng, VD: "Biên bản thanh toán cho đối tác"]
 Tài liệu: [đường dẫn file .md / .doc, link Jira, hoặc paste nội dung]
@@ -34,7 +34,7 @@ Chiến lược ma trận: output-class (mặc định) — hoặc: pairwise / f
 #### Mode BROWSER — Có URL app, muốn AI inspect DOM thực tế
 
 ```
-/generate_cross_module_test_plan
+/generate-cross-module-test-plan
 
 Tính năng: [Tên tính năng]
 URL: [https://your-app.com]
@@ -94,7 +94,7 @@ Output dạng bảng Markdown, sẵn sàng copy sang Excel.
 ### Bước 1: Phân tích Cross-Module & Sinh Ma Trận
 
 ```
-/generate_cross_module_test_plan
+/generate-cross-module-test-plan
 
 Tính năng: Biên bản thanh toán cho đối tác
 Tài liệu: docs/requirements/payment_record.md
@@ -115,7 +115,7 @@ Tài liệu: docs/requirements/payment_record.md
 ### Bước 2: Sinh Test Data cho Ma Trận
 
 ```
-/generate_combinatorial_test_data
+/generate-combinatorial-test-data
 
 Ma trận: [paste bảng ma trận từ Bước 1]
 Mode: GENERATE (hoặc PIPELINE nếu muốn tạo data thật trên hệ thống)
@@ -140,7 +140,7 @@ Format: json (hoặc: csv, markdown, typescript)
 ### Bước 3: Sinh Test Cases (Tùy chọn)
 
 ```
-/generate_testcases_manual_rbt
+/generate-testcases-manual-rbt
 
 Requirements: [paste requirements + ma trận kết hợp từ Bước 1]
 ```
@@ -152,7 +152,7 @@ Requirements: [paste requirements + ma trận kết hợp từ Bước 1]
 ### Bước 4: Sinh Automation Scripts (Tùy chọn)
 
 ```
-/generate_automation_from_testcases
+/generate-automation-from-testcases
 
 URL: https://example.com
 Test cases: [paste test cases từ Bước 3]
@@ -229,7 +229,7 @@ Business rules:
 
 | Tình huống                                                  | Dùng workflow nào?                                                            |
 | ----------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| Test 1 module đơn lẻ, form đơn giản                         | `/generate_testcases_manual_rbt` hoặc `/generate_testcases_from_requirements` |
-| Nhiều modules nhưng **độc lập** (không ảnh hưởng lẫn nhau)  | `/generate_application_test_plan`                                             |
-| Nhiều modules **nối tiếp**, output phụ thuộc **bộ kết hợp** | ✅ `/generate_cross_module_test_plan` ← **Dùng workflow này**                 |
-| Chỉ cần test data cho 1 form                                | `/generate_test_data`                                                         |
+| Test 1 module đơn lẻ, form đơn giản                         | `/generate-testcases-manual-rbt` hoặc `/generate-testcases-from-requirements` |
+| Nhiều modules nhưng **độc lập** (không ảnh hưởng lẫn nhau)  | `/generate-application-test-plan`                                             |
+| Nhiều modules **nối tiếp**, output phụ thuộc **bộ kết hợp** | ✅ `/generate-cross-module-test-plan` ← **Dùng workflow này**                 |
+| Chỉ cần test data cho 1 form                                | `/generate-test-data`                                                         |

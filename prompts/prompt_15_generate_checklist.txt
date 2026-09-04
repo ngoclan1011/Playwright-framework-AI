@@ -1,4 +1,4 @@
-/generate_checklist_test
+/generate-checklist-test
 
 # CONTEXT
 - Module/Tính năng cần rà: [Tên module — VD: Customers, Login, Invoice]
@@ -24,4 +24,4 @@
 
 # GHI CHÚ
 - Command này sinh checklist tick tay (CHECKLIST mode) — mục ngắn 1 dòng, KHÔNG có steps chi tiết
-- Cần TC chi tiết có steps + test data đầy đủ → dùng /generate_testcases_from_requirements (QUICK) hoặc /generate_testcases_manual_rbt (FULL RBT)
+- Cần TC chi tiết có steps + test data đầy đủ → dùng /generate-testcases-from-requirements (QUICK) hoặc /generate-testcases-manual-rbt (FULL RBT)

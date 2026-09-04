@@ -5,7 +5,7 @@
 ### Cách 1: One-Click (Tự động hoàn toàn — Đề xuất)
 
 ```
-/generate_automation_from_testcases
+/generate-automation-from-testcases
 
 URL: [https://your-app.com/login]
 Tài khoản: [admin@test.com / Test@123]

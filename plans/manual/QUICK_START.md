@@ -7,7 +7,7 @@ Có **2 luồng** riêng biệt, tuỳ tool AI bạn đang dùng:
 ### Luồng 1: Claude Code (Slash Command) — Tự động
 
 ```
-Gõ: /generate_testcases_manual_rbt + dán requirements
+Gõ: /generate-testcases-manual-rbt + dán requirements
 → AI tự chạy 6 bước theo skill, dừng ở checkpoint chờ bạn
 → KHÔNG cần copy-paste prompt templates
 ```
@@ -31,7 +31,7 @@ Copy prompt Bước 1 → paste vào chat → AI xử lý
 ## Luồng 1: Claude Code — Prompt nhanh
 
 ```
-/generate_testcases_manual_rbt
+/generate-testcases-manual-rbt
 
 Dự án: [Tên dự án]
 Tính năng: [Tên tính năng]

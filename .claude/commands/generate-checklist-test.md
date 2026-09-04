@@ -14,7 +14,7 @@ Command này sử dụng **Mode CHECKLIST** của skill `skills-rbt-manual-testi
 
 - **Mode:** CHECKLIST (1 lượt duy nhất, không chờ user giữa chừng)
 - **Checklist ≠ Test Case:** checklist trả lời *"đã rà hết chưa?"*, test case trả lời *"rà bằng cách nào?"*
-- **KHÔNG** viết steps đánh số trong mục checklist — nếu user cần steps chi tiết, test data đầy đủ, import Jira/TestRail hoặc giao cho automation → dùng `/generate_testcases_from_requirements` (QUICK) hoặc `/generate_testcases_manual_rbt` (FULL RBT)
+- **KHÔNG** viết steps đánh số trong mục checklist — nếu user cần steps chi tiết, test data đầy đủ, import Jira/TestRail hoặc giao cho automation → dùng `/generate-testcases-from-requirements` (QUICK) hoặc `/generate-testcases-manual-rbt` (FULL RBT)
 - Tất cả output bằng **Tiếng Việt**
 
 ## Input cần thu thập
@@ -124,6 +124,6 @@ Agent **tự động đề xuất chuyển mode** nếu phát hiện:
 
 | Dấu hiệu | Chuyển sang |
 |---|---|
-| User cần steps chi tiết / test data đầy đủ / import Jira-TestRail | `/generate_testcases_from_requirements` (QUICK) |
-| Scope lớn, requirements mơ hồ, cần Risk Assessment hoặc Traceability Matrix | `/generate_testcases_manual_rbt` (FULL RBT) |
-| Đã có bộ TC nhưng chất lượng kém, cần đánh giá trước khi rút checklist | `/review_testcases` |
+| User cần steps chi tiết / test data đầy đủ / import Jira-TestRail | `/generate-testcases-from-requirements` (QUICK) |
+| Scope lớn, requirements mơ hồ, cần Risk Assessment hoặc Traceability Matrix | `/generate-testcases-manual-rbt` (FULL RBT) |
+| Đã có bộ TC nhưng chất lượng kém, cần đánh giá trước khi rút checklist | `/review-testcases` |

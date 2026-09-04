@@ -1,4 +1,4 @@
-/generate_test_data
+/generate-test-data
 
 # CONTEXT
 - Module: [Tên module. Ví dụ: Quản lý Khách hàng]

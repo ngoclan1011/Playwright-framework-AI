@@ -3,7 +3,7 @@
 > **📍 NGUỒN DUY NHẤT** của project structure. Mọi thay đổi cấu trúc thư mục chỉ sửa ở file này — không sao chép sang nơi khác.
 
 **Skill:** `skills-framework-architect`
-**Workflow dùng file này:** `/generate_automation_framework` · `/generate_automation_from_testcases` · `/generate_automation_from_ui_flow`
+**Workflow dùng file này:** `/generate-automation-framework` · `/generate-automation-from-testcases` · `/generate-automation-from-ui-flow`
 
 ---
 
@@ -475,4 +475,4 @@ Mỗi framework PHẢI bao gồm các thành phần sau:
 - **Skill chi tiết:** [`SKILL.md`](../SKILL.md) — design principles, supported stacks, browser setup rules
 - **Code mẫu base classes:** [`CODE_TEMPLATES.md`](CODE_TEMPLATES.md)
 - **Rules:** [`automation_rules.md`](../../../rules/automation_rules.md) · [`locator_strategy.md`](../../../rules/locator_strategy.md)
-- **Workflow scaffold:** `/generate_automation_framework`
+- **Workflow scaffold:** `/generate-automation-framework`

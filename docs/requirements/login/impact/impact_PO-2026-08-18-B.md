@@ -48,7 +48,7 @@
 | `REQ-LOGIN-25` | Quên mật khẩu bỏ trống email **phải** báo **trường bắt buộc** | Trả `Email not found` — sai bản chất lỗi | `AMB-05` ✅ |
 
 > ⚠️ **TC viết theo hai REQ này SẼ FAIL trên bản hiện tại. Đó là kết quả ĐÚNG.**
-> Tuyệt đối **không** sửa TC cho khớp hiện trạng — phải mở bug. Đây chính là tình huống mà `/create_bug_report` sinh ra để xử lý.
+> Tuyệt đối **không** sửa TC cho khớp hiện trạng — phải mở bug. Đây chính là tình huống mà `/create-bug-report` sinh ra để xử lý.
 >
 > `AMB-10` là trường hợp **kết luận khác Giả định tạm** — giả định cũ là "ghi nhận hiện trạng", nay đảo thành "hiện trạng là lỗi". Module chưa có TC nào nên không TC cũ nào phải sửa.
 
@@ -120,7 +120,7 @@
 
 ## Cảnh báo & việc còn lại
 
-- 🐞 **Mở 2 bug report** cho `REQ-LOGIN-16` và `REQ-LOGIN-25` — chạy `/create_bug_report`. Không làm thì TC đỏ sẽ bị hiểu nhầm là TC sai.
+- 🐞 **Mở 2 bug report** cho `REQ-LOGIN-16` và `REQ-LOGIN-25` — chạy `/create-bug-report`. Không làm thì TC đỏ sẽ bị hiểu nhầm là TC sai.
 - 🚧 **Nhánh mobile của `REQ-LOGIN-29` chưa có số liệu DOM nào.** PO xác nhận lối đăng xuất mobile "dùng được", nhưng chưa có lượt recon nào ở viewport mobile. Muốn viết TC mobile thì phải recon trước — **không** viết TC dựa trên lời xác nhận suông.
 - 🔑 **`CUST` và `PRJ` cần chạy lại phần ma trận phân quyền.** Hai module này recon xong **trước khi** có tài khoản `Project Manager`, nên còn **24** và **28** ô `❔`. Nay đã gỡ được nút thắt, nên cập nhật lại (`AMB-15` của `CUST`, `AMB-28` của `PRJ`).
 - ⚠️ **Khu Setup vẫn chưa vào được.** Tài khoản `Project Manager` **cũng** bị `access_denied` — vấn đề master data (Taxes · Payment Modes · Departments…) chưa được gỡ, cần account quyền cao hơn.
@@ -130,10 +130,10 @@
 
 ## Bước kế tiếp
 
-Module `LOGIN` **chưa có test case nào** → **không** chạy `/update_testcases_from_impact`. Chạy thẳng:
+Module `LOGIN` **chưa có test case nào** → **không** chạy `/update-testcases-from-impact`. Chạy thẳng:
 
 ```
-/generate_testcases_manual_rbt docs/requirements/login/requirements_login.md
+/generate-testcases-manual-rbt docs/requirements/login/requirements_login.md
 ```
 
 Bỏ qua `REQ-LOGIN-27`, `34`, `35`, `40` (ngoài phạm vi). Gắn `assumption-based` cho TC của `REQ-LOGIN-30` và `REQ-LOGIN-42`.

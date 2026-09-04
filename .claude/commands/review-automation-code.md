@@ -13,7 +13,7 @@ Kiểm code automation **đã tồn tại** theo Definition of Done trong `CLAUD
 
 ## Workflow này khác gì các workflow lân cận?
 
-| | Workflow này | `run_and_fix_tests` | `review_testcases` |
+| | Workflow này | `run-and-fix-tests` | `review-testcases` |
 |---|---|---|---|
 | **Đối tượng** | Code automation | Kết quả chạy | Manual test case |
 | **Tiền đề** | Suite xanh cũng vẫn review được | Suite đang đỏ | Có file TC |

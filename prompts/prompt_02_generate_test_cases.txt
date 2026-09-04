@@ -1,4 +1,4 @@
-/generate_testcases_manual_rbt
+/generate-testcases-manual-rbt
 
 # CONTEXT
 - Module: [Tên module cần test]
@@ -13,4 +13,4 @@
 
 # GHI CHÚ
 - Command này chạy theo quy trình AI-RBT 6 bước (FULL RBT mode) — agent sẽ dừng ở checkpoint chờ bạn xác nhận
-- Nếu chỉ cần sinh TC nhanh không qua 6 bước → dùng /generate_testcases_from_requirements
+- Nếu chỉ cần sinh TC nhanh không qua 6 bước → dùng /generate-testcases-from-requirements

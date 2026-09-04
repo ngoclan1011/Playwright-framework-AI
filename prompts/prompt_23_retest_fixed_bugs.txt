@@ -1,4 +1,4 @@
-/retest_fixed_bugs
+/retest-fixed-bugs
 
 # CONTEXT
 - Module: [Tên module chứa bug]

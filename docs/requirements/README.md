@@ -11,7 +11,7 @@
 | Môi trường dùng chung | **CÓ** — cấm thao tác phá huỷ, phải dọn dữ liệu test sau khi chạy |
 | URL · tài khoản | `.env` (không commit) — **KHÔNG** ghi credentials vào `docs/` |
 | **Vai trò hệ thống** | **3 vai trò**, đã có tài khoản đủ cả 3 (2026-08-18): `Admin` và `Project Manager` đăng nhập ở `/admin/authentication` · `Customer` đăng nhập ở **`/login`** (cổng khách hàng, hệ thống đăng nhập **tách biệt** — không vào được `/admin`) |
-| Khởi tạo | 2026-08-14 bởi `/discover_system` (Mode UI) |
+| Khởi tạo | 2026-08-14 bởi `/discover-system` (Mode UI) |
 
 ---
 
@@ -57,8 +57,8 @@ CTR · EXP · ITEM · TICK · ESTREQ · KB · REP · DASH · TODO · REM · PROF
 
 | Vùng | Lý do | Muốn đưa vào thì làm gì |
 |---|---|---|
-| Quản trị hệ thống (Setup: Settings · Staff · Roles · Departments · Taxes · Currencies · Payment Modes · Custom Fields · Email Templates) | 403 với tài khoản hiện tại | Xin account quyền cao hơn → chạy `/discover_system` **Mode ADD** |
-| Calendar · Media · Bulk PDF Export | User chốt loại khỏi phạm vi | Chạy `/discover_system` **Mode ADD** khi cần |
+| Quản trị hệ thống (Setup: Settings · Staff · Roles · Departments · Taxes · Currencies · Payment Modes · Custom Fields · Email Templates) | 403 với tài khoản hiện tại | Xin account quyền cao hơn → chạy `/discover-system` **Mode ADD** |
+| Calendar · Media · Bulk PDF Export | User chốt loại khỏi phạm vi | Chạy `/discover-system` **Mode ADD** khi cần |
 | Cổng khách hàng (front-end ngoài `/admin`) | Chưa chốt phạm vi | Chốt phạm vi rồi chạy Mode ADD |
 
 ---
@@ -143,12 +143,12 @@ docs/requirements/
 
 | Tình huống | Workflow | Ghi vào đâu |
 |---|---|---|
-| Khảo sát chi tiết một module | `/generate_requirements_from_website <module>` | `docs/requirements/<module>/requirements_<module>.md` + cập nhật dòng tương ứng ở bảng mục 1 |
-| Phát hiện module bị sót | `/discover_system` (Mode ADD) | `_discovery/` + thêm dòng ở mục 1 |
-| Hệ thống deploy tính năng mới | `/discover_system` (Mode DELTA) | Nhật ký khám phá ở `system_map.md` |
-| Có ticket sửa yêu cầu đã có | `/update_requirements_from_ticket` | Tài liệu module + Nhật ký thay đổi + `impact/impact_<TICKET-ID>.md` |
-| **Requirements vừa đổi, bộ TC đã có cần đồng bộ** | `/update_testcases_from_impact` | Sửa tại chỗ `docs/testcases/<module>/test_cases_<module>.md`, giữ nguyên TC ID |
-| Sinh test case sau khi có requirements | `/generate_testcases_manual_rbt` hoặc `/generate_testcases_from_requirements` | `docs/testcases/<module>/` |
+| Khảo sát chi tiết một module | `/generate-requirements-from-website <module>` | `docs/requirements/<module>/requirements_<module>.md` + cập nhật dòng tương ứng ở bảng mục 1 |
+| Phát hiện module bị sót | `/discover-system` (Mode ADD) | `_discovery/` + thêm dòng ở mục 1 |
+| Hệ thống deploy tính năng mới | `/discover-system` (Mode DELTA) | Nhật ký khám phá ở `system_map.md` |
+| Có ticket sửa yêu cầu đã có | `/update-requirements-from-ticket` | Tài liệu module + Nhật ký thay đổi + `impact/impact_<TICKET-ID>.md` |
+| **Requirements vừa đổi, bộ TC đã có cần đồng bộ** | `/update-testcases-from-impact` | Sửa tại chỗ `docs/testcases/<module>/test_cases_<module>.md`, giữ nguyên TC ID |
+| Sinh test case sau khi có requirements | `/generate-testcases-manual-rbt` hoặc `/generate-testcases-from-requirements` | `docs/testcases/<module>/` |
 
 **Thứ tự recon đã chốt:** `LOGIN → CUST → CONT → LEAD → PRJ → TASK → EST → PROP → INV → PAY → CN → SUB → CTR → EXP → ITEM → TICK → ESTREQ → KB → REP → DASH → TODO → REM → PROF`
 
@@ -158,10 +158,10 @@ docs/requirements/
 
 | Ngày | Thay đổi |
 |---|---|
-| 2026-08-18 | **Chốt 13 quyết định PO còn lại + được cấp tài khoản 3 vai trò** (`/update_requirements_from_ticket`, nguồn `PO-2026-08-18-B`) — **`AMB-01` gỡ được nút thắt lớn nhất của toàn dự án**: có tài khoản `Admin` · `Project Manager` · `Customer`, ma trận phân quyền `LOGIN` kiểm chứng **100%**. Phát hiện `Customer` dùng hệ thống đăng nhập **tách biệt** ở `/login` và không vào được `/admin` → `REQ-LOGIN-43`. Phiên sống **1 giờ** → `REQ-LOGIN-42`. Module lên **43 REQ**, ambiguity còn treo **1**. ⚠️ Hai REQ (`16`, `25`) nay ghi kỳ vọng đúng mà hệ thống chưa đạt → **cần mở bug**. Impact Report: [login/impact/impact_PO-2026-08-18-B.md](login/impact/impact_PO-2026-08-18-B.md) |
-| 2026-08-18 | **Chốt 4 quyết định PO cho module `LOGIN`** (`/update_requirements_from_ticket`, nguồn `PO-2026-08-18`) — `AMB-02` ✅ không khoá tài khoản → `REQ-LOGIN-41` · `AMB-04` ⏭️ bỏ qua luồng gửi mail · `AMB-14` ⏭️ chuyển kiểm chứng timer sang module `TASK` · `AMB-15` ⏭️ Remember Me không hoạt động. Module lên **41 REQ**, ambiguity 🔴 giảm từ 5 xuống **2**, **không Story nào còn BLOCKED**. Impact Report: [login/impact/impact_PO-2026-08-18.md](login/impact/impact_PO-2026-08-18.md) |
+| 2026-08-18 | **Chốt 13 quyết định PO còn lại + được cấp tài khoản 3 vai trò** (`/update-requirements-from-ticket`, nguồn `PO-2026-08-18-B`) — **`AMB-01` gỡ được nút thắt lớn nhất của toàn dự án**: có tài khoản `Admin` · `Project Manager` · `Customer`, ma trận phân quyền `LOGIN` kiểm chứng **100%**. Phát hiện `Customer` dùng hệ thống đăng nhập **tách biệt** ở `/login` và không vào được `/admin` → `REQ-LOGIN-43`. Phiên sống **1 giờ** → `REQ-LOGIN-42`. Module lên **43 REQ**, ambiguity còn treo **1**. ⚠️ Hai REQ (`16`, `25`) nay ghi kỳ vọng đúng mà hệ thống chưa đạt → **cần mở bug**. Impact Report: [login/impact/impact_PO-2026-08-18-B.md](login/impact/impact_PO-2026-08-18-B.md) |
+| 2026-08-18 | **Chốt 4 quyết định PO cho module `LOGIN`** (`/update-requirements-from-ticket`, nguồn `PO-2026-08-18`) — `AMB-02` ✅ không khoá tài khoản → `REQ-LOGIN-41` · `AMB-04` ⏭️ bỏ qua luồng gửi mail · `AMB-14` ⏭️ chuyển kiểm chứng timer sang module `TASK` · `AMB-15` ⏭️ Remember Me không hoạt động. Module lên **41 REQ**, ambiguity 🔴 giảm từ 5 xuống **2**, **không Story nào còn BLOCKED**. Impact Report: [login/impact/impact_PO-2026-08-18.md](login/impact/impact_PO-2026-08-18.md) |
 | 2026-08-18 | **Rà soát chất lượng module `LOGIN`** — 3 lỗi 🔴 (token `autologin` thật bị commit vào tài liệu · `REQ-LOGIN-09` có AC không chứng minh được kết luận · danh mục evidence khai sai trạng thái ảnh) và 5 lỗi 🟡. Kiểm chứng lại trên UI thật phát hiện thêm: `REQ-LOGIN-29` **sai** (đếm 2 phần tử DOM nhưng 1 cái `display:none` ở desktop), tiêu đề tab thật là `(16) Dashboard` chứ không phải `Dashboard`. Module lên **40 REQ** (thêm `36`→`40`), 17 AMB, 10 REQ chuyển 🟡. Thay 2 ảnh Dashboard full-page chứa dữ liệu khách hàng bằng ảnh viewport. Toàn bộ luật rút ra đã đưa ngược vào `skills-requirements-analyzer` mục 7.1/7.2/7.2.1 và mục 4.3 để không tái diễn ở module/dự án khác |
-| 2026-08-14 | Recon module `PRJ` bằng `/generate_requirements_from_website` — **104 REQ**, 10 Story, 16 AMB (6 🔴), 7 RISK, 31 ảnh evidence. Module **vượt ngưỡng 80 REQ** nên **tách file** theo mục 5.1 của skill: index `requirements_projects.md` + 10 file trong `stories/`. Đây là module đầu tiên của dự án phải tách. Đối chiếu danh mục với thư mục `docs/requirements/`: khớp, không có module lạc hay prefix trùng |
-| 2026-08-14 | Recon module `CUST` bằng `/generate_requirements_from_website` — 79 REQ, 10 Story, 13 AMB (4 🔴), 7 RISK, 21 ảnh evidence. Module lớn hơn ước lượng của tầng khám phá (~45–65 → 79 REQ) nhưng vẫn dưới ngưỡng 80 nên **giữ 1 file**, không tách. Đối chiếu danh mục với thư mục `docs/requirements/`: khớp, không có module lạc hay prefix trùng |
-| 2026-08-14 | Recon module `LOGIN` bằng `/generate_requirements_from_website` — 35 REQ, 6 Story, 14 AMB, 7 RISK, 9 ảnh evidence. Đối chiếu danh mục với thư mục `docs/requirements/`: khớp, không có module lạc hay prefix trùng |
-| 2026-08-14 | Khởi tạo danh mục từ `/discover_system` Mode UI — 23 module, 23 prefix. Setup (403) và Calendar/Media/Bulk PDF Export **không cấp prefix**, ghi ở mục "Vùng chưa cấp prefix". Chốt tiền tố TC ID `CRM_` |
+| 2026-08-14 | Recon module `PRJ` bằng `/generate-requirements-from-website` — **104 REQ**, 10 Story, 16 AMB (6 🔴), 7 RISK, 31 ảnh evidence. Module **vượt ngưỡng 80 REQ** nên **tách file** theo mục 5.1 của skill: index `requirements_projects.md` + 10 file trong `stories/`. Đây là module đầu tiên của dự án phải tách. Đối chiếu danh mục với thư mục `docs/requirements/`: khớp, không có module lạc hay prefix trùng |
+| 2026-08-14 | Recon module `CUST` bằng `/generate-requirements-from-website` — 79 REQ, 10 Story, 13 AMB (4 🔴), 7 RISK, 21 ảnh evidence. Module lớn hơn ước lượng của tầng khám phá (~45–65 → 79 REQ) nhưng vẫn dưới ngưỡng 80 nên **giữ 1 file**, không tách. Đối chiếu danh mục với thư mục `docs/requirements/`: khớp, không có module lạc hay prefix trùng |
+| 2026-08-14 | Recon module `LOGIN` bằng `/generate-requirements-from-website` — 35 REQ, 6 Story, 14 AMB, 7 RISK, 9 ảnh evidence. Đối chiếu danh mục với thư mục `docs/requirements/`: khớp, không có module lạc hay prefix trùng |
+| 2026-08-14 | Khởi tạo danh mục từ `/discover-system` Mode UI — 23 module, 23 prefix. Setup (403) và Calendar/Media/Bulk PDF Export **không cấp prefix**, ghi ở mục "Vùng chưa cấp prefix". Chốt tiền tố TC ID `CRM_` |

@@ -1,4 +1,4 @@
-/create_bug_report
+/create-bug-report
 
 # CONTEXT
 - Môi trường: [Dev / Staging / Production] — [URL nếu có]

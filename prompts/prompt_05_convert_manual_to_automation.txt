@@ -1,4 +1,4 @@
-/generate_automation_from_testcases
+/generate-automation-from-testcases
 
 # HỆ THỐNG
 - URL: [URL ứng dụng]
@@ -7,7 +7,7 @@
 
 # PROJECT (chọn 1 trong 2)
 - A. Đã có sẵn source code — Project path: [path/to/project]
-- B. Chưa có project — agent tự scaffold theo /generate_automation_framework
+- B. Chưa có project — agent tự scaffold theo /generate-automation-framework
 
 # TEST CASES
 [Một trong 3 cách cung cấp test cases:]

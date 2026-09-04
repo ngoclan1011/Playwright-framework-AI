@@ -1,7 +1,7 @@
 # ============================================================
 # BƯỚC 1: KHỞI TẠO NGỮ CẢNH (Context & Role-play)
 # ============================================================
-# Workflow: /generate_automation_from_testcases
+# Workflow: /generate-automation-from-testcases
 # Skill:    skills-qa-automation-engineer
 # ============================================================
 # CÁCH DÙNG:
@@ -13,7 +13,7 @@
 
 ---START---
 
-/generate_automation_from_testcases
+/generate-automation-from-testcases
 
 Hãy đóng vai là một **Senior Automation Engineer** với 10 năm kinh nghiệm.
 

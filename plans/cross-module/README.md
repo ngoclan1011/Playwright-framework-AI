@@ -22,7 +22,7 @@ Khi một tính năng **KHÔNG nằm gọn trong 1 module** mà phải đi qua c
 
 ## 🚀 Quy Trình 2 Giai Đoạn
 
-### Giai đoạn 1: Phân Tích & Sinh Ma Trận (`/generate_cross_module_test_plan`)
+### Giai đoạn 1: Phân Tích & Sinh Ma Trận (`/generate-cross-module-test-plan`)
 
 Workflow hỗ trợ **2 modes**:
 
@@ -47,7 +47,7 @@ Workflow hỗ trợ **2 modes**:
 >
 > 💡 **Không có business rules thì workflow này giá trị thấp hơn hẳn** — bạn nhận được bảng chỉ có cột input, và vẫn phải ngồi điền expected bằng tay (phần tốn thời gian nhất). Bước 0 sẽ cảnh báo và đề xuất 3 hướng xử lý trước khi chạy.
 
-### Giai đoạn 2: Sinh Test Data (`/generate_combinatorial_test_data`)
+### Giai đoạn 2: Sinh Test Data (`/generate-combinatorial-test-data`)
 
 | Mode | Khi nào dùng | Output |
 |------|-------------|--------|
@@ -94,26 +94,26 @@ không ảnh hưởng output.
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
 │  📋 Bước 0: Phân tích Requirements từng Module (tùy chọn)      │
-│      Có tài liệu:  /analyze_requirement_document                │
-│      Có URL app:   /generate_requirements_from_website (N lần)  │
+│      Có tài liệu:  /analyze-requirement-document                │
+│      Có URL app:   /generate-requirements-from-website (N lần)  │
 │                          ↓                                       │
 │  📊 Bước 1: Phân Tích Cross-Module & Sinh Ma Trận              │
-│      Workflow: /generate_cross_module_test_plan                 │
+│      Workflow: /generate-cross-module-test-plan                 │
 │      Mode: DOCUMENT (mặc định) hoặc BROWSER                     │
 │      Output: Data Flow Map + Ma trận kết hợp                    │
 │                          ↓                                       │
 │  🗃️ Bước 2: Sinh Test Data Cho Ma Trận                         │
-│      Workflow: /generate_combinatorial_test_data                │
+│      Workflow: /generate-combinatorial-test-data                │
 │      Mode: GENERATE (offline) hoặc PIPELINE (chạy thật)         │
 │      Output: Bộ test data (offline hoặc trên hệ thống)         │
 │                          ↓                                       │
 │  📝 Bước 3: Sinh Test Cases Chi Tiết                            │
-│      Workflow: /generate_testcases_manual_rbt (FULL RBT)        │
+│      Workflow: /generate-testcases-manual-rbt (FULL RBT)        │
 │      Input: Ma trận + Requirements                              │
 │      Output: Test cases đầy đủ                                  │
 │                          ↓                                       │
 │  🤖 Bước 4: Sinh Automation Scripts                             │
-│      Workflow: /generate_automation_from_testcases              │
+│      Workflow: /generate-automation-from-testcases              │
 │      Output: Scripts PASS stable                                │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
@@ -133,8 +133,8 @@ plans/cross-module/
 
 ```
 .claude/commands/
-├── generate_cross_module_test_plan.md       ← Phân tích cross-module + sinh Ma trận
-└── generate_combinatorial_test_data.md      ← Sinh test data cho ma trận
+├── generate-cross-module-test-plan.md       ← Phân tích cross-module + sinh Ma trận
+└── generate-combinatorial-test-data.md      ← Sinh test data cho ma trận
 ```
 
 **Skills sử dụng:**

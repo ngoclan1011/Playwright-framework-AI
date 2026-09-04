@@ -1,4 +1,4 @@
-/generate_traceability_matrix
+/generate-traceability-matrix
 
 # CONTEXT
 - Phạm vi: [Toàn dự án / Module cụ thể: ...]

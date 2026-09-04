@@ -1,4 +1,4 @@
-/generate_automation_from_mobile_flow
+/generate-automation-from-mobile-flow
 
 # ỨNG DỤNG
 - Platform: [Android / iOS / Cả hai]

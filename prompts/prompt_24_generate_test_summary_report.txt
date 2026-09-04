@@ -1,4 +1,4 @@
-/generate_test_summary_report
+/generate-test-summary-report
 
 # CONTEXT
 - Mốc báo cáo: [VD: Release v2.4 / Sprint 12 / UAT đợt 2]

@@ -5,7 +5,7 @@
 | **Hệ thống** | Perfex CRM — Anh Tester Demo (`https://crm.anhtester.com`) |
 | **Module** | Đăng nhập / Xác thực · prefix `LOGIN` |
 | **Nguồn requirement** | [requirements_login.md](../../requirements/login/requirements_login.md) — 43 REQ, **39 trong phạm vi** |
-| **Mode sinh** | QUICK (`/generate_testcases_from_requirements`) · **độ hạt GỘP** |
+| **Mode sinh** | QUICK (`/generate-testcases-from-requirements`) · **độ hạt GỘP** |
 | **Ngày sinh** | 2026-08-20 · **cập nhật ngôn ngữ kiểm chứng 2026-08-20** |
 | **Dải TC ID** | `CRM_LOGIN_TC_001` → `CRM_LOGIN_TC_041` — **giữ nguyên qua lần cập nhật này** |
 | **Mã kế tiếp** | `CRM_LOGIN_TC_042` — **KHÔNG đánh lại từ 001** |
@@ -23,7 +23,7 @@ TC ở đây được viết theo **độ hạt GỘP**: các biến thể của
 - Chạy một TC nghĩa là chạy **hết** biến thể của nó, không được bỏ dòng nào
 - Sang automation, TC gộp map thành **test data-driven** (`@DataProvider` · `test.each` · `parametrize`), mỗi biến thể một bộ dữ liệu
 
-> Cần mỗi biến thể là một TC riêng (khách hàng tính công theo số TC, hoặc cần pass-rate từng biến thể) → sinh lại bằng `/generate_testcases_from_requirements <đường dẫn> TÁCH`.
+> Cần mỗi biến thể là một TC riêng (khách hàng tính công theo số TC, hoặc cần pass-rate từng biến thể) → sinh lại bằng `/generate-testcases-from-requirements <đường dẫn> TÁCH`.
 
 ### 2. Dòng `🔧 Ghi chú kỹ thuật` — đọc kỹ trước khi chạy
 
@@ -283,4 +283,4 @@ Một số yêu cầu — cookie ghi nhớ, mã chống CSRF, header bảo mật
 |---|---|---|---|
 | 2026-08-20 | Phản hồi người dùng — TC chứa quá nhiều kiểm chứng thuộc tính HTML | **Viết lại toàn bộ Test Steps và Expected Result theo ngôn ngữ người dùng nhìn thấy.** Mọi `document.title`, `body.className`, `checkValidity()`, `offsetParent`, `querySelector`, selector CSS, mã HTTP và tab Network được gỡ khỏi phần chính; nội dung cấp kỹ thuật tách xuống dòng `🔧 Ghi chú kỹ thuật (cần DevTools)` và TC gắn thêm tag `@TechCheck` (23 TC).<br>**TC ID giữ nguyên `001`→`041`** — không đánh lại, không cắt case nào, độ phủ vẫn 39/39 REQ. Bổ sung `ASM-09` giải thích vì sao `TC_008`/`TC_009` không có kỳ vọng nhìn thấy được. `TC_016` đổi cách chạy sang **cửa sổ ẩn danh + tắt tự điền** để tester bắt được lỗi mà không cần View Source. Bổ sung bộ chạy `@TechCheck` và mục "Cách đọc" phần 2.<br>Luật gốc đã đưa vào `.claude/skills/skills-rbt-manual-testing/SKILL.md` mục **Quy Tắc Ngôn Ngữ Kiểm Chứng** (+ tiêu chí 8 của Self-Quality Gate) nên lần sinh sau không lặp lại. Bản trước lưu ở `archive/test_cases_login_v2_GOP_domdanguage_20260820.md` | Toàn bộ `CRM_LOGIN_TC_001` → `CRM_LOGIN_TC_041` |
 | 2026-08-20 | Yêu cầu người dùng — gộp TC nhỏ lẻ | **Sinh lại toàn bộ ở độ hạt GỘP: 82 TC → 41 TC.** Độ phủ REQ **không đổi** (39/39) và **không case nào bị bỏ**. TC ID đánh lại từ `001` — chấp nhận được vì bộ TC 82 chưa có script / execution report / RTM nào trỏ vào | Toàn bộ `CRM_LOGIN_TC_001` → `CRM_LOGIN_TC_041` |
-| 2026-08-20 | `/generate_testcases_from_requirements` Mode QUICK | Khởi tạo bộ TC từ `requirements_login.md` ở **độ hạt TÁCH** — 82 TC, 3 part. Mở 9/9 ảnh evidence, không phát hiện xung đột tài liệu ↔ ảnh | (bản đầu tiên) |
+| 2026-08-20 | `/generate-testcases-from-requirements` Mode QUICK | Khởi tạo bộ TC từ `requirements_login.md` ở **độ hạt TÁCH** — 82 TC, 3 part. Mở 9/9 ảnh evidence, không phát hiện xung đột tài liệu ↔ ảnh | (bản đầu tiên) |

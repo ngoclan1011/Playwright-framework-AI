@@ -43,7 +43,7 @@
 
 ## 1. Add Playwright MCP Thủ Công (Developers → Local MCP Server)
 
-Playwright MCP cho Claude quyền **mở browser thật, đọc DOM, click, gõ phím, chụp screenshot**. Đây là điều kiện bắt buộc để chạy các skill `skills-ui-debug-agent`, `skills-manual-test-executor`, và các command `/execute_test_cases`, `/generate_requirements_from_website`.
+Playwright MCP cho Claude quyền **mở browser thật, đọc DOM, click, gõ phím, chụp screenshot**. Đây là điều kiện bắt buộc để chạy các skill `skills-ui-debug-agent`, `skills-manual-test-executor`, và các command `/execute-test-cases`, `/generate-requirements-from-website`.
 
 > 📌 **Claude Desktop KHÔNG có form điền sẵn.** Mục `Local MCP servers` chỉ có nút **Edit Config** — bấm vào là mở thẳng file `claude_desktop_config.json` để bạn tự gõ JSON. Không có ô Name / Command / Arguments riêng lẻ.
 
@@ -287,7 +287,7 @@ npx playwright install
 
 ### 2.2. Atlassian (Jira + Confluence)
 
-**Dùng để:** kéo requirement/user story từ Jira, đọc tài liệu Confluence, cập nhật kết quả test lên ticket. Phục vụ command `/fetch_jira_requirements`, `/analyze_requirement_document`, `/update_requirements_from_ticket`, và skill `skills-jira-integration`.
+**Dùng để:** kéo requirement/user story từ Jira, đọc tài liệu Confluence, cập nhật kết quả test lên ticket. Phục vụ command `/fetch-jira-requirements`, `/analyze-requirement-document`, `/update-requirements-from-ticket`, và skill `skills-jira-integration`.
 
 **Các bước:**
 
@@ -311,7 +311,7 @@ Sau đó gõ `/mcp` trong phiên Claude Code → chọn `atlassian` → **Authen
 
 > ⚠️ Luồng OAuth **cần môi trường tương tác**. Nếu chạy trong CI hoặc phiên non-interactive, Claude sẽ báo "server needs authorization" và không dùng được cho tới khi bạn xác thực ở phiên tương tác.
 
-**Giới hạn cần biết:** Connector Atlassian **không** bao gồm Xray. Muốn đẩy kết quả lên Xray (`/import_test_results_xray`), phải dùng Xray REST API với `CLIENT_ID` / `CLIENT_SECRET` để trong `.env` — xem skill `skills-jira-integration`.
+**Giới hạn cần biết:** Connector Atlassian **không** bao gồm Xray. Muốn đẩy kết quả lên Xray (`/import-test-results-xray`), phải dùng Xray REST API với `CLIENT_ID` / `CLIENT_SECRET` để trong `.env` — xem skill `skills-jira-integration`.
 
 ### 2.3. Slack
 
@@ -407,10 +407,10 @@ gh run view --log-failed
 
 | Tên | Loại | Cách cài | Cần OAuth | Dùng cho command/skill nào |
 |---|---|---|---|---|
-| **Playwright** | Local MCP | `npx @playwright/mcp@latest` | Không | `/execute_test_cases`, `/generate_requirements_from_website`, `/generate_automation_from_ui_flow` |
-| **Atlassian** | Connector | Settings → Connectors | Có | `/fetch_jira_requirements`, `/update_requirements_from_ticket`, `skills-jira-integration` |
+| **Playwright** | Local MCP | `npx @playwright/mcp@latest` | Không | `/execute-test-cases`, `/generate-requirements-from-website`, `/generate-automation-from-ui-flow` |
+| **Atlassian** | Connector | Settings → Connectors | Có | `/fetch-jira-requirements`, `/update-requirements-from-ticket`, `skills-jira-integration` |
 | **Slack** | Connector | Settings → Connectors | Có | Gửi report, đọc task, Schedule |
-| **GitHub** | Connector / CLI | Connectors hoặc `gh auth login` | Có | Đọc CI result, tạo issue từ `/create_bug_report` |
+| **GitHub** | Connector / CLI | Connectors hoặc `gh auth login` | Có | Đọc CI result, tạo issue từ `/create-bug-report` |
 | **Claude in Chrome** | Extension | Chrome Web Store | Có | Thao tác trên session sẵn có |
 
 ---

@@ -95,7 +95,7 @@ Sử dụng skill này khi:
 ## 🔴 Requirements chưa được cover (ưu tiên xử lý)
 | REQ ID | Mô tả | Đề xuất |
 |---|---|---|
-| REQ-003 | ... | Sinh TC bằng /generate_testcases_from_requirements |
+| REQ-003 | ... | Sinh TC bằng /generate-testcases-from-requirements |
 
 ## 🟡 TC chưa automate (đề xuất thứ tự theo priority)
 | TC ID | Priority | Ghi chú |

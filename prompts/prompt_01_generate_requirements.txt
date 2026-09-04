@@ -1,4 +1,4 @@
-/generate_requirements_from_website
+/generate-requirements-from-website
 
 # CONTEXT
 - Website URL: [URL_TRANG_WEB]

@@ -5,7 +5,7 @@ skills:
   - skills-requirements-analyzer
 ---
 
-# /generate_cross_module_test_plan — Phân Tích Cross-Module & Sinh Ma Trận Kết Hợp
+# /generate-cross-module-test-plan — Phân Tích Cross-Module & Sinh Ma Trận Kết Hợp
 
 > **Dùng khi:** Tính năng cần test đi qua **nhiều modules nối tiếp nhau**, mỗi module có nhiều lựa chọn (dimensions), và bộ kết hợp các lựa chọn quyết định output cuối cùng.
 
@@ -19,8 +19,8 @@ skills:
 
 | Tình huống | Dùng? |
 |------------|-------|
-| Tính năng đi qua **1 module/form** | ❌ Dùng `/generate_testcases_manual_rbt` |
-| Tính năng đi qua **nhiều modules**, mỗi module **độc lập** | ⚠️ Dùng `/generate_application_test_plan` |
+| Tính năng đi qua **1 module/form** | ❌ Dùng `/generate-testcases-manual-rbt` |
+| Tính năng đi qua **nhiều modules**, mỗi module **độc lập** | ⚠️ Dùng `/generate-application-test-plan` |
 | Tính năng đi qua **nhiều modules NỐI TIẾP**, output phụ thuộc **bộ kết hợp điều kiện** | ✅ **Đúng workflow này** |
 | Cần **ma trận kết hợp** (Output-Class / Pairwise / Decision Table đa chiều) | ✅ **Đúng workflow này** |
 
@@ -352,9 +352,9 @@ Agent hỗ trợ **3 chiến lược** — user chọn hoặc agent đề xuất
 
 | Mục tiêu | Workflow tiếp theo |
 |----------|-------------------|
-| Sinh **test cases chi tiết** cho từng bộ kết hợp | `/generate_testcases_manual_rbt` — input = ma trận |
-| Tạo **test data thật trên hệ thống** qua browser pipeline | `/generate_combinatorial_test_data` — mode PIPELINE |
-| Sinh **automation scripts** | `/generate_automation_from_testcases` — input = test cases |
+| Sinh **test cases chi tiết** cho từng bộ kết hợp | `/generate-testcases-manual-rbt` — input = ma trận |
+| Tạo **test data thật trên hệ thống** qua browser pipeline | `/generate-combinatorial-test-data` — mode PIPELINE |
+| Sinh **automation scripts** | `/generate-automation-from-testcases` — input = test cases |
 
 ---
 

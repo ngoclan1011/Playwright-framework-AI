@@ -113,11 +113,11 @@ docs/
 
 | Tình huống | Workflow | Ghi vào đâu |
 |---|---|---|
-| Sinh REQ chi tiết cho 1 module API | `/analyze_requirement_document` với spec đã snapshot | `_book-api/<module>/requirements_<module>.md` + cập nhật bảng mục 1 |
-| Sinh API test cases | `/generate_api_tests_from_swagger` (Mode SPEC) | `docs/testcases/_book-api/<module>/` |
-| Sinh cả automation script | `/generate_api_tests_from_swagger` (Mode FULL) | Như trên + source code |
+| Sinh REQ chi tiết cho 1 module API | `/analyze-requirement-document` với spec đã snapshot | `_book-api/<module>/requirements_<module>.md` + cập nhật bảng mục 1 |
+| Sinh API test cases | `/generate-api-tests-from-swagger` (Mode SPEC) | `docs/testcases/_book-api/<module>/` |
+| Sinh cả automation script | `/generate-api-tests-from-swagger` (Mode FULL) | Như trên + source code |
 | Spec đổi phiên bản | Snapshot spec mới vào `_discovery/sources/`, so sánh với bản cũ | Nhật ký khám phá ở `api_map.md` |
-| Báo lỗi bảo mật F-01…F-07 | `/create_bug_report` | `docs/bugs/_book-api/<module>/` |
+| Báo lỗi bảo mật F-01…F-07 | `/create-bug-report` | `docs/bugs/_book-api/<module>/` |
 
 **Thứ tự đề xuất:** `AUTH → USER → BOOK → CAT → PROMO → FILE → ADDR → SYS`
 `AUTH` đi đầu vì mọi module còn lại cần token. `SYS` để cuối vì là tiện ích test, không phải nghiệp vụ.

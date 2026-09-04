@@ -1,9 +1,9 @@
-/analyze_test_report
+/analyze-test-report
 
 # NHÁNH (bắt buộc chọn 1 — chọn nhầm là phân loại failure sai toàn bộ)
 [Xoá dòng không dùng:]
 - AUTOMATION — report Playwright / Allure / JUnit / TestNG
-- MANUAL — execution_report.md / retest_report.md do /execute_test_cases, /retest_fixed_bugs sinh ra
+- MANUAL — execution_report.md / retest_report.md do /execute-test-cases, /retest-fixed-bugs sinh ra
 
 # CONTEXT
 - Loại suite / đợt chạy: [Smoke / Regression / Full]
@@ -26,4 +26,4 @@
 # GHI CHÚ
 - Workflow này chỉ phân tích và báo cáo, KHÔNG tự sửa test/code/TC
 - Nhánh MANUAL: agent đọc mục BLOCKED TRƯỚC mục FAIL — BLOCKED > 20% thì không kết luận chất lượng
-- Cần gộp nhiều module thành báo cáo gửi PM/khách → dùng /generate_test_summary_report thay vì workflow này
+- Cần gộp nhiều module thành báo cáo gửi PM/khách → dùng /generate-test-summary-report thay vì workflow này

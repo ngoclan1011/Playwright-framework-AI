@@ -1,4 +1,4 @@
-/generate_api_mocks
+/generate-api-mocks
 
 # CONTEXT
 - Project path: [path/to/project]

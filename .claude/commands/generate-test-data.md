@@ -5,7 +5,7 @@ skills:
   - skills-qa-automation-engineer
 ---
 
-# /generate_test_data — Sinh Test Data Có Cấu Trúc
+# /generate-test-data — Sinh Test Data Có Cấu Trúc
 
 > User cung cấp feature/module hoặc test cases cần sinh data.
 > AI phân tích fields, constraints, sinh bộ data đầy đủ (positive, negative, boundary, edge cases) với format sẵn sàng sử dụng.

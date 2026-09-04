@@ -1,32 +1,32 @@
 ---
-description: Sinh test data cho ma trận kết hợp đa chiều bằng pipeline chạy thật qua nhiều modules. Input từ /generate_cross_module_test_plan.
+description: Sinh test data cho ma trận kết hợp đa chiều bằng pipeline chạy thật qua nhiều modules. Input từ /generate-cross-module-test-plan.
 skills:
   - skills-test-data-generator
   - skills-ui-debug-agent
   - skills-qa-automation-engineer
 ---
 
-# /generate_combinatorial_test_data — Sinh Test Data Cho Ma Trận Kết Hợp
+# /generate-combinatorial-test-data — Sinh Test Data Cho Ma Trận Kết Hợp
 
-> **Dùng khi:** Đã có ma trận kết hợp (từ `/generate_cross_module_test_plan`) và cần **tạo test data thực tế** bằng cách chạy qua nhiều modules trên browser, hoặc sinh bộ data có cấu trúc sẵn sàng cho automation.
+> **Dùng khi:** Đã có ma trận kết hợp (từ `/generate-cross-module-test-plan`) và cần **tạo test data thực tế** bằng cách chạy qua nhiều modules trên browser, hoặc sinh bộ data có cấu trúc sẵn sàng cho automation.
 
 > **BẮT BUỘC (MANDATORY):** Trước khi bắt đầu, PHẢI nạp và đọc kỹ:
 > - **Skill:** `.claude/skills/skills-test-data-generator/SKILL.md` — Quy tắc sinh data (xem phần Multi-Step Pipeline)
 > - **Skill:** `.claude/skills/skills-ui-debug-agent/SKILL.md` — Inspect DOM khi chạy browser
-> - **Workflow:** `.claude/commands/generate_cross_module_test_plan.md` — Hiểu cấu trúc ma trận đầu vào
+> - **Workflow:** `.claude/commands/generate-cross-module-test-plan.md` — Hiểu cấu trúc ma trận đầu vào
 
 ---
 
 ## Mối quan hệ với các workflows khác
 
 ```
-/generate_cross_module_test_plan     →  Ma trận kết hợp (input)
+/generate-cross-module-test-plan     →  Ma trận kết hợp (input)
         ↓
-/generate_combinatorial_test_data    →  Bộ test data (workflow này)
+/generate-combinatorial-test-data    →  Bộ test data (workflow này)
         ↓
-/generate_testcases_manual_rbt       →  Test cases chi tiết
+/generate-testcases-manual-rbt       →  Test cases chi tiết
         ↓
-/generate_automation_from_testcases  →  Automation scripts
+/generate-automation-from-testcases  →  Automation scripts
 ```
 
 ---
@@ -82,7 +82,7 @@ Nếu app là **môi trường demo/staging nhiều người dùng chung**:
 
 | Input | Bắt buộc | Mô tả |
 |-------|----------|-------|
-| **Ma trận kết hợp** | ✅ | File `.md` / bảng Markdown từ `/generate_cross_module_test_plan` |
+| **Ma trận kết hợp** | ✅ | File `.md` / bảng Markdown từ `/generate-cross-module-test-plan` |
 | **URL ứng dụng** | ✅ (PIPELINE) | Để agent chạy browser tạo data |
 | **Credentials** | ⚠️ PIPELINE | Nếu app cần đăng nhập |
 | **Output format** | ❌ | `json` (mặc định), `csv`, `markdown`, `code` (TS/Java/Python) |

@@ -21,7 +21,7 @@ skills:
 
 | Nguồn | Bắt buộc? | Ghi chú |
 |---|---|---|
-| Requirements (markdown/Jira export/user stories) | Cần ≥2 nguồn | Có thể lấy từ `/fetch_jira_requirements` |
+| Requirements (markdown/Jira export/user stories) | Cần ≥2 nguồn | Có thể lấy từ `/fetch-jira-requirements` |
 | Manual test cases (markdown/Excel/CSV) | Cần ≥2 nguồn | |
 | Automation scripts (path thư mục test) | Cần ≥2 nguồn | Agent tự scan `.spec.ts`, `*Test.java`, `.py` |
 
@@ -45,13 +45,13 @@ skills:
 3. **⬛ Module chưa có tài liệu — điểm mù của RTM, BẮT BUỘC kiểm:**
    Đọc `docs/requirements/README.md`, liệt kê module có `Trạng thái recon` = ⬜ / 🟨 / ⏸️.
    Những module này **không có REQ nào**, nên RTM tính đúng theo công thức vẫn ra coverage cao — trong khi cả một module chưa ai chạm tới. Không nêu ra thì con số RTM **gây hiểu nhầm nghiêm trọng**.
-   Chưa có file danh mục (chưa chạy `/discover_system`) → ghi rõ: *"Chưa khảo sát cấp hệ thống — không kết luận được RTM đã phủ hết hệ thống hay chưa"*.
+   Chưa có file danh mục (chưa chạy `/discover-system`) → ghi rõ: *"Chưa khảo sát cấp hệ thống — không kết luận được RTM đã phủ hết hệ thống hay chưa"*.
 
 ### Bước 4: Xuất RTM (CHECKPOINT)
 1. Sinh `traceability_matrix.md` theo template trong skill
 2. Nếu user cần import Excel → sinh thêm `traceability_matrix.csv`
 3. **⏸️ Trình bày kết quả** — nhấn mạnh mục 🔴 và mục ⚠️ cần user xác nhận
-4. Đề xuất bước tiếp theo: khảo sát module còn ⬜ (`/generate_requirements_from_website`), sinh TC lấp gap (`/generate_testcases_from_requirements`), automate TC ưu tiên cao (`/generate_automation_from_testcases`)
+4. Đề xuất bước tiếp theo: khảo sát module còn ⬜ (`/generate-requirements-from-website`), sinh TC lấp gap (`/generate-testcases-from-requirements`), automate TC ưu tiên cao (`/generate-automation-from-testcases`)
 
 ## Output
 

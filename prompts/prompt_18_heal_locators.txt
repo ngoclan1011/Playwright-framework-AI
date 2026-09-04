@@ -1,4 +1,4 @@
-/heal_locators
+/heal-locators
 
 # CONTEXT
 - Mode: [SCAN (chỉ báo cáo) / HEAL (sửa + verify)]

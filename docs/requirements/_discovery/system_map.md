@@ -1,6 +1,6 @@
 # Bản đồ hệ thống — Perfex CRM (Anh Tester Demo)
 
-> **Tầng khám phá — KHÔNG chứa mã `REQ-XXX-NN`.** Ở đây chỉ cấp **prefix** cho từng module. Mã REQ được cấp ở tầng module khi chạy `/generate_requirements_from_website`.
+> **Tầng khám phá — KHÔNG chứa mã `REQ-XXX-NN`.** Ở đây chỉ cấp **prefix** cho từng module. Mã REQ được cấp ở tầng module khi chạy `/generate-requirements-from-website`.
 >
 > Danh mục toàn hệ thống: [../README.md](../README.md)
 
@@ -219,7 +219,7 @@ Xếp theo **phụ thuộc trước, rủi ro sau** (user chốt ngày 2026-08-1
 
 | Vùng | Lý do | Xử lý |
 |---|---|---|
-| **Khu Quản trị hệ thống (Setup)** — Settings · Staff · Roles · Departments · Taxes · Currencies · Payment Modes · Custom Fields · Email Templates · Announcements | Menu bánh răng **không có trong DOM**; thử trực tiếp `/admin/settings`, `/admin/staff`, `/admin/roles` đều bị chuyển về `/admin/access_denied` | **Ngoài phạm vi đợt này** (user chốt) — không cấp prefix. Muốn đưa vào sau: xin account quyền cao hơn rồi chạy `/discover_system` Mode ADD |
+| **Khu Quản trị hệ thống (Setup)** — Settings · Staff · Roles · Departments · Taxes · Currencies · Payment Modes · Custom Fields · Email Templates · Announcements | Menu bánh răng **không có trong DOM**; thử trực tiếp `/admin/settings`, `/admin/staff`, `/admin/roles` đều bị chuyển về `/admin/access_denied` | **Ngoài phạm vi đợt này** (user chốt) — không cấp prefix. Muốn đưa vào sau: xin account quyền cao hơn rồi chạy `/discover-system` Mode ADD |
 | Cổng khách hàng (front-end site) | Nằm ngoài khu `/admin`; các luồng khách ký hợp đồng, bình luận đề xuất, xem KB đều bắt nguồn từ đây | Chưa khảo sát — cần chốt phạm vi riêng |
 | Form tạo/sửa của mọi module | Môi trường dùng chung, tầng khám phá chỉ quan sát danh sách | Recon cấp module sẽ mở form (chỉ xem, không Save) |
 | Số lượng role của hệ thống | Màn hình Roles 403 | Chưa biết hệ thống có mấy role |

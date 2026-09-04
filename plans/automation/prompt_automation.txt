@@ -1,7 +1,7 @@
 # ============================================================
 # ONE-CLICK AUTOMATION PROMPT
 # ============================================================
-# Workflow: /generate_automation_from_testcases
+# Workflow: /generate-automation-from-testcases
 # ============================================================
 #
 # CÁCH DÙNG:
@@ -14,7 +14,7 @@
 
 ---START---
 
-/generate_automation_from_testcases
+/generate-automation-from-testcases
 
 Bạn là Senior Automation Engineer với 10 năm kinh nghiệm. Hãy tự động hóa toàn bộ Manual Test Cases bên dưới thành automation test script hoàn chỉnh, chạy được, PASS 100%.
 

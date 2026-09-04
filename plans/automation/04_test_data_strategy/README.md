@@ -1,6 +1,6 @@
 # Bước 4: Chiến lược dữ liệu (Test Data Strategy)
 
-**Workflow:** `/generate_automation_from_testcases` (tiếp tục)
+**Workflow:** `/generate-automation-from-testcases` (tiếp tục)
 **Skill:** `skills-qa-automation-engineer` + `skills-test-data-generator`
 
 ---

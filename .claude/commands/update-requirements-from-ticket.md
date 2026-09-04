@@ -20,15 +20,15 @@ Module đang phát triển thì ticket liên tục sửa/bổ sung yêu cầu. W
 > **KHÔNG dùng workflow này khi:**
 > | Tình huống | Dùng thay thế |
 > |---|---|
-> | Module **chưa có** tài liệu requirements | `/generate_requirements_from_website` hoặc `/analyze_requirement_document` |
-> | Chỉ cần phân tích ticket, chưa muốn động vào tài liệu module | `/analyze_requirement_document` |
-> | Cần sinh lại test case sau khi cập nhật | `/generate_testcases_manual_rbt` (chỉ cho REQ 🟡/🟢 mới) |
+> | Module **chưa có** tài liệu requirements | `/generate-requirements-from-website` hoặc `/analyze-requirement-document` |
+> | Chỉ cần phân tích ticket, chưa muốn động vào tài liệu module | `/analyze-requirement-document` |
+> | Cần sinh lại test case sau khi cập nhật | `/generate-testcases-manual-rbt` (chỉ cho REQ 🟡/🟢 mới) |
 
 ## Đầu vào (Input)
 
 | # | Input | Bắt buộc | Mô tả |
 |---|---|---|---|
-| 1 | **Ticket mới** | ✅ | File hoặc nội dung ticket — xem bảng định dạng ở `/analyze_requirement_document` |
+| 1 | **Ticket mới** | ✅ | File hoặc nội dung ticket — xem bảng định dạng ở `/analyze-requirement-document` |
 | 2 | **Module đích** | ✅ | Tên module để xác định `docs/requirements/<module>/requirements_<module>.md` |
 | 3 | **Thư mục test cases** | ⭕ Khuyến khích | Để sinh Impact Report chính xác. Không có thì Impact Report ghi `⚠️ chưa rà soát` |
 | 4 | **Mockup/file đính kèm** | ⭕ Tùy chọn | Xử lý theo mục 3.2 Bước 2 của skill |
@@ -92,7 +92,7 @@ Sửa **tại chỗ** `requirements_<module>.md`, theo đúng thứ tự:
 5. **Nhật ký thay đổi (6.9):** thêm dòng mới **lên đầu bảng**, một dòng cho mỗi nhóm thay đổi
 6. **Metadata (6.1):** cập nhật `Dải mã đã dùng` và `Mã kế tiếp`
 7. **Danh mục toàn hệ thống** `docs/requirements/README.md` — **BẮT BUỘC**, đây là chỗ hay quên nhất:
-   - Bảng mục 1: cột `REQ đã dùng`, `Mã kế tiếp`, `AMB treo`, `Cập nhật`. Module mới chỉ được `/discover_system` phát hiện (đang ⬜) mà ticket này là lần đầu sinh REQ → đổi `Trạng thái recon` sang ✅ và điền `Mức phủ tài liệu`
+   - Bảng mục 1: cột `REQ đã dùng`, `Mã kế tiếp`, `AMB treo`, `Cập nhật`. Module mới chỉ được `/discover-system` phát hiện (đang ⬜) mà ticket này là lần đầu sinh REQ → đổi `Trạng thái recon` sang ✅ và điền `Mức phủ tài liệu`
    - Bảng mục 2: số lượng REQ theo trạng thái 🟢/🟡/🔴/⚪ của module này và dòng Tổng
    - Mục 3: thêm/gỡ ambiguity 🔴 High vừa phát sinh hoặc vừa được trả lời
 
@@ -102,7 +102,7 @@ Sửa **tại chỗ** `requirements_<module>.md`, theo đúng thứ tự:
 
 Báo cáo riêng cho tester. **PHẢI ghi ra file** `docs/requirements/<module>/impact/impact_<TICKET-ID>.md`, đồng thời hiển thị trong chat và là cột `TC cần xử lý` trong Nhật ký.
 
-> 🚨 **Không được để Impact Report chỉ nằm trong chat.** Nó là input **bắt buộc** của `/update_testcases_from_impact` và `/update_automation_from_impact` — hai workflow này thường chạy ở phiên khác, có khi hôm sau. Đóng phiên là mất, và không có cách nào dựng lại ngoài chạy lại cả workflow.
+> 🚨 **Không được để Impact Report chỉ nằm trong chat.** Nó là input **bắt buộc** của `/update-testcases-from-impact` và `/update-automation-from-impact` — hai workflow này thường chạy ở phiên khác, có khi hôm sau. Đóng phiên là mất, và không có cách nào dựng lại ngoài chạy lại cả workflow.
 
 Nội dung file:
 
@@ -136,8 +136,8 @@ Nội dung file:
 
 **Cách xác định TC bị ảnh hưởng:**
 1. Nếu có thư mục test cases → tìm theo cột `REQ ID` trong các file TC
-2. Nếu có RTM (`/generate_traceability_matrix`) → tra ngược từ RTM
-3. Không có nguồn nào → ghi `⚠️ chưa rà soát` và **nói rõ với user** rằng cần chạy `/generate_traceability_matrix` để biết tác động thật
+2. Nếu có RTM (`/generate-traceability-matrix`) → tra ngược từ RTM
+3. Không có nguồn nào → ghi `⚠️ chưa rà soát` và **nói rõ với user** rằng cần chạy `/generate-traceability-matrix` để biết tác động thật
 
 ## Quy tắc quan trọng
 
@@ -158,7 +158,7 @@ Nội dung file:
 - **PHẢI giữ 4 nơi khớp nhau:** Nhật ký (6.9) ↔ Trạng thái REQ (6.2) ↔ Dải mã metadata (6.1) ↔ **Danh mục `docs/requirements/README.md`**
 - **PHẢI kiểm tra lại dòng tổng của Phân rã Epic/Story** sau khi thêm/bỏ REQ
 - **PHẢI xuất Impact Report ra file** `docs/requirements/<module>/impact/impact_<TICKET-ID>.md` — kể cả khi không có TC nào bị ảnh hưởng (ghi rõ "không tác động")
-- **PHẢI báo đường dẫn file Impact Report** ở cuối, kèm command kế tiếp `/update_testcases_from_impact`
+- **PHẢI báo đường dẫn file Impact Report** ở cuối, kèm command kế tiếp `/update-testcases-from-impact`
 - **PHẢI đối chiếu ticket với AMB đang treo** (Bước 4) — đây là chỗ hay bị bỏ sót nhất
 - **PHẢI viết bằng Tiếng Việt**, format Markdown
 
@@ -166,11 +166,11 @@ Nội dung file:
 
 | Tình huống | Workflow |
 |---|---|
-| Trước đó — tạo tài liệu module lần đầu | `/generate_requirements_from_website` |
-| Trước đó — phân tích ticket độc lập, chưa merge vào module | `/analyze_requirement_document` |
-| Sau đó — **cập nhật TC bị ảnh hưởng (🟡) + archive TC bị gỡ (🗑️)** | `/update_testcases_from_impact` ⭐ mắt xích kế tiếp |
-| Sau đó — sinh TC cho REQ mới (🟢) | `/generate_testcases_manual_rbt` hoặc `/generate_testcases_from_requirements` |
-| Sau đó — chấm chất lượng bộ TC **sau khi** đã đồng bộ | `/review_testcases` |
-| Sau đó — cập nhật ma trận truy vết | `/generate_traceability_matrix` |
-| Sau đó — cập nhật automation script **đã có** theo Impact Report | `/update_automation_from_impact` |
-| Sau đó — automate TC mới hoàn toàn (chưa có script) | `/generate_automation_from_testcases` |
+| Trước đó — tạo tài liệu module lần đầu | `/generate-requirements-from-website` |
+| Trước đó — phân tích ticket độc lập, chưa merge vào module | `/analyze-requirement-document` |
+| Sau đó — **cập nhật TC bị ảnh hưởng (🟡) + archive TC bị gỡ (🗑️)** | `/update-testcases-from-impact` ⭐ mắt xích kế tiếp |
+| Sau đó — sinh TC cho REQ mới (🟢) | `/generate-testcases-manual-rbt` hoặc `/generate-testcases-from-requirements` |
+| Sau đó — chấm chất lượng bộ TC **sau khi** đã đồng bộ | `/review-testcases` |
+| Sau đó — cập nhật ma trận truy vết | `/generate-traceability-matrix` |
+| Sau đó — cập nhật automation script **đã có** theo Impact Report | `/update-automation-from-impact` |
+| Sau đó — automate TC mới hoàn toàn (chưa có script) | `/generate-automation-from-testcases` |

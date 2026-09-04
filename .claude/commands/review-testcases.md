@@ -9,11 +9,11 @@ skills:
 
 > **BẮT BUỘC (MANDATORY SKILL):** Bạn PHẢI nạp và đọc kỹ nội dung của skill **`skills-testcase-reviewer`** (tại `.claude/skills/skills-testcase-reviewer/SKILL.md`) trước khi bắt đầu.
 
-> 🚨 **KHÔNG dùng workflow này để cập nhật TC theo ticket đã đổi requirements** → dùng `/update_testcases_from_impact`.
+> 🚨 **KHÔNG dùng workflow này để cập nhật TC theo ticket đã đổi requirements** → dùng `/update-testcases-from-impact`.
 >
 > Workflow này chấm **chất lượng cách viết** theo rubric 6 tiêu chí. Một TC mô tả rất tốt về hành vi **đã bị thay đổi** vẫn đạt 12/12 điểm — rubric không đối chiếu với REQ mới, nên **không bắt được TC stale**. Mode FIX lại sinh file `_improved` lạc tên index mà các workflow sau đọc theo mẫu.
 >
-> Thứ tự đúng: `/update_testcases_from_impact` đồng bộ nội dung **trước** → workflow này chấm chất lượng **sau**.
+> Thứ tự đúng: `/update-testcases-from-impact` đồng bộ nội dung **trước** → workflow này chấm chất lượng **sau**.
 
 ## ⚠️ Nguyên tắc thực thi
 

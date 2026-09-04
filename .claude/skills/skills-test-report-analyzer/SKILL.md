@@ -17,7 +17,7 @@ Sử dụng skill này khi:
 - User đưa file report (HTML/JSON/XML) và hỏi "kết quả thế nào", "tại sao fail"
 - Cần so sánh kết quả giữa các lần chạy (trend analysis)
 - CI/CD pipeline đỏ và cần biết nên fix cái gì trước
-- **Vừa chạy xong manual** bằng `/execute_test_cases` hoặc `/retest_fixed_bugs`, cần gom nhóm FAIL theo nguyên nhân và biết lần chạy đó có đủ tin cậy để kết luận không
+- **Vừa chạy xong manual** bằng `/execute-test-cases` hoặc `/retest-fixed-bugs`, cần gom nhóm FAIL theo nguyên nhân và biết lần chạy đó có đủ tin cậy để kết luận không
 
 > Gộp nhiều module thành **một báo cáo gửi PM/khách kèm khuyến nghị go/no-go** thì đó là việc của `skills-test-summary-reporter`, không phải skill này. Skill này phân tích **một phạm vi chạy**; skill kia tổng hợp **toàn dự án tại một mốc**.
 
@@ -39,8 +39,8 @@ Sử dụng skill này khi:
 
 | Nguồn | Format | Vị trí |
 |---|---|---|
-| `/execute_test_cases` | Markdown | `docs/executions/<module>/run_*/execution_report.md` |
-| `/retest_fixed_bugs` | Markdown | `docs/executions/<module>/retest_*/retest_report.md` |
+| `/execute-test-cases` | Markdown | `docs/executions/<module>/run_*/execution_report.md` |
+| `/retest-fixed-bugs` | Markdown | `docs/executions/<module>/retest_*/retest_report.md` |
 
 ⚠️ **Không áp bảng Failure Categories của automation cho report manual.** Report manual **không có** stack trace, không có retry, không có tên page object — mọi tín hiệu dùng để phân loại failure của automation đều vắng mặt. Dùng bảng riêng ở mục **Phân tích Report Manual**.
 
@@ -93,11 +93,11 @@ Phân loại dựa trên **Expected vs Actual**, vì không có stack trace:
 
 | Category | Dấu hiệu trong report | Hành động |
 |---|---|---|
-| 🐛 **Bug ứng dụng** | Actual lệch Expected, Expected có căn cứ REQ, tái hiện được | `/create_bug_report` |
-| 📝 **TC viết sai / mơ hồ** | Expected không đo được, TC không nói rõ pre-condition, 2 TC cùng ID | `/review_testcases` — **KHÔNG** báo bug |
-| 📄 **Requirement đã lệch** | App chạy đúng logic mới, TC dựa trên requirement cũ | `/update_requirements_from_ticket` → `/update_testcases_from_impact` (**KHÔNG** dùng `/review_testcases` — rubric không bắt được TC stale) |
+| 🐛 **Bug ứng dụng** | Actual lệch Expected, Expected có căn cứ REQ, tái hiện được | `/create-bug-report` |
+| 📝 **TC viết sai / mơ hồ** | Expected không đo được, TC không nói rõ pre-condition, 2 TC cùng ID | `/review-testcases` — **KHÔNG** báo bug |
+| 📄 **Requirement đã lệch** | App chạy đúng logic mới, TC dựa trên requirement cũ | `/update-requirements-from-ticket` → `/update-testcases-from-impact` (**KHÔNG** dùng `/review-testcases` — rubric không bắt được TC stale) |
 | 🌐 **Môi trường / pre-condition** | Phần lớn BLOCKED, cùng lý do "không dựng được pre-condition", "không đăng nhập được" | Sửa môi trường trước, **KHÔNG** kết luận gì về chất lượng app |
-| 📊 **Test data** | "không tìm thấy bản ghi", data bị người khác sửa (môi trường dùng chung) | Sinh lại data, cân nhắc `/generate_test_data` |
+| 📊 **Test data** | "không tìm thấy bản ghi", data bị người khác sửa (môi trường dùng chung) | Sinh lại data, cân nhắc `/generate-test-data` |
 | 🔁 **Regression sau fix** | Xuất hiện trong `retest_report.md` mục "Regression phát sinh do fix" | Bug mới, priority cao — fix đã gây hỏng chỗ khác |
 
 ### Ba tín hiệu riêng của manual — bắt buộc kiểm

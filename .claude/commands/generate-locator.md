@@ -5,7 +5,7 @@ skills:
   - skills-ui-debug-agent
 ---
 
-# /generate_locator — Sinh Locator Ổn Định Cho UI Automation
+# /generate-locator — Sinh Locator Ổn Định Cho UI Automation
 
 > User cung cấp element cần tìm locator (mô tả, screenshot, URL, hoặc HTML snippet).
 > AI inspect DOM/UI hierarchy thực tế, sinh locator ổn định theo priority chuẩn, verify uniqueness, trả về kết quả.

@@ -314,7 +314,7 @@ export default function App() {
             <div className="text-base font-semibold text-slate-700">Kéo thả hoặc bấm để chọn file test cases</div>
             <p className="mt-2 text-sm text-slate-500">
               Hỗ trợ file Markdown chứa bảng test case có cột <code className="font-mono text-brand-700">TC ID</code>{' '}
-              (output của <code className="font-mono text-brand-700">/generate_testcases_from_requirements</code>).
+              (output của <code className="font-mono text-brand-700">/generate-testcases-from-requirements</code>).
               Có thể import nhiều file — mỗi file là một module.
             </p>
           </div>

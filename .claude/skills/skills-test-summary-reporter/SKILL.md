@@ -189,8 +189,8 @@ Mỗi tiêu chí chấm **Đạt / Không đạt / Không áp dụng**, kèm s�
 | Ưu tiên | Việc | Ai làm | Command |
 |---|---|---|---|
 | 🔴 Trước release | Fix BUG_CUST_1785700456 hoặc PM duyệt ngoại lệ | Dev / PM | — |
-| 🟠 Trước release | Xin tài khoản Manager để khảo sát module Báo cáo | QA | `/generate_requirements_from_website` |
-| 🟡 Sprint sau | Bổ sung TC cho 4 REQ chưa phủ | QA | `/generate_testcases_from_requirements` |
+| 🟠 Trước release | Xin tài khoản Manager để khảo sát module Báo cáo | QA | `/generate-requirements-from-website` |
+| 🟡 Sprint sau | Bổ sung TC cho 4 REQ chưa phủ | QA | `/generate-testcases-from-requirements` |
 ```
 
 ---

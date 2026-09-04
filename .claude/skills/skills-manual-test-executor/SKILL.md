@@ -237,7 +237,7 @@ File: `docs/executions/<module>/<run_id>/execution_report.md`
 
 ## 6. Đề xuất bước tiếp theo
 
-- FAIL #1 (High) → sinh bug report bằng `/create_bug_report`
+- FAIL #1 (High) → sinh bug report bằng `/create-bug-report`
 - 2 TC SKIPPED cần chạy tay có giám sát trên môi trường riêng
 ```
 
@@ -247,7 +247,7 @@ File: `docs/executions/<module>/<run_id>/execution_report.md`
 
 - ❌ Chấm PASS khi **chưa verify hết** các Expected Result đánh số
 - ❌ Suy đoán kết quả ("chắc là đúng") mà không snapshot quan sát thực tế
-- ❌ **Sửa nội dung TC cho khớp hành vi thực tế** — lệch thì ghi FAIL, TC chỉ được sửa qua `/review_testcases`
+- ❌ **Sửa nội dung TC cho khớp hành vi thực tế** — lệch thì ghi FAIL, TC chỉ được sửa qua `/review-testcases`
 - ❌ Tự thêm/bớt bước so với Test Steps rồi vẫn chấm PASS
 - ❌ Thực thi TC có thao tác phá huỷ trên môi trường dùng chung
 - ❌ Tạo dữ liệu test mà không dọn, hoặc dọn nhầm dữ liệu người khác

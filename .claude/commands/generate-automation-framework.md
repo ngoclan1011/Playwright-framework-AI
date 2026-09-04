@@ -198,7 +198,7 @@ Workflow này giúp agent thiết kế, scaffold và triển khai một automati
    **Nếu chưa có URL** (framework scaffold thuần):
    - Dùng placeholder + comment cảnh báo bắt buộc:
      ```typescript
-     // ⚠️ PLACEHOLDER — chưa inspect DOM. Chạy /generate_locator hoặc mở
+     // ⚠️ PLACEHOLDER — chưa inspect DOM. Chạy /generate-locator hoặc mở
      // Playwright MCP inspect trang thật rồi thay thế trước khi chạy test.
      readonly usernameInput = this.page.getByLabel('Username');
      readonly passwordInput = this.page.getByLabel('Password');

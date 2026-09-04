@@ -54,7 +54,7 @@ Agent tự động chọn mode dựa trên **trigger keywords** và **ngữ cả
 ### → Mode QUICK
 
 Kích hoạt khi:
-- User dùng command `/generate_testcases_from_requirements`
+- User dùng command `/generate-testcases-from-requirements`
 - User nói: "sinh test cases nhanh", "tạo TC từ requirement này", "viết test cases cho form..."
 - Requirements đã rõ ràng, scope nhỏ (1 module / 1 tính năng)
 - User không yêu cầu phân tích rủi ro hay quy trình bài bản
@@ -62,7 +62,7 @@ Kích hoạt khi:
 ### → Mode FULL RBT
 
 Kích hoạt khi:
-- User dùng command `/generate_testcases_manual_rbt`
+- User dùng command `/generate-testcases-manual-rbt`
 - User nói: "quy trình 6 bước", "phân tích RBT", "sinh test cases đầy đủ", "sinh bộ TC bài bản"
 - Scope lớn (nhiều modules, hệ thống phức tạp)
 - User yêu cầu Traceability Matrix hoặc đánh giá Risk Level
@@ -71,7 +71,7 @@ Kích hoạt khi:
 ### → Mode CHECKLIST
 
 Kích hoạt khi:
-- User dùng command `/generate_checklist_test`
+- User dùng command `/generate-checklist-test`
 - User nói: "sinh checklist test", "checklist smoke", "checklist trước release", "danh sách rà soát", "checklist bàn giao cho tester", "rà nhanh sau hotfix"
 - User cần **danh sách tick tay** ngắn gọn, KHÔNG cần steps chi tiết
 - User muốn rút gọn bộ TC chi tiết đã có thành checklist chạy nhanh
@@ -81,8 +81,8 @@ Kích hoạt khi:
 ### → Mode DELTA
 
 Kích hoạt khi:
-- User dùng command `/update_testcases_from_impact`
-- User đưa **Impact Report** (từ `/update_requirements_from_ticket`) hoặc danh sách REQ đã đổi
+- User dùng command `/update-testcases-from-impact`
+- User đưa **Impact Report** (từ `/update-requirements-from-ticket`) hoặc danh sách REQ đã đổi
 - User nói: "cập nhật TC theo ticket", "requirement đổi rồi, sửa TC", "TC nào bị ảnh hưởng", "đồng bộ lại bộ TC"
 - Module **đã có** `docs/testcases/<module>/test_cases_<module>.md` và yêu cầu vừa thay đổi
 
@@ -287,7 +287,7 @@ docs/testcases/
 
 | Quy tắc | Lý do |
 |---|---|
-| Tên index **luôn** `test_cases_<module>.md` | Mọi workflow phía sau (`/execute_test_cases`, `/review_testcases`, `/generate_automation_from_testcases`, `/generate_traceability_matrix`) đọc theo mẫu `docs/testcases/<module>/test_cases_<module>.md`. Đổi tên là vỡ chuỗi |
+| Tên index **luôn** `test_cases_<module>.md` | Mọi workflow phía sau (`/execute-test-cases`, `/review-testcases`, `/generate-automation-from-testcases`, `/generate-traceability-matrix`) đọc theo mẫu `docs/testcases/<module>/test_cases_<module>.md`. Đổi tên là vỡ chuỗi |
 | **KHÔNG** nhét số phiên bản vào tên index (`_v2`, `_new`…) | Phiên bản mới **thay thế** index; bản cũ chuyển vào `archive/` |
 | Part đặt trong `parts/`, đặt tên `part_NN_<slug>.md` | `NN` có số 0 đứng đầu để sắp xếp đúng; slug mô tả nhóm chức năng |
 | Mode DELTA sửa **tại chỗ** index/part, bản trước khi sửa copy vào `archive/` | Giữ đúng một nguồn sự thật. Sinh `_improved` / `_v2` ở ngoài `archive/` là để lại hai bộ TC mà không ai biết bộ nào đang dùng |
@@ -487,7 +487,7 @@ Sinh test cases **nhanh, đủ chất lượng** từ requirements/user stories 
 ```
 
 > **Giải thích Metadata:**
-> - **REQ ID:** Mã requirement mà TC này cover (`REQ-LOGIN-01`) — BẮT BUỘC, 1 TC có thể cover nhiều REQ (phân cách `,`). Đây là mắt xích truy vết để đối soát "đủ case" và chạy `/generate_traceability_matrix`
+> - **REQ ID:** Mã requirement mà TC này cover (`REQ-LOGIN-01`) — BẮT BUỘC, 1 TC có thể cover nhiều REQ (phân cách `,`). Đây là mắt xích truy vết để đối soát "đủ case" và chạy `/generate-traceability-matrix`
 > - **Automatable:** `Yes` / `No` / `Partial` (Độ khả thi để viết script tự động)
 > - **Auto Type:** `UI` / `API` / `Unit` / `N/A` (Loại automation phù hợp)
 > - **Tags:** `@Smoke`, `@Regression`, `@CriticalPath`, `@Security`, `@Boundary`
@@ -911,7 +911,7 @@ Trước khi xuất, agent **BẮT BUỘC** tự rà:
 
 Đồng bộ bộ TC **đã tồn tại** với requirements vừa đổi theo ticket. Chỉ chạm phần bị ảnh hưởng, giữ nguyên mọi thứ còn lại.
 
-Command: `/update_testcases_from_impact` — quy trình 7 bước chi tiết nằm trong command đó. Mục này là **bộ quy tắc bất biến** mà mọi lần chạy DELTA phải tuân thủ.
+Command: `/update-testcases-from-impact` — quy trình 7 bước chi tiết nằm trong command đó. Mục này là **bộ quy tắc bất biến** mà mọi lần chạy DELTA phải tuân thủ.
 
 ## Nguyên tắc gốc: TC ID là khoá, không phải nhãn
 
@@ -923,7 +923,7 @@ Vì vậy Mode DELTA đặt việc **bảo toàn TC ID** lên trên mọi mục 
 
 | # | Quy tắc | Vì sao |
 |---|---|---|
-| 1 | **Sửa tại chỗ** trong `test_cases_<module>.md` / `parts/part_NN_*.md` — tên file không đổi | Mọi workflow sau (`/execute_test_cases`, `/update_automation_from_impact`, `/generate_traceability_matrix`) đọc theo mẫu đường dẫn cố định |
+| 1 | **Sửa tại chỗ** trong `test_cases_<module>.md` / `parts/part_NN_*.md` — tên file không đổi | Mọi workflow sau (`/execute-test-cases`, `/update-automation-from-impact`, `/generate-traceability-matrix`) đọc theo mẫu đường dẫn cố định |
 | 2 | **Sao lưu trước khi sửa** vào `archive/test_cases_<module>_v<N>.md` | Sửa tại chỗ không có bản đối chiếu thì không ai kiểm được agent đã đổi gì |
 | 3 | **Giữ nguyên TC ID.** TC mới cấp số tiếp dải hiện có, KHÔNG chèn vào giữa | Xem nguyên tắc gốc ở trên |
 | 4 | **KHÔNG xoá dòng TC.** Chức năng gỡ → `🗑️ Deprecated (TICKET-XXX)` | Đối xứng quy tắc "KHÔNG xoá dòng REQ". Xoá dòng là mất dấu vết TC từng tồn tại, và script tương ứng thành orphan |
@@ -1058,7 +1058,7 @@ Vì vậy Mode DELTA đặt việc **bảo toàn TC ID** lên trên mọi mục 
 | `test_cases_<module>.md` đã sửa | Sửa **tại chỗ**, tên file không đổi, TC ID giữ nguyên |
 | `archive/test_cases_<module>_v<N>.md` | Bản trước khi sửa — để đối chiếu |
 | Nhật ký thay đổi | Bảng ở cuối file TC: ngày · ticket · TC bị ảnh hưởng · thay đổi · bản sao lưu |
-| **Delta TC List** | Hiển thị trong chat — input trực tiếp cho `/update_automation_from_impact` |
+| **Delta TC List** | Hiển thị trong chat — input trực tiếp cho `/update-automation-from-impact` |
 | Danh sách ngoài phạm vi | REQ 🟢 chưa có TC + command tiếp theo |
 
 Tất cả output phải bằng **Tiếng Việt**, format **Markdown**, và tuân thủ **Quy Tắc Xuất File & Theo Dõi Tiến Độ**: ghi thẳng vào file (`docs/testcases/` hoặc `docs/checklists/`), chat chỉ hiện tiến độ + Bảng Đối Soát Coverage + tóm tắt đường dẫn file.

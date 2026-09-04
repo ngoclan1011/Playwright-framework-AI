@@ -10,32 +10,32 @@
 
 ```
 ┌─ CHUẨN BỊ TÀI LIỆU ──────────────────────────────────────────────┐
-│  0. /discover_system                     → bản đồ module + prefix│  1 lần / hệ thống
-│  1. /generate_requirements_from_website  → REQ ID                │  N lần = số module
+│  0. /discover-system                     → bản đồ module + prefix│  1 lần / hệ thống
+│  1. /generate-requirements-from-website  → REQ ID                │  N lần = số module
 └──────────────────────────────────────────────────────────────────┘
                                   ↓
 ┌─ SINH & KIỂM TEST CASES ─────────────────────────────────────────┐
-│  2. /generate_testcases_manual_rbt       → TC có cột REQ ID      │  N lần = số module
-│  3. /review_testcases                    → chấm rubric, lấp gap  │
+│  2. /generate-testcases-manual-rbt       → TC có cột REQ ID      │  N lần = số module
+│  3. /review-testcases                    → chấm rubric, lấp gap  │
 └──────────────────────────────────────────────────────────────────┘
                                   ↓
 ┌─ THỰC THI & XỬ LÝ LỖI ───────────────────────────────────────────┐
-│  4. /execute_test_cases                  → chạy tay, chấm P/F/B/S│  Mỗi đợt kiểm thử
-│  5. /analyze_test_report                 → gom nhóm root cause   │
-│     /create_bug_report                   → bug report chuẩn      │
-│     /retest_fixed_bugs   ←──── dev fix ───┘  → FIXED? regression?│  ↻ lặp tới khi hết bug
+│  4. /execute-test-cases                  → chạy tay, chấm P/F/B/S│  Mỗi đợt kiểm thử
+│  5. /analyze-test-report                 → gom nhóm root cause   │
+│     /create-bug-report                   → bug report chuẩn      │
+│     /retest-fixed-bugs   ←──── dev fix ───┘  → FIXED? regression?│  ↻ lặp tới khi hết bug
 └──────────────────────────────────────────────────────────────────┘
                                   ↓
 ┌─ CHỨNG MINH ĐỘ PHỦ ──────────────────────────────────────────────┐
-│  6. /generate_traceability_matrix        → RTM                   │  Trước release
+│  6. /generate-traceability-matrix        → RTM                   │  Trước release
 └──────────────────────────────────────────────────────────────────┘
                                   ↓
 ┌─ BÁO CÁO & QUYẾT ĐỊNH ───────────────────────────────────────────┐
-│  7. /generate_test_summary_report        → go / no-go có căn cứ  │  Mỗi mốc release
+│  7. /generate-test-summary-report        → go / no-go có căn cứ  │  Mỗi mốc release
 └──────────────────────────────────────────────────────────────────┘
 ```
 
-> 📋 **Đợt kiểm thử có kế hoạch chính thức** (khách hàng/PM yêu cầu tài liệu duyệt) → chạy `/generate_master_test_plan` **trước chặng 4**. Nó công bố tiêu chí exit mà chặng 7 sẽ chấm lại.
+> 📋 **Đợt kiểm thử có kế hoạch chính thức** (khách hàng/PM yêu cầu tài liệu duyệt) → chạy `/generate-master-test-plan` **trước chặng 4**. Nó công bố tiêu chí exit mà chặng 7 sẽ chấm lại.
 
 **Mắt xích giữ cả chuỗi là `REQ ID`.** Chặng 1 sinh ra → chặng 2 ghi vào cột `REQ ID` của mỗi TC → chặng 6 dùng để tính coverage. Đứt ở đâu thì từ đó trở đi không chứng minh được "đã test đủ".
 
@@ -46,7 +46,7 @@
 > **Chạy 1 lần cho cả hệ thống.** Trả lời câu hỏi: *"hệ thống này có những module nào?"*
 
 ```
-/discover_system
+/discover-system
 ```
 
 📋 Prompt mẫu: [`prompts/prompt_00_discover_system.txt`](prompts/prompt_00_discover_system.txt)
@@ -83,16 +83,16 @@ docs/requirements/_discovery/doc_inventory.md  ← chỉ khi có tài liệu
 > **Chạy lặp, mỗi lần một module**, theo thứ tự đã chốt ở chặng 0.
 
 ```
-/generate_requirements_from_website
+/generate-requirements-from-website
 ```
 
 📋 Prompt mẫu: [`prompts/prompt_01_generate_requirements.txt`](prompts/prompt_01_generate_requirements.txt)
 
 | Biến thể | Command | Prompt mẫu |
 |---|---|---|
-| Có ticket Jira thay vì UI | `/analyze_requirement_document` | [`prompt_20`](prompts/prompt_20_analyze_requirement_document.txt) |
-| Tài liệu đã có, ticket sửa đổi | `/update_requirements_from_ticket` | [`prompt_21`](prompts/prompt_21_update_requirements_from_ticket.txt) |
-| Tài liệu vừa đổi, **bộ TC đã có cần đồng bộ** | `/update_testcases_from_impact` | [`prompt_27`](prompts/prompt_27_update_testcases_from_impact.txt) |
+| Có ticket Jira thay vì UI | `/analyze-requirement-document` | [`prompt_20`](prompts/prompt_20_analyze_requirement_document.txt) |
+| Tài liệu đã có, ticket sửa đổi | `/update-requirements-from-ticket` | [`prompt_21`](prompts/prompt_21_update_requirements_from_ticket.txt) |
+| Tài liệu vừa đổi, **bộ TC đã có cần đồng bộ** | `/update-testcases-from-impact` | [`prompt_27`](prompts/prompt_27_update_testcases_from_impact.txt) |
 
 **AI làm gì:** đọc bản đồ chặng 0 (khỏi dò đường) → mở từng form → **trigger từng validation lấy message nguyên văn** → đọc DOM bằng `browser_evaluate` → bắt network lấy validation server-side → chụp evidence full-page → sinh `REQ-<PREFIX>-NN`.
 
@@ -121,9 +121,9 @@ Cộng thêm: `README.md` cập nhật `Trạng thái recon` ⬜ → ✅.
 
 | Mode | Command | Prompt mẫu | Khi nào dùng |
 |---|---|---|---|
-| **FULL RBT** | `/generate_testcases_manual_rbt` | [`prompt_02_generate_test_cases.txt`](prompts/prompt_02_generate_test_cases.txt) | Module lớn · requirements còn mơ hồ · cần đánh giá risk · **bộ TC gốc của module** |
-| **QUICK** | `/generate_testcases_from_requirements` | [`prompt_22_generate_testcases_quick.txt`](prompts/prompt_22_generate_testcases_quick.txt) | Requirements đã rõ · scope 1 form / 1 tính năng · cần nhanh |
-| **CHECKLIST** | `/generate_checklist_test` | [`prompt_15_generate_checklist.txt`](prompts/prompt_15_generate_checklist.txt) | Rà tay nhanh: smoke · sau hotfix · trước release |
+| **FULL RBT** | `/generate-testcases-manual-rbt` | [`prompt_02_generate_test_cases.txt`](prompts/prompt_02_generate_test_cases.txt) | Module lớn · requirements còn mơ hồ · cần đánh giá risk · **bộ TC gốc của module** |
+| **QUICK** | `/generate-testcases-from-requirements` | [`prompt_22_generate_testcases_quick.txt`](prompts/prompt_22_generate_testcases_quick.txt) | Requirements đã rõ · scope 1 form / 1 tính năng · cần nhanh |
+| **CHECKLIST** | `/generate-checklist-test` | [`prompt_15_generate_checklist.txt`](prompts/prompt_15_generate_checklist.txt) | Rà tay nhanh: smoke · sau hotfix · trước release |
 
 **Đầu ra tương ứng:** FULL RBT / QUICK → TC chi tiết có steps. CHECKLIST → danh sách tick, **không** có steps.
 
@@ -149,7 +149,7 @@ docs/checklists/checklist_<loại>_<module>.md     ← nếu chạy mode CHECKLI
 ## Chặng 3 — Review Test Cases
 
 ```
-/review_testcases
+/review-testcases
 ```
 
 📋 Prompt mẫu: [`prompts/prompt_12_review_testcases.txt`](prompts/prompt_12_review_testcases.txt)
@@ -170,7 +170,7 @@ Nói *"sửa luôn"* / *"cải thiện giùm"* → AI tự chuyển sang **FIX**
 ## Chặng 4 — Thực thi Manual
 
 ```
-/execute_test_cases
+/execute-test-cases
 ```
 
 📋 Prompt mẫu: [`prompts/prompt_16_execute_test_cases.txt`](prompts/prompt_16_execute_test_cases.txt)
@@ -187,7 +187,7 @@ Report gồm 6 mục: Tổng kết · Kết quả từng TC · Chi tiết FAIL �
 
 ### ⚠️ Hai luật quan trọng
 
-**1. KHÔNG sửa TC trong lúc chạy.** TC FAIL vì viết sai thì ghi nhận lại, chạy xong mới quay về `/review_testcases` mode FIX. Sửa giữa chừng là mất dấu vết của lần chạy đó.
+**1. KHÔNG sửa TC trong lúc chạy.** TC FAIL vì viết sai thì ghi nhận lại, chạy xong mới quay về `/review-testcases` mode FIX. Sửa giữa chừng là mất dấu vết của lần chạy đó.
 
 **2. Môi trường dùng chung → kiểm mục "Dữ liệu đã tạo & dọn dẹp" mỗi lần chạy.** Dữ liệu test phải traceable (`Auto_<Module>_<timestamp>`) và có kế hoạch xoá. Không dọn thì vài lần chạy là môi trường thành bãi rác, và người khác lãnh hậu quả.
 
@@ -197,10 +197,10 @@ Report gồm 6 mục: Tổng kết · Kết quả từng TC · Chi tiết FAIL �
 
 | Tình huống | Command | Prompt mẫu | Ghi chú |
 |---|---|---|---|
-| **Nhiều TC FAIL**, chưa rõ nguyên nhân | `/analyze_test_report` | [`prompt_11_analyze_test_report.txt`](prompts/prompt_11_analyze_test_report.txt) | **Chạy cái này trước** — 12 TC FAIL thường chỉ là 2 bug |
-| Đã rõ bug, cần báo cáo | `/create_bug_report` | [`prompt_10_create_bug_report.txt`](prompts/prompt_10_create_bug_report.txt) | Tự lấy evidence từ run vừa rồi, tuỳ chọn đẩy Jira |
-| FAIL vì **TC viết sai**, không phải lỗi hệ thống | `/review_testcases` mode FIX | [`prompt_12_review_testcases.txt`](prompts/prompt_12_review_testcases.txt) | Quay lại chặng 3 |
-| **Dev báo đã fix**, cần xác minh | `/retest_fixed_bugs` | [`prompt_23_retest_fixed_bugs.txt`](prompts/prompt_23_retest_fixed_bugs.txt) | Đóng vòng lặp bug — xem dưới |
+| **Nhiều TC FAIL**, chưa rõ nguyên nhân | `/analyze-test-report` | [`prompt_11_analyze_test_report.txt`](prompts/prompt_11_analyze_test_report.txt) | **Chạy cái này trước** — 12 TC FAIL thường chỉ là 2 bug |
+| Đã rõ bug, cần báo cáo | `/create-bug-report` | [`prompt_10_create_bug_report.txt`](prompts/prompt_10_create_bug_report.txt) | Tự lấy evidence từ run vừa rồi, tuỳ chọn đẩy Jira |
+| FAIL vì **TC viết sai**, không phải lỗi hệ thống | `/review-testcases` mode FIX | [`prompt_12_review_testcases.txt`](prompts/prompt_12_review_testcases.txt) | Quay lại chặng 3 |
+| **Dev báo đã fix**, cần xác minh | `/retest-fixed-bugs` | [`prompt_23_retest_fixed_bugs.txt`](prompts/prompt_23_retest_fixed_bugs.txt) | Đóng vòng lặp bug — xem dưới |
 
 **Đầu ra:**
 ```
@@ -213,7 +213,7 @@ docs/bugs/<module>/BUG_<module>_<timestamp>_<TC_ID>.md  ← mỗi bug 1 file, h�
 ### Vòng lặp bug — chạy tới khi hết, không phải một chiều
 
 ```
-TC FAIL → /create_bug_report → dev fix → /retest_fixed_bugs
+TC FAIL → /create-bug-report → dev fix → /retest-fixed-bugs
                     ↑                            │
                     └──── regression mới ────────┘
 ```
@@ -237,7 +237,7 @@ TC FAIL → /create_bug_report → dev fix → /retest_fixed_bugs
 ## Chặng 6 — Ma trận truy vết (RTM)
 
 ```
-/generate_traceability_matrix
+/generate-traceability-matrix
 ```
 
 📋 Prompt mẫu: [`prompts/prompt_13_generate_traceability_matrix.txt`](prompts/prompt_13_generate_traceability_matrix.txt)
@@ -258,7 +258,7 @@ TC FAIL → /create_bug_report → dev fix → /retest_fixed_bugs
 ## Chặng 7 — Báo cáo tổng hợp & quyết định release
 
 ```
-/generate_test_summary_report
+/generate-test-summary-report
 ```
 
 📋 Prompt mẫu: [`prompts/prompt_24_generate_test_summary_report.txt`](prompts/prompt_24_generate_test_summary_report.txt)
@@ -273,7 +273,7 @@ Gộp **mọi** kết quả của cả đợt — execution report nhiều modul
 | **Khuyến nghị GO vẫn phải kèm rủi ro tồn đọng** | GO trơn không nêu tồn đọng là báo cáo vô trách nhiệm — có sự cố thì không ai biết QA đã cảnh báo hay chưa |
 | **Vùng chưa test đứng TRƯỚC mọi tỷ lệ** | Cùng lý do với mục ⬛ của RTM: pass rate đẹp che mất module chưa ai chạm |
 
-**Tiêu chí exit phải chốt TRƯỚC khi nhìn kết quả.** Nhìn số rồi mới đặt ngưỡng là hợp thức hoá kết quả, không phải đánh giá. Đợt có kế hoạch chính thức thì `/generate_master_test_plan` đã công bố bộ tiêu chí này từ đầu — chặng 7 chỉ chấm lại đúng bộ đó.
+**Tiêu chí exit phải chốt TRƯỚC khi nhìn kết quả.** Nhìn số rồi mới đặt ngưỡng là hợp thức hoá kết quả, không phải đánh giá. Đợt có kế hoạch chính thức thì `/generate-master-test-plan` đã công bố bộ tiêu chí này từ đầu — chặng 7 chỉ chấm lại đúng bộ đó.
 
 **Đầu ra:** `docs/executions/test_summary_<mốc>_<timestamp>.md`
 
@@ -299,18 +299,18 @@ Tương tự, [`scripts/testcases-viewer/bundle.html`](scripts/testcases-viewer/
 Hệ thống đang phát triển thì ticket sẽ liên tục sửa yêu cầu. Đừng sinh lại từ đầu:
 
 ```
-/update_requirements_from_ticket
+/update-requirements-from-ticket
         ↓  Impact Report — TC nào stale
    ┌────┴──────────────────────────────────────────┐
    ↓                                               ↓
 REQ mới (🟢) → /generate_testcases_*     TC phải sửa (🟡) + TC bị gỡ (🗑️)
-                                              → /update_testcases_from_impact
+                                              → /update-testcases-from-impact
    └────────────────────┬─────────────────────────┘
                         ↓
-            /execute_test_cases  (chạy lại phần bị ảnh hưởng)
+            /execute-test-cases  (chạy lại phần bị ảnh hưởng)
 ```
 
-> 🚨 **Không dùng `/review_testcases` mode FIX cho nhánh 🟡.** Nó chấm rubric chất lượng, không đối chiếu với REQ mới — TC viết rất tốt về hành vi **cũ** vẫn đạt 12/12 điểm. Nó cũng sinh file `_improved` lạc tên index. Đồng bộ bằng `/update_testcases_from_impact` trước, chấm chất lượng bằng `/review_testcases` sau.
+> 🚨 **Không dùng `/review-testcases` mode FIX cho nhánh 🟡.** Nó chấm rubric chất lượng, không đối chiếu với REQ mới — TC viết rất tốt về hành vi **cũ** vẫn đạt 12/12 điểm. Nó cũng sinh file `_improved` lạc tên index. Đồng bộ bằng `/update-testcases-from-impact` trước, chấm chất lượng bằng `/review-testcases` sau.
 
 Cột **`TC cần xử lý`** trong Nhật ký thay đổi của tài liệu requirements là **mắt xích cảnh báo duy nhất** cho tester biết TC nào đã lỗi thời. Bỏ qua nó là chạy test trên bộ TC sai mà không biết.
 
@@ -320,22 +320,22 @@ Cột **`TC cần xử lý`** trong Nhật ký thay đổi của tài liệu req
 
 | Chặng | Command | Prompt mẫu | Số lần chạy |
 |---|---|---|---|
-| 0 | `/discover_system` | [`prompt_00`](prompts/prompt_00_discover_system.txt) | **1 lần** / hệ thống (+ ADD/DELTA khi cần) |
-| 1 | `/generate_requirements_from_website` | [`prompt_01`](prompts/prompt_01_generate_requirements.txt) | **N lần** = số module |
-| 2 | `/generate_testcases_manual_rbt` | [`prompt_02`](prompts/prompt_02_generate_test_cases.txt) | **N lần** = số module |
-| 2' | `/generate_checklist_test` | [`prompt_15`](prompts/prompt_15_generate_checklist.txt) | Khi cần checklist tick tay |
-| 3 | `/review_testcases` | [`prompt_12`](prompts/prompt_12_review_testcases.txt) | 1 lần / bộ TC |
-| 4 | `/execute_test_cases` | [`prompt_16`](prompts/prompt_16_execute_test_cases.txt) | Mỗi đợt kiểm thử |
-| 5 | `/analyze_test_report` | [`prompt_11`](prompts/prompt_11_analyze_test_report.txt) | Khi nhiều TC FAIL |
-| 5 | `/create_bug_report` | [`prompt_10`](prompts/prompt_10_create_bug_report.txt) | Mỗi bug cần báo |
-| 5 | `/retest_fixed_bugs` | [`prompt_23`](prompts/prompt_23_retest_fixed_bugs.txt) | **Mỗi lần dev báo đã fix** |
-| 6 | `/generate_traceability_matrix` | [`prompt_13`](prompts/prompt_13_generate_traceability_matrix.txt) | Định kỳ / trước release |
-| 7 | `/generate_test_summary_report` | [`prompt_24`](prompts/prompt_24_generate_test_summary_report.txt) | **Mỗi mốc release / sprint** |
-| ↻ | `/update_requirements_from_ticket` | [`prompt_21`](prompts/prompt_21_update_requirements_from_ticket.txt) | Mỗi ticket sửa yêu cầu |
-| ↻ | `/update_testcases_from_impact` | [`prompt_27`](prompts/prompt_27_update_testcases_from_impact.txt) | **Mỗi Impact Report** — ngay sau command trên |
-| ⊹ | `/generate_master_test_plan` | [`prompt_25`](prompts/prompt_25_generate_master_test_plan.txt) | 1 lần / đợt — khi cần kế hoạch chính thức |
+| 0 | `/discover-system` | [`prompt_00`](prompts/prompt_00_discover_system.txt) | **1 lần** / hệ thống (+ ADD/DELTA khi cần) |
+| 1 | `/generate-requirements-from-website` | [`prompt_01`](prompts/prompt_01_generate_requirements.txt) | **N lần** = số module |
+| 2 | `/generate-testcases-manual-rbt` | [`prompt_02`](prompts/prompt_02_generate_test_cases.txt) | **N lần** = số module |
+| 2' | `/generate-checklist-test` | [`prompt_15`](prompts/prompt_15_generate_checklist.txt) | Khi cần checklist tick tay |
+| 3 | `/review-testcases` | [`prompt_12`](prompts/prompt_12_review_testcases.txt) | 1 lần / bộ TC |
+| 4 | `/execute-test-cases` | [`prompt_16`](prompts/prompt_16_execute_test_cases.txt) | Mỗi đợt kiểm thử |
+| 5 | `/analyze-test-report` | [`prompt_11`](prompts/prompt_11_analyze_test_report.txt) | Khi nhiều TC FAIL |
+| 5 | `/create-bug-report` | [`prompt_10`](prompts/prompt_10_create_bug_report.txt) | Mỗi bug cần báo |
+| 5 | `/retest-fixed-bugs` | [`prompt_23`](prompts/prompt_23_retest_fixed_bugs.txt) | **Mỗi lần dev báo đã fix** |
+| 6 | `/generate-traceability-matrix` | [`prompt_13`](prompts/prompt_13_generate_traceability_matrix.txt) | Định kỳ / trước release |
+| 7 | `/generate-test-summary-report` | [`prompt_24`](prompts/prompt_24_generate_test_summary_report.txt) | **Mỗi mốc release / sprint** |
+| ↻ | `/update-requirements-from-ticket` | [`prompt_21`](prompts/prompt_21_update_requirements_from_ticket.txt) | Mỗi ticket sửa yêu cầu |
+| ↻ | `/update-testcases-from-impact` | [`prompt_27`](prompts/prompt_27_update_testcases_from_impact.txt) | **Mỗi Impact Report** — ngay sau command trên |
+| ⊹ | `/generate-master-test-plan` | [`prompt_25`](prompts/prompt_25_generate_master_test_plan.txt) | 1 lần / đợt — khi cần kế hoạch chính thức |
 
-**Biến thể của chặng 1–2** (không nằm trên luồng chính): `/analyze_requirement_document` → [`prompt_20`](prompts/prompt_20_analyze_requirement_document.txt) · `/generate_testcases_from_requirements` → [`prompt_22`](prompts/prompt_22_generate_testcases_quick.txt).
+**Biến thể của chặng 1–2** (không nằm trên luồng chính): `/analyze-requirement-document` → [`prompt_20`](prompts/prompt_20_analyze_requirement_document.txt) · `/generate-testcases-from-requirements` → [`prompt_22`](prompts/prompt_22_generate_testcases_quick.txt).
 
 ---
 

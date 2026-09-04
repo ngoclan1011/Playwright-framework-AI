@@ -8,7 +8,7 @@ skills:
 
 # Workflow: Master Test Plan
 
-> **BẮT BUỘC (MANDATORY SKILL):** Bạn PHẢI nạp **`skills-test-summary-reporter`** — mục **Tiêu chí Exit** là **nguồn duy nhất** định nghĩa tiêu chí ra. Plan này công bố tiêu chí đó **trước**, `/generate_test_summary_report` chấm lại **sau**. Hai bên phải khớp, nếu không thì lúc release sẽ cãi nhau về chuẩn.
+> **BẮT BUỘC (MANDATORY SKILL):** Bạn PHẢI nạp **`skills-test-summary-reporter`** — mục **Tiêu chí Exit** là **nguồn duy nhất** định nghĩa tiêu chí ra. Plan này công bố tiêu chí đó **trước**, `/generate-test-summary-report` chấm lại **sau**. Hai bên phải khớp, nếu không thì lúc release sẽ cãi nhau về chuẩn.
 
 Tài liệu quản lý một đợt kiểm thử: **ai làm gì, trong phạm vi nào, khi nào bắt đầu được, khi nào coi là xong.**
 
@@ -16,8 +16,8 @@ Tài liệu quản lý một đợt kiểm thử: **ai làm gì, trong phạm vi
 
 | User cần | Workflow đúng | Đầu ra |
 |---|---|---|
-| *"Test cái gì trước, có những kịch bản nào"* | `/generate_application_test_plan` | Scenario + priority, **không** quản lý |
-| *"Hệ thống có module nào"* | `/discover_system` | Bản đồ module + prefix |
+| *"Test cái gì trước, có những kịch bản nào"* | `/generate-application-test-plan` | Scenario + priority, **không** quản lý |
+| *"Hệ thống có module nào"* | `/discover-system` | Bản đồ module + prefix |
 | *"Tài liệu kế hoạch để gửi PM/khách ký"* | **Workflow này** | Master Test Plan — phạm vi · tiêu chí · lịch · nhân lực · rủi ro |
 
 > Workflow này **không sinh test scenario, không sinh TC**. Nó nói *cách tổ chức việc kiểm thử*, không nói *kiểm thử cái gì cụ thể*.
@@ -43,7 +43,7 @@ Thu thập những gì **đã có**, để buổi hỏi user ngắn nhất có t
 | `traceability_matrix.md` (nếu có) | Độ phủ hiện tại |
 | `docs/bugs/` | Bug đang mở — ảnh hưởng tiêu chí vào. Đọc `docs/bugs/README.md` trước để nắm danh mục |
 
-> Chưa chạy `/discover_system` → plan sẽ thiếu phần phạm vi đáng tin. Đề nghị user chạy khám phá trước, hoặc chấp nhận plan có phạm vi tạm và ghi rõ điều đó.
+> Chưa chạy `/discover-system` → plan sẽ thiếu phần phạm vi đáng tin. Đề nghị user chạy khám phá trước, hoặc chấp nhận plan có phạm vi tạm và ghi rõ điều đó.
 
 ---
 
@@ -116,10 +116,10 @@ Kiểm thử đợt <mốc> nhằm xác nhận <mục tiêu nghiệp vụ>, đ�
 
 | Loại test | Có làm? | Cách làm | Ghi chú |
 |---|---|---|---|
-| Kiểm thử chức năng | ✅ | Manual theo TC — `/execute_test_cases` | |
-| Regression | ✅ | Checklist + automation suite | `/generate_checklist_test` |
-| Retest bug | ✅ | `/retest_fixed_bugs` | Mọi bug Critical/Major chạy mode FULL |
-| Kiểm thử tích hợp cross-module | ✅ | `/generate_cross_module_test_plan` | |
+| Kiểm thử chức năng | ✅ | Manual theo TC — `/execute-test-cases` | |
+| Regression | ✅ | Checklist + automation suite | `/generate-checklist-test` |
+| Retest bug | ✅ | `/retest-fixed-bugs` | Mọi bug Critical/Major chạy mode FULL |
+| Kiểm thử tích hợp cross-module | ✅ | `/generate-cross-module-test-plan` | |
 | UAT | ✅ | Khách hàng thực hiện, QA hỗ trợ | |
 | Hiệu năng · Bảo mật | ❌ | Ngoài phạm vi — mục 2.2 | |
 
@@ -142,7 +142,7 @@ Kiểm thử đợt <mốc> nhằm xác nhận <mục tiêu nghiệp vụ>, đ�
 
 ### 4.2 Tiêu chí RA (Exit)
 
-> Lấy nguyên từ `skills-test-summary-reporter`. `/generate_test_summary_report` sẽ chấm lại đúng bộ này.
+> Lấy nguyên từ `skills-test-summary-reporter`. `/generate-test-summary-report` sẽ chấm lại đúng bộ này.
 
 | # | Tiêu chí | Ngưỡng |
 |---|---|---|
@@ -184,10 +184,10 @@ Kiểm thử đợt <mốc> nhằm xác nhận <mục tiêu nghiệp vụ>, đ�
 
 | Mốc | Ngày | Điều kiện hoàn thành |
 |---|---|---|
-| Hoàn tất viết TC | ❓ | TC đã review qua `/review_testcases` |
+| Hoàn tất viết TC | ❓ | TC đã review qua `/review-testcases` |
 | Bắt đầu thực thi | ❓ | Đạt toàn bộ tiêu chí vào (mục 4.1) |
 | Code freeze | ❓ | |
-| Báo cáo tổng hợp | ❓ | `/generate_test_summary_report` |
+| Báo cáo tổng hợp | ❓ | `/generate-test-summary-report` |
 
 ## 8. Rủi ro DỰ ÁN & biện pháp
 
@@ -204,12 +204,12 @@ Kiểm thử đợt <mốc> nhằm xác nhận <mục tiêu nghiệp vụ>, đ�
 
 | Sản phẩm | Nơi lưu | Workflow sinh ra |
 |---|---|---|
-| Tài liệu requirements | `docs/requirements/<module>/` | `/generate_requirements_from_website` |
-| Test cases | `docs/testcases/<module>/` | `/generate_testcases_manual_rbt` |
-| Execution report | `docs/executions/<module>/run_*/` | `/execute_test_cases` |
-| Bug report | `docs/bugs/<module>/` | `/create_bug_report` |
-| Ma trận truy vết | `traceability_matrix.md` | `/generate_traceability_matrix` |
-| **Báo cáo tổng hợp** | `docs/executions/test_summary_*.md` | `/generate_test_summary_report` |
+| Tài liệu requirements | `docs/requirements/<module>/` | `/generate-requirements-from-website` |
+| Test cases | `docs/testcases/<module>/` | `/generate-testcases-manual-rbt` |
+| Execution report | `docs/executions/<module>/run_*/` | `/execute-test-cases` |
+| Bug report | `docs/bugs/<module>/` | `/create-bug-report` |
+| Ma trận truy vết | `traceability_matrix.md` | `/generate-traceability-matrix` |
+| **Báo cáo tổng hợp** | `docs/executions/test_summary_*.md` | `/generate-test-summary-report` |
 
 ## 10. Phê duyệt
 

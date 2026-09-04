@@ -1,4 +1,4 @@
-/execute_test_cases
+/execute-test-cases
 
 # CONTEXT
 - Module: [Tên module cần chạy test]

@@ -1,4 +1,4 @@
-/analyze_requirement_document
+/analyze-requirement-document
 
 # CONTEXT
 - Module đích (nơi lưu tài liệu phân tích): [VD: project — để trống thì agent sẽ hỏi, KHÔNG tự đoán]
@@ -22,6 +22,6 @@
 
 # GHI CHÚ
 - Command này CHỈ sinh tài liệu phân tích `analysis_<TICKET-ID>.md`, KHÔNG sinh test cases
-- Nguồn sự thật là hệ thống đang chạy (không có tài liệu) → dùng /generate_requirements_from_website
-- Module ĐÃ có requirements và ticket này sửa/bổ sung yêu cầu cũ → dùng /update_requirements_from_ticket (chế độ delta, giữ nguyên REQ ID)
-- URL Jira/Confluence: agent KHÔNG tự fetch — cần lấy từ Jira thì chạy /fetch_jira_requirements trước
+- Nguồn sự thật là hệ thống đang chạy (không có tài liệu) → dùng /generate-requirements-from-website
+- Module ĐÃ có requirements và ticket này sửa/bổ sung yêu cầu cũ → dùng /update-requirements-from-ticket (chế độ delta, giữ nguyên REQ ID)
+- URL Jira/Confluence: agent KHÔNG tự fetch — cần lấy từ Jira thì chạy /fetch-jira-requirements trước

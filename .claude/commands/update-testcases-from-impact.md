@@ -12,21 +12,21 @@ skills:
 > - **`skills-rbt-manual-testing`** (`.claude/skills/skills-rbt-manual-testing/SKILL.md`) — **Mode DELTA** + Quy Tắc Xuất File (index bất biến, ngưỡng tách part, Bảng Đối Soát Coverage)
 > - **`skills-coverage-traceability`** (`.claude/skills/skills-coverage-traceability/SKILL.md`) — Mapping Rules để nối REQ ID ↔ TC ID
 
-Mắt xích **giữa** của chuỗi delta 3 tầng. Requirements đổi → Impact Report chỉ ra TC stale → **workflow này** sửa đúng TC đó → `/update_automation_from_impact` sửa script tương ứng.
+Mắt xích **giữa** của chuỗi delta 3 tầng. Requirements đổi → Impact Report chỉ ra TC stale → **workflow này** sửa đúng TC đó → `/update-automation-from-impact` sửa script tương ứng.
 
 ```
-/update_requirements_from_ticket   (tầng requirements — đã có)
+/update-requirements-from-ticket   (tầng requirements — đã có)
         ↓ Impact Report
-/update_testcases_from_impact      (tầng test case — WORKFLOW NÀY)
+/update-testcases-from-impact      (tầng test case — WORKFLOW NÀY)
         ↓ Delta TC List
-/update_automation_from_impact     (tầng automation — đã có)
+/update-automation-from-impact     (tầng automation — đã có)
 ```
 
-## Workflow này khác gì `/review_testcases`?
+## Workflow này khác gì `/review-testcases`?
 
 Hai workflow trả lời **hai câu hỏi khác nhau**. Chạy sai cái là bỏ sót đúng thứ cần bắt:
 
-| | Workflow này (delta) | `/review_testcases` (chất lượng) |
+| | Workflow này (delta) | `/review-testcases` (chất lượng) |
 |---|---|---|
 | **Câu hỏi trả lời** | "TC còn khớp requirement **mới** không?" | "TC viết có đạt chuẩn không?" |
 | **Input** | Impact Report + REQ đã đổi | Bộ TC (+ requirements nếu có) |
@@ -34,9 +34,9 @@ Hai workflow trả lời **hai câu hỏi khác nhau**. Chạy sai cái là bỏ
 | **Bỏ sót** | Chất lượng diễn đạt của TC | **TC stale** — TC viết rất tốt về hành vi **cũ** vẫn được 12/12 điểm rubric |
 | **Ghi vào đâu** | Sửa **tại chỗ** trong index, sao lưu bản cũ vào `archive/` | Sinh file `<tên>_improved.md` mới, giữ nguyên gốc |
 
-> 🚨 **KHÔNG dùng `/review_testcases` mode FIX để đồng bộ TC theo ticket.** Nó chấm rubric chất lượng, không đối chiếu với REQ đã đổi, và đẻ ra file `_improved` **lạc tên index** — `/update_automation_from_impact` đọc theo mẫu `docs/testcases/<module>/test_cases_<module>.md` sẽ không thấy bản mới.
+> 🚨 **KHÔNG dùng `/review-testcases` mode FIX để đồng bộ TC theo ticket.** Nó chấm rubric chất lượng, không đối chiếu với REQ đã đổi, và đẻ ra file `_improved` **lạc tên index** — `/update-automation-from-impact` đọc theo mẫu `docs/testcases/<module>/test_cases_<module>.md` sẽ không thấy bản mới.
 >
-> Chạy `/review_testcases` **sau** workflow này thì hợp lý: đồng bộ nội dung trước, chấm chất lượng sau.
+> Chạy `/review-testcases` **sau** workflow này thì hợp lý: đồng bộ nội dung trước, chấm chất lượng sau.
 
 ## ⚠️ Nguyên tắc thực thi
 
@@ -45,7 +45,7 @@ Hai workflow trả lời **hai câu hỏi khác nhau**. Chạy sai cái là bỏ
 - 🚨 **CẤM đổi TC ID, CẤM đánh lại số từ `001`** — TC ID là khoá nối sang automation (`allure.label('testId', ...)`) và RTM. Đứt TC ID là vỡ truy vết cả hai chiều
 - 🚨 **CẤM xoá dòng TC** — chức năng bị gỡ thì đổi trạng thái `🗑️ Deprecated` kèm mã ticket, giữ nguyên dòng (đối xứng quy tắc "KHÔNG xoá dòng REQ" của tầng requirements)
 - 🚨 **CẤM sinh file `_improved` / `_v2` / `_new`** — tên index **bất biến** là `test_cases_<module>.md`. Bản trước khi sửa chuyển vào `archive/test_cases_<module>_vN.md`
-- **KHÔNG tự viết TC cho REQ mới (nhóm ➕)** — ngoài phạm vi, route sang `/generate_testcases_manual_rbt` hoặc `/generate_testcases_from_requirements`
+- **KHÔNG tự viết TC cho REQ mới (nhóm ➕)** — ngoài phạm vi, route sang `/generate-testcases-manual-rbt` hoặc `/generate-testcases-from-requirements`
 - **KHÔNG sửa TC theo suy đoán từ tên TC** — phải đọc **nội dung REQ sau khi đổi** trong tài liệu requirements. Tên TC không chứa đủ thông tin để biết kỳ vọng mới là gì
 - **KHÔNG bịa mapping REQ ↔ TC.** Không map được thì ghi vào mục "cần xác nhận", KHÔNG đoán rồi sửa nhầm TC
 - 🚨 **Bám đúng độ hạt của bộ TC đang có.** Bộ TC viết ở độ hạt GỘP (có Bảng biến thể) thì TC bổ sung cũng phải gộp, và sửa một biến thể là sửa **dòng biến thể** chứ không tách nó ra thành TC mới. Bộ TC viết ở độ hạt TÁCH thì mỗi case mới là một TC. Trộn hai độ hạt trong cùng một file làm hỏng cách đếm và cách giao việc — xem mục **Độ Hạt Test Case** trong skill
@@ -65,14 +65,14 @@ Hai workflow trả lời **hai câu hỏi khác nhau**. Chạy sai cái là bỏ
 
 | Input | Bắt buộc? | Ghi chú |
 |---|---|---|
-| **Impact Report** | ⭐ Bắt buộc (hoặc thay bằng danh sách REQ dưới) | `docs/requirements/<module>/impact/impact_<TICKET-ID>.md` — do `/update_requirements_from_ticket` ghi ra. Hoặc dán trực tiếp nội dung |
+| **Impact Report** | ⭐ Bắt buộc (hoặc thay bằng danh sách REQ dưới) | `docs/requirements/<module>/impact/impact_<TICKET-ID>.md` — do `/update-requirements-from-ticket` ghi ra. Hoặc dán trực tiếp nội dung |
 | **Danh sách REQ đã đổi** | Thay thế cho Impact Report | Khi user tự biết REQ nào đổi: REQ ID + đổi cái gì |
 | **Tài liệu requirements hiện hành** | ⭐ Bắt buộc | `docs/requirements/<module>/requirements_<module>.md` — nguồn sự thật của kỳ vọng **mới** |
 | **File test cases hiện hành** | ⭐ Bắt buộc | `docs/testcases/<module>/test_cases_<module>.md` (+ `parts/` nếu có) |
 | **Evidence của module** | ⭕ Khuyến nghị | `docs/requirements/<module>/evidence/*.png` — bắt buộc mở nếu thay đổi đụng bố cục/nhãn/thứ tự field |
 | **RTM** | ⭕ Khuyến nghị | Có sẵn thì map REQ → TC nhanh và chắc hơn nhiều |
 
-> Impact Report ghi `⚠️ chưa rà soát` ở cột TC → **dừng**, báo user chạy `/generate_traceability_matrix` trước. Không có nguồn map thì workflow này chỉ đoán mò.
+> Impact Report ghi `⚠️ chưa rà soát` ở cột TC → **dừng**, báo user chạy `/generate-traceability-matrix` trước. Không có nguồn map thì workflow này chỉ đoán mò.
 
 ## Các bước thực hiện
 
@@ -111,7 +111,7 @@ Phân loại hành động cho TC — **khác** với hành động dành cho sc
 | Đổi **steps / luồng** | Sửa cột Steps, kiểm lại Precondition còn đúng không | Steps + Precondition |
 | Đổi **phân quyền** | Sửa TC phân quyền, kiểm ma trận role còn khớp | Nhóm TC phân quyền |
 | Chức năng **bị gỡ** (REQ 🔴) | Đổi trạng thái TC → `🗑️ Deprecated (TICKET-XXX)`, **KHÔNG xoá dòng** | Cột trạng thái |
-| REQ **mới** (🟢) | ❌ Ngoài phạm vi → `/generate_testcases_manual_rbt` | — |
+| REQ **mới** (🟢) | ❌ Ngoài phạm vi → `/generate-testcases-manual-rbt` | — |
 
 Mỗi mục ghi: `file:dòng`, TC ID, sửa ô nào, có cần mở evidence không.
 
@@ -165,7 +165,7 @@ Kiểm đủ 6 mục, thiếu mục nào là chưa xong:
 | 2026-08-17 | TICKET-123 | CRM_PRJ_TC_031 | 🗑️ Deprecated — chức năng Copy Project đã gỡ | ↑ |
 ```
 
-2. Xuất **Delta TC List** ra chat — đây là input trực tiếp cho `/update_automation_from_impact`:
+2. Xuất **Delta TC List** ra chat — đây là input trực tiếp cho `/update-automation-from-impact`:
 
 ```markdown
 ## Delta TC List — TICKET-123 · 2026-08-17
@@ -179,10 +179,10 @@ Kiểm đủ 6 mục, thiếu mục nào là chưa xong:
 ### Ngoài phạm vi
 | REQ | Việc còn lại | Command |
 |---|---|---|
-| REQ-PRJ-79 → 81 | Chưa có TC | `/generate_testcases_manual_rbt` |
+| REQ-PRJ-79 → 81 | Chưa có TC | `/generate-testcases-manual-rbt` |
 ```
 
-3. Nhắc user chuỗi tiếp theo: `/update_automation_from_impact` (script đã có) → `/generate_traceability_matrix` (khớp lại RTM)
+3. Nhắc user chuỗi tiếp theo: `/update-automation-from-impact` (script đã có) → `/generate-traceability-matrix` (khớp lại RTM)
 
 ## Output
 
@@ -204,11 +204,11 @@ Kiểm đủ 6 mục, thiếu mục nào là chưa xong:
 
 | Tình huống | Command |
 |---|---|
-| Trước đó — cập nhật requirements từ ticket | `/update_requirements_from_ticket` |
-| Trước đó — chưa có nguồn map REQ ↔ TC | `/generate_traceability_matrix` |
-| REQ mới hoàn toàn, chưa có TC | `/generate_testcases_manual_rbt` · `/generate_testcases_from_requirements` |
-| Sau đó — cập nhật automation script **đã có** | `/update_automation_from_impact` |
-| Sau đó — automate TC mới hoàn toàn | `/generate_automation_from_testcases` |
-| Sau đó — chấm chất lượng bộ TC vừa sửa | `/review_testcases` |
-| Sau đó — chạy lại phần TC bị ảnh hưởng | `/execute_test_cases` |
-| Sau đó — khớp lại ma trận truy vết | `/generate_traceability_matrix` |
+| Trước đó — cập nhật requirements từ ticket | `/update-requirements-from-ticket` |
+| Trước đó — chưa có nguồn map REQ ↔ TC | `/generate-traceability-matrix` |
+| REQ mới hoàn toàn, chưa có TC | `/generate-testcases-manual-rbt` · `/generate-testcases-from-requirements` |
+| Sau đó — cập nhật automation script **đã có** | `/update-automation-from-impact` |
+| Sau đó — automate TC mới hoàn toàn | `/generate-automation-from-testcases` |
+| Sau đó — chấm chất lượng bộ TC vừa sửa | `/review-testcases` |
+| Sau đó — chạy lại phần TC bị ảnh hưởng | `/execute-test-cases` |
+| Sau đó — khớp lại ma trận truy vết | `/generate-traceability-matrix` |

@@ -17,25 +17,25 @@ skills:
 Mắt xích **cuối** của chuỗi delta 3 tầng: requirements đổi → TC được đồng bộ → **workflow này** chỉ ra script nào phải sửa và sửa đúng chỗ đó.
 
 ```
-/update_requirements_from_ticket   → Impact Report
+/update-requirements-from-ticket   → Impact Report
         ↓
-/update_testcases_from_impact      → Delta TC List (kỳ vọng MỚI đã nằm trong TC)
+/update-testcases-from-impact      → Delta TC List (kỳ vọng MỚI đã nằm trong TC)
         ↓
-/update_automation_from_impact     ← WORKFLOW NÀY
+/update-automation-from-impact     ← WORKFLOW NÀY
 ```
 
-> ⚠️ **Chạy workflow này khi TC chưa được đồng bộ là sửa script theo kỳ vọng cũ.** File test cases là nguồn sự thật của kỳ vọng mới — TC còn mô tả hành vi cũ thì script sửa xong vẫn sai. Chưa chạy `/update_testcases_from_impact` thì làm nó trước.
+> ⚠️ **Chạy workflow này khi TC chưa được đồng bộ là sửa script theo kỳ vọng cũ.** File test cases là nguồn sự thật của kỳ vọng mới — TC còn mô tả hành vi cũ thì script sửa xong vẫn sai. Chưa chạy `/update-testcases-from-impact` thì làm nó trước.
 
-## Workflow này khác gì `generate_automation_from_testcases`?
+## Workflow này khác gì `generate-automation-from-testcases`?
 
-| | Workflow này (delta) | `generate_automation_from_testcases` (sinh mới) |
+| | Workflow này (delta) | `generate-automation-from-testcases` (sinh mới) |
 |---|---|---|
 | **Input** | Impact Report / danh sách TC đã đổi | Bộ TC đầy đủ |
 | **Với script đã có** | **Sửa đúng phần đổi**, giữ nguyên phần còn lại | Sinh lại từ đầu |
 | **Phạm vi chạm** | Chỉ test/POM liên quan TC đổi | Cả module |
 | **Dùng khi** | TC_005 đổi expected result | Module chưa có automation |
 
-> TC **mới hoàn toàn** (➕ Viết mới trong Impact Report) **không** thuộc workflow này — route sang `/generate_automation_from_testcases`. Trộn hai việc vào một là mất lý do tồn tại của delta mode.
+> TC **mới hoàn toàn** (➕ Viết mới trong Impact Report) **không** thuộc workflow này — route sang `/generate-automation-from-testcases`. Trộn hai việc vào một là mất lý do tồn tại của delta mode.
 
 ## ⚠️ Nguyên tắc thực thi
 
@@ -60,13 +60,13 @@ Mắt xích **cuối** của chuỗi delta 3 tầng: requirements đổi → TC 
 
 | Input | Bắt buộc? | Ghi chú |
 |---|---|---|
-| **Impact Report** | ⭐ Bắt buộc (hoặc thay bằng danh sách TC dưới) | Từ `/update_requirements_from_ticket` — dán trực tiếp hoặc file path |
+| **Impact Report** | ⭐ Bắt buộc (hoặc thay bằng danh sách TC dưới) | Từ `/update-requirements-from-ticket` — dán trực tiếp hoặc file path |
 | **Danh sách TC đã đổi** | Thay thế cho Impact Report | Khi user tự biết TC nào đổi: TC ID + đổi cái gì |
 | **File test cases hiện hành** | ⭐ Bắt buộc | Để đọc nội dung TC **sau khi đổi** — nguồn sự thật của kỳ vọng mới |
 | **Thư mục automation** | ⭐ Bắt buộc | VD: `src/tests/` + `src/pages/` |
 | **RTM** | ⭕ Khuyến nghị | Có sẵn thì map nhanh và chắc hơn nhiều |
 
-> Impact Report ghi `⚠️ chưa rà soát` ở cột TC → dừng, báo user chạy `/generate_traceability_matrix` trước. Không có nguồn map thì workflow này chỉ đoán mò.
+> Impact Report ghi `⚠️ chưa rà soát` ở cột TC → dừng, báo user chạy `/generate-traceability-matrix` trước. Không có nguồn map thì workflow này chỉ đoán mò.
 
 ## Các bước thực hiện
 
@@ -103,7 +103,7 @@ Phân loại hành động cho automation — **khác** với hành động dàn
 | Đổi **precondition** | Sửa setup/fixture | `beforeEach` / `@BeforeMethod` |
 | Field/màn hình **mới** | Thêm locator (**inspect DOM thật**) + method POM | POM |
 | TC bị **archive** | Đánh dấu skip + ghi lý do, **KHÔNG xoá file** | Test block |
-| TC **mới** | ❌ Ngoài phạm vi → `/generate_automation_from_testcases` | — |
+| TC **mới** | ❌ Ngoài phạm vi → `/generate-automation-from-testcases` | — |
 
 Mỗi mục ghi: `file:line`, đổi gì, có cần mở browser inspect không.
 
@@ -134,8 +134,8 @@ Mỗi mục ghi: `file:line`, đổi gì, có cần mở browser inspect không.
 | Nguyên nhân | Hành động |
 |---|---|
 | Sửa thiếu / sai kỳ vọng mới | Quay lại Bước 3 — **tối đa 3 vòng** |
-| App **chưa** implement thay đổi | DỪNG — đây là bug/chưa xong việc, không phải lỗi test. Báo user, gợi ý `/create_bug_report` |
-| Locator gãy diện rộng | → `/heal_locators` |
+| App **chưa** implement thay đổi | DỪNG — đây là bug/chưa xong việc, không phải lỗi test. Báo user, gợi ý `/create-bug-report` |
+| Locator gãy diện rộng | → `/heal-locators` |
 
 ### Bước 7: Báo Cáo Cuối
 
@@ -143,7 +143,7 @@ Cập nhật `reports/automation_impact_plan.md`:
 - Danh sách file đã sửa (`file:line`, code cũ → mới)
 - Kết quả chạy: test trong delta + test hồi quy cùng POM
 - Việc còn lại: TC mới cần automate, TC archive chờ xác nhận xoá, mapping ❓ chưa giải quyết
-- Nhắc chạy `/generate_traceability_matrix` để RTM khớp lại
+- Nhắc chạy `/generate-traceability-matrix` để RTM khớp lại
 
 ## Output
 
@@ -160,10 +160,10 @@ Cập nhật `reports/automation_impact_plan.md`:
 
 | Tình huống | Command |
 |---|---|
-| Trước đó — cập nhật requirements từ ticket | `/update_requirements_from_ticket` |
-| Trước đó — **đồng bộ TC theo Impact Report** (nguồn kỳ vọng mới) | `/update_testcases_from_impact` ⭐ |
-| Trước đó — chưa có nguồn map TC ↔ script | `/generate_traceability_matrix` |
-| TC mới hoàn toàn, chưa có script | `/generate_automation_from_testcases` |
-| Sau khi sửa — locator gãy diện rộng | `/heal_locators` |
-| Sau khi sửa — muốn chạy cả suite kiểm hồi quy | `/run_and_fix_tests` |
-| App chưa implement đúng thay đổi | `/create_bug_report` |
+| Trước đó — cập nhật requirements từ ticket | `/update-requirements-from-ticket` |
+| Trước đó — **đồng bộ TC theo Impact Report** (nguồn kỳ vọng mới) | `/update-testcases-from-impact` ⭐ |
+| Trước đó — chưa có nguồn map TC ↔ script | `/generate-traceability-matrix` |
+| TC mới hoàn toàn, chưa có script | `/generate-automation-from-testcases` |
+| Sau khi sửa — locator gãy diện rộng | `/heal-locators` |
+| Sau khi sửa — muốn chạy cả suite kiểm hồi quy | `/run-and-fix-tests` |
+| App chưa implement đúng thay đổi | `/create-bug-report` |

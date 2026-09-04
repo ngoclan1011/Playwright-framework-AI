@@ -10,9 +10,9 @@ Bộ Skills này **không chỉ dành riêng cho Automation** — mà được t
 
 > 🔌 **Lần đầu cài đặt?** Đọc **[SETUP_CLAUDE.md](SETUP_CLAUDE.md)** — hướng dẫn add **Playwright MCP** thủ công, kết nối **Atlassian / Slack / GitHub / Claude in Chrome**, và setup **Cowork Schedule** để tự động chạy task theo lịch.
 >
-> 🔄 **Cài xong rồi, chạy cái gì trước?** Đọc **[AI_FULL_FLOW_MANUAL.md](AI_FULL_FLOW_MANUAL.md)** — quy trình 8 chặng cho tình huống phổ biến nhất: hệ thống chỉ có UI, không tài liệu, không bộ test cases. Từ `/discover_system` → requirements → test cases → chạy tay → bug report → retest → ma trận truy vết → báo cáo release.
+> 🔄 **Cài xong rồi, chạy cái gì trước?** Đọc **[AI_FULL_FLOW_MANUAL.md](AI_FULL_FLOW_MANUAL.md)** — quy trình 8 chặng cho tình huống phổ biến nhất: hệ thống chỉ có UI, không tài liệu, không bộ test cases. Từ `/discover-system` → requirements → test cases → chạy tay → bug report → retest → ma trận truy vết → báo cáo release.
 >
-> 🤖 **Đã có bộ test cases, muốn viết script?** Đọc **[AI_FULL_FLOW_AUTOMATION.md](AI_FULL_FLOW_AUTOMATION.md)** — quy trình 8 chặng Automation nối tiếp: `/generate_automation_framework` → sinh script → review code → chạy & tự sửa → bảo trì khi UI/requirements đổi → RTM → Xray.
+> 🤖 **Đã có bộ test cases, muốn viết script?** Đọc **[AI_FULL_FLOW_AUTOMATION.md](AI_FULL_FLOW_AUTOMATION.md)** — quy trình 8 chặng Automation nối tiếp: `/generate-automation-framework` → sinh script → review code → chạy & tự sửa → bảo trì khi UI/requirements đổi → RTM → Xray.
 
 ---
 
@@ -24,7 +24,7 @@ Bộ Skills này **không chỉ dành riêng cho Automation** — mà được t
   - Checklist validation **15 loại Input Field Types** (Text, Email, Phone, Date, Number, Dropdown, Checkbox/Radio, File Upload, Password, Textarea, OTP/MFA, Date Range, Rich Text, Multi-Select, Range Slider).
   - Tích hợp Scenarios Chuyên Sâu & Non-Functional (Race Condition, Session/Network Resilience, Localization/UTF-8/Emoji, Keyboard A11y, HTTP Status Codes).
   - **AI Self-Quality Gate (7 Tiêu chí):** Đảm bảo Unique TC ID, Step-Expected 1-1, Concrete Test Data, Field Coverage, Automation Metadata Ready, Requirement Coverage (đối soát mọi REQ có ≥1 TC), và **Evidence-verified** (bắt buộc mở hết ảnh evidence trước khi sinh TC — đối soát ảnh nào chống lưng cho TC nào).
-  - **Truy vết REQ ID xuyên suốt:** Requirements được gán mã `REQ-<MODULE>-<SỐ>` → mỗi TC có cột `REQ ID` → Bảng Đối Soát Coverage chứng minh "đủ case", sẵn sàng cho `/generate_traceability_matrix`.
+  - **Truy vết REQ ID xuyên suốt:** Requirements được gán mã `REQ-<MODULE>-<SỐ>` → mỗi TC có cột `REQ ID` → Bảng Đối Soát Coverage chứng minh "đủ case", sẵn sàng cho `/generate-traceability-matrix`.
 - **🌐 API Testing & OWASP Security Standards:**
   - Bao phủ đủ **12 HTTP Status Codes** tiêu chuẩn (`200`, `201`, `400`, `401`, `403`, `404`, `406`, `409`, `413`, `415`, `429`, `500`).
   - Tích hợp **OWASP API Security Checklist** (BOLA/IDOR, Mass Assignment, SQLi/XSS, ReDoS, Sensitive Data Masking).
@@ -92,12 +92,12 @@ claude-testing-skills/
 
 | Thư mục         | Vai trò                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `commands/`     | 34 slash commands: `/discover_system`, `/generate_automation_from_mobile_flow`, `/generate_requirements_from_website`, `/update_requirements_from_ticket`, `/generate_testcases_manual_rbt`, `/update_testcases_from_impact`, `/generate_automation_from_testcases`, `/update_automation_from_impact`, `/run_and_fix_tests`, `/heal_locators`, `/review_automation_code`, `/execute_test_cases`, `/retest_fixed_bugs`, `/analyze_test_report`, `/create_bug_report`, `/review_testcases`, `/generate_traceability_matrix`, `/generate_master_test_plan`, `/generate_test_summary_report`, `/generate_api_mocks`... |
+| `commands/`     | 34 slash commands: `/discover-system`, `/generate-automation-from-mobile-flow`, `/generate-requirements-from-website`, `/update-requirements-from-ticket`, `/generate-testcases-manual-rbt`, `/update-testcases-from-impact`, `/generate-automation-from-testcases`, `/update-automation-from-impact`, `/run-and-fix-tests`, `/heal-locators`, `/review-automation-code`, `/execute-test-cases`, `/retest-fixed-bugs`, `/analyze-test-report`, `/create-bug-report`, `/review-testcases`, `/generate-traceability-matrix`, `/generate-master-test-plan`, `/generate-test-summary-report`, `/generate-api-mocks`... |
 | `rules/`        | 6 quy tắc bắt buộc: automation chung, reporting (Allure), locator strategy, Playwright, Selenium, Appium                                                                                                                                                                                                                                                                                                                                                                |
 | `skills/`       | 19 kỹ năng chuyên biệt: requirements analyzer, automation engineer, manual testing, manual test executor, UI debug (web), **mobile debug (Appium — Native/Flutter/Hybrid)**, locator healer, test data generator, framework architect, jira integration, bug reporter, test report analyzer, **test summary reporter**, testcase reviewer, automation code reviewer, coverage traceability, api mocking...                                                                                                                              |
 | `settings.json` | Cấu hình quyền hạn: cho phép/cấm các hành động cụ thể (đọc file, chạy test, push code...). Riêng `settings.local.json` là cấu hình **cục bộ từng máy** — đã gitignore, không commit                                                                                                                                                                                                                                                                 |
 
-> **📌 Lưu ý về cấu trúc:** Trong Claude Code, **workflows** được gọi là **commands** và đặt trong `.claude/commands/`. Tên file dùng dấu gạch dưới (`_`). Ví dụ: `generate_automation_from_testcases.md`.
+> **📌 Lưu ý về cấu trúc:** Trong Claude Code, **workflows** được gọi là **commands** và đặt trong `.claude/commands/`. Tên file dùng dấu gạch dưới (`_`). Ví dụ: `generate-automation-from-testcases.md`.
 
 ---
 
@@ -175,9 +175,9 @@ Dành cho tác vụ **đơn lẻ**, chỉ cần copy → thay `[...]` bằng d�
 4. **Sử dụng slash commands:**
    Gõ `/` trong Claude Code để xem danh sách commands có sẵn. Ví dụ:
    ```
-   /generate_automation_from_testcases
-   /generate_testcases_manual_rbt
-   /generate_cross_module_test_plan
+   /generate-automation-from-testcases
+   /generate-testcases-manual-rbt
+   /generate-cross-module-test-plan
    ```
 
 ### Cách 2: Claude Code trong VS Code
@@ -198,7 +198,7 @@ Copy `.claude` vào dự án là AI đã có **Rule / Skill / Command**. Nhưng 
 
 | Nội dung                                                       | Vì sao cần                                                                                                                                                                     |
 | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Cài Playwright MCP thủ công** (Developer → Local MCP Server) | **Bắt buộc** cho `/discover_system`, `/execute_test_cases`, `/generate_requirements_from_website`, `/generate_automation_from_ui_flow` — không có thì AI không mở được browser |
+| **Cài Playwright MCP thủ công** (Developer → Local MCP Server) | **Bắt buộc** cho `/discover-system`, `/execute-test-cases`, `/generate-requirements-from-website`, `/generate-automation-from-ui-flow` — không có thì AI không mở được browser |
 | **Connectors: Atlassian / Slack / GitHub / Claude in Chrome**  | Kéo requirement từ Jira, gửi report vào Slack, đọc log CI từ GitHub Actions                                                                                                    |
 | **Cowork Schedule** — tự động chạy task theo lịch              | Ví dụ sẵn: mỗi sáng đọc task từ Slack và ước lượng effort · cuối ngày tổng hợp kết quả GitHub Actions gửi vào kênh Slack                                                       |
 | **Checklist nghiệm thu & bảng lỗi thường gặp**                 | Xử lý nhanh `spawn npx ENOENT` trên Windows, connector kẹt OAuth, task chạy sai múi giờ                                                                                        |

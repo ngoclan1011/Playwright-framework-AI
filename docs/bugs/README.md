@@ -33,7 +33,7 @@
 | Trạng thái | Số lượng | Ý nghĩa |
 |---|---|---|
 | 🔴 Đang mở | 6 | Đã xác nhận, chưa fix |
-| 🟡 Đã fix, chờ retest | 0 | Dev báo fix xong → chạy `/retest_fixed_bugs` |
+| 🟡 Đã fix, chờ retest | 0 | Dev báo fix xong → chạy `/retest-fixed-bugs` |
 | 🟢 Đã đóng | 0 | Retest FIXED |
 | ⚠️ Cần rà lại | 0 | Tham chiếu lệch hoặc evidence mất — chưa dùng được |
 
@@ -69,10 +69,10 @@ docs/bugs/
 
 | Tình huống | Workflow | Ghi chú |
 |---|---|---|
-| TC FAIL → cần mở bug | `/create_bug_report` | Tự thu evidence, phân loại severity/priority, tuỳ chọn đẩy Jira |
-| Dev báo đã fix → cần verify | `/retest_fixed_bugs` | Chấm FIXED/NOT_FIXED/PARTIAL, chạy regression quanh vùng fix, ghi **Lịch sử retest** vào file bug |
-| Tổng hợp bug đang mở cho báo cáo release | `/generate_test_summary_report` | Đọc `docs/bugs/<module>/BUG_*.md` để lấy Severity + Lịch sử retest |
-| Lập Master Test Plan | `/generate_master_test_plan` | Đọc `docs/bugs/` để đối chiếu tiêu chí vào |
+| TC FAIL → cần mở bug | `/create-bug-report` | Tự thu evidence, phân loại severity/priority, tuỳ chọn đẩy Jira |
+| Dev báo đã fix → cần verify | `/retest-fixed-bugs` | Chấm FIXED/NOT_FIXED/PARTIAL, chạy regression quanh vùng fix, ghi **Lịch sử retest** vào file bug |
+| Tổng hợp bug đang mở cho báo cáo release | `/generate-test-summary-report` | Đọc `docs/bugs/<module>/BUG_*.md` để lấy Severity + Lịch sử retest |
+| Lập Master Test Plan | `/generate-master-test-plan` | Đọc `docs/bugs/` để đối chiếu tiêu chí vào |
 
 ---
 
@@ -80,5 +80,5 @@ docs/bugs/
 
 | Ngày | Thay đổi |
 |---|---|
-| 2026-08-20 | `/create_bug_report` sau lần chạy `run_1787215085` (regression đầy đủ module Login): mở 5 bug mới (`TC_004`, `TC_016`, `TC_018-a`, `TC_028`, `TC_029`) và **rà lại xong** `BUG_login_1785678750` — sửa tham chiếu TC/REQ lệch nghĩa, bổ sung evidence mới, ghi Lịch sử retest xác nhận lỗi vẫn còn (`NOT_FIXED`). Tổng 6 bug đang mở |
+| 2026-08-20 | `/create-bug-report` sau lần chạy `run_1787215085` (regression đầy đủ module Login): mở 5 bug mới (`TC_004`, `TC_016`, `TC_018-a`, `TC_028`, `TC_029`) và **rà lại xong** `BUG_login_1785678750` — sửa tham chiếu TC/REQ lệch nghĩa, bổ sung evidence mới, ghi Lịch sử retest xác nhận lỗi vẫn còn (`NOT_FIXED`). Tổng 6 bug đang mở |
 | 2026-08-20 | **Chuyển `bug_reports/` ở gốc repo vào `docs/bugs/<module>/`.** Lý do: bug là mắt xích thứ tư của chuỗi truy vết, ba tầng còn lại đều nằm trong `docs/` và đều có danh mục — riêng bug đứng ngoài nên không có danh mục và **bị sót khi dọn dự án** (`rm -rf docs` không chạm tới nó). Chính lỗ hổng đó để lại `BUG_login_1785678750` mồ côi với tham chiếu TC/REQ đã lệch nghĩa. Khởi tạo file danh mục này |

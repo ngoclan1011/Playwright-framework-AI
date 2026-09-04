@@ -28,7 +28,7 @@ Workflow này phân tích requirement documents (Jira tickets, .doc files, user 
 - User cần danh sách các điểm mơ hồ (ambiguities) để clarify với PO/BA
 - User nói: "phân tích requirement", "review yêu cầu", "analyze this ticket"
 
-> **KHÔNG dùng workflow này khi** nguồn sự thật là hệ thống đang chạy (không có tài liệu) → dùng `/generate_requirements_from_website`.
+> **KHÔNG dùng workflow này khi** nguồn sự thật là hệ thống đang chạy (không có tài liệu) → dùng `/generate-requirements-from-website`.
 
 ### ⛔ Bước 0 — Chốt chặn đầu vào (BẮT BUỘC, làm TRƯỚC mọi thứ khác)
 
@@ -38,8 +38,8 @@ Workflow này nhận **tài liệu nguồn** (ticket, spec, user story) và sinh
 
 | Dấu hiệu tệp là ĐẦU RA, không phải đầu vào | Thuộc workflow nào | Route đúng |
 |---|---|---|
-| Tên khớp `requirements_<module>.md`, hoặc có bảng `REQ ID`/`Dải mã đã dùng`/`Nhật ký thay đổi` | `/generate_requirements_from_website` | Cập nhật theo ticket → `/update_requirements_from_ticket` · Sinh TC → `/generate_testcases_*` |
-| Tên khớp `system_map.md` / `api_map.md`, hoặc nằm trong `_discovery/` | `/discover_system` | Recon chi tiết một module → `/generate_requirements_from_website` |
+| Tên khớp `requirements_<module>.md`, hoặc có bảng `REQ ID`/`Dải mã đã dùng`/`Nhật ký thay đổi` | `/generate-requirements-from-website` | Cập nhật theo ticket → `/update-requirements-from-ticket` · Sinh TC → `/generate_testcases_*` |
+| Tên khớp `system_map.md` / `api_map.md`, hoặc nằm trong `_discovery/` | `/discover-system` | Recon chi tiết một module → `/generate-requirements-from-website` |
 | Tên khớp `analysis_<TICKET-ID>.md`, `impact_<TICKET-ID>.md`, `test_cases_<module>.md` | chính workflow này hoặc tầng test case | Hỏi user muốn làm gì với nó |
 
 **Không xác định được ticket ID** từ tệp đầu vào cũng là dấu hiệu đủ để dừng — đầu ra bắt buộc đặt tên theo `analysis_<TICKET-ID>.md`, không có ID thì không đặt tên được.
@@ -69,7 +69,7 @@ Agent cần thu thập từ user:
 | `.pdf` | **Ủy quyền skill `pdf`** |
 | `.pptx` | **Ủy quyền skill `pptx`** |
 | Ảnh (`.png`, `.jpg`) | `Read` — công cụ hiển thị ảnh trực tiếp |
-| **URL Jira / Confluence** | ❌ **KHÔNG tự fetch.** Route sang `/fetch_jira_requirements` (skill `skills-jira-integration`). Nếu MCP Atlassian chưa authorize → **dừng, báo user cần authorize**, tuyệt đối KHÔNG bịa nội dung ticket |
+| **URL Jira / Confluence** | ❌ **KHÔNG tự fetch.** Route sang `/fetch-jira-requirements` (skill `skills-jira-integration`). Nếu MCP Atlassian chưa authorize → **dừng, báo user cần authorize**, tuyệt đối KHÔNG bịa nội dung ticket |
 
 > [!NOTE]
 > Nếu user chỉ cung cấp file tài liệu mà không có mockup, agent vẫn phải phân tích đầy đủ dựa trên nội dung document. Nếu có mockup/screenshot, agent phân tích UI chi tiết hơn.
@@ -93,7 +93,7 @@ Agent cần thu thập từ user:
    | Bảng thông báo lỗi / message key | Validation Messages |
    | Ma trận role × chức năng | Ma trận Phân quyền |
    | Bảng trạng thái × hành động | Ma trận Trạng thái |
-   | Data mẫu / test data | Ghi chú lại làm input cho `/generate_test_data` — KHÔNG đưa vào requirements |
+   | Data mẫu / test data | Ghi chú lại làm input cho `/generate-test-data` — KHÔNG đưa vào requirements |
 5. **Đọc toàn bộ comments** — comment thường chứa quyết định mới nhất và **đè lên** phần mô tả gốc
 6. **Xác nhận** đã nắm được bối cảnh → tiếp tục phân tích
 
@@ -241,7 +241,7 @@ docs/requirements/<module>/analysis/
 
 > [!IMPORTANT]
 > **Workflow này dùng template 10 mục dưới đây — KHÔNG dùng cấu trúc mục 6 của skill.**
-> Mục 6 của skill (`Field Specifications`, `Ma trận Phân quyền`…) dành cho `/generate_requirements_from_website`, đầu ra là **tài liệu đặc tả module** (`requirements_<module>.md`). Còn workflow này sinh **tài liệu phân tích ticket** (`analysis_<TICKET-ID>.md`) — hai thứ khác nhau.
+> Mục 6 của skill (`Field Specifications`, `Ma trận Phân quyền`…) dành cho `/generate-requirements-from-website`, đầu ra là **tài liệu đặc tả module** (`requirements_<module>.md`). Còn workflow này sinh **tài liệu phân tích ticket** (`analysis_<TICKET-ID>.md`) — hai thứ khác nhau.
 >
 > Từ skill, workflow này chỉ mượn: **mục 2 + 2.1** (đánh mã), **3.2** (trích xuất tài liệu), **4** (AMB/RISK), **5** (scaling), **7.1 + 7.3** (strict rules).
 
@@ -307,7 +307,7 @@ Agent PHẢI xuất artifact theo cấu trúc sau:
 - **KHÔNG tự viết AC thay PO/BA.** Ticket thiếu AC → ghi nhận đúng thực trạng + `AMB-XX` 🔴 High. Đây là luật tương đương "không đoán locator" của nhánh UI — vi phạm là tài liệu mất giá trị hoàn toàn
 - **KHÔNG đánh lại mã REQ từ `01`** nếu module đã có tài liệu — luôn đánh tiếp từ số cuối (mục 2.1 của skill). Đụng mã là vỡ toàn bộ RTM
 - **KHÔNG đọc file nhị phân bằng `Read`** (`.docx`/`.xlsx`/`.pdf`/`.pptx`) — ủy quyền đúng skill. Đọc không được thì **dừng và báo user**, không suy đoán từ tên file
-- **KHÔNG tự fetch URL Jira/Confluence** — route sang `/fetch_jira_requirements`. MCP chưa authorize thì báo user, tuyệt đối không bịa nội dung ticket
+- **KHÔNG tự fetch URL Jira/Confluence** — route sang `/fetch-jira-requirements`. MCP chưa authorize thì báo user, tuyệt đối không bịa nội dung ticket
 - **KHÔNG tự đoán** business logic nếu document không nói rõ → đưa vào Ambiguities
 - **KHÔNG bỏ qua comments** trong Jira ticket — comments thường là quyết định mới nhất và **đè lên** phần mô tả gốc
 - **KHÔNG tự giải quyết im lặng xung đột giữa các nguồn** — luôn thành `AMB-XX`, kể cả khi đã áp thứ tự ưu tiên
@@ -335,7 +335,7 @@ Agent PHẢI xuất artifact theo cấu trúc sau:
 
 | Sau khi phân tích xong | Workflow tiếp theo |
 |---|---|
-| Cần sinh test cases nhanh | `/generate_testcases_from_requirements` |
-| Cần sinh test cases bài bản (RBT 6 bước) | `/generate_testcases_manual_rbt` |
-| Cần sinh automation scripts | `/generate_automation_from_testcases` |
-| Cần phân tích cross-module | `/generate_cross_module_test_plan` |
+| Cần sinh test cases nhanh | `/generate-testcases-from-requirements` |
+| Cần sinh test cases bài bản (RBT 6 bước) | `/generate-testcases-manual-rbt` |
+| Cần sinh automation scripts | `/generate-automation-from-testcases` |
+| Cần phân tích cross-module | `/generate-cross-module-test-plan` |

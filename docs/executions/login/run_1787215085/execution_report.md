@@ -160,7 +160,7 @@
 | **Actual** | Thanh địa chỉ giữ nguyên `http://crm.anhtester.com/admin/authentication` — không chuyển hướng |
 | Evidence | ![](evidence/TC_039_http_not_upgraded.png) |
 | Tái hiện được? | Có |
-| Ghi chú | Xác nhận lại **bug cũ vẫn còn tồn tại** trên build hiện tại — khớp với [BUG_login_1785678750_TC039.md](../../../bugs/login/BUG_login_1785678750_TC039.md) (2026-08-02). Đã cập nhật lại đúng tham chiếu TC ID/REQ ID + evidence mới qua `/create_bug_report` |
+| Ghi chú | Xác nhận lại **bug cũ vẫn còn tồn tại** trên build hiện tại — khớp với [BUG_login_1785678750_TC039.md](../../../bugs/login/BUG_login_1785678750_TC039.md) (2026-08-02). Đã cập nhật lại đúng tham chiếu TC ID/REQ ID + evidence mới qua `/create-bug-report` |
 
 ## 4. TC BLOCKED
 
@@ -178,7 +178,7 @@ Không tạo bản ghi nghiệp vụ nào (không thêm khách hàng, task, lead
 ## 6. Đề xuất bước tiếp theo
 
 - 3 TC FAIL đã có bug xác nhận trước (`TC_016`, `TC_028`) hoặc xác nhận lại bug cũ (`TC_039`) → không cần mở bug mới, có thể trỏ tới bug report hiện có / cập nhật bug cũ
-- 3 TC FAIL mới phát hiện trong lần chạy này (`TC_004`, `TC_018-a`, `TC_029`) → đề xuất chạy `/create_bug_report` để sinh bug report chuẩn, đặc biệt `TC_029` (ô Email không reset ở Quên mật khẩu) vì đây là hành vi chưa từng ghi nhận trước đây
+- 3 TC FAIL mới phát hiện trong lần chạy này (`TC_004`, `TC_018-a`, `TC_029`) → đề xuất chạy `/create-bug-report` để sinh bug report chuẩn, đặc biệt `TC_029` (ô Email không reset ở Quên mật khẩu) vì đây là hành vi chưa từng ghi nhận trước đây
 - `TC_014` cần tài khoản test có mật khẩu chứa chữ cái — đề nghị PO/Admin tạo thêm 1 tài khoản test dành riêng cho automation biên
 - `TC_034` cần phối hợp chạy cùng lúc kiểm thử module `TASK` để dựng được pre-condition
 - `TC_026` (chờ phiên hết hạn 65 phút) chưa chạy trong phiên này — đề xuất chạy riêng vào lúc không gấp thời gian

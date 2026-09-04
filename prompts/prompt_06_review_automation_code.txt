@@ -1,4 +1,4 @@
-/review_automation_code
+/review-automation-code
 
 # CONTEXT
 - Mode: [REVIEW (chỉ báo cáo) / FIX (báo cáo + sửa code + chạy lại)]

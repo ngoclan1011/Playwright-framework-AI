@@ -73,7 +73,7 @@
 
 ## 4. Ánh xạ sang module gốc
 
-Bảng dưới để chạy `/generate_traceability_matrix` và để biết khi sửa module nào thì phải chạy lại test của `PRJ`:
+Bảng dưới để chạy `/generate-traceability-matrix` và để biết khi sửa module nào thì phải chạy lại test của `PRJ`:
 
 | Tab trong dự án | Module gốc | Prefix | Tài liệu module gốc |
 |---|---|---|---|

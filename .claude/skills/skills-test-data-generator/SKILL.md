@@ -202,7 +202,7 @@ Module 3: tax_note      = "auto_combo01_tax_1712049200"
 
 ### Khi nào dùng
 
-- Đã có ma trận kết hợp (từ `/generate_cross_module_test_plan`)
+- Đã có ma trận kết hợp (từ `/generate-cross-module-test-plan`)
 - Cần sinh N bộ data tương ứng N bộ kết hợp
 - Mỗi bộ data phải có expected output (template, formula, computed values)
 
@@ -239,8 +239,8 @@ Module 3: tax_note      = "auto_combo01_tax_1712049200"
 
 ### Workflow tham chiếu
 
-- `/generate_cross_module_test_plan` → Sinh ma trận kết hợp (input cho skill này)
-- `/generate_combinatorial_test_data` → Workflow chính dùng skill này cho combinatorial data
+- `/generate-cross-module-test-plan` → Sinh ma trận kết hợp (input cho skill này)
+- `/generate-combinatorial-test-data` → Workflow chính dùng skill này cho combinatorial data
 
 ---
 

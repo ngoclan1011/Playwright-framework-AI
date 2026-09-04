@@ -3,7 +3,7 @@
 Trang web nhỏ gọn để **xem test cases từ file Markdown** — hỗ trợ search, sort và phân nhóm theo module.
 
 Dùng để đọc output của các workflow sinh test case trong repo này:
-`/generate_testcases_from_requirements`, `/generate_testcases_manual_rbt`.
+`/generate-testcases-from-requirements`, `/generate-testcases-manual-rbt`.
 
 ---
 

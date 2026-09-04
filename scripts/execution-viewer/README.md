@@ -3,7 +3,7 @@
 Trang web nhỏ gọn để **xem và gộp kết quả kiểm thử từ file Markdown** — thống kê, lọc, so sánh giữa các lần chạy, và xem độ phủ automation.
 
 Dùng để đọc output của:
-`/execute_test_cases` (`execution_report.md`) · `/retest_fixed_bugs` (`retest_report.md`) · `/generate_traceability_matrix` (`traceability_matrix.md`)
+`/execute-test-cases` (`execution_report.md`) · `/retest-fixed-bugs` (`retest_report.md`) · `/generate-traceability-matrix` (`traceability_matrix.md`)
 
 ---
 
@@ -50,7 +50,7 @@ Nạp **nhiều file/thư mục** để gộp số liệu và so sánh giữa c�
 
 Trả lời câu hỏi *"test case manual nào đã có script automation"*.
 
-> ⚠️ **Nguồn phải là `traceability_matrix.md`** do `/generate_traceability_matrix` sinh ra — workflow đó quét **code thật** để biết TC nào có script.
+> ⚠️ **Nguồn phải là `traceability_matrix.md`** do `/generate-traceability-matrix` sinh ra — workflow đó quét **code thật** để biết TC nào có script.
 > **Đừng** dùng cột `Automatable` trong file test case: đó là **dự định** lúc viết TC, không phải **thực tế** đã automate. Hai con số này lệch nhau rất nhanh.
 
 **Bốn trạng thái, suy ra từ dữ liệu chứ không đọc cột `Trạng thái` của file:**

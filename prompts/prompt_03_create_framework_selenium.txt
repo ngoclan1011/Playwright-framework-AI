@@ -1,4 +1,4 @@
-/generate_automation_framework
+/generate-automation-framework
 
 # CONTEXT
 Tôi cần xây dựng Web UI Automation Framework từ đầu.

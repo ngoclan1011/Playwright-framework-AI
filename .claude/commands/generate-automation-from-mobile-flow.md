@@ -20,13 +20,13 @@ Workflow chạy flow mobile **trên device/emulator thật** qua Appium MCP, thu
 
 ## Workflow này khác gì các workflow lân cận?
 
-| | Workflow này | `generate_automation_from_ui_flow` | `generate_automation_from_testcases` |
+| | Workflow này | `generate-automation-from-ui-flow` | `generate-automation-from-testcases` |
 |---|---|---|---|
 | **Nền tảng** | Mobile (Appium) | Web (Playwright MCP) | Web hoặc mobile |
 | **Input** | App + flow mô tả bằng lời | URL + flow | File manual test cases |
 | **Recon** | UI hierarchy trên device | DOM trên browser | Theo TC rồi verify |
 
-> Đã có sẵn bộ manual TC cho app mobile → dùng `/generate_automation_from_testcases`, workflow đó cũng ra Appium. Workflow này dành cho lúc **chưa có TC**, chỉ biết "mở app, đăng nhập, tạo đơn".
+> Đã có sẵn bộ manual TC cho app mobile → dùng `/generate-automation-from-testcases`, workflow đó cũng ra Appium. Workflow này dành cho lúc **chưa có TC**, chỉ biết "mở app, đăng nhập, tạo đơn".
 
 ## ⚠️ Nguyên tắc thực thi
 

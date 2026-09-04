@@ -100,7 +100,7 @@ Agent chạy tiếp qua TC fail (fail-forward), **chỉ dừng** khi:
 
 | Tình huống | Làm gì |
 |---|---|
-| Có TC FAIL | `/create_bug_report` — sinh bug report chuẩn từ evidence đã thu |
-| Nhiều TC FAIL cần gom nhóm root cause | `/analyze_test_report` |
-| Cần đẩy kết quả lên Xray | `/import_test_results_xray` |
-| TC FAIL do TC viết sai (không phải lỗi hệ thống) | `/review_testcases` mode FIX — **không sửa TC trong lúc chạy** |
+| Có TC FAIL | `/create-bug-report` — sinh bug report chuẩn từ evidence đã thu |
+| Nhiều TC FAIL cần gom nhóm root cause | `/analyze-test-report` |
+| Cần đẩy kết quả lên Xray | `/import-test-results-xray` |
+| TC FAIL do TC viết sai (không phải lỗi hệ thống) | `/review-testcases` mode FIX — **không sửa TC trong lúc chạy** |

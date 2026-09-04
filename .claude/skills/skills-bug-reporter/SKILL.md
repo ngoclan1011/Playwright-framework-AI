@@ -69,7 +69,7 @@ Sử dụng skill này khi:
 - **Nghi ngờ root cause (nếu phân tích được):** ...
 
 ## Lịch sử retest
-<!-- Do /retest_fixed_bugs ghi. Dòng mới thêm LÊN ĐẦU bảng. Bảng rỗng = chưa retest lần nào -->
+<!-- Do /retest-fixed-bugs ghi. Dòng mới thêm LÊN ĐẦU bảng. Bảng rỗng = chưa retest lần nào -->
 
 | Ngày | Build | Kết quả | Retest report | Ghi chú |
 |---|---|---|---|---|
@@ -86,7 +86,7 @@ Sử dụng skill này khi:
 | 🟡 **PARTIAL** | Lỗi gốc hết nhưng hành vi vẫn lệch Expected, hoặc chỉ hết ở một phần trường hợp |
 | ⚠️ **CANNOT_VERIFY** | Không dựng được pre-condition / môi trường lỗi / mất quyền — **KHÔNG** được chấm FIXED |
 
-Chi tiết quy trình: workflow `/retest_fixed_bugs`.
+Chi tiết quy trình: workflow `/retest-fixed-bugs`.
 
 ---
 
@@ -131,7 +131,7 @@ Trước khi bàn giao bug report, verify:
 - [ ] Test data traceable — dev có thể tìm đúng record trong DB
 - [ ] Severity/Priority gán theo bảng chuẩn, không cảm tính
 - [ ] Title đủ thông tin để tìm kiếm sau này (module + hành vi sai)
-- [ ] **Có `Build / Version`** — thiếu thì `/retest_fixed_bugs` không đối chiếu được build mới, retest thành vô nghĩa
+- [ ] **Có `Build / Version`** — thiếu thì `/retest-fixed-bugs` không đối chiếu được build mới, retest thành vô nghĩa
 - [ ] **Có `REQ ID liên quan`** (nếu truy được) — thiếu thì retest không chọn được phạm vi regression, phải dò tay
 - [ ] Có mục `Lịch sử retest` (bảng rỗng) sẵn trong file
 

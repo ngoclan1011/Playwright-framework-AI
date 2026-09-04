@@ -1,7 +1,7 @@
 # ============================================================
 # BƯỚC 2: PHÂN TÍCH & ĐIỀU TRA UI (Analysis & UI Recon)
 # ============================================================
-# Workflow: /generate_automation_from_testcases (tiếp tục)
+# Workflow: /generate-automation-from-testcases (tiếp tục)
 # Skill:    skills-qa-automation-engineer + skills-ui-debug-agent
 # ============================================================
 # CÁCH DÙNG:
