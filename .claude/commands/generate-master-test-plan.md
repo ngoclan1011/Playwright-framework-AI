@@ -28,6 +28,43 @@ Tài liệu quản lý một đợt kiểm thử: **ai làm gì, trong phạm vi
 - **KHÔNG BỊA** lịch trình, nhân lực, ngày mốc, tên người — agent không có cách nào biết. Thiếu thì để `❓ Chờ <ai> cung cấp`, **không** điền số cho đủ chỗ
 - **Phần nào suy ra được từ repo thì tự điền** (danh sách module, độ phủ hiện tại, rủi ro sản phẩm đã phát hiện) — đừng hỏi lại thứ đã có trong `docs/`
 - Tiêu chí exit lấy **nguyên** từ `skills-test-summary-reporter`, không tự chế bộ khác
+- **KHÔNG bịa số điều khoản chuẩn** — xem mục Chuẩn tham chiếu ngay dưới
+
+---
+
+## Chuẩn tham chiếu — vì sao cần và ghi thế nào
+
+Template này bám **ISO/IEC/IEEE 29119-3 — Test Plan**, chuẩn quốc tế hiện hành về tài liệu kiểm thử. Nó **thay thế IEEE 829** (đã withdrawn), nhưng nhiều khách hàng Nhật/Mỹ và công ty outsourcing vẫn quen mặt template 829 — nên tài liệu xuất ra ánh xạ sang **cả hai**.
+
+**Mục đích của việc ánh xạ:** khi đi nghiệm thu hợp đồng hoặc audit, người duyệt hỏi *"plan này theo chuẩn nào"*. Có bảng ánh xạ thì trả lời được bằng một trang; không có thì phải ngồi giải trình từng mục.
+
+| Mục trong template này | ISO/IEC/IEEE 29119-3 — Test Plan | IEEE 829-2008 |
+|---|---|---|
+| 1. Mục tiêu | Context of the testing — Project/test sub-process | 2. Introduction |
+| 2.1 Trong phạm vi | Context of the testing — Test scope · Test item(s) | 3. Test items · 4. Features to be tested |
+| 2.2 Ngoài phạm vi | Context of the testing — Test scope (exclusions) | **5. Features NOT to be tested** |
+| 3. Chiến lược kiểm thử | Test strategy — Test sub-processes · Test design techniques · Retesting & regression | 6. Approach |
+| 4.1 Tiêu chí vào | Test strategy — Entry criteria | — (829 không có mục riêng) |
+| 4.2 Tiêu chí ra | Test strategy — Test completion criteria | 7. Item pass/fail criteria |
+| 4.3 Tạm dừng & tiếp tục | Test strategy — Suspension & resumption criteria | 8. Suspension criteria and resumption requirements |
+| 5. Môi trường & Dữ liệu test | Test strategy — Test environment requirements · Test data requirements | 10. Environmental needs |
+| 6. Nhân lực & Phân công | Staffing — Roles, responsibilities, training needs | 11. Responsibilities · 12. Staffing and training needs |
+| 7. Lịch trình & Mốc | Testing activities and estimates · Schedule | 9. Testing tasks · 13. Schedule |
+| 8. Rủi ro dự án | **Risk register — Project risks** | 14. Risks and contingencies |
+| 9. Sản phẩm bàn giao | Test strategy — Test deliverables | — (nằm rải trong 829) |
+| 10. Phê duyệt | — (29119 để tổ chức tự quy định) | 15. Approvals |
+
+### Hai mục chuẩn có, template này CHƯA có — nêu khi phù hợp
+
+| Mục chuẩn | Khi nào bắt buộc thêm vào plan |
+|---|---|
+| **Risk register — Product risks** | 29119 gộp rủi ro sản phẩm và rủi ro dự án vào một register. Repo này **tách đôi**: rủi ro sản phẩm do RBT đánh giá, nằm ở `docs/testcases/<module>/`. Plan chỉ cần **trỏ tới** nơi đó ở mục 8, không chép lại |
+| **Deviations from Organizational Test Strategy** | Khi công ty có chiến lược kiểm thử cấp tổ chức và đợt này làm khác đi (bỏ một cấp test, dùng tool khác, hạ ngưỡng exit). Đây là mục **auditor đọc đầu tiên** — làm khác mà không giải trình là điểm trừ nặng |
+| **Testing communication** | Dự án có khách hàng bên ngoài hoặc nhiều đội: ai báo cho ai, tần suất, kênh nào |
+
+> ⚠️ **Quy tắc ghi chuẩn:** ghi **tên mục** của chuẩn (`Test strategy — Suspension & resumption criteria`), **KHÔNG ghi số điều khoản** (`clause 7.3.2`). Số điều khoản đổi giữa các bản phát hành, và agent không có bản chuẩn trong tay để tra — ghi số là bịa. Tên mục thì ổn định và người duyệt tra ra ngay.
+>
+> ⚠️ **KHÔNG tuyên bố "tuân thủ ISO/IEC/IEEE 29119".** Tuân thủ là kết luận của đánh giá viên, không phải của người viết tài liệu. Câu đúng: *"Tài liệu này biên soạn **theo cấu trúc** ISO/IEC/IEEE 29119-3 — Test Plan"*.
 
 ---
 
@@ -42,6 +79,7 @@ Thu thập những gì **đã có**, để buổi hỏi user ngắn nhất có t
 | `docs/testcases/README.md` | Module nào đã có TC, bao nhiêu TC |
 | `traceability_matrix.md` (nếu có) | Độ phủ hiện tại |
 | `docs/bugs/` | Bug đang mở — ảnh hưởng tiêu chí vào. Đọc `docs/bugs/README.md` trước để nắm danh mục |
+| **Bảng rà soát đặc tính chất lượng** cuối `test_cases_<module>.md` | ⭐ Mọi ô `➖ Ngoài phạm vi` → chép thẳng vào **mục 2.2**. Đây là nguồn đáng tin nhất cho mục ngoài phạm vi: nó do người viết TC ghi lại lúc đã nhìn kỹ module, không phải nhớ lại lúc lập plan |
 
 > Chưa chạy `/discover-system` → plan sẽ thiếu phần phạm vi đáng tin. Đề nghị user chạy khám phá trước, hoặc chấp nhận plan có phạm vi tạm và ghi rõ điều đó.
 
@@ -61,6 +99,8 @@ Hỏi **một lượt**, không hỏi lắt nhắt:
 | **Tiêu chí exit của dự án** | Có bộ riêng không, hay dùng bộ mặc định của skill |
 | **Loại test trong phạm vi** | Chức năng · regression · UAT · hiệu năng · bảo mật — cái nào đội này làm, cái nào đội khác |
 | **Công cụ quản lý** | Jira/Xray hay file markdown trong repo |
+| **Chuẩn tài liệu khách hàng yêu cầu** | Mặc định dùng cấu trúc 29119-3 của template này. Khách có template riêng (hay bắt theo IEEE 829 16 mục) → **hỏi xin file mẫu**, ánh xạ nội dung sang đó thay vì bắt khách đọc cấu trúc lạ |
+| **Có Test Strategy cấp tổ chức không** | Có → phải điền mục 11.2 *Điểm làm khác chiến lược chung*. Không có → ghi `Không áp dụng` |
 
 > ### ⚠️ Mục "Ngoài phạm vi" là mục có giá trị pháp lý cao nhất trong plan
 >
@@ -84,6 +124,7 @@ File: `docs/test_plan_<mốc>.md`
 | Người lập | <QA Lead> |
 | Người duyệt | ❓ Chờ PM xác nhận |
 | Trạng thái | 🟨 Draft — còn 3 ô chờ thông tin (mục 6, 7) |
+| Cấu trúc tài liệu | Biên soạn **theo cấu trúc** ISO/IEC/IEEE 29119-3 — Test Plan · ánh xạ ở mục 11 |
 
 > **Ô còn treo:** lịch mốc (mục 7) · nhân lực module Báo cáo (mục 6) · ngày môi trường UAT sẵn sàng (mục 5)
 
@@ -217,6 +258,38 @@ Kiểm thử đợt <mốc> nhằm xác nhận <mục tiêu nghiệp vụ>, đ�
 |---|---|---|---|
 | QA Lead | | | |
 | PM / PO | | | |
+
+## 11. Ánh xạ chuẩn tài liệu
+
+### 11.1 Đối chiếu mục
+
+> Tài liệu này biên soạn **theo cấu trúc** ISO/IEC/IEEE 29119-3 — Test Plan (chuẩn hiện hành, thay thế IEEE 829 đã withdrawn). Bảng dưới để người duyệt đối chiếu nhanh; **không** phải tuyên bố đã được đánh giá tuân thủ.
+
+| Mục tài liệu này | ISO/IEC/IEEE 29119-3 — Test Plan | IEEE 829-2008 |
+|---|---|---|
+| 1 | Context of the testing — Project/test sub-process | 2 |
+| 2.1 | Context of the testing — Test scope · Test item(s) | 3, 4 |
+| 2.2 | Context of the testing — Test scope (exclusions) | 5 |
+| 3 | Test strategy — Test sub-processes · Test design techniques | 6 |
+| 4.1 | Test strategy — Entry criteria | — |
+| 4.2 | Test strategy — Test completion criteria | 7 |
+| 4.3 | Test strategy — Suspension & resumption criteria | 8 |
+| 5 | Test strategy — Test environment · Test data requirements | 10 |
+| 6 | Staffing — Roles, responsibilities, training needs | 11, 12 |
+| 7 | Testing activities and estimates · Schedule | 9, 13 |
+| 8 | Risk register — Project risks | 14 |
+| 9 | Test strategy — Test deliverables | — |
+| 10 | (Tổ chức tự quy định) | 15 |
+
+**Rủi ro sản phẩm** (Risk register — Product risks): không chép vào plan này. Đánh giá theo quy trình RBT, lưu tại `docs/testcases/<module>/` — xem mục 8.
+
+### 11.2 Điểm làm khác chiến lược chung (Deviations)
+
+| Làm khác ở đâu | Chiến lược chung quy định | Đợt này làm | Lý do | Ai duyệt |
+|---|---|---|---|---|
+| | | | | |
+
+> Không có Test Strategy cấp tổ chức → ghi `Không áp dụng`. **Đừng để trống** — trống nghĩa là "chưa ai xem xét", khác hẳn "đã xem và không có gì khác biệt".
 ```
 
 ---
@@ -232,6 +305,10 @@ Kiểm thử đợt <mốc> nhằm xác nhận <mục tiêu nghiệp vụ>, đ�
 - [ ] Rủi ro dự án tách bạch với rủi ro sản phẩm
 - [ ] URL, tài khoản nằm ở `.env` — **không** trong tài liệu
 - [ ] Phạm vi module lấy từ `docs/requirements/README.md`, khớp trạng thái recon thực tế
+- [ ] Mục **11.1** có đủ dòng cho mọi mục 1–10 — thêm mục mới vào plan thì thêm dòng ánh xạ tương ứng
+- [ ] Mục **11.2 Deviations** đã điền hoặc ghi rõ `Không áp dụng` — không để bảng rỗng
+- [ ] **Không** có số điều khoản chuẩn (`clause 7.x`) ở bất kỳ đâu — chỉ tên mục
+- [ ] **Không** có câu tuyên bố "tuân thủ ISO/IEC/IEEE 29119" — chỉ "biên soạn theo cấu trúc"
 
 **Báo cáo cho user:** số module trong phạm vi · số ô còn chờ thông tin (liệt kê rõ) · rủi ro dự án đáng chú ý nhất · nhắc gửi PM duyệt trước khi bắt đầu thực thi.
 

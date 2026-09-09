@@ -201,6 +201,7 @@ Agent sử dụng skills trong `.claude/skills/` tùy theo nhiệm vụ:
 | `skills-testcase-reviewer`      | Review chất lượng manual test cases — rubric 6 tiêu chí, coverage gaps               |
 | `skills-coverage-traceability`  | Sinh ma trận truy vết RTM — Requirements ↔ Test Cases ↔ Automation                    |
 | `skills-api-mocking`            | Sinh mock/stub API (Playwright route, WireMock) — test UI độc lập backend             |
+| `skills-user-guide-writer`      | Sinh Hướng dẫn sử dụng cho người dùng cuối — viết theo việc cần làm, bám cấu trúc ISO/IEC/IEEE 26514 · 82079-1 |
 
 ## 6. Kế Hoạch Kiểm Thử (Plan Templates)
 
@@ -262,12 +263,22 @@ docs/
 │       │   └── evidence/*.png
 │       └── analysis_<timestamp>.md             ← /analyze-test-report nhánh MANUAL
 │
-└── bugs/                                       ← bug sinh từ TC FAIL
-    ├── README.md                               ← DANH MỤC bug
-    └── <module>/BUG_<module>_<timestamp>_<TC_ID>.md  ← mỗi bug 1 file, hậu tố TC_ID để nhìn tên biết ngay thuộc TC nào
+├── bugs/                                       ← bug sinh từ TC FAIL
+│   ├── README.md                               ← DANH MỤC bug
+│   └── <module>/BUG_<module>_<timestamp>_<TC_ID>.md  ← mỗi bug 1 file, hậu tố TC_ID để nhìn tên biết ngay thuộc TC nào
+│
+└── user-guides/                                 ← Hướng dẫn sử dụng cho NGƯỜI DÙNG CUỐI
+    ├── README.md                                ← DANH MỤC — module × role × phiên bản phần mềm
+    └── <module>/
+        ├── user_guide_<module>.md               ← INDEX — TÊN FILE BẤT BIẾN
+        ├── images/*.png                          ← ảnh minh hoạ, đặt tên theo việc
+        ├── parts/part_NN_<slug>.md               ← chỉ khi > 15 việc
+        └── archive/user_guide_<module>_vN.md     ← bản cũ
 ```
 
 > `test_summary_*.md` nằm ở **gốc `executions/`**, không thuộc module nào — nó gộp mọi module tại một mốc release.
+>
+> `docs/user-guides/` là nhánh **duy nhất** viết cho người ngoài đọc — khách hàng, người dùng cuối. Nó **dùng lại** kết quả recon của `requirements/` nhưng **không** chép nội dung sang: requirements nói *hệ thống phải làm gì*, hướng dẫn nói *người dùng làm thế nào*. 🔒 Ảnh trong nhánh này phải dùng **dữ liệu mẫu** — tài liệu được phát ra ngoài.
 >
 > `docs/bugs/` là **mắt xích thứ tư** của chuỗi truy vết `requirements → testcases → executions → bugs`. Evidence của bug **không** nhân bản sang đây — bug report chỉ **link tới** ảnh trong `executions/<module>/run_*/evidence/`, giữ đúng một nguồn sự thật.
 
@@ -285,7 +296,7 @@ Ba trang tĩnh trong `scripts/`, mở bằng cách double-click, chạy offline,
 
 | Quy tắc | Lý do |
 |---|---|
-| Tên file index **luôn** `requirements_<module>.md` / `test_cases_<module>.md` | Mọi workflow phía sau đọc theo mẫu `docs/<nhánh>/<module>/<file>`. Đổi tên là vỡ chuỗi RTM |
+| Tên file index **luôn** `requirements_<module>.md` / `test_cases_<module>.md` / `user_guide_<module>.md` | Mọi workflow phía sau đọc theo mẫu `docs/<nhánh>/<module>/<file>`. Đổi tên là vỡ chuỗi RTM |
 | **KHÔNG** nhét số phiên bản vào tên index (`_v2`, `_new`, `_index`…) | Bản mới **thay thế** index; bản cũ chuyển vào `archive/` |
 | Mỗi module một prefix **duy nhất** (`LOGIN`, `CUST`, `PRJ`…) | Chống trùng mã giữa các module — tra ở danh mục trước khi đặt |
 | **KHÔNG đánh lại mã REQ từ `01`** khi module đã có tài liệu | Đụng mã là vỡ toàn bộ traceability |
@@ -378,7 +389,7 @@ rm -rf docs .playwright-mcp task.md .claude/settings.local.json
 
 ⚠️ **`.claude/settings.local.json`** là permission tích luỹ theo từng máy/phiên, thường chứa đường dẫn tuyệt đối của dự án cũ. Đã đưa vào `.gitignore` — nếu file còn bị git theo dõi từ trước, gỡ bằng: `git rm --cached .claude/settings.local.json`
 
-⚠️ **Trước khi xoá, kiểm tra ảnh trong `docs/executions/*/run_*/evidence/`** — screenshot chụp hệ thống thật, thường chứa dữ liệu khách hàng (tên, email, số tiền). Quan trọng hơn nữa: **đừng commit chúng lên repo công khai**.
+⚠️ **Trước khi xoá, kiểm tra ảnh trong `docs/executions/*/run_*/evidence/` và `docs/user-guides/*/images/`** — screenshot chụp hệ thống thật, thường chứa dữ liệu khách hàng (tên, email, số tiền). Quan trọng hơn nữa: **đừng commit chúng lên repo công khai**.
 
 Không cần dọn gì thêm. Agent tự tạo lại `docs/` và 2 file danh mục (`docs/requirements/README.md`, `docs/testcases/README.md`) ở lần chạy workflow đầu tiên — xem skill `skills-requirements-analyzer` mục 5.7.1.
 
@@ -476,3 +487,4 @@ Agent sử dụng workflows trong `.claude/commands/` qua slash commands:
 | `/review-testcases`                     | Review chất lượng manual TCs (2 modes: REVIEW/FIX)         |
 | `/generate-traceability-matrix`         | Sinh ma trận truy vết RTM 3 tầng                          |
 | `/generate-api-mocks`                   | Sinh API mocks + tests cho edge cases                        |
+| `/generate-user-guide`                  | Sinh **Hướng dẫn sử dụng** cho người dùng cuối từ requirements + evidence đã khảo sát (2 modes: DOC/LIVE). KHÔNG phải tài liệu requirements viết lại giọng khác |

@@ -80,6 +80,29 @@ Mỗi tiêu chí chấm **Đạt / Không đạt / Không áp dụng**, kèm s�
 
 ---
 
+## Chuẩn tham chiếu
+
+Báo cáo này tương ứng với **ISO/IEC/IEEE 29119-3 — Test Completion Report** (chuẩn hiện hành về tài liệu kiểm thử, thay thế IEEE 829 đã withdrawn). Cặp đôi của nó là Master Test Plan do `/generate-master-test-plan` sinh ra: **plan công bố tiêu chí trước, report chấm lại sau**.
+
+| Mục báo cáo | ISO/IEC/IEEE 29119-3 — Test Completion Report |
+|---|---|
+| 1. Khuyến nghị | Test completion evaluation (kết luận) |
+| 2. Vùng chưa kiểm thử | Deviations from planned testing · Residual risks |
+| 3. Đối chiếu tiêu chí exit | Test completion evaluation |
+| 4. Kết quả theo module | Testing performed · Test measures |
+| 5. Tình hình lỗi | Test measures (defect metrics) · Residual risks |
+| 6. Độ phủ yêu cầu | Test measures (coverage) |
+| 7. Đề xuất hành động | Recommendations |
+| 8. Yếu tố cản trở & Bài học | Factors blocking progress · Lessons learned · Reusable test assets |
+
+> ⚠️ Ghi **tên mục** của chuẩn, **KHÔNG ghi số điều khoản** — số đổi giữa các bản phát hành, agent không có bản chuẩn để tra, ghi số là bịa.
+>
+> ⚠️ **KHÔNG tuyên bố "tuân thủ ISO/IEC/IEEE 29119"** — tuân thủ là kết luận của đánh giá viên. Câu đúng: *"biên soạn theo cấu trúc ISO/IEC/IEEE 29119-3 — Test Completion Report"*.
+
+**Mục 8 là mục hay bị bỏ nhất và mất mát nhiều nhất.** Không ghi lại vì sao đợt này chậm (môi trường sập mấy ngày, chờ tài khoản role, build lỗi phải test lại), thì đợt sau lặp lại nguyên xi và không ai ước lượng đúng được.
+
+---
+
 ## Report Template
 
 ```markdown
@@ -93,6 +116,7 @@ Mỗi tiêu chí chấm **Đạt / Không đạt / Không áp dụng**, kèm s�
 | Khoảng thời gian | 2026-08-01 → 2026-08-12 |
 | Người lập | <tên QA> (agent hỗ trợ) |
 | Nguồn dữ liệu | 6 execution report · 2 retest report · 14 bug report |
+| Cấu trúc tài liệu | Biên soạn **theo cấu trúc** ISO/IEC/IEEE 29119-3 — Test Completion Report · ánh xạ ở mục 9 |
 
 ---
 
@@ -191,6 +215,52 @@ Mỗi tiêu chí chấm **Đạt / Không đạt / Không áp dụng**, kèm s�
 | 🔴 Trước release | Fix BUG_CUST_1785700456 hoặc PM duyệt ngoại lệ | Dev / PM | — |
 | 🟠 Trước release | Xin tài khoản Manager để khảo sát module Báo cáo | QA | `/generate-requirements-from-website` |
 | 🟡 Sprint sau | Bổ sung TC cho 4 REQ chưa phủ | QA | `/generate-testcases-from-requirements` |
+
+---
+
+## 8. Yếu tố cản trở tiến độ & Bài học
+
+### 8.1 Điều gì làm chậm đợt này
+
+| Yếu tố | Mất bao lâu | Ảnh hưởng | Đã xử lý thế nào |
+|---|---|---|---|
+| Không có tài khoản role Manager | Cả đợt | Module Báo cáo không kiểm được — 1 vùng trắng | Chưa — đã xin từ ngày <ngày>, chưa nhận |
+| Môi trường staging bị đội khác reset data | 1.5 ngày | 8 TC phải chạy lại | Thoả thuận khung giờ chạy, ghi ID bản ghi đã tạo |
+| Build v2.4.1 lỗi đăng nhập | 0.5 ngày | Toàn bộ test dừng | Dev vá trong ngày, phát hành v2.4.2 |
+
+> ⚠️ Ghi cả **thời lượng thực tế**, không chỉ tên sự việc. Không có con số thì đợt sau vẫn ước lượng lịch sai y như đợt này.
+
+### 8.2 Bài học rút ra
+
+| Bài học | Áp dụng vào đâu |
+|---|---|
+| Tài khoản đủ mọi role phải là **tiêu chí VÀO**, không phải việc xin trong lúc test | Mục 4.1 của Master Test Plan đợt sau |
+| Môi trường dùng chung cần chốt khung giờ **trước** khi bắt đầu | Mục 5 Master Test Plan |
+| Bản fix vùng search gây regression → vùng này cần retest FULL, không chỉ retest bug | Chiến lược retest đợt sau |
+
+### 8.3 Tài sản dùng lại được
+
+| Tài sản | Nơi lưu | Dùng lại cho |
+|---|---|---|
+| Bộ TC module Khách hàng (36 TC) | `docs/testcases/customers/` | Regression các đợt sau |
+| Checklist smoke 12 mục | `docs/testcases/checklist_smoke.md` | Mọi build mới |
+
+---
+
+## 9. Phụ lục — Ánh xạ chuẩn tài liệu
+
+> Tài liệu này biên soạn **theo cấu trúc** ISO/IEC/IEEE 29119-3 — Test Completion Report. Bảng dưới để người duyệt/nghiệm thu đối chiếu; **không** phải tuyên bố đã được đánh giá tuân thủ.
+
+| Mục | ISO/IEC/IEEE 29119-3 — Test Completion Report |
+|---|---|
+| 1 | Test completion evaluation (kết luận) |
+| 2 | Deviations from planned testing · Residual risks |
+| 3 | Test completion evaluation |
+| 4 | Testing performed · Test measures |
+| 5 | Test measures (defect metrics) · Residual risks |
+| 6 | Test measures (coverage) |
+| 7 | Recommendations |
+| 8 | Factors blocking progress · Lessons learned · Reusable test assets |
 ```
 
 ---
@@ -207,6 +277,9 @@ Mỗi tiêu chí chấm **Đạt / Không đạt / Không áp dụng**, kèm s�
 - [ ] BLOCKED và SKIPPED không bị tính lẫn vào phần đã kiểm chứng
 - [ ] Regression phát sinh trong kỳ được nêu riêng — đây là tín hiệu chất lượng bản fix
 - [ ] Không có credentials, không có dữ liệu khách hàng thật trong báo cáo
+- [ ] Mục **8.1** ghi **thời lượng thực tế** của từng yếu tố cản trở, không chỉ tên sự việc
+- [ ] Mục **8.2** mỗi bài học chỉ đích danh **áp dụng vào mục nào** của plan đợt sau — bài học không có nơi áp dụng là câu nói suông
+- [ ] **Không** có số điều khoản chuẩn (`clause 7.x`); **không** có câu tuyên bố "tuân thủ ISO/IEC/IEEE 29119"
 
 ---
 

@@ -599,7 +599,55 @@ Agent không được chỉ "nhắc tên" kỹ thuật — phải áp dụng the
 
 ---
 
+## Rà Soát Đặc Tính Chất Lượng — ISO/IEC 25010:2023 (chống bỏ sót loại test)
+
+> **Mục đích:** trả lời câu hỏi *"bộ TC này có bỏ sót loại kiểm thử nào không"* bằng một khung có tên gọi chung, thay vì cảm tính. Chạy **một lượt ở cuối**, sau khi đã sinh xong TC — **không** dùng làm khung sinh TC.
+
+ISO/IEC 25010:2023 (Product quality model) có **9 đặc tính**. So với bản 2011 quen thuộc: `Usability` → **Interaction Capability**, `Portability` → **Flexibility**, và thêm mới **Safety**.
+
+| # | Đặc tính | Đặc tính con chính | QA chức năng làm được gì bằng manual TC | Nếu ngoài phạm vi |
+|---|---|---|---|---|
+| 1 | **Functional Suitability**<br>Phù hợp chức năng | Completeness · Correctness · Appropriateness | ⭐ **Phần chính của mọi bộ TC** — đã phủ qua Positive/Negative/Boundary | Không bao giờ ngoài phạm vi |
+| 2 | **Performance Efficiency**<br>Hiệu quả hiệu năng | Time behaviour · Resource utilization · Capacity | Chỉ quan sát được mức thô: trang tải quá lâu, danh sách 1000 dòng bị treo | Đội hiệu năng / công cụ tải — ghi vào mục 2.2 Master Test Plan |
+| 3 | **Compatibility**<br>Tương thích | Co-existence · Interoperability | Đa trình duyệt · đa độ phân giải · import/export đúng định dạng · tích hợp bên thứ ba | Ghi rõ trình duyệt/thiết bị nào **không** kiểm |
+| 4 | **Interaction Capability**<br>Khả năng tương tác (bản 2011: Usability) | Learnability · Operability · **User error protection** · Inclusivity · User assistance | ⭐ Làm được nhiều: thông báo lỗi có dễ hiểu không · chặn thao tác sai · điều hướng bàn phím · nhãn/tooltip · trạng thái rỗng | A11y chuyên sâu (WCAG đầy đủ) cần công cụ riêng |
+| 5 | **Reliability**<br>Tin cậy | Faultlessness · Availability · Fault tolerance · **Recoverability** | Mất mạng giữa chừng · session hết hạn · submit lại sau lỗi · dữ liệu có mất không sau khi khôi phục | Đo uptime/MTBF thuộc vận hành |
+| 6 | **Security**<br>An toàn thông tin | Confidentiality · Integrity · Authenticity · **Accountability** · Resistance | Phân quyền theo role · truy cập URL trực tiếp khi chưa đăng nhập · dữ liệu người này có lộ sang người kia không · nhật ký thao tác | Pentest, quét lỗ hổng — **luôn** ghi rõ ai làm |
+| 7 | **Maintainability**<br>Bảo trì | Modularity · Reusability · Analysability · Modifiability · Testability | 🚫 **Không kiểm được bằng manual TC** — đây là đặc tính của mã nguồn | Code review / static analysis — không thuộc QA chức năng |
+| 8 | **Flexibility**<br>Linh hoạt (bản 2011: Portability) | Adaptability · **Scalability** · Installability · Replaceability | Responsive trên nhiều kích thước màn hình · cài đặt/nâng cấp · đổi ngôn ngữ, múi giờ, đơn vị tiền | Scalability hạ tầng thuộc đội vận hành |
+| 9 | **Safety**<br>An toàn (mới ở bản 2023) | Operational constraint · Fail safe · **Hazard warning** | Chỉ áp dụng cho hệ thống mà lỗi gây thiệt hại thật (y tế, tài chính, thiết bị): có cảnh báo trước thao tác không hồi lại được không · có xác nhận trước khi xoá/chuyển tiền không | ➖ Không áp dụng với đa số app nghiệp vụ thông thường |
+
+### Cách dùng — 3 quy tắc
+
+1. **Chấm từng đặc tính, không bỏ trống ô nào:** `✅ Có TC` (dẫn TC ID) · `➖ Ngoài phạm vi` (**phải ghi ai chịu trách nhiệm**) · `🔴 Thiếu` (phải bổ sung trước khi xuất).
+2. 🚫 **KHÔNG sinh TC cho đủ 9 ô.** Đặc tính không áp dụng với module này thì chấm `➖` kèm lý do — TC sinh ra chỉ để lấp bảng là TC rác, và nó làm loãng bộ TC thật.
+3. **Ô `➖` là dữ liệu đầu vào cho `/generate-master-test-plan` mục 2.2 (Ngoài phạm vi).** Đây là giá trị lớn nhất của bảng này: biến "QA quên test" thành "đã xem xét và thống nhất không test" — hai chuyện hoàn toàn khác nhau khi có sự cố production.
+
+### Bảng xuất kèm output (đặt cuối tài liệu TC)
+
+```markdown
+## Rà soát đặc tính chất lượng (ISO/IEC 25010:2023)
+
+| Đặc tính | Trạng thái | TC ID / Lý do |
+|---|---|---|
+| Functional Suitability | ✅ Có TC | TC_001–TC_048 |
+| Performance Efficiency | ➖ Ngoài phạm vi | Không có công cụ tải — đội Hạ tầng, đợt sau |
+| Compatibility | ✅ Có TC | TC_049–TC_052 (Chrome, Edge, 1366×768) |
+| Interaction Capability | ✅ Có TC | TC_053–TC_060 (thông báo lỗi, điều hướng bàn phím, trạng thái rỗng) |
+| Reliability | 🔴 Thiếu | Chưa có TC session hết hạn giữa chừng khi điền form → **bổ sung trước khi xuất** |
+| Security | ✅ Có TC | TC_061–TC_070 (phân quyền 3 role, truy cập URL trực tiếp) |
+| Maintainability | ➖ Không áp dụng | Đặc tính của mã nguồn, không kiểm bằng manual TC |
+| Flexibility | ✅ Có TC | TC_071–TC_074 (responsive 1366/1920, đổi ngôn ngữ) |
+| Safety | ➖ Không áp dụng | App nghiệp vụ, lỗi không gây thiệt hại vật lý |
+```
+
+> ⚠️ Ghi **tên đặc tính** theo chuẩn, **KHÔNG ghi số điều khoản**. Và **không** tuyên bố *"tuân thủ ISO/IEC 25010"* — câu đúng là *"rà soát theo mô hình chất lượng ISO/IEC 25010:2023"*.
+
+---
+
 ## Scenarios Chuyên Sâu & Non-Functional Checklist (Áp dụng nâng cao)
+
+> Đây là phần **chi tiết hoá** của bảng đặc tính bên trên — 5 nhóm dưới đây map lần lượt vào Functional Suitability (1), Reliability (5), Interaction Capability (4) và Flexibility (8).
 
 Agent phải tích hợp thêm các tình huống kiểm thử nâng cao khi phân tích module:
 
@@ -622,7 +670,7 @@ Agent phải tích hợp thêm các tình huống kiểm thử nâng cao khi ph�
 
 ## 🛡️ AI Self-Quality Gate (Quy trình Tự Kiểm Định Chất Lượng)
 
-Trước khi xuất kết quả cuối cùng cho user, Agent **BẮT BUỘC** tự rà soát qua 8 tiêu chí:
+Trước khi xuất kết quả cuối cùng cho user, Agent **BẮT BUỘC** tự rà soát qua 10 tiêu chí (0–9):
 - [ ] **0. Độ hạt nhất quán:** Đã chốt GỘP hay TÁCH **trước** batch đầu và nêu ra chat. Toàn bộ bộ TC theo **một** độ hạt, không nửa gộp nửa tách. Nếu GỘP: mọi biến thể có mã riêng (`a`, `b`…), không TC nào quá 6 biến thể, không TC nào vi phạm bảng CẤM gộp.
 - [ ] **1. Unique TC ID:** Đảm bảo không trùng mã TC ID và đúng quy tắc dự án (`PROJECT_MODULE_TC_001`).
 - [ ] **2. 1-to-1 Step-Expected Matching:** Các bước `Test Steps` đánh số rõ ràng (1,2,3 — mỗi bước 1 hành động) và khớp 1-1 với `Expected Result` đánh số tương ứng.
@@ -651,6 +699,9 @@ Trước khi xuất kết quả cuối cùng cho user, Agent **BẮT BUỘC** t�
 > Có dòng 🔴 → **vẫn xuất được** bộ TC, nhưng phải nêu rõ ở tóm tắt cuối và đề xuất recon bổ sung. KHÔNG được im lặng bỏ qua.
 
 - [ ] **8. Ngôn ngữ kiểm chứng (theo [Quy Tắc Ngôn Ngữ Kiểm Chứng](#quy-tắc-ngôn-ngữ-kiểm-chứng-bắt-buộc--áp-dụng-cả-4-modes)):** grep toàn file, phần TC chính **không còn** `document.`, `querySelector`, `checkValidity`, `offsetParent`, `className`, `getAttribute`, `$(`, `input#`, `[type=`, mã HTTP, tên header, selector CSS/XPath (trừ TC có `Auto Type` = `API`). Mọi nội dung cấp kỹ thuật còn lại nằm dưới `🔧 Ghi chú kỹ thuật (cần DevTools):` và TC đó mang tag `@TechCheck`. **Phép thử cuối:** che hết dòng `🔧 Ghi chú kỹ thuật` → mọi TC vẫn chạy và chấm PASS/FAIL được.
+
+- [ ] **9. Rà soát đặc tính chất lượng (ISO/IEC 25010:2023)** — áp dụng **QUICK · FULL RBT · DELTA**, KHÔNG áp dụng CHECKLIST: đã chấm đủ **9/9 đặc tính**, không ô nào trống. Ô `➖` có ghi **ai chịu trách nhiệm** (không chỉ ghi "ngoài phạm vi" trơn). Ô 🔴 phải bổ sung TC **trước khi xuất**. Bảng rà soát đặt ở cuối tài liệu TC.
+  > Với **DELTA**: chỉ chấm lại đặc tính bị ticket chạm tới, giữ nguyên phần còn lại của bảng — không rà lại cả module.
 
 ---
 
@@ -797,7 +848,7 @@ Quy trình bài bản, tuần tự cho module phức tạp. Bao gồm phân tíc
    - Test Steps đánh số `1. 2. 3.` (mỗi bước 1 hành động), Expected Result đánh số khớp 1-1, dùng `<br>` xuống dòng trong cell
    - Gắn đầy đủ metadata `Automatable` (`Yes`/`No`/`Partial`), `Auto Type` (`UI`/`API`/`Unit`/`N/A`), và `@Tags` (`@Smoke`, `@Regression`, `@CriticalPath`...)
    - **TUYỆT ĐỐI không được bỏ sót** bất kỳ test case nào đã sinh ở Bước 5
-3. **Chạy Self-Quality Gate (8 Tiêu chí):** Kiểm định lại — bao gồm **Bảng Đối Soát Coverage** (tiêu chí 6: mọi REQ có ≥1 TC), **Bảng Đối Soát Evidence** (tiêu chí 7) và **rà ngôn ngữ kiểm chứng** (tiêu chí 8) — trước khi xuất Artifact (`test_cases_<module>.md`).
+3. **Chạy Self-Quality Gate (10 Tiêu chí, 0–9):** Kiểm định lại — bao gồm **Bảng Đối Soát Coverage** (tiêu chí 6: mọi REQ có ≥1 TC), **Bảng Đối Soát Evidence** (tiêu chí 7), **rà ngôn ngữ kiểm chứng** (tiêu chí 8) và **Bảng rà soát đặc tính chất lượng ISO/IEC 25010:2023** (tiêu chí 9: đủ 9/9 đặc tính, ô `➖` ghi rõ ai chịu) — trước khi xuất Artifact (`test_cases_<module>.md`).
 
 **Output:** Bảng Test Cases Markdown hoàn chỉnh kèm Metadata Automation.
 
@@ -1003,6 +1054,8 @@ Vì vậy Mode DELTA đặt việc **bảo toàn TC ID** lên trên mọi mục 
 - ❌ Thấy tài liệu và ảnh mâu thuẫn nhưng **tự chọn một bên rồi im lặng** — phải viết theo ảnh, ghi `ASM-XX` và báo user
 - ❌ Đọc checkbox **xám mờ (disabled)** thành "không tick" — bỏ sót nguyên một business rule phụ thuộc
 - ❌ Xuất bộ TC mà không kèm **Bảng Đối Soát Evidence** (tiêu chí 7 Quality Gate)
+- ❌ Sinh TC cho đủ 9 ô của bảng đặc tính chất lượng — đặc tính không áp dụng thì chấm `➖` kèm lý do, TC lấp bảng là TC rác
+- ❌ Chấm `➖ Ngoài phạm vi` trơn, không ghi **ai chịu trách nhiệm** — mất luôn giá trị của bảng khi đưa sang Master Test Plan mục 2.2
 - ❌ **Chạy QUICK/FULL RBT trên module đã có file TC** — sinh bộ thứ hai, TC ID đánh lại từ `001`, vỡ truy vết sang automation. Đã có TC thì dùng Mode DELTA
 - ❌ DELTA sinh lại cả file/module TC thay vì sửa đúng dòng bị ảnh hưởng
 - ❌ DELTA đổi TC ID, đánh lại số, hoặc chèn số mới vào giữa dải đang dùng
@@ -1027,6 +1080,7 @@ Vì vậy Mode DELTA đặt việc **bảo toàn TC ID** lên trên mọi mục 
 | Bảng Đối Soát Coverage | Mỗi REQ ID × số TC × đủ Positive/Negative/Boundary (tiêu chí 6) |
 | **Bảng Đối Soát Evidence** | Mỗi ảnh × màn hình/trạng thái × TC dựa vào × đầy đủ hay cắt cụt (tiêu chí 7) |
 | **Vùng chưa có evidence** | Danh sách màn hình/trạng thái không có ảnh chống lưng + TC bị gắn `@NeedsVerify` |
+| **Bảng rà soát đặc tính chất lượng** | 9 đặc tính ISO/IEC 25010:2023 × ✅/➖/🔴 × TC ID hoặc lý do (tiêu chí 9) |
 
 ### Mode FULL RBT
 
@@ -1037,7 +1091,7 @@ Vì vậy Mode DELTA đặt việc **bảo toàn TC ID** lên trên mọi mục 
 | 3 | Module Decomposition + Dependencies |
 | 4 | Traceability Matrix + High-Level Scenarios |
 | 5 | Test Cases chi tiết (REQ ID + Risk Level + Test Data) |
-| 6 | Bảng Markdown chuẩn (Jira/Excel ready) + Bảng Đối Soát Coverage + **Bảng Đối Soát Evidence** |
+| 6 | Bảng Markdown chuẩn (Jira/Excel ready) + Bảng Đối Soát Coverage + **Bảng Đối Soát Evidence** + **Bảng rà soát đặc tính chất lượng (ISO/IEC 25010:2023)** |
 
 ### Mode CHECKLIST
 

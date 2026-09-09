@@ -87,7 +87,7 @@ Chấm **từng** tiêu chí đã chốt ở Bước 0: `✅ Đạt` / `❌ Khô
 
 File: `docs/executions/test_summary_<mốc>_<timestamp>.md` — đặt ở **gốc `docs/executions/`** vì báo cáo này cắt ngang mọi module, không thuộc module nào.
 
-Theo **Report Template** trong skill, đủ 7 mục theo đúng thứ tự:
+Theo **Report Template** trong skill, đủ 9 mục theo đúng thứ tự:
 
 | Mục | Vì sao ở vị trí đó |
 |---|---|
@@ -98,16 +98,23 @@ Theo **Report Template** trong skill, đủ 7 mục theo đúng thứ tự:
 | 5. Tình hình lỗi | Bug đang mở + regression phát sinh trong kỳ |
 | 6. Độ phủ yêu cầu | Từ RTM, nếu có |
 | 7. Đề xuất hành động | Việc cụ thể, ai làm, command nào |
+| 8. Yếu tố cản trở & Bài học | Sau kết quả, trước phụ lục — đọc xong mới hiểu vì sao số ra như vậy |
+| 9. Phụ lục — Ánh xạ chuẩn | Cuối cùng, dành cho người nghiệm thu/audit chứ không phải người đọc thường |
+
+> **Mục 8 lấy dữ liệu từ đâu:** BLOCKED trong `execution_report.md` (lý do bị chặn), `retest_report.md` (bản fix nào gây regression), và mục Rủi ro của Master Test Plan (rủi ro nào đã thành hiện thực). **Không hỏi user** những gì có trong file — chỉ hỏi phần thời lượng nếu file không ghi.
+
+> **Chuẩn tham chiếu:** báo cáo bám cấu trúc **ISO/IEC/IEEE 29119-3 — Test Completion Report**. Xem mục *Chuẩn tham chiếu* trong skill trước khi viết mục 9. Ghi **tên mục** chuẩn, **không** ghi số điều khoản; **không** tuyên bố "tuân thủ".
 
 ---
 
 ## Bàn giao
 
-**Checklist trước khi báo xong:** dùng nguyên **Quality Checklist** của skill (10 mục). Ba mục hay sai nhất:
+**Checklist trước khi báo xong:** dùng nguyên **Quality Checklist** của skill (13 mục). Bốn mục hay sai nhất:
 
 - [ ] Vùng chưa test đặt **trước** tỷ lệ
 - [ ] Khuyến nghị GO vẫn liệt kê rủi ro
 - [ ] Manual và automation **không cộng gộp**
+- [ ] Mục 8.1 có **thời lượng thực tế**, mục 8.2 mỗi bài học chỉ đích danh nơi áp dụng
 
 **Báo cáo cho user:** khuyến nghị (GO / GO có điều kiện / NO-GO) · số tiêu chí đạt/tổng · bug Critical & Major đang mở · module chưa test · đường dẫn file báo cáo.
 
