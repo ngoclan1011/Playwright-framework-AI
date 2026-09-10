@@ -6,6 +6,7 @@ import {
   PRIORITY_ORDER,
   RISK_ORDER,
   compareTcId,
+  compareText,
 } from '@/lib/parser'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -183,28 +184,25 @@ export default function App() {
       )
     }
     const dir = sort.dir
-    const sorted = [...rows]
-    sorted.sort((a, b) => {
+    // Mọi cột đều tie-break bằng TC ID để thứ tự không đổi giữa các lần render.
+    // Dấu * chỉ áp lên phép so sánh chính, KHÔNG áp lên tie-break — nếu không, các dòng
+    // cùng giá trị sẽ đảo ngược theo hướng sort và trông như sort sai.
+    const primary = (a: TestCase, b: TestCase): number => {
       switch (sort.key) {
         case 'id':
-          return dir * compareTcId(a.id, b.id)
+          return compareTcId(a.id, b.id)
         case 'title':
-          return dir * a.title.localeCompare(b.title)
+          return compareText(a.title, b.title)
         case 'group':
-          return dir * a.group.localeCompare(b.group) || compareTcId(a.id, b.id)
+          return compareText(a.group, b.group)
         case 'priority':
-          return (
-            dir *
-              ((PRIORITY_ORDER[a.priority.toLowerCase()] ?? 9) - (PRIORITY_ORDER[b.priority.toLowerCase()] ?? 9)) ||
-            compareTcId(a.id, b.id)
-          )
+          return (PRIORITY_ORDER[a.priority.toLowerCase()] ?? 9) - (PRIORITY_ORDER[b.priority.toLowerCase()] ?? 9)
         case 'risk':
-          return (
-            dir * ((RISK_ORDER[a.risk.toLowerCase()] ?? 9) - (RISK_ORDER[b.risk.toLowerCase()] ?? 9)) ||
-            compareTcId(a.id, b.id)
-          )
+          return (RISK_ORDER[a.risk.toLowerCase()] ?? 9) - (RISK_ORDER[b.risk.toLowerCase()] ?? 9)
       }
-    })
+    }
+    const sorted = [...rows]
+    sorted.sort((a, b) => dir * primary(a, b) || compareTcId(a.id, b.id))
     return sorted
   }, [allCases, selectedGroup, priorityFilter, autoFilter, tagFilter, search, sort])
 
@@ -523,17 +521,14 @@ export default function App() {
                       </td>
                     </tr>
                   )}
-                  {filtered.map((tc) => {
-                    const rowKey = tc.sourceFile + '/' + tc.id
-                    return (
-                      <CaseRow
-                        key={rowKey}
-                        tc={tc}
-                        open={expanded.has(rowKey)}
-                        onToggle={() => toggleExpand(rowKey)}
-                      />
-                    )
-                  })}
+                  {filtered.map((tc) => (
+                    <CaseRow
+                      key={tc.uid}
+                      tc={tc}
+                      open={expanded.has(tc.uid)}
+                      onToggle={() => toggleExpand(tc.uid)}
+                    />
+                  ))}
                 </tbody>
               </table>
             </div>

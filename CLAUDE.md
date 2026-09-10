@@ -288,7 +288,7 @@ Ba trang tĩnh trong `scripts/`, mở bằng cách double-click, chạy offline,
 
 | Trang | Nạp file gì | Dùng khi |
 |---|---|---|
-| `scripts/testcases-viewer/bundle.html` | `test_cases_*.md` · `checklist_*.md` | Duyệt, lọc, xuất Excel test case |
+| `scripts/testcases-viewer/bundle.html` | `test_cases_*.md` | Duyệt, lọc, xuất Excel test case |
 | `scripts/execution-viewer/bundle.html` | `execution_report.md` · `retest_report.md` · `traceability_matrix.md` | Xem kết quả chạy, so sánh giữa các lần chạy, xem độ phủ automation, xuất CSV/Excel |
 | `scripts/bugs-viewer/bundle.html` | `docs/bugs/README.md` (danh mục) · `docs/bugs/<module>/BUG_*.md` | Lọc bug theo Severity/Priority/Trạng thái, xem Lịch sử retest, xuất CSV/Excel |
 

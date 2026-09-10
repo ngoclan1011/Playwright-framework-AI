@@ -47,5 +47,5 @@ skills:
 ## Output
 
 - File `docs/bugs/<module>/BUG_<module>_<timestamp>_<TC_ID>.md` theo template chuẩn
-- Bổ sung/cập nhật dòng của bug trong danh mục `docs/bugs/README.md` — chưa tồn tại thì tạo mới với bảng rỗng
+- Bổ sung/cập nhật dòng của bug trong danh mục `docs/bugs/README.md` — chưa tồn tại thì tạo mới theo **Template Danh Mục** trong skill `skills-bug-reporter` (cột `Mã bug` và `Trạng thái` là bắt buộc, thiếu là `scripts/bugs-viewer` bỏ cả bảng)
 - Jira issue key (nếu user chọn đẩy lên Jira)

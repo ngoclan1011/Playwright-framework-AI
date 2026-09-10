@@ -116,7 +116,36 @@ Chi tiết quy trình: workflow `/retest-fixed-bugs`.
 3. **Isolate** — Rút gọn steps to reproduce về mức tối thiểu
 4. **Classify** — Gán Severity/Priority theo bảng chuẩn
 5. **Write** — Điền template, đính kèm evidence
-6. **Deliver** — Lưu file `docs/bugs/<module>/BUG_<module>_<timestamp>_<TC_ID>.md` và cập nhật danh mục `docs/bugs/README.md`; nếu user yêu cầu → đẩy lên Jira qua `skills-jira-integration`
+6. **Deliver** — Lưu file `docs/bugs/<module>/BUG_<module>_<timestamp>_<TC_ID>.md` và cập nhật danh mục `docs/bugs/README.md` (template bên dưới); nếu user yêu cầu → đẩy lên Jira qua `skills-jira-integration`
+
+---
+
+## Template Danh Mục `docs/bugs/README.md` (BẮT BUỘC)
+
+Danh mục là **điểm vào tầng bug** và cũng là file `scripts/bugs-viewer` nạp để có cái nhìn tổng quan khi chưa nạp từng file bug chi tiết. Chưa có thì tạo mới theo đúng khung này; đã có thì **chỉ thêm/sửa dòng**, không dựng lại bảng.
+
+```markdown
+# Danh mục Bug Report — <Tên hệ thống>
+
+| Mục | Giá trị |
+|---|---|
+| Hệ thống | <tên + URL> |
+| Quy ước mã bug | `BUG_<module>_<timestamp>_<TC_ID>` |
+| Đường dẫn file | `docs/bugs/<module>/BUG_<module>_<timestamp>_<TC_ID>.md` |
+| Ngày cập nhật | <YYYY-MM-DD> |
+
+## 1. Danh mục bug
+
+| Mã bug | Module | Tiêu đề ngắn | Severity | Priority | Trạng thái | TC liên quan | Ngày phát hiện |
+|---|---|---|---|---|---|---|---|
+| [BUG_login_1787226514_TC016](login/BUG_login_1787226514_TC016.md) | `LOGIN` | Ô Email không giữ giá trị sau khi đăng nhập thất bại | 🟡 Minor | P2 | 🔴 **Đang mở** | `CRM_LOGIN_TC_016` | 2026-08-20 |
+```
+
+> ⚠️ **Tên cột là hợp đồng đọc, không phải nhãn trình bày.** `scripts/bugs-viewer` chỉ nhận bảng danh mục khi có **đồng thời** cột `Mã bug` **và** cột `Trạng thái` — thiếu một trong hai (hoặc dịch sang `Bug ID` / `Status`) thì viewer **bỏ toàn bộ bảng**, không báo lỗi gì. Các cột còn lại khớp theo chuỗi con (`Module`, `Tiêu đề`, `Severity`, `Priority`, `TC liên quan`, `Ngày phát hiện`) — thiếu thì chỉ mất cột đó.
+>
+> **Giá trị cột `Trạng thái`** phải chứa một trong các từ khoá viewer nhận: `Đang mở` · `Đã fix` / `Chờ retest` · `rà lại` · `đóng`. Viết kiểu khác thì bug bị xếp mặc định là *Đang mở*.
+>
+> **Cột `Mã bug` nên bọc link Markdown** trỏ tới file bug tương ứng — viewer lấy mã từ trong `[...]`, và người đọc bấm được sang chi tiết.
 
 ---
 

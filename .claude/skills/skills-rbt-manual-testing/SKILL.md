@@ -483,14 +483,17 @@ Sinh test cases **nhanh, đủ chất lượng** từ requirements/user stories 
 ## Bảng Output Standard (chuẩn hóa đầy đủ Metadata)
 
 ```markdown
-| TC ID | REQ ID | Module | Test Scenario | Pre-Condition | Test Steps | Expected Result | Test Data | Priority | Automatable | Auto Type | Tags |
+| TC ID | REQ ID | Module | Risk Level | Test Scenario | Pre-Condition | Test Steps | Test Data | Expected Result | Priority | Automatable | Auto Type | Tags |
 ```
 
 > **Giải thích Metadata:**
 > - **REQ ID:** Mã requirement mà TC này cover (`REQ-LOGIN-01`) — BẮT BUỘC, 1 TC có thể cover nhiều REQ (phân cách `,`). Đây là mắt xích truy vết để đối soát "đủ case" và chạy `/generate-traceability-matrix`
+> - **Risk Level:** `High` / `Medium` / `Low` — mức rủi ro của vùng chức năng TC này chạm tới. **KHÔNG được bỏ cột này**: `scripts/testcases-viewer` có cột Risk và cho sort theo nó, thiếu cột thì toàn bộ cột Risk hiện `—` và sort mất tác dụng
 > - **Automatable:** `Yes` / `No` / `Partial` (Độ khả thi để viết script tự động)
 > - **Auto Type:** `UI` / `API` / `Unit` / `N/A` (Loại automation phù hợp)
 > - **Tags:** `@Smoke`, `@Regression`, `@CriticalPath`, `@Security`, `@Boundary`
+>
+> ⚠️ **Tên cột là hợp đồng đọc, không phải nhãn trình bày.** `scripts/testcases-viewer` map cột theo **tên**, nên thứ tự cột đổi được nhưng tên thì không: `TC ID`, `REQ ID`, `Module`, `Priority`, `Automatable`, `Tags` phải khớp **chính xác** (thêm chữ như `TC ID liên quan` là mất cột), còn `Risk`, `Scenario`/`Test Title`, `Pre-Condition`, `Test Steps`, `Test Data`, `Expected`, `Auto Type` khớp theo chuỗi con. **KHÔNG dịch tên cột sang Tiếng Việt** — nội dung ô viết Tiếng Việt, tên cột giữ nguyên.
 >
 > **Ở độ hạt GỘP:** cột `Test Data` (Kiểu A) hoặc `Expected Result` (Kiểu B) chứa **Bảng biến thể / Bảng kiểm** — mỗi dòng một mã (`a`, `b`, `c`…), phân cách bằng `<br>`. Số cột của bảng **không đổi**, chỉ nội dung ô dày hơn. Xem mẫu ở mục Độ Hạt Test Case.
 
@@ -1103,6 +1106,8 @@ Vì vậy Mode DELTA đặt việc **bảo toàn TC ID** lên trên mọi mục 
 | Bảng ký nhận | Môi trường · Build/Version · Người thực hiện · Ngày · Kết quả |
 
 > File output khuyến nghị: `docs/checklists/checklist_<loại>_<module>.md`
+>
+> 📄 **Checklist là tài liệu đọc/in trực tiếp, KHÔNG nạp vào `scripts/testcases-viewer`.** Viewer đó chỉ đọc bảng test case chi tiết (`test_cases_*.md`); checklist cố tình không có `Test Steps` / `Test Data` / `Risk Level` nên nạp vào chỉ ra bảng rỗng. Vì vậy header checklist **được phép** đặt Tiếng Việt cho người tick tay (`Hạng mục kiểm tra`, `Kết quả kỳ vọng`, `TC ID liên quan`) — nó không chịu hợp đồng đọc của viewer như bảng TC.
 
 ### Mode DELTA
 

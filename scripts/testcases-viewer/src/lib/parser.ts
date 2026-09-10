@@ -1,6 +1,10 @@
 // Parser đọc file Markdown chứa bảng test cases (format của skill skills-rbt-manual-testing)
 
 export interface TestCase {
+  // Khoá duy nhất trong phạm vi 1 file, gán theo thứ tự xuất hiện.
+  // KHÔNG dùng `id` làm khoá React: một TC ID có thể xuất hiện nhiều lần trong cùng file
+  // (bảng tóm tắt, bảng nhắc lại...) → key trùng làm React render sai dòng.
+  uid: string
   id: string
   reqIds: string[]
   module: string
@@ -79,6 +83,7 @@ export function parseMarkdownFile(fileName: string, content: string): ParsedFile
   const testCases: TestCase[] = []
   let docTitle = fileName.replace(/\.md$/i, '')
   let currentGroup = ''
+  let seq = 0
   let i = 0
 
   while (i < lines.length) {
@@ -99,8 +104,11 @@ export function parseMarkdownFile(fileName: string, content: string): ParsedFile
     if (line.trim().startsWith('|') && i + 1 < lines.length && isSeparatorRow(lines[i + 1].trim())) {
       const headers = splitCells(line.trim())
       const keys = headers.map(columnKey)
-      // chỉ nhận bảng test case (có cột TC ID)
-      if (keys.includes('id')) {
+      // Chỉ nhận bảng test case thật: phải có cột TC ID **và** ít nhất một cột nội dung.
+      // Bảng tóm tắt (VD: `| TC ID | REQ | Vì sao FAIL | Trạng thái |`) cũng có cột TC ID
+      // nhưng không phải test case — nhận vào sẽ đếm trùng và làm sai số lượng TC.
+      const hasBody = keys.includes('title') || keys.includes('steps') || keys.includes('expected')
+      if (keys.includes('id') && hasBody) {
         i += 2
         while (i < lines.length && lines[i].trim().startsWith('|')) {
           const cells = splitCells(lines[i].trim())
@@ -110,6 +118,7 @@ export function parseMarkdownFile(fileName: string, content: string): ParsedFile
           })
           if (row.id && /TC/i.test(row.id)) {
             testCases.push({
+              uid: fileName + '#' + seq++,
               id: stripInline(row.id),
               reqIds: (row.req || '')
                 .split(',')
@@ -125,8 +134,12 @@ export function parseMarkdownFile(fileName: string, content: string): ParsedFile
               priority: stripInline(row.priority || ''),
               automatable: stripInline(row.automatable || ''),
               autoType: stripInline(row.autoType || ''),
+              // Tags trong tài liệu viết cách nhau bằng dấu phẩy: `@Regression, @Security, @Login`.
+              // Tách chỉ theo khoảng trắng thì tag nào không ở cuối cũng dính phẩy (`@Security,`) —
+              // badge hiện phẩy thừa, và dropdown lọc coi `@Security` với `@Security,` là hai tag
+              // khác nhau nên lọc ra thiếu TC.
               tags: (row.tags || '')
-                .split(/\s+/)
+                .split(/[\s,;]+/)
                 .map((t) => stripInline(t).trim())
                 .filter((t) => t.startsWith('@')),
               group: currentGroup,
@@ -164,5 +177,15 @@ export const RISK_ORDER: Record<string, number> = {
 
 // So sánh TC ID theo số tự nhiên (TC_002 < TC_010)
 export function compareTcId(a: string, b: string): number {
-  return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' })
+  return a.localeCompare(b, 'vi', { numeric: true, sensitivity: 'base' })
+}
+
+// So sánh text hiển thị (Nhóm, Test Scenario): bỏ markdown inline và ký hiệu dẫn đầu
+// (emoji 🐞/⚠️, dấu gạch) để "🐞 Sau khi..." xếp cạnh "Sau khi..." thay vì dồn hết lên đầu bảng.
+export function compareText(a: string, b: string): number {
+  const norm = (s: string) =>
+    stripInline(s)
+      .replace(/^[^\p{L}\p{N}]+/u, '')
+      .trim()
+  return norm(a).localeCompare(norm(b), 'vi', { numeric: true, sensitivity: 'base' })
 }

@@ -81,6 +81,8 @@ Command này sử dụng **Mode CHECKLIST** của skill `skills-rbt-manual-testi
 
 ## Bảng Output
 
+> 📄 **Checklist là tài liệu đọc/in trực tiếp, KHÔNG nạp vào `scripts/testcases-viewer`.** Viewer đó chỉ đọc bảng test case chi tiết (`test_cases_*.md` — có `Test Steps`, `Test Data`, `Risk Level`); checklist cố tình không có những cột đó nên nạp vào chỉ ra bảng rỗng. Checklist mở bằng bất kỳ trình xem Markdown nào, hoặc in ra tick tay — đó là mục đích của nó.
+
 ```markdown
 ## [Tên Module] — Checklist <Loại> (<số mục> mục · ~<thời gian> phút)
 

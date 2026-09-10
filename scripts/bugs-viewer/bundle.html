@@ -398,7 +398,7 @@ function parseBugIndex(text, fileName){
 }
 
 /* ============================ STATE ============================ */
-let DOCS=[]; let tab='tc';
+let DOCS=[];
 const offStatus=new Set(), offSev=new Set(), offPrio=new Set();
 const $=s=>document.querySelector(s);
 let sortKey='dateFound', sortDir=-1;
@@ -465,13 +465,20 @@ function toast(msg){
     'padding:9px 16px;border-radius:8px;font-size:13px;z-index:70;box-shadow:0 8px 24px rgba(0,0,0,.3)';
   document.body.appendChild(el); setTimeout(()=>el.remove(),2600);
 }
-// CHỈ nhận ảnh viết đúng cú pháp link Markdown ![]() hoặc []() — tên file nhắc tới trong văn xuôi
-// (không bọc link, ví dụ ảnh cũ đã mất chỉ còn ghi lại đường dẫn để tham khảo) KHÔNG được coi là
-// evidence xem được, tránh hiện chip "chưa nạp" cho ảnh vốn không bao giờ nạp được.
+/* Nhận hai dạng, với luật khác nhau (giữ đồng bộ với execution-viewer):
+     1. Link Markdown `![](x.png)` / `[](x.png)` — luôn thành chip. Chưa nạp ảnh thì hiện chip
+        "chưa nạp" kèm hướng dẫn, vì tác giả đã khai rõ đây là evidence.
+     2. Đường dẫn trần `evidence/TC_004_x.png` — CHỈ thành chip khi ảnh đã được nạp.
+   Điều kiện "đã nạp" ở dạng 2 giữ nguyên mục đích ban đầu: tên file nhắc tới trong văn xuôi
+   (ảnh cũ đã mất, chỉ ghi lại để tham khảo) không sinh chip "chưa nạp" gây hiểu nhầm. */
 function evidenceHTML(raw){
   const txt=String(raw||''); const found=[];
-  txt.replace(/!?\[[^\]]*\]\(([^)]+)\)/gi,
-    (m,a)=>{ const p=(a||'').trim(); if(p && IMG_RE.test(p)) found.push(p); return m; });
+  const rest=txt.replace(/!?\[[^\]]*\]\(([^)]+)\)/gi,
+    (m,a)=>{ const p=(a||'').trim(); if(p && IMG_RE.test(p)) found.push(p); return ' '; });
+  for(const tok of rest.split(/[\s,;|]+/)){
+    const t=tok.trim().replace(/^[('"<]+|[)'">.,;]+$/g,'');
+    if(t && IMG_RE.test(t) && IMAGES.has(baseName(t).toLowerCase())) found.push(t);
+  }
   if(!found.length) return `<span class="v">${esc(txt)||'—'}</span>`;
   const uniq=[...new Set(found)];
   const chips=uniq.map(p=>{
@@ -514,10 +521,31 @@ function filtered(){
     return [b.id,b.title,b.module,b.tc,b.req,b.steps,b.expected,b.actual,b.freq,b.workaround,b.rootCause,
       b.proposedFix,b.notesOther,b.build,b.env]
       .some(v=>String(v||'').toLowerCase().includes(q));
-  }).sort((a,b)=>{
-    const va=String(a[sortKey]||''), vb=String(b[sortKey]||'');
-    return va.localeCompare(vb,'vi')*sortDir;
-  });
+  }).sort(rowCmp(sortKey, sortDir));
+}
+
+/* Sort: cột có thứ bậc phải so theo BẢNG BẬC, không so theo chữ cái — sort theo chữ cái cho ra
+   "Không verify được, Đã đóng, Cần rà lại, Đang mở..." là thứ tự vô nghĩa với người đọc.
+   Trước đây severity/priority tình cờ đúng vì alphabet trùng thứ bậc (CRITICAL<MAJOR<MINOR<TRIVIAL);
+   thêm một mức mới như BLOCKER là vỡ ngay, nên khai bảng bậc tường minh. */
+const SEV_RANK={CRITICAL:0,MAJOR:1,MINOR:2,TRIVIAL:3};
+const PRIO_RANK={P1:0,P2:1,P3:2};
+const STATUS_RANK=ALL_ST.reduce((o,s,i)=>(o[s]=i,o),{}); // còn việc phải làm → xong
+const RANKS={severity:SEV_RANK, priority:PRIO_RANK, status:STATUS_RANK};
+
+function rowCmp(key, dir){
+  const rank=RANKS[key];
+  return (x,y)=>{
+    const a=String(x[key]??'').trim(), b=String(y[key]??'').trim();
+    // Ô rỗng luôn xuống cuối, bất kể chiều sort — bug thiếu dữ liệu không được chen lên đầu bảng
+    if(!a!==!b) return a?-1:1;
+    const main = rank
+      ? (rank[a]??99)-(rank[b]??99)
+      : a.localeCompare(b,'vi',{numeric:true,sensitivity:'base'});
+    // dir CHỈ áp lên phép so sánh chính. Áp cả lên tie-break thì các dòng cùng giá trị sẽ
+    // đảo ngược theo hướng sort, trông như sort sai.
+    return dir*main || String(x.id||'').localeCompare(String(y.id||''),'vi',{numeric:true});
+  };
 }
 
 /* ============================ RENDER ============================ */

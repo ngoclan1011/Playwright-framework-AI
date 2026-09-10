@@ -535,15 +535,23 @@ function toast(msg){
   document.body.appendChild(el); setTimeout(()=>el.remove(),2600);
 }
 
-/* Biến ô Evidence thành chip bấm được. Chấp nhận cả cú pháp markdown ![](x.png),
-   đường dẫn trần, và nhiều ảnh cách nhau bởi dấu phẩy/xuống dòng. */
-// CHỈ nhận ảnh viết đúng cú pháp link Markdown ![]() hoặc []() — tên file nhắc tới trong văn xuôi
-// (không bọc link) KHÔNG được coi là evidence xem được, tránh hiện chip "chưa nạp" cho ảnh
-// không thật sự là evidence (VD tên file bị nhắc tới trong ghi chú).
+/* Biến ô Evidence thành chip bấm được. Nhận hai dạng, với luật khác nhau:
+     1. Link Markdown `![](x.png)` / `[](x.png)` — luôn thành chip. Chưa nạp ảnh thì hiện chip
+        "chưa nạp" kèm hướng dẫn, vì tác giả đã khai rõ đây là evidence.
+     2. Đường dẫn trần `evidence/TC_004_x.png` — CHỈ thành chip khi ảnh đã được nạp.
+   Dạng 2 là format mà `execution_report.md` thật sự dùng (cột Evidence ghi đường dẫn tương đối,
+   không bọc link), nên chỉ nhận dạng 1 thì nạp đúng thư mục evidence/ vẫn không xem được ảnh nào.
+   Điều kiện "đã nạp" giữ nguyên mục đích ban đầu của việc siết chỉ nhận Markdown: tên file bị
+   nhắc trong văn xuôi (ảnh cũ đã mất) không sinh chip "chưa nạp" gây hiểu nhầm. */
 function evidenceHTML(raw){
   const txt=String(raw||''); const found=[];
-  txt.replace(/!?\[[^\]]*\]\(([^)]+)\)/gi,
-    (m,a)=>{ const p=(a||'').trim(); if(p && IMG_RE.test(p)) found.push(p); return m; });
+  let rest=txt.replace(/!?\[[^\]]*\]\(([^)]+)\)/gi,
+    (m,a)=>{ const p=(a||'').trim(); if(p && IMG_RE.test(p)) found.push(p); return ' '; });
+  // Đường dẫn trần: tách theo dấu phẩy/chấm phẩy/xuống dòng/khoảng trắng, giữ lại cái đã nạp
+  for(const tok of rest.split(/[\s,;|]+/)){
+    const t=tok.trim().replace(/^[('"<]+|[)'">.,;]+$/g,'');
+    if(t && IMG_RE.test(t) && IMAGES.has(baseName(t).toLowerCase())) found.push(t);
+  }
   if(!found.length) return `<span class="v">${esc(txt)}</span>`;
   const uniq=[...new Set(found)];
   const chips=uniq.map(p=>{
@@ -583,12 +591,36 @@ function filtered(){
     if(!q) return true;
     return [t.id,t.scenario,t.note,t.blockReason,t.expected,t.actual,t.reqId,t.needToRun]
       .some(v=>String(v||'').toLowerCase().includes(q));
-  }).sort((a,b)=>{
-    const va=String(a[sortKey]||''), vb=String(b[sortKey]||'');
-    if(sortKey==='id'){ const na=va.match(/(\d+)$/), nb=vb.match(/(\d+)$/);
-      if(na&&nb&&va.replace(/\d+$/,'')===vb.replace(/\d+$/,'')) return (+na[1]-+nb[1])*sortDir; }
-    return va.localeCompare(vb,'vi')*sortDir;
-  });
+  }).sort(rowCmp(sortKey, sortDir));
+}
+
+/* Sort: cột Kết quả có thứ bậc nên phải so theo BẢNG BẬC — sort theo chữ cái cho ra
+   BLOCKED trước FAIL trước PASS, thứ tự không phản ánh việc cần xử lý.
+   Thứ tự dùng ở đây là "cần chú ý trước": FAIL → BLOCKED → SKIPPED → PASS. Khác thứ tự
+   ALL_ST của dãy chip (chip là để LỌC, sort là để xếp việc cần làm lên đầu).
+   Cột id / run dùng so sánh numeric nên TC_002 < TC_010 và run_2 < run_10 (thay cho
+   nhánh đặc biệt cũ, nhánh đó bỏ qua ID có hậu tố như TC_018-a). */
+const STATUS_RANK={FAIL:0,BLOCKED:1,SKIPPED:2,PASS:3};
+const RANKS={status:STATUS_RANK};
+/* Sort phải bám giá trị ĐANG HIỂN THỊ trong ô, không bám thuộc tính thô. Cột "Ghi chú" hiện
+   `note || blockReason`, nên TC bị BLOCKED (note rỗng, lý do chặn nằm ở blockReason) từng bị
+   coi là ô rỗng và tụt xuống cuối ở cả hai chiều dù ô hiện rõ chữ. */
+const SORT_VALUE={ note: t => t.note || t.blockReason || '' };
+const sortVal=(t,key)=> SORT_VALUE[key] ? SORT_VALUE[key](t) : t[key];
+
+function rowCmp(key, dir){
+  const rank=RANKS[key];
+  return (x,y)=>{
+    const a=String(sortVal(x,key)??'').trim(), b=String(sortVal(y,key)??'').trim();
+    // Ô rỗng luôn xuống cuối, bất kể chiều sort — TC không có ghi chú không được chen lên đầu
+    if(!a!==!b) return a?-1:1;
+    const main = rank
+      ? (rank[a]??99)-(rank[b]??99)
+      : a.localeCompare(b,'vi',{numeric:true,sensitivity:'base'});
+    // dir CHỈ áp lên phép so sánh chính. Áp cả lên tie-break thì các dòng cùng giá trị sẽ
+    // đảo ngược theo hướng sort, trông như sort sai.
+    return dir*main || String(x.id||'').localeCompare(String(y.id||''),'vi',{numeric:true});
+  };
 }
 function trendRows(){
   const out=[]; const byMod={};
@@ -610,7 +642,7 @@ function trendRows(){
     }
   }
   const rank={NEW:0,RECUR:1,TOBLOCKED:2,FIXEDTREND:3};
-  return out.sort((a,b)=>rank[a.grp]-rank[b.grp]||a.id.localeCompare(b.id));
+  return out.sort((a,b)=>rank[a.grp]-rank[b.grp]||a.id.localeCompare(b.id,'vi',{numeric:true}));
 }
 
 /* ============================ RENDER ============================ */
@@ -693,6 +725,7 @@ function render(){
     <td class="id">${esc(r.id)}</td><td>${esc(r.module)}</td>
     <td>${r.seq.map(s=>`<span class="st ${s.st}" style="margin-right:4px">${s.st}</span>`).join('→ ')}</td></tr>`).join('');
   $('#noTrend').style.display=tr.length?'none':'block';
+  window.__trend=tr;
 
   // bugs
   const bugs=vis.flatMap(d=>d.bugs);
@@ -811,6 +844,23 @@ function exportPlan(){
     if(R.undocumented.length) sheets.push({name:'Module chưa có tài liệu',widths:[26,20,34],
       head:['Module','Trạng thái','Rủi ro'],rows:R.undocumented.map(i=>[i.module,i.note,i.risk])});
     return {base:'do_phu_automation', sheets};
+  }
+  /* Nút export phải xuất ĐÚNG bảng đang xem. Trước đây chỉ tab 'cov' được xử lý riêng,
+     nên đứng ở tab "So sánh các lần chạy" hay "Verify bug (retest)" bấm Excel lại ra bảng
+     Kết quả TC — người dùng không có cách nào biết mình vừa tải sai bảng. */
+  if(tab==='trend'){
+    const rows=(window.__trend||[]).map(r=>[GRP_LABEL[r.grp]||r.grp, r.id, r.module,
+      r.seq.map(x=>x.st).join(' → '), r.seq.map(x=>x.run).join(' → ')]);
+    return {base:'so_sanh_cac_lan_chay', sheets:[{name:'Diễn biến', widths:[22,22,20,30,40],
+      head:['Nhóm','TC ID','Module','Diễn biến kết quả','Các lần chạy'], rows}]};
+  }
+  if(tab==='bug'){
+    const rows=(window.__bugs||[]).map(b=>[b.bug, b.status, b.module, b.build, b.runId,
+      b.severity, b.tcReq, b.repeat, b.expected, b.actual, b.file].map(v=>String(v??'')));
+    return {base:'verify_bug_retest', sheets:[{name:'Verify bug', statusCol:1,
+      widths:[26,16,18,14,20,14,24,11,40,40,26],
+      head:['Bug','Kết quả retest','Module','Build','Lần retest','Severity gốc','TC / REQ liên quan',
+            'Số lần lặp','Expected','Actual','File nguồn'], rows}]};
   }
   const head=['TC ID','Kịch bản','Kết quả','Module','Lần chạy','Build','REQ ID','Priority','Bước fail','Expected','Actual','Nguyên nhân chặn','Ghi chú','File nguồn'];
   const keys=['id','scenario','status','module','runId','build','reqId','priority','failStep','expected','actual','blockReason','note','file'];
