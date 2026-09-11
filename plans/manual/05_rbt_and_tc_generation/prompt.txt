@@ -57,9 +57,51 @@ Test Data **PHẢI CỤ THỂ**, không được dùng mô tả chung chung:
 ✅ ĐÚNG: "Nhập tên: [chuỗi 256 ký tự 'A' liên tiếp] (vượt giới hạn 255)"
 ```
 
-### 4. Phạm vi bao phủ
+### 4. Phạm vi bao phủ — sinh TUẦN TỰ theo 4 VÒNG
 
-Đảm bảo các Test Cases bao phủ đa dạng:
+**BẮT BUỘC đi hết 4 vòng theo đúng thứ tự, không nhảy cóc.** Mỗi batch nằm trọn trong một vòng.
+
+```
+VÒNG 1 – SMOKE
+├── UI cơ bản      → nhãn nguyên văn · thứ tự field · nút · liên kết · trạng thái mặc định từng ô · con trỏ đang ở đâu
+├── Open form      → mở được bằng mọi lối vào · đóng bằng X / Cancel / ESC
+├── Display        → định dạng hiển thị (tiền, ngày, badge) · trạng thái rỗng · đang tải
+├── Input valid    → bộ dữ liệu hợp lệ tối thiểu + bộ đầy đủ
+├── Save           → lưu thành công · thông báo đúng · điều hướng đúng
+└── Verify data    → dữ liệu hiện đúng ở danh sách VÀ ở màn hình chi tiết
+
+VÒNG 2 – FUNCTIONAL
+├── UI Behavior    → field bật/tắt theo lựa chọn khác · nút khoá đến khi đủ điều kiện · bộ đếm ký tự · hiện/ẩn mật khẩu
+├── Required       → bỏ trống TỪNG field bắt buộc · bỏ trống tất cả
+├── Validation     → đối soát ĐỦ TỪNG MỤC của bảng loại field ở phần 5
+├── Equivalence Partitioning  → mỗi partition ≥1 TC
+├── Boundary Value Analysis   → min-1 · min · max · max+1
+├── Business Rule  → mỗi rule: 1 TC tuân thủ + 1 TC vi phạm
+├── Decision Table → ≥3 điều kiện kết hợp → mỗi rule 1 TC
+├── State Transition → mọi transition hợp lệ + mọi transition bị chặn
+├── Dependency     → đổi A thì B đổi theo · xoá A đang được B tham chiếu
+├── Use Case       → chuỗi nghiệp vụ nhiều bước trong module
+├── Save / Edit / Delete → toàn bộ CRUD, gồm huỷ giữa chừng
+└── Error Guessing → bấm Lưu 2 lần · dán dữ liệu lạ · Back sau khi lưu · nạp lại giữa chừng · 2 tab cùng sửa
+
+VÒNG 3 – TECHNICAL   (phần lớn cần DevTools/DB → tách xuống "🔧 Ghi chú kỹ thuật" + tag @TechCheck)
+├── Permission     → ma trận role × hành động · truy cập URL trực tiếp khi không đủ quyền
+├── Security       → truy cập khi chưa đăng nhập · dữ liệu lộ chéo · XSS/SQLi · phiên sau đăng xuất
+├── API · Database · Integration · Logging/Audit → có quyền thì làm, không thì ghi ➖ kèm lý do + ai chịu
+
+VÒNG 4 – NON-FUNCTIONAL & REGRESSION   (app nghiệp vụ thường: phần lớn ghi ➖ là ĐÚNG)
+├── Compatibility  → danh sách trình duyệt đã chốt × luồng chính
+├── Responsive     → các breakpoint ĐÃ CHỐT (1920 · 1366 · 768 · 375) · không tràn ngang · zoom 125%
+├── Accessibility  → Tab đúng thứ tự · Enter/Space kích hoạt · viền focus nhìn thấy được
+├── Performance    → chỉ mức quan sát thô
+├── Regression     → mỗi bug đã đóng = 1 TC chống tái phát, trỏ về mã bug
+└── E2E            → kịch bản xuyên ≥2 module
+
+⚠️ BA NHÁNH KHÔNG BAO GIỜ ĐƯỢC BỎ:  UI cơ bản (V1) · Validation (V2) · Permission (V3, khi có ≥2 role)
+🚫 KHÔNG sinh TC chỉ để lấp ô — nhánh không áp dụng thì ghi ➖ kèm lý do + ai chịu trách nhiệm
+```
+
+Đảm bảo các Test Cases bao phủ đa dạng **trong từng vòng**:
 - **Happy Path:** Luồng chính đi trơn tru
 - **Negative Path:** Nhập sai, thiếu dữ liệu, sai định dạng
 - **Boundary Values:** Giá trị biên (min, max, min-1, max+1)
@@ -83,6 +125,9 @@ Test Data **PHẢI CỤ THỂ**, không được dùng mô tả chung chung:
 1. **Liệt kê tất cả input fields** trên form/UI đang test
 2. **Sinh validation TCs riêng cho TỪNG trường** theo đặc tính riêng của field đó
 3. **KHÔNG gộp** validation nhiều trường vào 1 test case
+4. **Đối soát ĐỦ TỪNG MỤC** của dòng loại field trong bảng dưới — mục nào không áp dụng phải **ghi lý do một dòng**, không im lặng bỏ qua
+
+> 🚨 `1 positive + 2 negative` là **sàn tối thiểu, KHÔNG phải mức đạt**. Trường Mật khẩu có 7 mục trong bảng, Email có 9 mục — sinh 3 TC rồi dừng là **chưa đạt**, dù nhìn số lượng vẫn qua sàn. Đây chính là chỗ bộ TC bị nông nhất.
 
 Áp dụng checklist validation theo loại field:
 

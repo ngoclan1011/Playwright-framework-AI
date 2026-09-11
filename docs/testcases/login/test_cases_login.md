@@ -1,14 +1,14 @@
-# Test Cases — Module Đăng nhập / Xác thực (`LOGIN`) — 41 TC · độ hạt GỘP
+# Test Cases — Module Đăng nhập / Xác thực (`LOGIN`) — 50 TC · độ hạt GỘP
 
 | Thông tin | Nội dung |
 |---|---|
 | **Hệ thống** | Perfex CRM — Anh Tester Demo (`https://crm.anhtester.com`) |
 | **Module** | Đăng nhập / Xác thực · prefix `LOGIN` |
 | **Nguồn requirement** | [requirements_login.md](../../requirements/login/requirements_login.md) — 43 REQ, **39 trong phạm vi** |
-| **Mode sinh** | QUICK (`/generate-testcases-from-requirements`) · **độ hạt GỘP** |
-| **Ngày sinh** | 2026-08-20 · **cập nhật ngôn ngữ kiểm chứng 2026-08-20** |
-| **Dải TC ID** | `CRM_LOGIN_TC_001` → `CRM_LOGIN_TC_041` — **giữ nguyên qua lần cập nhật này** |
-| **Mã kế tiếp** | `CRM_LOGIN_TC_042` — **KHÔNG đánh lại từ 001** |
+| **Mode sinh** | QUICK (`/generate-testcases-from-requirements`) · **độ hạt GỘP**<br>Bổ sung 2026-09-11: 9 TC theo **Bản Đồ Loại Kiểm Thử — 4 Vòng** (`/generate-testcases-manual-rbt`) |
+| **Ngày sinh** | 2026-08-20 · cập nhật ngôn ngữ kiểm chứng 2026-08-20 · **bổ sung 4 vòng 2026-09-11** |
+| **Dải TC ID** | `CRM_LOGIN_TC_001` → `CRM_LOGIN_TC_050` — `001`→`041` **giữ nguyên**, `042`→`050` là phần bổ sung |
+| **Mã kế tiếp** | `CRM_LOGIN_TC_051` — **KHÔNG đánh lại từ 001** |
 | **Môi trường** | ⚠️ **Dùng chung** — mọi TC chỉ đọc hoặc hoàn tác được; không có TC nào phá huỷ dữ liệu nghiệp vụ |
 | **Trình duyệt chuẩn** | Google Chrome, viewport desktop `1600×750` |
 | **Tài khoản** | 🔒 Lấy từ `.env` (`ADMIN_*`, `PM_*`, `CUSTOMER_*`) — **KHÔNG** ghi mật khẩu thật vào tài liệu |
@@ -144,6 +144,44 @@ Một số yêu cầu — cookie ghi nhớ, mã chống CSRF, header bảo mật
 
 ---
 
+## Nhóm H — Hành vi ô nhập và nút bấm (Vòng 2 · UI Behavior)
+
+> Nhóm này bổ sung ngày 2026-09-11 theo **Bản Đồ Loại Kiểm Thử — 4 Vòng**. Nhánh `V2 · UI Behavior` trước đó **không có TC nào** — bộ TC kiểm được thông báo lỗi nhưng không kiểm hành vi của chính ô nhập và nút bấm.
+
+| TC ID | REQ ID | Module | Risk Level | Test Scenario | Pre-Condition | Test Steps | Test Data | Expected Result | Priority | Automatable | Auto Type | Tags |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| CRM_LOGIN_TC_042 | REQ-LOGIN-02 | LOGIN | Medium | Ô Mật khẩu che ký tự, dán được, và biểu mẫu không có nút hiện/ẩn mật khẩu | Đang ở `/admin/authentication`, trang đã tải xong, chưa nhập gì | 1. Gõ `Abc12345` vào ô `Password`<br>2. Quan sát chữ hiện trong ô<br>3. Quan sát bên trong và hai đầu ô `Password`, tìm biểu tượng con mắt hoặc chữ `Show` / `Hiện`<br>4. Xoá sạch ô `Password`<br>5. Sao chép giá trị `ADMIN_PASSWORD` trong `.env` từ một trình soạn thảo, bấm vào ô `Password` rồi nhấn `Ctrl+V`<br>6. Nhập ô `Email` giá trị `admin@example.com` và bấm `Login` | Password gõ tay: `Abc12345`<br>Password dán vào: giá trị `ADMIN_PASSWORD` trong `.env`<br>Email: `admin@example.com` | 2. Chữ hiện thành dấu chấm che, **không** đọc được ký tự thật<br>3. **Không** có biểu tượng con mắt, **không** có chữ `Show` / `Hiện` — biểu mẫu không có nút hiện/ẩn mật khẩu. Không có cách nào xem lại mật khẩu vừa gõ bằng giao diện<br>5. Dán **thành công** — ô nhận đủ ký tự và vẫn hiện dấu chấm che. Thao tác dán **không** bị chặn<br>6. Đăng nhập thành công vào `https://crm.anhtester.com/admin/` — chuỗi dán vào dùng được thật, không bị biến dạng<br><br>💡 Cho phép dán là **hành vi đúng** theo khuyến nghị bảo mật hiện hành: chặn dán làm người dùng trình quản lý mật khẩu phải gõ tay, dẫn tới chọn mật khẩu yếu hơn<br><br>🔧 Ghi chú kỹ thuật (cần DevTools): ô `Password` không đặt bộ xử lý chặn dán; trong biểu mẫu không có phần tử nào đóng vai trò nút hiện/ẩn | Medium | Yes | UI | @Regression, @UIBehavior, @Login |
+| CRM_LOGIN_TC_043 | REQ-LOGIN-02, REQ-LOGIN-10 | LOGIN | Medium | Nút Login luôn bấm được, không tự khoá theo trạng thái biểu mẫu | Đang ở `/admin/authentication`, trang vừa tải xong | 1. Để hai ô nhập theo biến thể<br>2. Quan sát màu nền và màu chữ của nút `Login`<br>3. Rê chuột lên nút `Login`, quan sát hình con trỏ chuột<br>4. Bấm nút `Login` một lần<br>5. Quan sát trang có nạp lại và có dải báo lỗi không | **Bảng biến thể:**<br>`a` Rỗng cả hai → Email: *(trống)* · Password: *(trống)*<br>`b` Chỉ có Email → Email: `admin@example.com` · Password: *(trống)*<br>`c` Chỉ có Password → Email: *(trống)* · Password: `Abc12345` | **Mọi biến thể cho cùng kết quả:**<br>2. Nút `Login` nền xanh dương đậm, chữ trắng rõ — **không** mờ đi, không chuyển xám<br>3. Con trỏ chuột đổi thành hình bàn tay chỉ — nút ở trạng thái bấm được<br>4. Bấm được, không bị chặn<br>5. Trang nạp lại và hiện dải báo lỗi<br><br>📌 Kết luận của TC này: hệ thống **không** khoá nút theo mức độ điền của biểu mẫu; việc kiểm tra trường bắt buộc xảy ra **sau khi gửi**. Nội dung nguyên văn từng dải báo lỗi thuộc `CRM_LOGIN_TC_011`, TC này **không** chấm phần đó | Medium | Yes | UI | @Regression, @UIBehavior, @Login |
+| CRM_LOGIN_TC_044 | REQ-LOGIN-02 | LOGIN | Low | Biểu mẫu không chặn tính năng tự điền và đề nghị lưu mật khẩu của trình duyệt | Cửa sổ Chrome **thường** (không ẩn danh), đã bật tính năng đề nghị lưu mật khẩu, **chưa** lưu mật khẩu nào cho `crm.anhtester.com` | 1. Mở `https://crm.anhtester.com/admin/authentication`<br>2. Nhập `admin@example.com` và giá trị `ADMIN_PASSWORD` trong `.env`, bấm `Login`<br>3. Sau khi trang chuyển, quan sát hộp thoại nhỏ của trình duyệt ở đầu thanh địa chỉ<br>4. Chọn `Lưu` / `Save`<br>5. Đăng xuất, quay lại trang đăng nhập, bấm chuột vào ô `Email`<br>6. Chọn dòng gợi ý hiện ra<br>7. **Dọn dẹp:** vào phần quản lý mật khẩu của Chrome, xoá mục đã lưu cho `crm.anhtester.com` | Email: `admin@example.com`<br>Password: giá trị `ADMIN_PASSWORD` trong `.env` | 3. Trình duyệt hiện hộp hỏi `Lưu mật khẩu?` — biểu mẫu **không** chặn tính năng này<br>5. Ô `Email` bật danh sách gợi ý có dòng `admin@example.com`<br>6. Chọn vào thì **cả hai ô** được điền sẵn, đăng nhập được ngay<br>7. Mục đã lưu biến mất khỏi danh sách của trình duyệt<br><br>🔒 **Bước 7 là bắt buộc** — môi trường dùng chung, để lại mật khẩu đã lưu trên máy là rò rỉ thông tin đăng nhập cho người dùng máy tiếp theo<br><br>🔧 Ghi chú kỹ thuật (cần DevTools): hai ô `Email` và `Password` không đặt thuộc tính tắt tự điền | Low | No | N/A | @Regression, @UIBehavior, @Login |
+
+---
+
+## Nhóm I — Giới hạn độ dài và giá trị biên (Vòng 2 · Boundary Value Analysis)
+
+> Nhóm này bổ sung ngày 2026-09-11. Nhánh `V2 · BVA` trước đó **không có TC nào** — bộ TC có ca "email rất dài" ở `TC_018` nhưng không xác định **ngưỡng** nào, nên không chỉ ra được đâu là hành vi đúng.
+>
+> 📐 **Ngưỡng đã đo trên hệ thống thật ngày 2026-09-11:** ranh giới nằm ở **phần trước dấu `@`**, không phải tổng độ dài email. Tối đa **64 ký tự** — đúng bằng giới hạn chuẩn RFC 5321. Vượt qua mốc này, thông báo **đổi hẳn** sang nhóm lỗi định dạng.
+
+| TC ID | REQ ID | Module | Risk Level | Test Scenario | Pre-Condition | Test Steps | Test Data | Expected Result | Priority | Automatable | Auto Type | Tags |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| CRM_LOGIN_TC_045 | REQ-LOGIN-13, REQ-LOGIN-14 | LOGIN | Medium | Email có phần trước dấu @ dài tới đúng mốc 64 ký tự vẫn được coi là đúng định dạng | Đang ở `/admin/authentication` | 1. Dán chuỗi Email của biến thể vào ô `Email`<br>2. Chọn toàn bộ nội dung trong ô, sao chép sang trình soạn thảo và **đếm số ký tự**<br>3. Nhập ô `Password`: `Abc12345`<br>4. Bấm nút `Login`<br>5. Đọc nguyên văn dải báo lỗi và đếm số dải | **Bảng biến thể** (`a×N` = ký tự `a` lặp N lần):<br>`a` Dưới mốc một bậc → `a×63` + `@example.com` (tổng 75 ký tự)<br>`b` Đúng mốc → `a×64` + `@example.com` (tổng 76 ký tự)<br><br>Password mọi biến thể: `Abc12345` | **Mọi biến thể cho cùng kết quả:**<br>2. Ô giữ **đủ** số ký tự đã dán, không bị cắt bớt<br>4. Trang nạp lại, **không** vào được Dashboard<br>5. Đúng **1** dải báo lỗi, nguyên văn `Invalid email or password`<br><br>📌 Đây là dải báo lỗi của bước **xác thực** — nghĩa là hệ thống đã chấp nhận chuỗi này là email **đúng định dạng** và chỉ từ chối vì không khớp tài khoản nào. Cặp với `CRM_LOGIN_TC_046` để thấy rõ ranh giới | Medium | Yes | UI | @Regression, @Boundary, @Login |
+| CRM_LOGIN_TC_046 | REQ-LOGIN-13 | LOGIN | Medium | Email có phần trước dấu @ vượt mốc 64 ký tự bị máy chủ chặn ở bước kiểm tra định dạng | Đang ở `/admin/authentication` | 1. Dán chuỗi Email của biến thể vào ô `Email`<br>2. Nhập ô `Password`: `Abc12345`<br>3. Bấm nút `Login`<br>4. Đọc nguyên văn dải báo lỗi và đếm số dải<br>5. **So sánh** dải này với dải thu được ở `CRM_LOGIN_TC_045` | **Bảng biến thể** (`a×N` = ký tự `a` lặp N lần):<br>`a` ⭐ Vượt mốc một bậc → `a×65` + `@example.com`<br>`b` Vượt xa → `a×100` + `@example.com`<br>`c` Ca của bug đang mở → `a×250` + `@auto.test`<br><br>Password mọi biến thể: `Abc12345` | **Mọi biến thể cho cùng kết quả:**<br>3. Trang nạp lại, **không** vào được Dashboard<br>4. Đúng **1** dải báo lỗi, nguyên văn `The Email Address field must contain a valid email address.`<br>5. Dải này **khác hẳn** dải `Invalid email or password` của TC_045 — chứng tỏ chuỗi bị chặn ngay ở bước kiểm tra **định dạng**, chưa tới bước xác thực<br><br>📌 **Mốc 64 ký tự là chuẩn RFC 5321, đây là hành vi ĐÚNG — không phải lỗi.**<br>⚠️ Biến thể `c` chính là ca đang mở bug [BUG_login_1787226515_TC018](../../bugs/login/BUG_login_1787226515_TC018.md) (`CRM_LOGIN_TC_018-a`). Kết quả đo ngày 2026-09-11 cho thấy thông báo khác nhau là **đúng thiết kế**, nên **đề nghị xem lại bug đó** — nhiều khả năng phải đóng với trạng thái *không phải lỗi* | Medium | Yes | UI | @Regression, @Boundary, @KnownBug, @Login |
+| CRM_LOGIN_TC_047 | REQ-LOGIN-14 | LOGIN | Medium | Mật khẩu rất dài không làm hệ thống lỗi và vẫn trả đúng thông báo xác thực | Đang ở `/admin/authentication` | 1. Nhập ô `Email`: `admin@example.com`<br>2. Dán chuỗi mật khẩu của biến thể vào ô `Password`<br>3. Bấm nút `Login`<br>4. Quan sát trang trả về<br>5. Đọc nguyên văn dải báo lỗi | **Bảng biến thể** (`p×N` = ký tự `p` lặp N lần):<br>`a` → `p×256`<br>`b` → `p×1000`<br><br>Email mọi biến thể: `admin@example.com` | **Mọi biến thể cho cùng kết quả:**<br>4. Trang nạp lại bình thường về đúng trang đăng nhập — **không** trang lỗi máy chủ, **không** trang trắng, **không** đứng treo<br>5. Đúng **1** dải báo lỗi, nguyên văn `Invalid email or password`<br><br>📌 Hệ thống **không** đặt giới hạn trên cho ô mật khẩu, và đó là hành vi chấp nhận được — điều phải bảo đảm là không sập với chuỗi dài bất thường<br><br>🔧 Ghi chú kỹ thuật (cần DevTools): phản hồi trả `200`, thân trang không chứa dấu vết lỗi cơ sở dữ liệu hay đường dẫn tệp trên máy chủ | Medium | Yes | UI | @Regression, @Boundary, @Security, @TechCheck, @Login |
+| CRM_LOGIN_TC_048 | REQ-LOGIN-02 | LOGIN | Low | Hai ô nhập không tự cắt bớt ký tự khi dán chuỗi dài vào | Đang ở `/admin/authentication`. Đã chuẩn bị sẵn chuỗi 300 ký tự trong trình soạn thảo | 1. Sao chép chuỗi 300 ký tự đã chuẩn bị<br>2. Bấm vào ô của biến thể rồi nhấn `Ctrl+V`<br>3. Nhấn `Ctrl+A` trong ô đó rồi `Ctrl+C`<br>4. Dán ngược ra trình soạn thảo và **đếm số ký tự**<br>5. **KHÔNG** bấm `Login` — TC này chỉ kiểm ô nhập | **Bảng biến thể:**<br>`a` Ô `Email` → chuỗi `a` lặp 300 lần<br>`b` Ô `Password` → chuỗi `p` lặp 300 lần | **Mọi biến thể cho cùng kết quả:**<br>4. Đếm được **đúng 300** ký tự — ô nhận trọn chuỗi, **không** cắt bớt ở bất kỳ mốc nào<br><br>📌 Kết luận: biểu mẫu **không** đặt giới hạn số ký tự ở phía trình duyệt. Mọi giới hạn đều do máy chủ áp — xem `CRM_LOGIN_TC_046`<br><br>🔧 Ghi chú kỹ thuật (cần DevTools): hai ô `Email` và `Password` không đặt thuộc tính giới hạn độ dài | Low | Yes | UI | @Regression, @Boundary, @TechCheck, @Login |
+
+---
+
+## Nhóm K — Tương thích và đáp ứng màn hình (Vòng 4)
+
+> Nhóm này bổ sung ngày 2026-09-11. Nhánh `V4 · Responsive` trước đó chỉ có `TC_033` (đăng xuất trên màn hình hẹp), **không** có TC nào cho chính trang đăng nhập. Nhánh `V4 · Compatibility` **không có TC nào**.
+
+| TC ID | REQ ID | Module | Risk Level | Test Scenario | Pre-Condition | Test Steps | Test Data | Expected Result | Priority | Automatable | Auto Type | Tags |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| CRM_LOGIN_TC_049 | REQ-LOGIN-02 | LOGIN | Medium | Trang đăng nhập giữ đúng bố cục ở mọi kích thước màn hình đã chốt | Chrome, chưa đăng nhập. Dùng chế độ mô phỏng thiết bị của trình duyệt để đổi kích thước | 1. Mở `https://crm.anhtester.com/admin/authentication`<br>2. Đặt kích thước màn hình theo biến thể<br>3. Nạp lại trang<br>4. Kéo thanh cuộn sang phải xem có cuộn được không<br>5. Đối chiếu đủ 7 thành phần trên màn hình<br>6. Quan sát chữ và khung có đè lên nhau không | **Bảng biến thể:**<br>`a` Màn hình lớn → `1920×1080` ⚠️<br>`b` Màn hình chuẩn dự án → `1600×750`<br>`c` Laptop phổ thông → `1366×700` ⚠️<br>`d` Máy tính bảng dọc → `768×1024` ⚠️<br>`e` Điện thoại → `375×700` | **Mọi biến thể cho cùng kết quả:**<br>4. **Không** cuộn ngang được — trang vừa khít bề ngang màn hình<br>5. Thấy đủ **7** thành phần: logo Anh Tester · tiêu đề `Login` · nhãn và ô `Email Address` · nhãn và ô `Password` · ô tích `Remember me` · nút `Login` · liên kết `Forgot Password?`<br>6. Chữ **không** đè lên nhau, khung đăng nhập nằm **giữa** theo chiều ngang, nút `Login` rộng bằng ô nhập phía trên<br><br>📐 Số đo đã xác nhận: biến thể `e` khung rộng 311 px · biến thể `c` khung rộng 336 px — cả hai đều không cuộn ngang<br><br>⚠️ Ba biến thể `a`, `c`, `d` **chưa có ảnh evidence** — gắn `@NeedsVerify`, cần chụp bổ sung khi chạy | Medium | Yes | UI | @Regression, @Responsive, @NeedsVerify, @Login |
+| CRM_LOGIN_TC_050 | REQ-LOGIN-02, REQ-LOGIN-06, REQ-LOGIN-14 | LOGIN | Medium | Luồng đăng nhập chạy được trên các trình duyệt đã cam kết hỗ trợ | Máy đã cài đủ các trình duyệt của bảng biến thể, mỗi trình duyệt ở cửa sổ ẩn danh | 1. Mở `https://crm.anhtester.com/admin/authentication` bằng trình duyệt của biến thể<br>2. Đối chiếu đủ 7 thành phần của biểu mẫu<br>3. Đăng nhập bằng `admin@example.com` và giá trị `ADMIN_PASSWORD` trong `.env`<br>4. Đọc URL sau khi trang chuyển<br>5. Đăng xuất, đăng nhập lại với mật khẩu sai `SaiMatKhau_20260911`<br>6. Đọc nguyên văn dải báo lỗi | **Bảng biến thể:**<br>`a` → Google Chrome (bản hiện hành)<br>`b` → Microsoft Edge (bản hiện hành)<br>`c` → Mozilla Firefox (bản hiện hành)<br><br>Email: `admin@example.com`<br>Password đúng: giá trị `ADMIN_PASSWORD` trong `.env`<br>Password sai: `SaiMatKhau_20260911` | **Mọi biến thể cho cùng kết quả:**<br>2. Thấy đủ 7 thành phần, bố cục không vỡ<br>4. Vào `https://crm.anhtester.com/admin/`<br>6. Đúng 1 dải nguyên văn `Invalid email or password`<br><br>⚠️ **Danh sách trình duyệt chưa được PO chốt** — ba biến thể trên là đề xuất theo mức phổ biến. Gắn `@NeedsVerify` cho tới khi có cam kết chính thức; chốt xong thì cập nhật bảng biến thể và gỡ tag<br>📌 Đã chạy thực tế trên Chrome trong đợt `run_1787215085`; `b` và `c` chưa chạy lần nào | Medium | Partial | UI | @Regression, @Compatibility, @NeedsVerify, @Login |
+
+---
+
 ## 🐞 Ba TC nhiều khả năng FAIL — mở bug, KHÔNG sửa TC
 
 | TC ID | REQ | Vì sao FAIL là kết quả đúng | Trạng thái |
@@ -177,19 +215,19 @@ Một số yêu cầu — cookie ghi nhớ, mã chống CSRF, header bảo mật
 | REQ ID | Mô tả ngắn | Số TC | TC IDs (kèm biến thể) | Đủ Positive/Negative/Boundary? |
 |---|---|---|---|---|
 | REQ-LOGIN-01 | Truy cập trang đăng nhập | 2 | TC_001, TC_039 | ✅ |
-| REQ-LOGIN-02 | Thành phần biểu mẫu đăng nhập | 2 | TC_002 (6 mục), TC_038 | ✅ |
+| REQ-LOGIN-02 | Thành phần biểu mẫu đăng nhập | 8 | TC_002 (6 mục), TC_038, TC_042, TC_043, TC_044, TC_048, TC_049, TC_050 | ✅ |
 | REQ-LOGIN-03 | Tự đặt con trỏ vào ô Email | 1 | TC_002-`2` | ✅ |
 | REQ-LOGIN-04 | Logo dẫn về trang chủ | 1 | TC_004 | ✅ |
 | REQ-LOGIN-05 | Không có CAPTCHA | 1 | TC_003-`1` | ✅ (kiểm sự vắng mặt) |
-| REQ-LOGIN-06 | Đăng nhập bằng thông tin hợp lệ | 4 | TC_005, TC_006, TC_010, TC_041 | ✅ |
+| REQ-LOGIN-06 | Đăng nhập bằng thông tin hợp lệ | 5 | TC_005, TC_006, TC_010, TC_041, TC_050 | ✅ |
 | REQ-LOGIN-07 | Email không phân biệt hoa thường | 1 | TC_007-`a`,`b` | ✅ |
 | REQ-LOGIN-08 | Ghi nhớ đăng nhập sinh cookie ghi nhớ | 1 | TC_008 | ✅ (cặp với TC_009) |
 | REQ-LOGIN-09 | Không tích thì không phát hành cookie | 1 | TC_009 | ✅ (nhánh phủ định của REQ-08) |
-| REQ-LOGIN-10 | Bỏ trống cả hai trường | 1 | TC_011-`a`,`d` | ✅ |
+| REQ-LOGIN-10 | Bỏ trống cả hai trường | 2 | TC_011-`a`,`d`, TC_043-`a` | ✅ |
 | REQ-LOGIN-11 | Bỏ trống riêng Email | 1 | TC_011-`b` | ✅ |
 | REQ-LOGIN-12 | Bỏ trống riêng Mật khẩu | 1 | TC_011-`c` | ✅ |
-| REQ-LOGIN-13 | Chặn email sai định dạng tại trình duyệt | 1 | TC_012-`a`→`e` | ✅ |
-| REQ-LOGIN-14 | Thông báo khi sai thông tin đăng nhập | 5 | TC_013, TC_014, TC_017, TC_018, TC_040 | ✅ |
+| REQ-LOGIN-13 | Chặn email sai định dạng tại trình duyệt | 3 | TC_012-`a`→`e`, TC_045-`a`,`b`, TC_046-`a`→`c` | ✅ (client: TC_012 · máy chủ: TC_045/046) |
+| REQ-LOGIN-14 | Thông báo khi sai thông tin đăng nhập | 8 | TC_013, TC_014, TC_017, TC_018, TC_040, TC_045, TC_047, TC_050 | ✅ |
 | REQ-LOGIN-15 | Thông báo không tiết lộ email nào có thật | 2 | TC_013 (bước 5), TC_019 (bước 4) | ✅ |
 | REQ-LOGIN-16 | 🐞 Ô Email phải giữ lại email sau lỗi | 1 | TC_016 | ✅ (TC sẽ FAIL — đúng thiết kế) |
 | REQ-LOGIN-17 | Chặn URL nội bộ khi chưa đăng nhập | 1 | TC_021-`a`,`b` | ✅ |
@@ -242,6 +280,7 @@ Một số yêu cầu — cookie ghi nhớ, mã chống CSRF, header bảo mật
 | `logout_menu_open_viewport.png` | Dashboard — menu ảnh đại diện **đang mở** | TC_032 | ✅ viewport, xác nhận 5 mục theo thứ tự `My Profile` → `My Timesheets` → `Edit Profile` → `Language ▸` → `Logout`, và thanh đầu trang **không** có lối Logout thứ hai |
 | `forgot_password_form_default_fullpage.png` | Quên mật khẩu — mặc định | TC_027, TC_030 | ✅ full-page, xác nhận đúng 1 ô `Email Address` + nút `Confirm`, không liên kết quay lại đăng nhập |
 | `forgot_password_empty_submit_error_fullpage.png` | Quên mật khẩu — gửi khi bỏ trống, dải `Email not found` | TC_028, TC_029 | ✅ full-page, xác nhận **hiện trạng lỗi** mà TC_028 sẽ bắt được |
+| `login_form_375x700_fullpage.png` | Đăng nhập — màn hình điện thoại `375×700` | TC_049-`e` | ✅ full-page, xác nhận không cuộn ngang, đủ 7 thành phần, khung rộng 311 px. **Chụp 2026-09-11** |
 
 ### Vùng chưa có evidence — TC / biến thể gắn `@NeedsVerify`
 
@@ -259,15 +298,74 @@ Một số yêu cầu — cookie ghi nhớ, mã chống CSRF, header bảo mật
 
 ---
 
+## Đối soát loại kiểm thử (4 vòng)
+
+> Bảng này bổ sung ngày 2026-09-11 theo **Bản Đồ Loại Kiểm Thử — 4 Vòng** của skill `skills-rbt-manual-testing`. Nó trả lời câu hỏi mà **Bảng Đối Soát Coverage không trả lời được**: coverage đếm theo REQ, nên bộ TC có thể phủ 39/39 REQ mà vẫn thiếu hẳn một *loại* kiểm thử.
+>
+> Đúng như vậy: lần chấm đầu tiên phát hiện **6 nhánh trống hoặc nông** trong khi coverage vẫn xanh toàn bộ. Chín TC `TC_042`→`TC_050` sinh ra để lấp đúng các nhánh đó.
+
+| Vòng | Nhánh | Trạng thái | TC ID / Lý do |
+|---|---|---|---|
+| 1 | UI cơ bản | ✅ | TC_002, TC_003 (2 TC · 9 mục bảng kiểm) |
+| 1 | Open form | ✅ | TC_001, TC_027 (2 TC) |
+| 1 | Display | ✅ | TC_002-`2`, TC_005, TC_006 — module không hiển thị dữ liệu nghiệp vụ nên không có định dạng tiền/ngày/badge để kiểm |
+| 1 | Input valid data | ✅ | TC_005, TC_006 (2 TC · 2 vai trò) |
+| 1 | Save | ✅ | TC_005 — "lưu" của module này là **tạo phiên đăng nhập** |
+| 1 | Verify data | ✅ | TC_005, TC_006, TC_008, TC_009 (4 TC — phiên và cookie ghi nhớ giữ đúng) |
+| 2 | **UI Behavior** | ✅ **bổ sung 2026-09-11** | TC_042, TC_043, TC_044 (3 TC · 3 biến thể) — *trước đó nhánh này TRỐNG* |
+| 2 | Required | ✅ | TC_011 (1 TC · 4 biến thể) |
+| 2 | Validation | ✅ | TC_007, TC_012, TC_014, TC_017, TC_018, TC_045, TC_046, TC_047, TC_048 (9 TC · 23 biến thể)<br>• **Bảng Email: đủ 8/8 mục áp dụng** — mục *"email đã tồn tại"* không áp dụng: màn đăng nhập không tạo tài khoản<br>• **Bảng Password: đủ 4/4 mục áp dụng** — 3 mục không áp dụng, có lý do: *nút hiện/ẩn* không tồn tại (TC_042 xác nhận) · *ô xác nhận mật khẩu* không có trên màn này · *rule độ mạnh* (độ dài tối thiểu, ký tự đặc biệt, chữ hoa, chữ số) thuộc màn **Đăng ký / Đổi mật khẩu**, màn Đăng nhập chỉ xác thực chứ không áp rule |
+| 2 | Equivalence Partitioning | ✅ | TC_012, TC_013, TC_045, TC_046 |
+| 2 | **Boundary Value Analysis** | ✅ **bổ sung 2026-09-11** | TC_045, TC_046, TC_047, TC_048 (4 TC · 9 biến thể) — *trước đó nhánh này TRỐNG*, mốc 64 ký tự đo được ngày 2026-09-11 |
+| 2 | Business Rule | ✅ | TC_013, TC_015, TC_019 (3 TC) |
+| 2 | Decision Table | ➖ | Màn đăng nhập không có tổ hợp từ 3 điều kiện trở lên cùng quyết định một kết quả — không đủ điều kiện kích hoạt kỹ thuật này |
+| 2 | State Transition | ➖ | Chỉ có 2 trạng thái (có phiên / không phiên), dưới ngưỡng 3 trạng thái. Vòng đời trạng thái bản ghi thuộc các module nghiệp vụ |
+| 2 | Dependency | ✅ | TC_034 (bộ đếm giờ đang chạy chặn đăng xuất thẳng), TC_037 (cookie ghi nhớ sau khi đăng xuất) |
+| 2 | Use Case / Scenario | ✅ | Chuỗi TC_005 → TC_036 (đăng nhập → dùng → đăng xuất) |
+| 2 | Save / Edit / Delete | ➖ | Module xác thực không có bản ghi nghiệp vụ để tạo/sửa/xoá |
+| 2 | Error Guessing | ✅ | TC_010, TC_016, TC_018, TC_036, TC_040 (5 TC) |
+| 3 | Permission | ✅ | TC_006, TC_019, TC_020, TC_021, TC_022, TC_023 (6 TC · 3 vai trò Admin/PM/Khách hàng × truy cập URL trực tiếp) |
+| 3 | Security | ✅ | TC_017, TC_024, TC_025, TC_026, TC_036, TC_037, TC_039, TC_047 (8 TC) |
+| 3 | API | ➖ | QA **không có quyền** gọi API — **đội Dev xác minh**. Chốt với PO ngày 2026-09-11 |
+| 3 | Database | ➖ | QA **không có quyền** truy cập cơ sở dữ liệu — **đội Dev xác minh**. Chốt với PO ngày 2026-09-11 |
+| 3 | Integration | ➖ | QA không có quyền kiểm tầng tích hợp — **đội Dev xác minh**. TC_003 đã xác nhận trang đăng nhập **không** dùng đăng nhập bên thứ ba nào, nên bề mặt tích hợp của module này bằng không |
+| 3 | Logging / Audit | ➖ | **Tài khoản demo bị chặn quyền.** Đo ngày 2026-09-11: mở `Utilities → Activity Log` trả về trang **Từ chối truy cập**. Cần tài khoản Super Admin để kiểm đăng nhập thành công/thất bại có được ghi vết không — **đề nghị PO hoặc đội Dev cấp**, rà lại ở đợt sau |
+| 4 | Compatibility | ✅ **bổ sung 2026-09-11** | TC_050 (1 TC · 3 trình duyệt) — *trước đó nhánh này TRỐNG*. Gắn `@NeedsVerify`: danh sách trình duyệt **chưa được PO chốt** |
+| 4 | Responsive / UI Stability | ✅ **bổ sung 2026-09-11** | TC_049 (1 TC · 5 kích thước), TC_033 — *trước đó chỉ có TC_033 cho màn hình hẹp, không có TC nào cho chính trang đăng nhập* |
+| 4 | Accessibility | ✅ | TC_038 (điều hướng bàn phím đầy đủ, viền tiêu điểm). Rà WCAG đầy đủ cần công cụ chuyên dụng → ngoài phạm vi, **đội Dev / chuyên gia a11y** |
+| 4 | Performance | ✅ mức thô | TC_041 (đường truyền chậm). Đo tải thật và ngưỡng thời gian phản hồi ➖ — **đội Hạ tầng**, chưa có công cụ tải |
+| 4 | Regression | ➖ | Module có **6 bug đang mở**, **chưa bug nào được đóng** nên chưa có lỗi cũ để chống tái phát. Rà lại nhánh này ngay khi bug đầu tiên được đóng — nguồn: `docs/bugs/login/` |
+| 4 | E2E | ➖ | Module xác thực nằm trọn trong một màn hình. Luồng xuyên module thuộc phạm vi `/generate-cross-module-test-plan` |
+
+**Tổng: 50 TC · 70 biến thể** (phần bổ sung 2026-09-11: 9 TC · 20 biến thể).
+
+---
+
+## Rà soát đặc tính chất lượng (ISO/IEC 25010:2023)
+
+| Đặc tính | Trạng thái | TC ID / Lý do |
+|---|---|---|
+| Functional Suitability | ✅ Có TC | TC_001 → TC_048 — phần thân của bộ TC |
+| Performance Efficiency | ✅ một phần | TC_041 (đường truyền chậm). Đo tải và ngưỡng thời gian phản hồi ➖ — **đội Hạ tầng**, đợt sau |
+| Compatibility | ✅ Có TC | TC_049 (5 kích thước màn hình), TC_050 (3 trình duyệt — chờ PO chốt danh sách) |
+| Interaction Capability | ✅ Có TC | TC_011, TC_013 (thông báo lỗi dễ hiểu, không tiết lộ thừa), TC_038 (bàn phím), TC_042, TC_043, TC_044 (hành vi ô nhập và nút) |
+| Reliability | ✅ Có TC | TC_026 (hết hạn phiên), TC_040 (mất mạng giữa chừng), TC_047 (dữ liệu bất thường không làm sập) |
+| Security | ✅ Có TC | TC_017, TC_019 → TC_025, TC_036, TC_037, TC_039 — phân quyền 3 vai trò, chống CSRF, vòng đời phiên. Pentest và quét lỗ hổng ➖ — **đội bảo mật / đối tác đánh giá độc lập** |
+| Maintainability | ➖ Không áp dụng | Đặc tính của mã nguồn, không kiểm được bằng manual TC — **đội Dev**, qua code review và phân tích tĩnh |
+| Flexibility | ✅ một phần | TC_049 (bố cục đáp ứng trên 5 kích thước). Đổi ngôn ngữ ➖ — mục `Language` nằm **sau** khi đăng nhập (thấy ở TC_032), thuộc module Hồ sơ người dùng chứ không thuộc module này |
+| Safety | ➖ Không áp dụng | Ứng dụng nghiệp vụ; lỗi ở màn đăng nhập không gây thiệt hại vật lý hay tổn hại sức khoẻ |
+
+---
+
 ## Bộ chạy đề xuất
 
 | Bộ | TC | Số lượng | Thời gian ước tính |
 |---|---|---|---|
 | **Smoke** (`@Smoke`) | TC_001, TC_002, TC_005, TC_011-`a`, TC_013-`a`, TC_021-`a`, TC_032, TC_035, TC_036-`a` | 9 | ~12 phút |
-| **Regression đầy đủ** | Toàn bộ trừ `@Slow` | 40 | ~3 giờ |
+| **Regression đầy đủ** | Toàn bộ trừ `@Slow` | 49 | ~3 giờ 40 phút |
 | **Chạy riêng, tách khỏi mọi bộ** (`@Slow`) | TC_026 | 1 | 65 phút |
-| **Cần DevTools** (`@TechCheck`) — phần 🔧 của các TC dưới đây | TC_001, TC_002, TC_003, TC_005, TC_006, TC_008, TC_009, TC_012, TC_015, TC_016, TC_017, TC_018, TC_019, TC_023, TC_024, TC_025, TC_027, TC_030, TC_032, TC_036, TC_037, TC_039, TC_041 | 23 | ~50 phút (chỉ phần 🔧) |
-| **Chờ recon bổ sung** (`@NeedsVerify`) | TC_011-`d`, TC_014, TC_024, TC_025-`b`, TC_031-`b`, TC_033, TC_034, TC_039, TC_040, TC_041 | 10 | — |
+| **Cần DevTools** (`@TechCheck`) — phần 🔧 của các TC dưới đây | TC_001, TC_002, TC_003, TC_005, TC_006, TC_008, TC_009, TC_012, TC_015, TC_016, TC_017, TC_018, TC_019, TC_023, TC_024, TC_025, TC_027, TC_030, TC_032, TC_036, TC_037, TC_039, TC_041, TC_047, TC_048 | 25 | ~55 phút (chỉ phần 🔧) |
+| **Chờ recon bổ sung** (`@NeedsVerify`) | TC_011-`d`, TC_014, TC_024, TC_025-`b`, TC_031-`b`, TC_033, TC_034, TC_039, TC_040, TC_041, TC_049-`a`,`c`,`d`, TC_050 | 12 | — |
 
 > 🔝 **Thứ tự chạy:** Nhóm B (đăng nhập thành công) chạy **đầu tiên** trong mọi bộ — `RISK-06` chỉ ra module này là cổng vào của 23 module còn lại, hỏng ở đây là chặn toàn bộ đợt kiểm thử.
 >
@@ -281,6 +379,7 @@ Một số yêu cầu — cookie ghi nhớ, mã chống CSRF, header bảo mật
 
 | Ngày | Nguồn | Thay đổi | TC ảnh hưởng |
 |---|---|---|---|
+| 2026-09-11 | `/generate-testcases-manual-rbt` — chấm **Bản Đồ Loại Kiểm Thử 4 Vòng** lên bộ TC đang có | **Bổ sung 9 TC (`TC_042`→`TC_050`), KHÔNG đụng TC_001→TC_041.** Chấm bảng 4 vòng phát hiện 6 nhánh trống hoặc nông trong khi Bảng Đối Soát Coverage vẫn xanh 39/39 REQ: `V2 · UI Behavior` (trống) · `V2 · BVA` (trống) · `V2 · Validation` bảng Password/Email chưa đối soát đủ mục · `V3 · Logging` (chưa chấm) · `V4 · Compatibility` (trống) · `V4 · Responsive` (chỉ có TC_033).<br>**Recon thật ngày 2026-09-11 chốt được:** mốc độ dài phần trước `@` là **64 ký tự** (RFC 5321) — 64 cho `Invalid email or password`, 65 đổi sang `The Email Address field must contain a valid email address.`; ô nhập **không** giới hạn số ký tự; ô mật khẩu **không** chặn dán và **không** có nút hiện/ẩn; nút `Login` **không** khoá theo trạng thái biểu mẫu; `Utilities → Activity Log` trả **Từ chối truy cập** trên tài khoản demo.<br>⚠️ **Ảnh hưởng tới bug đang mở:** phát hiện của TC_046 cho thấy ca của [BUG_login_1787226515_TC018](../../bugs/login/BUG_login_1787226515_TC018.md) là **ranh giới chuẩn RFC, không phải lỗi** — đề nghị xem lại và nhiều khả năng đóng với trạng thái *không phải lỗi*.<br>Bổ sung **Bảng Đối soát loại kiểm thử (4 vòng)** và **Bảng rà soát đặc tính chất lượng ISO/IEC 25010:2023** (trước đó bộ TC chưa có bảng ISO vì sinh trước khi skill có tiêu chí 9). Thêm 1 ảnh evidence `login_form_375x700_fullpage.png`. Bản trước lưu ở `archive/test_cases_login_v3_truoc_bo_sung_4vong_20260911.md` | Thêm mới `CRM_LOGIN_TC_042` → `CRM_LOGIN_TC_050`<br>TC_001→TC_041 **giữ nguyên hoàn toàn** — execution report `run_1787215085` và 6 bug đang mở vẫn truy vết đúng |
 | 2026-08-20 | Phản hồi người dùng — TC chứa quá nhiều kiểm chứng thuộc tính HTML | **Viết lại toàn bộ Test Steps và Expected Result theo ngôn ngữ người dùng nhìn thấy.** Mọi `document.title`, `body.className`, `checkValidity()`, `offsetParent`, `querySelector`, selector CSS, mã HTTP và tab Network được gỡ khỏi phần chính; nội dung cấp kỹ thuật tách xuống dòng `🔧 Ghi chú kỹ thuật (cần DevTools)` và TC gắn thêm tag `@TechCheck` (23 TC).<br>**TC ID giữ nguyên `001`→`041`** — không đánh lại, không cắt case nào, độ phủ vẫn 39/39 REQ. Bổ sung `ASM-09` giải thích vì sao `TC_008`/`TC_009` không có kỳ vọng nhìn thấy được. `TC_016` đổi cách chạy sang **cửa sổ ẩn danh + tắt tự điền** để tester bắt được lỗi mà không cần View Source. Bổ sung bộ chạy `@TechCheck` và mục "Cách đọc" phần 2.<br>Luật gốc đã đưa vào `.claude/skills/skills-rbt-manual-testing/SKILL.md` mục **Quy Tắc Ngôn Ngữ Kiểm Chứng** (+ tiêu chí 8 của Self-Quality Gate) nên lần sinh sau không lặp lại. Bản trước lưu ở `archive/test_cases_login_v2_GOP_domdanguage_20260820.md` | Toàn bộ `CRM_LOGIN_TC_001` → `CRM_LOGIN_TC_041` |
 | 2026-08-20 | Yêu cầu người dùng — gộp TC nhỏ lẻ | **Sinh lại toàn bộ ở độ hạt GỘP: 82 TC → 41 TC.** Độ phủ REQ **không đổi** (39/39) và **không case nào bị bỏ**. TC ID đánh lại từ `001` — chấp nhận được vì bộ TC 82 chưa có script / execution report / RTM nào trỏ vào | Toàn bộ `CRM_LOGIN_TC_001` → `CRM_LOGIN_TC_041` |
 | 2026-08-20 | `/generate-testcases-from-requirements` Mode QUICK | Khởi tạo bộ TC từ `requirements_login.md` ở **độ hạt TÁCH** — 82 TC, 3 part. Mở 9/9 ảnh evidence, không phát hiện xung đột tài liệu ↔ ảnh | (bản đầu tiên) |

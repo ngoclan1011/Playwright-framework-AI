@@ -183,7 +183,7 @@ Agent sử dụng skills trong `.claude/skills/` tùy theo nhiệm vụ:
 | Skill                      | Vai trò                                                                                  |
 | -------------------------- | ----------------------------------------------------------------------------------------- |
 | `skills-qa-automation-engineer` | Master skill cho automation — điều phối toàn bộ quy trình                          |
-| `skills-rbt-manual-testing`     | Master skill cho manual testing — 4 modes: QUICK (sinh TC nhanh), FULL RBT (6 bước), CHECKLIST (checklist tick tay) và **DELTA** (cập nhật bộ TC đã có theo Impact Report, giữ nguyên TC ID) |
+| `skills-rbt-manual-testing`     | Master skill cho manual testing — 4 modes: QUICK (sinh TC nhanh), FULL RBT (6 bước), CHECKLIST (checklist tick tay) và **DELTA** (cập nhật bộ TC đã có theo Impact Report, giữ nguyên TC ID). Mọi mode sinh TC đi theo **khung 4 vòng** Smoke → Functional → Technical → Non-functional |
 | `skills-framework-architect`     | Thiết kế & scaffold automation framework — project structure, base classes, reporting, CI/CD |
 | `skills-requirements-analyzer`  | Phân tích requirements từ website/tài liệu                                           |
 | `skills-ui-debug-agent`         | Inspect UI/DOM **web**, thu thập locators                                                |
@@ -401,6 +401,7 @@ Không cần dọn gì thêm. Agent tự tạo lại `docs/` và 2 file danh m�
 | **Prefix TC ID** `<HỆ_THỐNG>_<MODULE>_TC_<3 số>` — `<HỆ_THỐNG>` đổi theo dự án (`CRM_` → `ERP_`, `HRM_`…) | Agent suy từ tên hệ thống, **xác nhận với user một câu** rồi dùng xuyên suốt. Đổi giữa chừng là phải sửa toàn bộ TC ID |
 | **URL · tài khoản test** | User cung cấp lúc chat — lưu ở `.env`, KHÔNG ghi vào tài liệu |
 | **Môi trường dùng chung không?** | **Hỏi user một lần** — không suy ra được từ UI. Nếu CÓ → bật quy tắc dọn dữ liệu test, cấm thao tác phá huỷ |
+| **Năng lực kiểm thử của QA** — quyền gọi API · truy vấn CSDL · kiểm tích hợp · xem nhật ký hoạt động | **Hỏi user một lần**, kiểm chứng được thì đo luôn → ghi vào bảng thuộc tính đầu `docs/requirements/README.md`. Đây là đầu vào cho nhánh **Vòng 3** của mọi bộ TC — hỏi lại ở từng module là sai |
 | Business rules ẩn (CAPTCHA, OTP, quy tắc sinh mã…) | Agent phát hiện khi recon → ghi ngay vào tài liệu module. Chỉ hỏi user khi mâu thuẫn |
 
 > **Không có file hồ sơ dự án để điền tay.** Ngữ cảnh dự án nằm trong `docs/` do agent tự sinh — xem `skills-requirements-analyzer` mục 5.7.1.
@@ -457,7 +458,7 @@ Agent sử dụng workflows trong `.claude/commands/` qua slash commands:
 | `/generate-requirements-from-website`   | Sinh requirements từ website/module (nhánh UI Recon)        |
 | `/analyze-requirement-document`         | Phân tích requirement document (Jira/.docx/.pdf/.xlsx/.csv) — sinh tài liệu phân tích, KHÔNG sinh TC |
 | `/update-requirements-from-ticket`      | **Delta mode** — cập nhật tài liệu requirements đã có từ ticket mới: nhận diện THÊM/SỬA/BỎ, giữ nguyên REQ ID, ghi Nhật ký thay đổi, xuất Impact Report cho test cases |
-| `/generate-testcases-manual-rbt`        | Sinh manual test cases theo AI-RBT 6 bước (FULL RBT mode) |
+| `/generate-testcases-manual-rbt`        | Sinh manual test cases theo AI-RBT 6 bước (FULL RBT mode) — sinh tuần tự theo **4 vòng** (Smoke → Functional → Technical → Non-functional), có bảng đối soát loại kiểm thử ở Quality Gate |
 | `/generate-testcases-from-requirements` | Sinh test cases nhanh từ requirements (QUICK mode)         |
 | `/generate-checklist-test`              | Sinh checklist test tick tay (CHECKLIST mode) — smoke / post-hotfix / regression / release-readiness |
 | `/update-testcases-from-impact`         | **Delta mode cho test cases** — mắt xích giữa của chuỗi delta 3 tầng: từ Impact Report sửa TC stale tại chỗ, giữ nguyên TC ID, đánh dấu 🗑️ Deprecated TC bị gỡ, xuất Delta TC List (2 modes: PLAN/APPLY). KHÔNG sinh lại cả module |

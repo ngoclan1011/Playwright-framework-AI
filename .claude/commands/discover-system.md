@@ -92,10 +92,19 @@ Thu thập, hỏi user thứ **không suy ra được**:
 | Tài liệu sẵn có (nếu có): spec, user story, ticket, file bảng, mockup | User | Tuỳ mode |
 | **Tên hệ thống viết tắt** — dùng làm tiền tố TC ID về sau (`CRM_`, `ERP_`, `HRM_`) | Agent đề xuất → **user xác nhận 1 câu** | ✅ |
 | **Môi trường dùng chung không?** | **Hỏi user** — không suy ra được từ UI | ✅ |
+| **Năng lực kiểm thử của QA** — có quyền gọi API · truy vấn CSDL · kiểm tầng tích hợp · xem nhật ký hoạt động không? | **Hỏi user một lần**, kiểm chứng được thì đo luôn (mở trang nhật ký, thử gọi một API đọc) | ✅ |
 
 ⚠️ Môi trường dùng chung = bật ngay quy tắc: **chỉ đọc, không tạo/sửa/xoá dữ liệu** trong suốt quá trình khám phá. Khám phá không cần ghi dữ liệu — mở form xem field là đủ, **KHÔNG bấm Save**.
 
 📌 URL và tài khoản lưu ở `.env`, **KHÔNG** ghi vào bất kỳ tài liệu nào trong `docs/`.
+
+🔑 **Năng lực kiểm thử của QA phải được ghi vào bảng thuộc tính đầu `docs/requirements/README.md` ngay ở bước này.** Đây là đầu vào cho **nhánh Vòng 3** (`API` · `Database` · `Integration` · `Logging/Audit`) của mọi bộ TC sinh về sau. Không ghi ở đây thì mỗi lần sinh TC agent lại hỏi user cùng một câu — hỏi lại ở từng module là sai, vì quyền của QA giống nhau trên toàn hệ thống.
+
+```markdown
+| **Năng lực kiểm thử của QA** | Chốt <ngày> — dùng cho nhánh Vòng 3 của **mọi** bộ TC:<br>• Gọi API: ❌ không có quyền — đội Dev xác minh<br>• Truy vấn CSDL: ❌ không có quyền — đội Dev xác minh<br>• Kiểm tầng tích hợp: ❌ không có quyền — đội Dev xác minh<br>• Xem nhật ký hoạt động: ❌ tài khoản bị chặn (`<đường dẫn đã thử>` → Từ chối truy cập) — cần Super Admin, đề nghị PO cấp<br>• DevTools trình duyệt: ✅ có |
+```
+
+> Trả lời **kiểm chứng được thì đo thay vì tin lời** — mở đúng trang nhật ký của hệ thống, thử một lệnh gọi API chỉ đọc. Ghi **kết quả đo kèm ngày**, chính xác hơn câu trả lời từ trí nhớ.
 
 ### Bước 1: Đọc trạng thái repo hiện có (LUÔN LÀM ĐẦU TIÊN)
 

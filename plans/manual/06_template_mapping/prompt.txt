@@ -52,11 +52,31 @@ Xuất thêm **Bảng Đối Soát Coverage** để chứng minh đủ case:
 ```
 - Mọi REQ phải có **≥1 TC** — REQ nào 0 TC thì PHẢI quay lại sinh bổ sung trước khi kết thúc
 
+### Đối soát loại kiểm thử 4 vòng (BẮT BUỘC — đặt sau Bảng Đối Soát Coverage):
+
+Bảng Coverage ở trên đếm theo **REQ**, nên bộ TC nông vẫn có thể xanh toàn bộ (8 REQ × 1 TC = đủ). Bảng dưới đây đếm theo **loại kiểm thử** — đây mới là chỗ phát hiện thiếu cả một lớp test:
+
+```
+| Vòng | Nhánh | Trạng thái | TC ID / Lý do |
+|---|---|---|---|
+| 1 | UI cơ bản | ✅ | TC_001–TC_003 (3 TC · 11 biến thể) |
+| 2 | Validation | ✅ | TC_013–TC_028 (đủ 7/7 mục bảng Mật khẩu) |
+| 2 | Error Guessing | 🔴 Thiếu | Chưa có TC bấm Lưu hai lần liên tiếp → bổ sung trước khi xuất |
+| 3 | Database | ➖ | QA không có quyền truy cập DB — đội Dev xác minh |
+| 4 | Performance | ➖ | Không có công cụ tải — đội Hạ tầng, đợt sau |
+```
+
+Quy tắc chấm:
+- `✅ Có TC` (dẫn TC ID) · `➖ Không áp dụng` (**bắt buộc ghi lý do + AI CHỊU TRÁCH NHIỆM**) · `🔴 Thiếu` (phải bổ sung **trước khi xuất**)
+- 🚫 **KHÔNG sinh TC chỉ để lấp ô** — TC rác làm loãng bộ TC thật
+- ⚠️ **Ba nhánh không bao giờ được `➖`:** `UI cơ bản` (V1) · `Validation` (V2, khi có field nhập) · `Permission` (V3, khi có ≥2 role)
+- Nếu gộp biến thể vào một TC → ghi **cả số TC và số biến thể**; thiếu con số này thì không ai phát hiện được việc rụng case
+
 ---
 
 ## Output
 
-Xuất kết quả dưới dạng **Artifact** (file `.md`) để tôi có thể:
+Xuất kết quả dưới dạng **Artifact** (file `.md`) gồm: bảng TC chuẩn → **Bảng Đối Soát Coverage** → **Bảng Đối soát loại kiểm thử (4 vòng)**. Để tôi có thể:
 - Copy trực tiếp bảng vào Excel/Google Sheets
 - Import vào Jira/TestRail/Xray
 
