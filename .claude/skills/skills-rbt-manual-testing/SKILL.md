@@ -636,11 +636,83 @@ Sinh **tuần tự V1 → V4**, không nhảy cóc. Lý do không phải hình t
 
 ---
 
+### Độ sâu theo rủi ro — không phải chức năng nào cũng chạy đủ 4 vòng
+
+Bảng 4 vòng ở trên chống **bỏ sót**. Mục này chống **thừa** — bơm 50 TC cho một trang "Giới thiệu" tĩnh cũng tai hại ngang bỏ quên lớp giao diện của màn thanh toán: nó ngốn công viết, công chạy, công bảo trì, và làm loãng bộ TC thật.
+
+Cơ chế phân xử **không phải là cái mới** — đó chính là `Risk Level` vốn đã có ở cột bảng TC và ở Bước 5 của Mode FULL RBT. Mục này nối nó vào khung 4 vòng.
+
+#### Chấm mức rủi ro — agent tự chấm, KHÔNG hỏi user
+
+| Mức | Điều kiện | Cách chấm |
+|---|---|---|
+| **Cao** | Chỉ cần **MỘT** dấu hiệu: đụng tiền hoặc số liệu tài chính · đụng xác thực/phân quyền · đụng dữ liệu cá nhân khách hàng · có thao tác **không hồi lại được** (xoá cứng, gửi mail ra ngoài, chốt sổ) · là **cổng vào** module khác (hỏng thì chặn cả đợt kiểm thử) | Đủ 1 dấu hiệu là Cao, không cần cân nhắc thêm |
+| **Thấp** | Phải đủ **CẢ BỐN**: chỉ hiển thị, không ghi dữ liệu · không có field nhập (hoặc chỉ có ô tìm kiếm) · hỏng thì không ai mất dữ liệu và không chặn việc gì · sửa lại được trong vài phút, không cần triển khai lại | Thiếu một điều kiện là **không** được chấm Thấp |
+| **Trung bình** | Phần còn lại | Mặc định khi lưỡng lự |
+
+> 🚨 **Lưỡng lự thì chấm mức CAO HƠN.** Chấm nhầm Cao chỉ tốn công viết thừa vài TC; chấm nhầm Thấp là bỏ lọt lỗi ra production. Hai sai lầm này **không cùng giá**.
+>
+> Agent **tự chấm và ghi căn cứ** — không thêm câu hỏi cho user. User phủ quyết ở **checkpoint Bước 4** (FULL RBT) hoặc ở dòng kế hoạch batch (QUICK); đó là lúc nhìn một bảng là chặn được, rẻ hơn nhiều so với chặn sau khi đã sinh xong.
+
+#### Ba mức độ sâu
+
+| | **Đầy đủ** (rủi ro Cao) | **Tiêu chuẩn** (Trung bình) | **Tối giản** (Thấp) |
+|---|---|---|---|
+| **V1 Smoke** | Đủ 6 nhánh | Đủ 6 nhánh | **Đủ 6 nhánh — KHÔNG rút** |
+| **V2 Functional** | Đủ mọi nhánh có điều kiện kích hoạt | Đủ mọi nhánh có điều kiện kích hoạt | Chỉ `Required` · `Validation` của field **có ràng buộc thật**; phần còn lại `⏭️` |
+| **V3 Technical** | Đủ 6 nhánh | `Permission` + `Security`; còn lại theo Năng lực kiểm thử của QA | `Permission` (nếu ≥2 role); còn lại `⏭️` |
+| **V4 Non-functional** | Đủ 6 nhánh | `Responsive` + `Accessibility`; còn lại `⏭️` | Toàn bộ `⏭️` |
+| **Số TC điển hình** (độ hạt GỘP, module cỡ Login) | 40–60 | 20–30 | 8–12 |
+
+#### Bốn thứ KHÔNG BAO GIỜ rút, bất kể rủi ro thấp đến đâu
+
+| Không rút | Vì sao |
+|---|---|
+| **Toàn bộ V1** | Bỏ V1 thì không biết chức năng **có chạy được không**. Sáu TC là cái giá rẻ nhất để biết điều đó |
+| `V2 · Required` + `V2 · Validation` khi **có field nhập** | Có ô nhập là có người nhập sai. Trang "chỉ hiển thị" mà có ô nhập thì nó không còn là "chỉ hiển thị" — chấm lại mức rủi ro |
+| `V3 · Permission` khi hệ thống có **≥2 vai trò** | Lỗi phân quyền không tỷ lệ với độ quan trọng của chức năng: một trang xem báo cáo tưởng vô hại vẫn có thể lộ dữ liệu cả công ty |
+| `V3 · Security` khi chức năng chạm **dữ liệu của người dùng khác** | Cùng lý do trên |
+
+#### Trạng thái thứ tư: `⏭️` — phân biệt với `➖`
+
+Bảng đối soát 4 vòng có **bốn** trạng thái, không phải ba:
+
+| Ký hiệu | Nghĩa | Bắt buộc ghi kèm |
+|---|---|---|
+| `✅` | Có TC | TC ID (kèm số biến thể nếu GỘP) |
+| `➖` | **Không áp dụng** — không có thứ đó để kiểm (module không có CRUD, không có dropdown, không có tích hợp) | Lý do kỹ thuật |
+| `⏭️` | **Cố ý bỏ** — có thứ đó, kiểm được, nhưng **quyết định không kiểm** vì rủi ro thấp | **Lý do + ai quyết định + điều kiện rà lại** |
+| `🔴` | Thiếu — phải bổ sung trước khi xuất | — |
+
+> 🚨 **`➖` và `⏭️` KHÔNG được dùng lẫn.** `➖` là **sự thật kỹ thuật** ("hệ thống không có cái đó"). `⏭️` là **một quyết định có người chịu trách nhiệm** ("có, nhưng chúng tôi chấp nhận rủi ro không kiểm"). Khi có sự cố production, hai câu đó dẫn tới hai cuộc họp hoàn toàn khác nhau. Ghi `➖` cho thứ thật ra là `⏭️` là **giấu quyết định** — nguy hiểm hơn cả bỏ trống ô.
+
+Mẫu dòng `⏭️` đạt yêu cầu:
+
+```markdown
+| 4 | Compatibility | ⏭️ Cố ý bỏ | Trang tĩnh, rủi ro Thấp — chỉ kiểm Chrome. **Quyết định: QA lead, 2026-09-11.** Rà lại khi trang có thêm field nhập hoặc khi hệ thống cam kết hỗ trợ trình duyệt mới |
+```
+
+```markdown
+❌ Không đạt: | 4 | Compatibility | ⏭️ | Không cần thiết |
+```
+
+#### Ghi mức độ sâu vào tài liệu TC
+
+Ngay dưới tiêu đề bộ TC, thêm một dòng để người đọc biết bộ này **cố tình** dừng ở đâu:
+
+```markdown
+| **Mức rủi ro · độ sâu** | `Thấp` → **Tối giản** — V1 đủ 6 nhánh, V2 chỉ nhánh có ràng buộc, V3/V4 phần lớn `⏭️`.<br>Căn cứ chấm Thấp: chỉ hiển thị · không ghi dữ liệu · không có field nhập · hỏng không chặn việc gì.<br>**Nâng lên Tiêu chuẩn khi:** thêm bất kỳ field nhập nào, hoặc chức năng bắt đầu ghi dữ liệu |
+```
+
+> Dòng **"Nâng lên khi…"** là phần quan trọng nhất — nó biến quyết định rút gọn hôm nay thành thứ **tự hết hạn** khi chức năng lớn lên, thay vì một lựa chọn bị quên vĩnh viễn.
+
+---
+
 ### Cách dùng — 5 quy tắc
 
 1. **Chia batch theo VÒNG**, không chia tự do theo nhóm chức năng. Vòng 2 đông TC thì chia con **bên trong vòng đó** theo nhóm chức năng.
-2. **Chấm từng nhánh, không bỏ trống ô nào:** `✅ Có TC` (dẫn TC ID) · `➖ Không áp dụng` (**bắt buộc ghi lý do + ai chịu trách nhiệm**) · `🔴 Thiếu` (phải bổ sung **trước khi xuất**).
-3. 🚫 **KHÔNG sinh TC để lấp ô.** Nhánh không áp dụng thì chấm `➖` — TC sinh ra chỉ cho bảng đẹp là TC rác và làm loãng bộ TC thật. Cùng một luật với bảng ISO 25010.
+2. **Chấm từng nhánh, không bỏ trống ô nào** — **bốn** trạng thái: `✅ Có TC` (dẫn TC ID) · `➖ Không áp dụng` (không có thứ đó để kiểm — ghi lý do kỹ thuật) · `⏭️ Cố ý bỏ` (có nhưng rủi ro thấp — ghi **lý do + ai quyết định + điều kiện rà lại**) · `🔴 Thiếu` (phải bổ sung **trước khi xuất**). Xem mục **Độ sâu theo rủi ro** ở trên để biết khi nào được dùng `⏭️`.
+3. 🚫 **KHÔNG sinh TC để lấp ô, cũng KHÔNG chạy đủ 4 vòng cho chức năng rủi ro Thấp.** Nhánh không có gì để kiểm thì `➖`; nhánh có mà không đáng đầu tư thì `⏭️`. TC sinh ra chỉ cho bảng đẹp là TC rác — cùng một luật với bảng ISO 25010.
 4. **Ba nhánh KHÔNG BAO GIỜ được `➖`:** `UI cơ bản` (V1) · `Validation` (V2, khi có field nhập) · `Permission` (V3, khi có ≥2 role). Chấm `➖` ở ba chỗ này là dấu hiệu agent đang né việc.
 5. **Độ hạt GỘP thì cột dẫn chứng ghi cả số biến thể** — `TC_001–TC_003 (3 TC · 11 biến thể)`. Gộp làm số TC giảm, nhưng **số biến thể không được giảm**; không ghi số biến thể thì không ai phát hiện được việc rụng case.
 
@@ -850,7 +922,9 @@ Trước khi xuất kết quả cuối cùng cho user, Agent **BẮT BUỘC** t�
 
 - [ ] **10. Đối soát loại kiểm thử 4 vòng** (theo [Bản Đồ Loại Kiểm Thử — 4 Vòng](#bản-đồ-loại-kiểm-thử--4-vòng-bắt-buộc--khung-sinh-tc-cho-quick--full-rbt--delta)) — áp dụng **QUICK · FULL RBT · DELTA**, KHÔNG áp dụng CHECKLIST:
   - Đã chấm **mọi nhánh** của cả 4 vòng, không ô nào trống. Xuất **Bảng Đối soát loại kiểm thử** đặt cuối tài liệu TC, **trước** bảng ISO 25010
-  - Ô `➖` **bắt buộc ghi lý do + ai chịu trách nhiệm** (không ghi "ngoài phạm vi" trơn); ô 🔴 phải bổ sung TC **trước khi xuất**
+  - Ô `➖` ghi **lý do kỹ thuật**; ô `⏭️` ghi **lý do + ai quyết định + điều kiện rà lại**; ô 🔴 phải bổ sung TC **trước khi xuất**
+  - **`➖` và `⏭️` không được dùng lẫn** — `➖` là sự thật kỹ thuật (hệ thống không có cái đó), `⏭️` là quyết định chấp nhận rủi ro. Ghi `➖` cho thứ thật ra là `⏭️` là **giấu quyết định**
+  - Mức rủi ro đã chấm và **độ sâu tương ứng** (Đầy đủ / Tiêu chuẩn / Tối giản) phải ghi ở đầu tài liệu TC, kèm dòng **"Nâng lên khi…"**
   - **Ba nhánh không bao giờ được `➖`:** `UI cơ bản` (V1) · `Validation` (V2, khi có field nhập) · `Permission` (V3, khi có ≥2 role)
   - Độ hạt **GỘP** → cột dẫn chứng ghi **cả số TC và số biến thể**: `TC_001–TC_003 (3 TC · 11 biến thể)`. Thiếu số biến thể = không kiểm chứng được gộp có làm rụng case hay không
   > Với **DELTA**: chỉ chấm lại nhánh bị ticket chạm tới, giữ nguyên phần còn lại của bảng.
@@ -953,10 +1027,11 @@ Quy trình bài bản, tuần tự cho module phức tạp. Bao gồm phân tíc
 **Mục đích:** Sinh test cases chi tiết theo chiến lược Risk-Based Testing.
 
 **Agent phải:**
-1. Đánh giá Risk Level cho mỗi Module:
-   - **High Risk:** Test kỹ, nhiều cases (nghiệp vụ quan trọng, liên quan tiền, bảo mật)
-   - **Medium Risk:** Test vừa phải
-   - **Low Risk:** Test cơ bản, happy path
+1. Đánh giá Risk Level cho mỗi Module **theo bảng tiêu chí ở mục [Độ sâu theo rủi ro](#độ-sâu-theo-rủi-ro--không-phải-chức-năng-nào-cũng-chạy-đủ-4-vòng)** — agent tự chấm và ghi căn cứ, KHÔNG hỏi user:
+   - **Cao** → độ sâu **Đầy đủ**: đủ mọi nhánh của cả 4 vòng (40–60 TC)
+   - **Trung bình** → độ sâu **Tiêu chuẩn**: V1 + V2 đủ, V3 giới hạn ở `Permission`/`Security`, V4 giới hạn ở `Responsive`/`Accessibility` (20–30 TC)
+   - **Thấp** → độ sâu **Tối giản**: V1 đủ 6 nhánh (**không rút**), V2 chỉ nhánh có ràng buộc thật, V3/V4 phần lớn `⏭️` (8–12 TC)
+   > ⚠️ Lưỡng lự thì chấm **mức cao hơn**. Bốn thứ không bao giờ rút: toàn bộ V1 · `Required`+`Validation` khi có field nhập · `Permission` khi ≥2 vai trò · `Security` khi chạm dữ liệu người dùng khác.
 2. Sinh test case với đầy đủ fields:
    - Module / Sub-module
    - **REQ ID** (mã requirement mà TC cover — lấy từ Traceability Matrix ở Bước 4)
@@ -1254,6 +1329,11 @@ Vì vậy Mode DELTA đặt việc **bảo toàn TC ID** lên trên mọi mục 
 - ❌ **Chấm `➖` cho `UI cơ bản` / `Validation` / `Permission`** — ba nhánh này không bao giờ ngoài phạm vi khi điều kiện kích hoạt đã thoả
 - ❌ **Ghi `➖` trơn không lý do, không tên người/đội chịu trách nhiệm** — biến "đã thống nhất không test" thành "QA quên test", đúng thứ bảng này sinh ra để chống
 - ❌ **Hỏi lại user về quyền API / CSDL / nhật ký ở từng module** — đó là thuộc tính cấp dự án, đọc dòng `Năng lực kiểm thử của QA` ở `docs/requirements/README.md`; chưa có thì hỏi **một lần** rồi ghi vào đó ngay
+- ❌ **Chạy đủ 4 vòng cho chức năng rủi ro Thấp** — bơm 50 TC cho một trang tĩnh chỉ hiển thị là lãng phí công viết, công chạy, công bảo trì, và làm loãng bộ TC thật. Chấm mức rủi ro trước, chọn độ sâu tương ứng
+- ❌ **Rút gọn bằng cách bỏ Vòng 1** — V1 là thứ duy nhất trả lời "chức năng này có chạy được không". Rủi ro Thấp vẫn phải đủ 6 nhánh V1
+- ❌ **Chấm `Thấp` cho chức năng có field nhập** — có ô nhập là có người nhập sai. Thiếu một trong bốn điều kiện là không được chấm Thấp
+- ❌ **Dùng `➖` thay cho `⏭️`** — `➖` nghĩa là hệ thống không có thứ đó, `⏭️` nghĩa là có nhưng cố ý không kiểm. Ghi nhầm là **giấu một quyết định chấp nhận rủi ro**
+- ❌ **Ghi `⏭️` mà không có điều kiện rà lại** — quyết định rút gọn phải **tự hết hạn** khi chức năng lớn lên, nếu không nó thành lỗ hổng bị quên vĩnh viễn
 - ❌ **Sinh TC chỉ để lấp ô bảng 4 vòng** — TC rác làm loãng bộ TC thật, vi phạm đúng luật đã áp cho bảng ISO 25010
 - ❌ **Gộp mà không công bố số biến thể** — Bảng Đối Soát Coverage đếm theo REQ nên không bắt được việc rụng biến thể
 - ❌ **DELTA sửa xong Vòng 2 rồi dừng** — ticket thêm field mà chỉ sửa TC validation, quên cập nhật bảng kiểm thành phần màn hình ở `V1 · UI cơ bản`. Bộ TC thành ra mô tả một màn hình không còn tồn tại
