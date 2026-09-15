@@ -45,18 +45,19 @@ claude-testing-skills/
 │
 │ ══════════ KHUNG — dùng lại cho mọi dự án ══════════
 ├── .claude/
-│   ├── commands/            # 33 lệnh tùy chỉnh (slash commands)
+│   ├── commands/            # 38 lệnh tùy chỉnh (slash commands)
 │   ├── rules/               # 6 quy tắc bắt buộc AI phải tuân theo
-│   ├── skills/              # 19 kỹ năng chuyên biệt cho AI
+│   ├── skills/              # 20 kỹ năng chuyên biệt cho AI
 │   └── settings.json        # Cấu hình quyền hạn cho Claude Code
 ├── plans/
 │   ├── manual/              # Quy trình 6 bước sinh Manual Test Cases (AI-RBT)
 │   ├── automation/          # Quy trình 6 bước sinh Automation Scripts
 │   └── cross-module/        # Quy trình phân tích Cross-Module & Ma trận kết hợp
-├── prompts/                 # 31 prompt mẫu dùng nhanh (copy → paste → gửi)
+├── prompts/                 # 35 prompt mẫu dùng nhanh (copy → paste → gửi)
 ├── scripts/
 │   ├── testcases-viewer/    # Công cụ web xem/lọc test case
-│   └── execution-viewer/    # Công cụ web xem kết quả chạy, so sánh các lần chạy & độ phủ automation
+│   ├── execution-viewer/    # Công cụ web xem kết quả chạy, so sánh các lần chạy & độ phủ automation
+│   └── bugs-viewer/         # Công cụ web lọc bug theo Severity/Priority/Trạng thái, xem lịch sử retest
 ├── CLAUDE.md                # Rule chung cho AI Agent (Claude Code đọc tự động)
 ├── SETUP_CLAUDE.md          # Hướng dẫn cài Playwright MCP, Connectors & Cowork Schedule
 ├── AI_FULL_FLOW_MANUAL.md      # Quy trình 8 chặng Manual Testing — chạy command nào, theo thứ tự nào
@@ -66,24 +67,33 @@ claude-testing-skills/
 ├── docs/
 │   ├── requirements/
 │   │   ├── README.md                          # DANH MỤC module: prefix đã chiếm, mã REQ kế tiếp
-│   │   └── <module>/
-│   │       ├── requirements_<module>.md       # INDEX — tên file bất biến
-│   │       ├── evidence/*.png                 # ảnh chụp khi khảo sát
-│   │       ├── stories/                       # khi tài liệu bị tách
-│   │       └── analysis/                      # phân tích ticket của module
+│   │   ├── _discovery/                        # bản đồ hệ thống: system_map.md (web + mobile) · api_map.md
+│   │   └── <module>/                          # MỘT nghiệp vụ = MỘT thư mục, chung mọi nền tảng
+│   │       ├── requirements_<module>.md       # INDEX — tên file bất biến: phần chung + Bản đồ tài liệu
+│   │       ├── web/                           # TẦNG NỀN TẢNG — chỉ 3 tên: web · mobile · api
+│   │       │   ├── requirements_<module>_web.md
+│   │       │   ├── evidence/*.png             # ảnh chụp khi khảo sát
+│   │       │   └── stories/                   # khi file nền tảng bị tách
+│   │       ├── mobile/                        # requirements_<module>_mobile.md · evidence/android_*.png · ios_*.png
+│   │       ├── api/                           # requirements_<module>_api.md — Endpoint Catalog
+│   │       ├── analysis/                      # phân tích ticket của module
+│   │       └── impact/                        # Impact Report theo ticket
 │   ├── testcases/
 │   │   ├── README.md                          # DANH MỤC bộ TC: prefix TC ID, độ phủ REQ↔TC
 │   │   └── <module>/
-│   │       ├── test_cases_<module>.md         # INDEX — tên file bất biến
-│   │       ├── parts/                         # khi > 40 TC
+│   │       ├── test_cases_<module>.md         # INDEX — tên file bất biến, không chứa dòng TC
+│   │       ├── web/ · mobile/ · api/          # test_cases_<module>_<nền-tảng>.md · parts/ khi > 40 TC
 │   │       └── archive/                       # phiên bản TC cũ
 │   ├── executions/
-│   │   └── <module>/run_<timestamp>/
+│   │   └── <module>/<nền-tảng>/run_<timestamp>/
 │   │       ├── execution_report.md
 │   │       └── evidence/*.png
-│   └── bugs/                                  # Bug report sinh từ TC FAIL
-│       ├── README.md                          # DANH MỤC bug
-│       └── <module>/BUG_<module>_<ts>.md
+│   ├── bugs/                                  # Bug report sinh từ TC FAIL
+│   │   ├── README.md                          # DANH MỤC bug — có cột Nền tảng
+│   │   └── <module>/<nền-tảng>/BUG_<module>_<ts>_<TC_ID>.md
+│   └── user-guides/                           # Hướng dẫn sử dụng cho người dùng cuối
+│       ├── README.md                          # DANH MỤC — module × role × phiên bản phần mềm
+│       └── <module>/user_guide_<module>.md    # INDEX — tên file bất biến
 ```
 
 > **Chuyển sang dự án mới:** chỉ cần xoá phần **ĐẦU RA** — `rm -rf docs .playwright-mcp task.md .claude/settings.local.json`. Agent tự tạo lại cấu trúc `docs/` ở lần chạy workflow đầu tiên. Chi tiết xem [CLAUDE.md](CLAUDE.md) mục 6b.
@@ -124,6 +134,7 @@ Dành cho tác vụ **đơn lẻ**, chỉ cần copy → thay `[...]` bằng d�
 | 02  | `prompt_02_generate_test_cases.txt`             | **[Mới]** Sinh manual TCs RBT chuẩn 15 field types & Quality Gate       |
 | 03  | `prompt_03_create_framework_playwright.txt`     | Dựng framework Playwright TS                                            |
 | 03  | `prompt_03_create_framework_selenium.txt`       | Dựng framework Selenium Java                                            |
+| 03  | `prompt_03_create_framework_appium.txt`         | Dựng framework Appium Java (Mobile)                                     |
 | 04  | `prompt_04_generate_script_playwright.txt`      | Viết test script Playwright TS                                          |
 | 04  | `prompt_04_generate_script_selenium.txt`        | Viết test script Selenium Java                                          |
 | 05  | `prompt_05_convert_manual_to_automation.txt`    | Chuyển manual TC sang automation                                        |
@@ -150,6 +161,9 @@ Dành cho tác vụ **đơn lẻ**, chỉ cần copy → thay `[...]` bằng d�
 | 26  | `prompt_26_generate_automation_mobile_flow.txt` | **[Mới]** Sinh automation Appium từ flow chạy thật — Native/Flutter/Hybrid |
 | 27  | `prompt_27_update_testcases_from_impact.txt`    | **[Mới]** Cập nhật TC đã có theo Impact Report (delta mode), giữ TC ID  |
 | 28  | `prompt_28_generate_user_guide.txt`             | **[Mới]** Hướng dẫn sử dụng cho người dùng cuối — tổ chức theo việc cần làm  |
+| 29  | `prompt_29_generate_requirements_from_api.txt`  | **[Mới]** Sinh REQ cho module API từ Swagger/Scalar/Postman — kiểm chứng bằng gọi thật |
+| 30  | `prompt_30_generate_requirements_from_mobile.txt` | **[Mới]** Sinh REQ cho module trên app mobile — Native/Flutter/Hybrid, qua Appium MCP |
+| 31  | `prompt_31_generate_automation_api.txt`         | **[Mới]** Sinh automation API từ file TC API — fixture 2 tài khoản BOLA, dọn dữ liệu |
 
 > Danh mục đầy đủ chia theo 7 nhóm tra cứu: [`prompts/README.md`](prompts/README.md)
 
