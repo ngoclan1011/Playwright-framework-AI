@@ -1,0 +1,23 @@
+{
+    "android": {
+        "platformName": "Android",
+        "appium:deviceName": "Pixel_9_Pro_XL_API_35",
+        "appium:automationName": "UiAutomator2",
+        "appium:platformVersion": "15",
+        "appium:noReset": true,
+        "appium:udid": "emulator-5554",
+        "appium:appPackage": "book.anhtester.com",
+        "appium:appActivity": ".MainActivity"
+    },
+    "ios": {
+        "appium:app": "/path/to/your/ios/app.ipa",
+        "appium:deviceName": "iPhone 17 Promax",
+        "appium:platformVersion": "17.0",
+        "appium:automationName": "XCUITest",
+        "appium:udid": "your-device-udid"
+    },
+    "general": {
+        "platformName": "Android",
+        "appium:automationName": "UiAutomator2"
+    }
+}

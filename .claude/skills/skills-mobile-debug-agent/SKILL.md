@@ -159,7 +159,7 @@ Mọi command mobile (`/discover-system` Bước 3-M · `/generate-requirements-
 | Việc | Tool · tham số | Lưu ý |
 |---|---|---|
 | Chọn thiết bị | `select_device` — `platform` (bắt buộc) · `iosDeviceType` = `simulator`/`real` khi iOS · `deviceUdid` khi có nhiều máy | Nhiều máy → hỏi user chọn, không tự chọn |
-| Mở phiên | `appium_session_management` `action=create` · `platform` · `capabilities` = **chuỗi JSON**, khoá có tiền tố `appium:` (`appium:app`, `appium:appPackage`, `appium:bundleId`, `appium:autoGrantPermissions`…) | Tool chuẩn bị (`prepare_ios_simulator`, `appium_prepare_ios_real_device`) trả `capabilitiesHint` → gộp nguyên vào `capabilities` |
+| Mở phiên | `appium_session_management` `action=create` · `platform` · `capabilities` = **chuỗi JSON**, khoá có tiền tố `appium:` (`appium:app`, `appium:appPackage`, `appium:bundleId`, `appium:autoGrantPermissions`…) | Tool chuẩn bị (`prepare_ios_simulator`, `appium_prepare_ios_real_device`) trả `capabilitiesHint` → gộp nguyên vào `capabilities`. Server có `CAPABILITIES_CONFIG` thì khối theo `platform` được nạp sẵn — xem mục *Cấu hình server `appium-mcp`* |
 | Đóng phiên | `appium_session_management` `action=delete` | Bắt buộc trước khi chạy bộ test bằng `mvn test` — xem mục *Hai loại phiên* |
 | Đọc màn hình | `appium_get_page_source` | XML — nguồn để nhận diện loại app và **đếm tính duy nhất** của locator |
 | Tìm phần tử | `appium_find_element` — `strategy` (`accessibility id` · `id` · `-android uiautomator` · `-ios predicate string` · `-ios class chain` · `xpath`) + `selector` | ⚠️ Chỉ trả **phần tử đầu tiên** khớp, **không** báo trùng |
@@ -177,7 +177,7 @@ Mọi command mobile (`/discover-system` Bước 3-M · `/generate-requirements-
 | Nút cứng | `appium_mobile_press_key` `key` = `BACK` · `HOME` · `APP_SWITCH` (Android) | |
 | Mở bảng thông báo | `appium_mobile_device_control` `action=open_notifications` (chỉ Android) | Tool này **chỉ** có `lock` · `unlock` · `shake` · `open_notifications` |
 | WebView | `appium_context` `action=list` · `action=switch` + `context` | Tên action là **`switch`**, không phải `set` |
-| Chụp ảnh | `appium_screenshot` (+ `elementUUID` để chụp riêng một phần tử · `maxWidth`) | Tool **không** nhận đường dẫn — nó tự lưu file và **trả về đường dẫn**. Copy file đó vào thư mục evidence với tên chuẩn rồi `Read` lại |
+| Chụp ảnh | `appium_screenshot` (+ `elementUUID` để chụp riêng một phần tử · `maxWidth`) | Tool **không** nhận đường dẫn — nó tự lưu file và **trả về đường dẫn**. Copy file đó vào thư mục evidence với tên chuẩn rồi `Read` lại. Tool báo lỗi / không trả đường dẫn → chụp bằng lệnh nền tảng (xem *Bảng chẩn đoán lỗi*) |
 | ❌ Tắt / bật mạng | **Appium MCP không có tool này** | Android có `adb`: `adb shell svc wifi disable` + `adb shell svc data disable` (bật lại bằng `enable`). iOS hoặc máy không có `adb`: nhờ user bật chế độ máy bay. Trong code test: `mobile: setConnectivity` (UiAutomator2). **Không** ghi REQ/TC là "đã kiểm" khi chưa tắt mạng được thật |
 | ⚠️ `appium_generate_tests` | Không dùng để sinh code cuối | Code của nó không theo Screen Object · Allure · `testId` của repo — chỉ tham khảo chuỗi bước |
 
@@ -194,6 +194,41 @@ Mọi command mobile (`/discover-system` Bước 3-M · `/generate-requirements-
 ### iOS cần máy Mac
 
 `prepare_ios_simulator` và `appium_prepare_ios_real_device` chỉ chạy trên **macOS** (máy thật cần thêm Xcode 16+ và thiết bị đã bật Developer Mode). Máy **Windows / Linux** chỉ khảo sát được **Android**; iOS phải qua Appium server trên Mac hoặc cloud (`remoteServerUrl`). Nói rõ với user ngay ở bước chọn nền tảng, đừng để tới lúc mở phiên mới báo lỗi.
+
+### Cấu hình server `appium-mcp` — biến môi trường
+
+Server `appium-mcp` đọc 2 biến môi trường từ khối `env` nơi khai server (config MCP của client — global hoặc `.mcp.json` của project):
+
+| Biến | Vai trò | Bẫy thường gặp |
+|---|---|---|
+| `ANDROID_HOME` (hoặc `ANDROID_SDK_ROOT`) | Thư mục Android SDK — driver nhúng tìm `adb`, `build-tools` ở đây | Config mẫu trong README của `appium-mcp` ghi `"ANDROID_HOME": "/path/to/android/sdk"`. Chép nguyên mà không thay → giá trị mẫu **đè** lên biến hệ thống, kể cả khi máy đã khai `ANDROID_HOME` đúng. `adb devices` ở terminal vẫn thấy máy bình thường nên rất dễ đổ nhầm cho thiết bị |
+| `CAPABILITIES_CONFIG` | Đường dẫn file JSON chứa capabilities mặc định, chia khối `android` · `ios` · `general` | File không tồn tại **chỉ ghi cảnh báo vào log** — phiên vẫn tạo được với capabilities mặc định, người dùng tưởng file đã được áp |
+
+**Quy tắc:**
+
+- Driver nhúng **chỉ** đọc SDK root từ biến môi trường của tiến trình MCP — **không** có capability nào thay thế. `ANDROID_HOME` sai thì không có cách né trong phiên đang chạy
+- Khai `ANDROID_HOME` **tường minh** trong `env`, đừng trông vào biến hệ thống — có client MCP chỉ chuyển một số biến mặc định sang tiến trình server
+- Ghi **đường dẫn tuyệt đối** cho cả hai biến — thư mục làm việc của tiến trình MCP không cố định
+- Biến `env` chỉ có hiệu lực khi **tiến trình MCP khởi động lại**. Server khai ở config của ứng dụng desktop: phải **thoát hẳn ứng dụng** rồi mở lại — đóng cửa sổ thì tiến trình cũ vẫn chạy với giá trị cũ
+- Chọn khối trong `CAPABILITIES_CONFIG` theo `platform` của lệnh `create`. Thứ tự gộp: mặc định của server → khối trong file → `udid` từ `select_device` → `capabilities` truyền trong lệnh (sau đè trước)
+- Khối **`general` chỉ dùng cho `platform=general` kèm `remoteServerUrl`**. ❌ Khai `appium:appPackage` trong `general` rồi tạo phiên `platform=android` → app **không** mở, vì phiên nhúng Android chỉ đọc khối `android`
+- Khối `android` / `ios` đã có `appium:udid` → bỏ qua được `select_device`
+- File không có `appium:app` / `appium:appPackage` → phiên chỉ gắn vào thiết bị ở màn hình đang hiển thị, **không** mở app nào
+
+```json
+{
+  "android": {
+    "platformName": "Android",
+    "appium:automationName": "UiAutomator2",
+    "appium:udid": "<udid lấy từ adb devices>",
+    "appium:appPackage": "<package của app cần test>",
+    "appium:appActivity": "<launcher activity>",
+    "appium:noReset": true
+  }
+}
+```
+
+> Chưa chắc launcher activity: `adb shell cmd package resolve-activity --brief <package>` — lấy từ máy thật, không đoán.
 
 ---
 
@@ -212,6 +247,9 @@ Mọi command mobile (`/discover-system` Bước 3-M · `/generate-requirements-
 | `mvn test` báo *Connection refused* tới `127.0.0.1:4723` | Chưa chạy Appium server cho bộ test | Lỗi môi trường — dừng, báo user khởi động Appium server; **không** sửa code |
 | `appium_context` báo action không hợp lệ | Dùng `set` thay vì `switch` | `action=switch` |
 | Element mất sau khi app quay lại foreground | Màn hình bị dựng lại | Tìm lại element, không giữ tham chiếu cũ |
+| `select_device` / `create` báo *The Android SDK root folder '<đường dẫn>' does not exist* hoặc *Neither ANDROID_HOME nor ANDROID_SDK_ROOT…* | Biến `ANDROID_HOME` trong khối `env` của server `appium-mcp` sai, thường là giá trị mẫu `/path/to/android/sdk` chép từ README — nó đè biến hệ thống | Lỗi **cấu hình MCP**, không phải thiết bị hay `adb`. Đọc đường dẫn trong thông báo lỗi → sửa `env` thành SDK thật → khởi động lại tiến trình MCP (xem mục *Cấu hình server `appium-mcp`*). Không né được trong phiên đang chạy — báo user, **không** chuyển sang tự dựng Appium server để vòng qua |
+| Phiên tạo được nhưng app không mở / capabilities trong file không được áp | `CAPABILITIES_CONFIG` sai đường dẫn (chỉ có cảnh báo trong log), hoặc khoá nằm ở khối `general` thay vì `android`/`ios` | Mở file, đối chiếu khối đúng `platform`. Cần gấp thì truyền thẳng khoá thiếu qua `capabilities` của lệnh `create` |
+| `appium_screenshot` báo lỗi schema (vd. *Unrecognized key: "structuredContent"*), không trả đường dẫn file | Lỗi định dạng phản hồi của tool ở một số phiên bản `appium-mcp` — thiết bị vẫn bình thường (`appium_get_page_source` chạy được) | Chụp bằng lệnh nền tảng: Android `adb -s <udid> exec-out screencap -p > <file>.png` (Windows chạy qua `cmd /c` — pipe của PowerShell làm hỏng byte PNG) · iOS Simulator `xcrun simctl io <udid> screenshot <file>.png`. Mở lại ảnh xác nhận đúng màn hình |
 
 ---
 
