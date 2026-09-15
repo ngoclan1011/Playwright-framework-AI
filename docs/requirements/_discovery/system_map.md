@@ -1,8 +1,8 @@
-# Bản đồ hệ thống — Perfex CRM (Anh Tester Demo)
+# Bản đồ hệ thống — CMS Adsplay (for FPTPlay)
 
-> **Tầng khám phá — KHÔNG chứa mã `REQ-XXX-NN`.** Ở đây chỉ cấp **prefix** cho từng module. Mã REQ được cấp ở tầng module khi chạy `/generate-requirements-from-website`.
->
-> Danh mục toàn hệ thống: [../README.md](../README.md)
+> **Tầng khám phá.** Tài liệu này trả lời *"hệ thống có những module nào"*, **không** đặc tả chi tiết field/rule.
+> ❌ **Không** chứa mã `REQ-XXX-NN` — mã REQ chỉ được cấp ở tầng module bởi `/generate-requirements-from-website`.
+> Danh mục & trạng thái recon: [`../README.md`](../README.md)
 
 ---
 
@@ -10,240 +10,263 @@
 
 | Mục | Giá trị |
 |---|---|
-| Ngày khảo sát | 2026-08-14 |
-| Mode | **UI** — repo chưa có `docs/`, không có tài liệu QA kèm theo |
-| Hệ thống | Perfex CRM (bản demo tuỳ biến thương hiệu "ANHTESTER") |
-| Tiền tố TC ID đã chốt | `CRM_` → `CRM_<MODULE>_TC_<3 số>` (VD `CRM_LOGIN_TC_001`) |
-| URL · tài khoản | Lưu ở `.env` — **KHÔNG** ghi vào `docs/` |
-| Role đã dùng | 1 account duy nhất, hiển thị **Admin Example**; **không phải full admin** (xem mục 5) |
-| Môi trường dùng chung | **CÓ** — khảo sát chỉ đọc: không tạo/sửa/xoá, không bấm Save |
-| Phạm vi crawl | Toàn bộ menu sidebar (2 cấp) · dropdown quick-create · dropdown hồ sơ · 1 màn hình chi tiết của Khách hàng và Dự án · tầng network |
-| Kỹ thuật crawl | `browser_navigate` → `browser_evaluate` gom `a[href]` + cột bảng + nút thanh công cụ → `browser_take_screenshot(fullPage)` |
-| Số module phát hiện | **23 module** được cấp prefix, viết trong **21 file** khám phá |
-| Ước tổng REQ | ~560–780 REQ cho toàn hệ thống |
+| **Hệ thống** | CMS Adsplay — nền tảng quản trị quảng cáo cho FPTPlay (nội bộ) |
+| **Tiền tố TC ID** | `CMS_` — chốt với user 2026-09-15. Ví dụ `CMS_LOGIN_TC_001` |
+| **Ngày khảo sát** | 2026-09-15 |
+| **Mode** | **UI** — không có tài liệu nào được cung cấp; sự thật 100% lấy từ hệ thống đang chạy |
+| **Mặt đã khảo sát** | **Web** (1 mặt). Chưa có app mobile, chưa có spec API được cung cấp |
+| **URL · tài khoản** | Lưu ở `.env` (đã `.gitignore`). **Không** ghi vào `docs/` |
+| **Môi trường** | Staging. Áp quy tắc **chỉ đọc** toàn bộ đợt khám phá — không tạo/sửa/xoá bản ghi nào. ⚠️ Chưa được user xác nhận staging có dùng chung hay không → giữ mặc định an toàn |
+| **Role đã dùng** | Duy nhất **1 tài khoản admin**. Hệ thống có **34 role** → ma trận phân quyền ở mục 5 phần lớn là **suy diễn**, không phải kiểm chứng |
+| **Trình duyệt** | Google Chrome qua Playwright MCP, viewport `1600×750` |
+| **Ngôn ngữ giao diện** | Khảo sát ở **English (`en_US`)**. Hệ thống có 2 ngôn ngữ: **English · Việt Nam** |
+| **Kiến trúc UI** | SPA hash-routing (`#/route`), Ant Design. Vùng nội dung là **workspace nhiều tab** — mỗi mục menu mở thành một tab và **được giữ lại qua reload** |
+| **Tầng network** | ✅ Quan sát được. Backend nằm ở **host API riêng** (xem `.env`), đường dẫn `/api/*`. Thu được 30 endpoint khi crawl |
+| **Phạm vi crawl** | Toàn bộ 7 nhóm menu, mở từng mục cấp 2 · 29 màn hình lá · thăm dò 7 route ẩn · mở 1 campaign ở chế độ xem · đọc bảng Roles (34) và Permission (248) |
+| **Ngoài phạm vi đợt này** | **Trang dành cho customer** — user đã nêu, sẽ khảo sát ở đợt sau. Tài liệu này chỉ phủ **trang quản trị dành cho admin** |
 
 ---
 
-## 2. Sơ đồ điều hướng (nguyên trạng menu)
+## 2. Sơ đồ điều hướng toàn hệ thống
+
+Cây menu nguyên trạng, kèm route thật lấy từ `data-menu-id` của từng mục:
 
 ```
-Dashboard                       /admin/
-Customers                       /admin/clients
-Projects                        /admin/projects
-Tasks                           /admin/tasks
-Contracts                       /admin/contracts
-Sales
-├── Proposals                   /admin/proposals
-├── Estimates                   /admin/estimates
-├── Invoices                    /admin/invoices
-├── Payments                    /admin/payments
-├── Credit Notes                /admin/credit_notes
-└── Items                       /admin/invoice_items
-Subscriptions                   /admin/subscriptions
-Expenses                        /admin/expenses
-Support                         /admin/tickets
-Leads                           /admin/leads
-Estimate Request                /admin/estimate_request
-Knowledge Base                  /admin/knowledge_base
-Utilities                                                  ← NGOÀI PHẠM VI (mục 8)
-├── Media                       /admin/utilities/media
-├── Bulk PDF Export             /admin/utilities/bulk_pdf_exporter
-└── Calendar                    /admin/utilities/calendar
-Reports
-├── Sales                       /admin/reports/sales
-├── Expenses                    /admin/reports/expenses
-├── Expenses vs Income          /admin/reports/expenses_vs_income
-├── Leads                       /admin/reports/leads
-├── Timesheets overview         /admin/staff/timesheets?view=all
-└── KB Articles                 /admin/reports/knowledge_base_articles
-
-Ngoài sidebar:
-├── Quick create (+)            invoice · estimate · proposal · credit_note · customer ·
-│                               subscription · project · expense · contract · article ·
-│                               ticket · event
-├── Dropdown hồ sơ              /admin/profile · /admin/staff/timesheets ·
-│                               /admin/staff/edit_profile · /admin/staff/change_language/* (26 ngôn ngữ)
-├── To Do                       /admin/todo
-├── Reminders                   /admin/misc/reminders
-├── Thông báo                   /admin/profile?notifications=true
-└── Đăng xuất                   /admin/authentication/logout
-
-Setup (bánh răng)               KHÔNG tồn tại trong DOM với account hiện tại — xem mục 8
+CMS Adsplay
+├── Dashboard                                      (nhóm, route cha /dashboard)
+│   ├── Report Campaign            /dashboard/report-campaign
+│   ├── Report Flights             /dashboard/report-flights
+│   ├── AVOD                       /dashboard/avod
+│   ├── Ads Valify                 /dashboard/ads-valify
+│   └── Error Monitor              /dashboard/error-monitor
+├── Moderation                                     (nhóm, route cha /moderation)
+│   ├── TVC List                   /moderation/tvc
+│   ├── Medias                     /moderation/medias
+│   ├── Transcode                  /moderation/transcode
+│   └── TVC Moderation             /moderation/tvc-moderation
+├── Management                                     (nhóm, route cha /system)
+│   ├── User                       /system/users
+│   ├── Roles                      /system/roles
+│   └── Permission                 /system/permissions
+├── Campaign                       /campaigns       (mục lá, không có menu con)
+│   └── (chi tiết)                 /campaigns/{id}  — màn "Flight Management"
+├── Advertiser                                     (nhóm, route cha /advertiser)
+│   ├── Advertisers                /advertiser/advertisers
+│   ├── Publishers                 /advertiser/publishers
+│   ├── Brands                     /advertiser/brands
+│   ├── Placements                 /advertiser/placements
+│   └── Webapps                    /advertiser/webapps
+├── Target                                         (nhóm, route cha /targeting)
+│   ├── Categories                 /targeting/categories
+│   ├── Source Providers           /targeting/source-providers
+│   ├── User Segments              /targeting/user-segments
+│   ├── Provinces                  /targeting/provinces
+│   ├── Live TV                    /targeting/live-tv
+│   ├── Live Channel               /targeting/live_channel
+│   └── Pages Key                  /targeting/pages_key
+└── Config                                         (nhóm, route cha /config)
+    ├── Whitelist Users            /config/whitelist-users
+    ├── Placement Templates        /config/placement_templates
+    ├── Email Config               /config/email_config
+    └── Category Weight            /config/category-weight
 ```
 
----
+**Ngoài cây menu** (không thuộc module nghiệp vụ nào):
 
-## 3. Bảng module tổng (23 module)
-
-| # | Module (tên UI) | Bí danh | Prefix | File khám phá | Loại màn hình | Risk | Ước REQ |
-|---|---|---|---|---|---|---|---|
-| 1 | Login | Đăng nhập / Xác thực | `LOGIN` | [module_01](modules/module_01_dang_nhap.md) | Form | 🔴 | 12–18 |
-| 2 | Customers | Khách hàng | `CUST` | [module_02](modules/module_02_khach_hang.md) | Danh sách + 19 tab | 🔴 | 45–65 |
-| 3 | Contacts | Liên hệ khách hàng | `CONT` | [module_03](modules/module_03_lien_he_khach_hang.md) | Danh sách + form | 🔴 | 20–30 |
-| 4 | Leads | Khách hàng tiềm năng | `LEAD` | [module_04](modules/module_04_khach_hang_tiem_nang.md) | Danh sách + Kanban | 🟡 | 30–40 |
-| 5 | Projects | Dự án | `PRJ` | [module_05](modules/module_05_du_an.md) | Danh sách + 17 tab | 🔴 | 60–80 |
-| 6 | Tasks | Công việc | `TASK` | [module_06](modules/module_06_cong_viec.md) | Danh sách + timer | 🔴 | 40–55 |
-| 7 | Estimates | Báo giá sơ bộ | `EST` | [module_07](modules/module_07_bao_gia_so_bo.md) | Chứng từ | 🔴 | 30–40 |
-| 8 | Proposals | Đề xuất | `PROP` | [module_08](modules/module_08_de_xuat_bao_gia.md) | Chứng từ | 🔴 | 30–40 |
-| 9 | Invoices | Hoá đơn | `INV` | [module_09](modules/module_09_hoa_don.md) | Chứng từ + 2 màn phụ | 🔴 | 50–70 |
-| 10 | Payments | Thanh toán | `PAY` | [module_10](modules/module_10_thanh_toan.md) | Danh sách tra cứu | 🔴 | 15–20 |
-| 11 | Credit Notes | Giấy báo có | `CN` | [module_11](modules/module_11_giay_bao_co.md) | Chứng từ | 🔴 | 25–35 |
-| 12 | Subscriptions | Đăng ký định kỳ | `SUB` | [module_12](modules/module_12_dang_ky_dinh_ky.md) | Danh sách + form | 🔴 | 25–35 |
-| 13 | Contracts | Hợp đồng | `CTR` | [module_13](modules/module_13_hop_dong.md) | Danh sách + editor | 🟡 | 25–35 |
-| 14 | Expenses | Chi phí | `EXP` | [module_14](modules/module_14_chi_phi.md) | Danh sách + form | 🟡 | 20–28 |
-| 15 | Items | Danh mục hàng hoá/dịch vụ | `ITEM` | [module_15](modules/module_15_danh_muc_hang_hoa.md) | Danh sách + modal | 🟡 | 15–22 |
-| 16 | Support Tickets | Hỗ trợ | `TICK` | [module_16](modules/module_16_ho_tro_ticket.md) | Danh sách + hội thoại | 🟡 | 30–40 |
-| 17 | Estimate Request | Yêu cầu báo giá | `ESTREQ` | [module_17](modules/module_17_yeu_cau_bao_gia.md) | Form builder | 🟡 | 15–20 |
-| 18 | Knowledge Base | Cơ sở tri thức | `KB` | [module_18](modules/module_18_co_so_tri_thuc.md) | Danh sách + editor | 🟢 | 12–18 |
-| 19 | Reports | Báo cáo | `REP` | [module_19](modules/module_19_bao_cao.md) | Báo cáo (6 trang) | 🟡 | 20–30 |
-| 20 | Dashboard | Trang tổng quan | `DASH` | [module_20](modules/module_20_dashboard_todo_nhac_nho.md) | Dashboard | 🟢 | 8–12 |
-| 21 | My To Do Items | Việc cần làm | `TODO` | [module_20](modules/module_20_dashboard_todo_nhac_nho.md) | Danh sách kéo thả | 🟢 | 8–12 |
-| 22 | Reminders | Nhắc nhở | `REM` | [module_20](modules/module_20_dashboard_todo_nhac_nho.md) | Danh sách | 🟢 | 8–12 |
-| 23 | My Profile / Timesheets | Hồ sơ cá nhân & Chấm công | `PROF` | [module_21](modules/module_21_ho_so_ca_nhan.md) | Form + danh sách | 🟡 | 15–20 |
-
-**Tự kiểm chứng:** 23 module ↔ 23 prefix ↔ 21 file khám phá (file `module_20` chứa 3 module). Mọi module thuộc **đúng 1 file**, không mồ côi, không trùng.
-
-> Cột `Trạng thái recon` **không** đặt ở đây — nguồn duy nhất là [../README.md](../README.md) để tránh lệch nhau.
-
----
-
-## Bản đồ tài liệu
-
-| File | Module bao phủ | Prefix |
+| Thành phần | Vị trí | Ghi chú |
 |---|---|---|
-| [modules/module_01_dang_nhap.md](modules/module_01_dang_nhap.md) | Đăng nhập / Xác thực | `LOGIN` |
-| [modules/module_02_khach_hang.md](modules/module_02_khach_hang.md) | Khách hàng | `CUST` |
-| [modules/module_03_lien_he_khach_hang.md](modules/module_03_lien_he_khach_hang.md) | Liên hệ khách hàng | `CONT` |
-| [modules/module_04_khach_hang_tiem_nang.md](modules/module_04_khach_hang_tiem_nang.md) | Khách hàng tiềm năng | `LEAD` |
-| [modules/module_05_du_an.md](modules/module_05_du_an.md) | Dự án | `PRJ` |
-| [modules/module_06_cong_viec.md](modules/module_06_cong_viec.md) | Công việc | `TASK` |
-| [modules/module_07_bao_gia_so_bo.md](modules/module_07_bao_gia_so_bo.md) | Báo giá sơ bộ (Estimates) | `EST` |
-| [modules/module_08_de_xuat_bao_gia.md](modules/module_08_de_xuat_bao_gia.md) | Đề xuất (Proposals) | `PROP` |
-| [modules/module_09_hoa_don.md](modules/module_09_hoa_don.md) | Hoá đơn | `INV` |
-| [modules/module_10_thanh_toan.md](modules/module_10_thanh_toan.md) | Thanh toán | `PAY` |
-| [modules/module_11_giay_bao_co.md](modules/module_11_giay_bao_co.md) | Giấy báo có | `CN` |
-| [modules/module_12_dang_ky_dinh_ky.md](modules/module_12_dang_ky_dinh_ky.md) | Đăng ký định kỳ | `SUB` |
-| [modules/module_13_hop_dong.md](modules/module_13_hop_dong.md) | Hợp đồng | `CTR` |
-| [modules/module_14_chi_phi.md](modules/module_14_chi_phi.md) | Chi phí | `EXP` |
-| [modules/module_15_danh_muc_hang_hoa.md](modules/module_15_danh_muc_hang_hoa.md) | Danh mục hàng hoá/dịch vụ | `ITEM` |
-| [modules/module_16_ho_tro_ticket.md](modules/module_16_ho_tro_ticket.md) | Hỗ trợ (Tickets) | `TICK` |
-| [modules/module_17_yeu_cau_bao_gia.md](modules/module_17_yeu_cau_bao_gia.md) | Yêu cầu báo giá | `ESTREQ` |
-| [modules/module_18_co_so_tri_thuc.md](modules/module_18_co_so_tri_thuc.md) | Cơ sở tri thức | `KB` |
-| [modules/module_19_bao_cao.md](modules/module_19_bao_cao.md) | Báo cáo | `REP` |
-| [modules/module_20_dashboard_todo_nhac_nho.md](modules/module_20_dashboard_todo_nhac_nho.md) | Dashboard · Việc cần làm · Nhắc nhở | `DASH` · `TODO` · `REM` |
-| [modules/module_21_ho_so_ca_nhan.md](modules/module_21_ho_so_ca_nhan.md) | Hồ sơ cá nhân & Chấm công | `PROF` |
+| Đăng nhập | `/login` | Chưa đăng nhập thì mọi route đều bị đẩy về đây |
+| Trang 404 | `/404` | Route không tồn tại bị đẩy về đây, `document.title` đổi thành `404 Page Not Found!` |
+| Tìm kiếm nhanh | Header · phím tắt `⌘K` | Chưa khảo sát phạm vi tìm kiếm |
+| Đổi ngôn ngữ | Header | 2 lựa chọn: `English` · `Việt Nam` |
+| Tuỳ chọn giao diện | Header (bánh răng) | Drawer: Mode · Layout · Presets · Font Family · Size · Page BreadCrumb · **Multi Tab** · Dark Sidebar · FullScreen. **Không phải** cấu hình nghiệp vụ |
+| Menu tài khoản | Header (avatar) | Hiện email đăng nhập + **Logout**. Không thấy trang Hồ sơ cá nhân |
+
+---
+
+## 3. Bảng module tổng — 10 module / 29 màn hình lá
+
+| # | Module (tên UI) | Bí danh trong hệ thống | Prefix | Nền tảng | File khám phá | Loại màn hình | Risk | Ước REQ |
+|---|---|---|---|---|---|---|---|---|
+| 1 | Đăng nhập & Phiên | — | `LOGIN` | Web | [module_01](modules/module_01_dang_nhap.md) | Form | 🔴 | 12–18 |
+| 2 | Vai trò & Quyền | `Roles` · `Permission` · perm `roles.*` `permissions.*` | `ROLE` | Web | [module_02](modules/module_02_vai_tro_va_quyen.md) | Danh sách + Modal | 🔴 | 20–25 |
+| 3 | Người dùng | `User` · perm `users.*` | `USER` | Web | [module_03](modules/module_03_nguoi_dung.md) | Danh sách + Modal | 🔴 | 20–25 |
+| 4 | Nhà quảng cáo | `Advertisers` · `Brands` · API `accounts?model=advertiser` | `ADV` | Web | [module_04](modules/module_04_nha_quang_cao_va_nha_xuat_ban.md) | Danh sách | 🟡 | 20–25 |
+| 5 | Nhà xuất bản & Kho QC | `Publishers` · `Webapps` · `Placements` · API `accounts?model=publisher` | `PUB` | Web | [module_04](modules/module_04_nha_quang_cao_va_nha_xuat_ban.md) | Danh sách | 🟡 | 35–45 |
+| 6 | Chiến dịch | `Campaign` · perm `campaigns.*` | `CAMP` | Web | [module_05](modules/module_05_chien_dich.md) | Danh sách + chi tiết | 🔴 | 35–45 |
+| 6b | Flight | `Flight` · perm `campaigns.flights.*` | `FLIGHT` | Web | [module_10](modules/module_10_flight_creative.md) | Biên tập lồng trong `/campaigns/{id}` | 🔴 | 40–50 |
+| 6c | Creative | `Creative` · perm `campaigns.creatives` | `CRTV` | Web | [module_11](modules/module_11_creative.md) | Form động lồng trong khối flight | 🔴 | 35–45 |
+| 7 | Kiểm duyệt TVC & Media | `TVC List` · `Medias` · `Transcode` · `TVC Moderation` | `MOD` | Web | [module_06](modules/module_06_kiem_duyet_tvc_media.md) | Lưới thẻ + Danh sách | 🔴 | 45–60 |
+| 8 | Nhắm mục tiêu | `Target` · 7 màn danh mục | `TGT` | Web | [module_07](modules/module_07_nham_muc_tieu.md) | Danh sách | 🟡 | 45–60 |
+| 9 | Cấu hình hệ thống | `Config` · 4 màn | `CFG` | Web | [module_08](modules/module_08_cau_hinh_he_thong.md) | Cấu hình | 🟡 | 30–40 |
+| 10 | Báo cáo & Dashboard | `Dashboard` · 5 màn báo cáo | `DASH` | Web | [module_09](modules/module_09_bao_cao_dashboard.md) | Dashboard/Báo cáo | 🟡 | 35–45 |
+
+**Tổng: 12 module** — khớp với số dòng ở [`../README.md`](../README.md). Ước tổng **370–480 REQ**.
+
+### Quyết định ranh giới đã chốt với user
+
+| Quyết định | Lý do | Rủi ro nếu sai |
+|---|---|---|
+| **Đợt 1 (2026-09-15): `CAMP` gộp Campaign + Flight + Creative** | Ba tầng lồng nhau trên cùng màn `/campaigns/{id}`, không tồn tại độc lập. Theo luật *nghi ngờ thì gộp* | — **đã đảo ở đợt 2** |
+| **Đợt 2 (2026-09-15): tách thành 3 module `CAMP` · `FLIGHT` · `CRTV`** | Khảo sát sâu cho thấy mỗi tầng đủ nặng để đứng riêng: Flight có **29 field · 17 chiều nhắm mục tiêu**; Creative có **form động 3 tầng · 3 lệch pha UI↔dữ liệu · 2 mắt xích cắt ngang module**. User chốt *"Flight thuộc con của Camp, nếu tách không gây ảnh hưởng logic thì tách"* và *"creative cũng khá phức tạp, tách luôn"* | **Không rủi ro traceability** — tầng khám phá không mang mã REQ (mục 5.8 của skill), nên tách/gộp lại là thao tác an toàn |
+| **Creative theo `CRTV` riêng, không ở lại `CAMP` hay `FLIGHT`** | `creative.flight_id` trỏ vào flight · nút `New creative` nằm trong khối flight · danh sách creative hiển thị theo từng flight | Thấp |
+| **Tách `ADV` / `PUB`, không theo menu** | Menu `Advertiser` gom 5 màn nhưng thực chất là **hai phía thị trường**: bên mua (Advertiser, Brand) và bên bán (Publisher, Webapp, Placement — Placement mang `Publisher Code` và gắn `Webapp`) | Thấp — ranh giới dữ liệu rõ ràng |
+| **`ROLE` gộp Roles + Permission** | Permission là thành phần cấu thành Role, luôn được sửa cùng nhau | Thấp |
+| **`CFG` gom 4 màn cấu hình rời rạc** | Tránh đẻ 4 prefix cho 4 trang cấu hình nhỏ | Thấp |
 
 ---
 
 ## 4. Bản đồ entity & phụ thuộc
 
 ```
-                    ┌──────────────┐
-                    │ LEAD         │  chuyển đổi
-                    └──────┬───────┘
-                           ▼
-   ┌──────────────────────────────────────────────┐
-   │ CUST (Khách hàng)  ── 1..n ──▶ CONT (Liên hệ)│
-   └───┬───────┬───────┬────────┬────────┬────────┘
-       │       │       │        │        │
-       ▼       ▼       ▼        ▼        ▼
-     PRJ     CTR   EST/PROP   TICK    SUB
-       │                │              │
-       ├──▶ TASK        ▼              ▼
-       │             ┌─────┐        (sinh tự động)
-       └──▶ EXP ────▶│ INV │◀───────────┘
-                     └──┬──┘
-                        ├──▶ PAY   (ghi nhận thanh toán)
-                        └──▶ CN    (điều chỉnh giảm)
+Advertiser ──┐
+             ├──> Campaign ──> Flight ──> Creative ──> MediaFile ──> Transcode
+Brand ───────┘       │           │                         │
+                     │           │                         └──> TVC Moderation (duyệt nội dung)
+Contract (CMS ngoài)─┘           │
+CMS Campaign (CMS ngoài)─────────┘
+                                 │
+Publisher ──> Webapp ──> Placement ──> (Flight nhắm vào)
+                             │
+                   Placement Template
 
-ITEM   ─── dữ liệu nền cho ▶ EST · PROP · INV · CN
-REP    ─── tổng hợp số liệu từ ▶ INV · EXP · LEAD · TASK · KB
-REM    ─── cắt ngang: tab Reminders trong CUST · PRJ · CTR · LEAD
-ESTREQ ─── biểu mẫu công khai ▶ sinh EST
+Target: Category · Source Provider · User Segment · Province · Live TV Event · Live Channel · Pages Key
+        └──> tham số nhắm mục tiêu của Flight
+
+User ──> Role ──> Permission
 ```
 
-**Căn cứ quan sát:**
-- 19 tab của màn hình chi tiết Khách hàng liệt kê đúng các module phụ thuộc phía trên.
-- 17 tab của màn hình chi tiết Dự án cho thấy Dự án là điểm gom của Task, chứng từ bán hàng và chi phí.
-- Cột `Project` xuất hiện ở bảng danh sách của INV · EST · PROP · CN · SUB · EXP → mọi chứng từ đều gắn được vào dự án.
+**Quan hệ đọc được từ tầng network và từ màn hình chi tiết:**
 
-### Phát hiện tầng network (cấp hệ thống)
-
-| Quan sát | Ý nghĩa |
+| Quan hệ | Bằng chứng |
 |---|---|
-| Bảng dữ liệu nạp qua `POST /admin/<module>/table` (ghi nhận `POST /admin/tasks/table`) | Ứng dụng server-render (CodeIgniter) + DataTables server-side. **Không có REST API `/api/`** → không khai thác được schema entity từ network như hệ thống SPA |
-| `GET /admin/utilities/get_calendar_data?csrf_token_name=…&start=…&end=…` | Mọi request đều mang **CSRF token** — ảnh hưởng thiết kế automation/API test về sau |
-| Không thấy endpoint nào không có UI tương ứng | Không phát hiện module ⚪ *Chưa implement* |
+| `Advertiser` và `Publisher` là **cùng một bảng** `accounts`, phân biệt bằng tham số `model` | `GET /api/accounts?model=advertiser` và `GET /api/accounts?model=publisher` |
+| `Campaign` tham chiếu sang **hệ thống CMS khác** | Form Create Campaign có field `Contract` và `CMS Campaign`; gọi `GET /api/cms/Contracts`. Màn chi tiết hiển thị `Contract: HDNB`, `CMS Campaign: Campaign Nội Bộ` |
+| `Flight` gắn với `Publisher` + `Webapp` | Màn chi tiết campaign: `Publisher: FPT Play`, `Web app: SSAI PC Web LiveTV - 11340112` |
+| `Placement` gắn `Webapp` + `Placement Template` | Cột bảng Placements |
+| `Creative` sinh ra `MediaFile` đi qua `Transcode` rồi tới `TVC Moderation` | Bảng Transcode và TVC Moderation dùng chung cột `Moderation`, `Status` |
+
+### Endpoint thu được ở tầng network (30 endpoint, đều `GET` — chỉ quan sát thụ động)
+
+```
+/api/accounts               /api/brands                  /api/campaigns
+/api/categories             /api/categories-weight       /api/cms/Contracts
+/api/creatives              /api/email-group-recipients  /api/error-logs-agg
+/api/flights                /api/livechannels            /api/livetvevents
+/api/pages-key              /api/permissions             /api/placement-templates
+/api/placements             /api/provinces               /api/report/avod
+/api/roles                  /api/source-providers        /api/users
+/api/stats/tvc-quality      /api/stats/tvc-quality-by-cid
+/api/stats/tvc-quality-daily                             /api/user-segment
+/api/website-apps           /api/whitelist-users
+/api/report/avod/source-provider                         /api/report/flights/realtime
+/api/categories-weight/get/report/metric   ← trả 400, xem PH-04
+```
+
+> Quy ước phân trang quan sát được: `offset` · `limit` · `order=<field>|desc` · `page`. **Không đồng nhất** — có endpoint dùng `page`, có endpoint dùng `offset`.
 
 ---
 
 ## 5. Ma trận phân quyền sơ bộ (cấp module)
 
-Chỉ có **1 tài khoản**, và **chưa xác định được tên role** của nó (màn hình Roles bị 403). Vì vậy ma trận này chỉ có 1 cột kiểm chứng.
+⚠️ **Chỉ có 1 tài khoản admin.** Hệ thống khai báo **34 role** và **248 dòng permission**. Ma trận dưới đây suy từ **bảng Permission của chính hệ thống**, chưa đăng nhập role nào khác để kiểm chứng.
 
-| Khu vực | Tài khoản `admin@example.com` ("Admin Example") | Role khác |
-|---|---|---|
-| 21 module nghiệp vụ (mục 3) | ✅ Truy cập được | ❔ |
-| `/admin/settings` (Cài đặt) | ❌ **Đã kiểm chứng** — chuyển hướng `/admin/access_denied` | ❔ |
-| `/admin/staff` (Nhân viên) | ❌ **Đã kiểm chứng** — `/admin/access_denied` | ❔ |
-| `/admin/roles` (Vai trò) | ❌ **Đã kiểm chứng** — `/admin/access_denied` | ❔ |
+| Module | Permission tương ứng (đọc từ màn Permission) | Admin | Các role khác |
+|---|---|---|---|
+| `LOGIN` | — (ai cũng vào được) | ✅ Đã kiểm chứng | ❔ |
+| `ROLE` | `roles.*` · `permissions.*` | ✅ Đã kiểm chứng | ⚠️❌ Chỉ vài role có `roles.all` |
+| `USER` | `users.all` · `users.view` · `users.log` | ✅ Đã kiểm chứng | ⚠️ Nhiều role có `users.*` |
+| `ADV` | `advertisers.all/view/create/update` · `brands.*` | ✅ Đã kiểm chứng | ⚠️ Phổ biến ở mức `view` |
+| `PUB` | `publishers.*` · `webapps.*` · `placements.*` | ✅ Đã kiểm chứng | ⚠️ Phổ biến ở mức `view` |
+| `CAMP` | `campaigns.all/view/update` · `campaigns.flights.view` · `campaigns.report` · `campaigns.creatives` | ✅ Đã kiểm chứng | ⚠️ Có role chỉ `campaigns.report` |
+| `MOD` | `medias.view` · `mediafiles.*` · `tvcs.*` | ✅ Đã kiểm chứng | ⚠️ Có role chỉ `medias.view` |
+| `TGT` | `categories.*` · `sourceproviders.*` · `usersegment.*` · `provinces.*` · `livetvevents.*` · `livechannels.*` · `pageskeys.*` | ✅ Đã kiểm chứng | ⚠️ |
+| `CFG` | `whitelist-users.*` · `placement_templates.*` · `emailconfigs.*` · `email_groups.*` · `categoriesweight.*` | ✅ Đã kiểm chứng | ⚠️ |
+| `DASH` | `dashboard.*` · `avod.view` · `ad-valify.*` | ✅ Đã kiểm chứng | ⚠️ Có role chỉ `avod.view` |
 
-**Đã kiểm chứng: 4 ô · Suy diễn: 0 ô · Chưa rõ: mọi role khác** — hệ thống có bao nhiêu role còn chưa biết vì màn hình quản lý vai trò không mở được.
+**Tổng kết độ tin cậy:** Đã kiểm chứng **10 ô** (toàn bộ cột Admin) · Suy diễn **10 ô** · Chưa có căn cứ trực tiếp **34 role × 10 module**.
 
-> ⚠️ Ô `❔` **không** được làm tròn thành `❌`. Khi recon từng module, mỗi role thiếu account phải mở một `AMB-XX` 🔴 tại tài liệu module đó.
+📌 **Việc cần làm ở tầng module:** xin ít nhất 2 account role thấp — gợi ý `Report Guest` (chỉ có `campaigns.report`) và `Guest_CMS` (toàn quyền ở mức `view`) — để chuyển ⚠️ thành ✅.
 
 ---
 
 ## 6. Thứ tự khảo sát đã chốt
 
-Xếp theo **phụ thuộc trước, rủi ro sau** (user chốt ngày 2026-08-14):
+Xếp theo **phụ thuộc trước, risk sau** — không theo alphabet:
 
-```
-1. LOGIN → 2. CUST → 3. CONT → 4. LEAD → 5. PRJ → 6. TASK
-→ 7. EST → 8. PROP → 9. INV → 10. PAY → 11. CN → 12. SUB
-→ 13. CTR → 14. EXP → 15. ITEM → 16. TICK → 17. ESTREQ
-→ 18. KB → 19. REP → 20. DASH → 21. TODO → 22. REM → 23. PROF
-```
-
-**Module bị chặn / cần điều kiện trước khi recon:**
-
-| Module | Chặn bởi | Cần gì |
+| Thứ tự | Module | Vì sao đứng ở đây |
 |---|---|---|
-| `ESTREQ` | Bảng dữ liệu **rỗng** — không quan sát được trạng thái và thao tác trên dòng | Dữ liệu mẫu + thống nhất cách dọn (môi trường dùng chung) |
-| `LEAD` · `TICK` · `EXP` · `ITEM` · `CTR` · `PAY` · `SUB` | Master data (Lead Source/Status, Departments, Services, Categories, Taxes, Payment Modes, Contract Types) nằm trong khu Setup đang 403 | Recon vẫn chạy được, nhưng danh sách giá trị chỉ suy được từ dropdown trên form — ghi rõ mức bằng chứng |
-| Mọi module | Chỉ có 1 account, chưa rõ role | Account role thấp hơn để dựng ma trận phân quyền thật |
+| 1 | `LOGIN` | Cổng vào, mọi module khác phụ thuộc |
+| 2 | `ROLE` | Định nghĩa quyền — chi phối ma trận phân quyền của toàn bộ module còn lại |
+| 3 | `USER` | Gắn role vào người dùng; cần `ROLE` xong trước |
+| 4 | `ADV` | Advertiser là **dữ liệu cha** của Campaign |
+| 5 | `PUB` | Publisher/Webapp/Placement là **dữ liệu cha** của Flight |
+| 6 | `CAMP` | Lõi nghiệp vụ — phụ thuộc cả 4 và 5 |
+| 6b | `FLIGHT` | Con của Campaign — cần `CAMP` xong trước; phụ thuộc `PUB` (webapp) và `TGT` (chiều nhắm mục tiêu) |
+| 6c | `CRTV` | Con của Flight — cần `FLIGHT` xong trước |
+| 7 | `MOD` | Kiểm duyệt media mà `CRTV` tiêu thụ |
+| 8 | `TGT` | Dữ liệu nhắm mục tiêu cho Flight |
+| 9 | `CFG` | Cấu hình, ít thay đổi |
+| 10 | `DASH` | Báo cáo — phụ thuộc dữ liệu của mọi module trên |
+
+**Module `BLOCKED`:** không module nào bị chặn hoàn toàn. Nhưng **mọi module đều bị chặn một phần** ở mảng phân quyền cho tới khi có account role thấp.
 
 ---
 
-## 7. Vùng chưa xác minh
+## 7. Phát hiện khi khám phá
 
-| Vùng | Lý do | Xử lý |
-|---|---|---|
-| **Khu Quản trị hệ thống (Setup)** — Settings · Staff · Roles · Departments · Taxes · Currencies · Payment Modes · Custom Fields · Email Templates · Announcements | Menu bánh răng **không có trong DOM**; thử trực tiếp `/admin/settings`, `/admin/staff`, `/admin/roles` đều bị chuyển về `/admin/access_denied` | **Ngoài phạm vi đợt này** (user chốt) — không cấp prefix. Muốn đưa vào sau: xin account quyền cao hơn rồi chạy `/discover-system` Mode ADD |
-| Cổng khách hàng (front-end site) | Nằm ngoài khu `/admin`; các luồng khách ký hợp đồng, bình luận đề xuất, xem KB đều bắt nguồn từ đây | Chưa khảo sát — cần chốt phạm vi riêng |
-| Form tạo/sửa của mọi module | Môi trường dùng chung, tầng khám phá chỉ quan sát danh sách | Recon cấp module sẽ mở form (chỉ xem, không Save) |
-| Số lượng role của hệ thống | Màn hình Roles 403 | Chưa biết hệ thống có mấy role |
+> Quan sát ở tầng khám phá. Ở tầng module chúng sẽ được chuyển thành `AMB-XX` / `RISK-XX` có mã chính thức.
 
----
-
-## 8. Vùng loại khỏi phạm vi (user chốt 2026-08-14)
-
-| Vùng | Route | Ghi chú | Evidence đã có |
+| # | Mức | Phát hiện | Bằng chứng |
 |---|---|---|---|
-| Calendar (Lịch & sự kiện) | `/admin/utilities/calendar` | Loại khỏi đợt này — **không cấp prefix** | [calendar_overview_fullpage.png](evidence/calendar_overview_fullpage.png) |
-| Media (File manager) | `/admin/utilities/media` | Loại khỏi đợt này — **không cấp prefix** | [media_overview_fullpage.png](evidence/media_overview_fullpage.png) |
-| Bulk PDF Export | `/admin/utilities/bulk_pdf_exporter` | Loại khỏi đợt này — **không cấp prefix** | [bulk_pdf_export_form_fullpage.png](evidence/bulk_pdf_export_form_fullpage.png) |
-| Quản trị hệ thống (Setup) | `/admin/settings`, `/admin/staff`, `/admin/roles`… | 403 với account hiện tại — **không cấp prefix** | [setup_access_denied_fullpage.png](evidence/setup_access_denied_fullpage.png) |
-
-Evidence của 4 vùng này **được giữ lại** để lần sau muốn đưa vào phạm vi thì không phải khảo sát lại từ đầu.
+| PH-01 | 🔴 | **Payload tấn công được lưu trong dữ liệu.** Một bản ghi ở bảng Roles có tên chứa `view onlyz> BCC:<32 ký tự>@oastify.com ymp: f`. `oastify.com` là domain callback out-of-band của Burp Collaborator, kèm tiền tố `BCC:` — dấu hiệu thử **email header injection / OOB exfiltration** qua trường Role Name, và payload **vẫn còn nằm trong dữ liệu**. Cần xác nhận là vết pentest hay xâm nhập thật | `/system/roles` |
+| PH-02 | 🟠 | **Dữ liệu rác diện rộng trên staging.** Hơn nửa trong 34 role là rác (`FEEEEEEÊE`, `testz123`, `test 123`, `JS023`, `iphones6`, `DuckCITY`, `JKSs56`…). Bảng Permission 248 dòng có `Bghhgh`, `Bgthgtht`, `Jyhjhyj`, `Ssssss`, `Test11`, `Test23`, `1 34`, `Change System1z`, `Taiqui`. Không phân biệt được cấu hình thật với rác → ảnh hưởng trực tiếp tới việc viết Expected Result | `/system/roles` · `/system/permissions` |
+| PH-03 | 🟠 | **Role `admin` hiển thị `No permissions`** nhưng tài khoản admin lại thấy và thao tác được toàn bộ menu → nghi có logic **bypass cho admin ở tầng server**. Ba role khác cũng `No permissions`: `csoc-nopermission`, `test 183 update`, `TH true milk` | `/system/roles` |
+| PH-04 | 🟡 | **Lỗi API khi chỉ mở trang, không thao tác gì.** `GET /api/categories-weight/get/report/metric` trả **400** ngay khi mở màn Category Weight | `/config/category-weight` |
+| PH-05 | 🟡 | **Permission khai nhiều module không có UI.** `Places`, `Places.Zones`, `Places.Wifi_mac_address`, `Places.Access_points`, `Wifi_report`, `Inventory_report`, `Audit`, `Workbench`, `Adsgroup`, `Creativetypes`, `Fshop`. **Đã thử mở trực tiếp** `/places` `/audit` `/workbench` `/wifi-report` `/inventory-report` `/adsgroup` `/creativetypes` → **tất cả trả 404**. Ghi `❔ Nghi có, chưa xác minh` — **không** đưa vào danh mục module | Thử route trực tiếp |
+| PH-06 | 🟡 | **Hệ thống đa ngôn ngữ EN · VI.** Mọi validation message phụ thuộc ngôn ngữ đang chọn. Đợt này khảo sát ở `en_US` — cần chốt ngôn ngữ chuẩn trước khi viết Expected Result | Header · đổi ngôn ngữ |
+| PH-07 | 🟡 | **Phiên đăng nhập hết hạn giữa chừng** khi đang khảo sát (khoảng 15 phút), bị đẩy về `/login` mà không có thông báo. Cần xác minh thời gian sống của phiên — ảnh hưởng tới thiết kế test dài | Quan sát trong lúc crawl |
+| PH-09 | 🔴 | **Payload tấn công còn nằm ở bảng Advertisers, không chỉ Roles (mở rộng PH-01).** Dropdown `Advertiser` của form Create Campaign lộ **4/10 mục là payload**, thuộc ít nhất 4 lớp tấn công: `a> BCC:<40 ký tự>@oastify.com yqr: d` và `a BCC:<40 ký tự>@oastify.com irj: w` (email header injection / OOB exfiltration) · `a]]>><` (thoát ngữ cảnh XML/XXE hoặc XSS) · `*)(!(!(!(objectClass=*)))` (**LDAP injection**). Đây là dấu vết một đợt quét **có hệ thống**, không phải thử lẻ | Form Create Campaign · `/campaigns` |
+| PH-10 | 🔴 | **API trả HTTP 200 nhưng thân phản hồi là 401.** `GET /api/cms/Campaigns` có mã HTTP `200`, body `{"status":401,"msg":"Unauthorized"}`. ⚠️ **Hệ quả cho automation:** mọi script API **không được tin mã HTTP status**, phải đọc trường `status` trong body. Không phát hiện sớm thì cả bộ API test pass giả. Bao bọc phản hồi chuẩn của hệ thống là `{status, data, meta}` | Tầng network |
+| PH-11 | 🔴 | **Ô upload media nhận cả định dạng thực thi.** `accept` của `Create Media`: `.mp4 .webm .m3u8 .ts .png .jpg .jpeg .gif .webp .js .css .xml .txt .pdf .apk .xlsx .html .json`. Hệ thống quảng cáo nhưng nhận `.js`, `.html`, `.apk`, `.pdf`, `.xlsx` → stored XSS, phát tán `.apk` qua CDN quảng cáo. `accept` chỉ là gợi ý phía trình duyệt — **phải kiểm server có chặn thật không**. Lưu ý: `.js`/`.css`/`.json` có thể hợp lệ cho creative HTML (`extend_source`) | `/moderation/medias` → `Create Media` |
+| PH-12 | 🟠 | **Lệch pha UI ↔ dữ liệu ở Creative.** `file_type = ortb` tồn tại trong dữ liệu (1/103) nhưng **không có trong dropdown UI** → có nguồn creative thứ ba (OpenRTB/programmatic) không tạo được từ form. Ngược lại `Display Type = Ad In Content` có trên UI nhưng không có mẫu nào trong dữ liệu | Form Create Creative · campaign 1188 |
+| PH-13 | 🟠 | **Backend có nhiều chiều hơn UI.** Schema flight **48 trường** / form UI **29**; schema creative **35 trường** / form UI tối đa **11**. Thiếu trên UI: `countries` `mobile_carriers` `zones` `regions` `scenes` `positions` `buy_type` `ad_type` (flight) · nhóm nút tuỳ biến `is_custom_button` + `btn_*` (creative, **8/103 bản ghi đang dùng**). Cần PO xác nhận chưa làm UI hay đã gỡ | `GET /api/campaigns/1188?includes=…` |
+| PH-14 | 🟠 | **Token xác thực là chuỗi hex trần trong header `authorization`**, không có tiền tố `Bearer`. Hình thái: `<40 ký tự hex>`. Ghi lại để bước automation API biết cách gắn token | Request header |
+| PH-15 | 🟡 | **`Moderation` và `Process Status` không phải quan hệ 1–1.** Quan sát được dòng `Moderation = Passed` nhưng `Process Status = Turn off Flight`. Kiểm duyệt trượt **có thể tự tắt flight** → quảng cáo ngừng phát. Vùng logic dễ sinh bug, phải làm rõ | `/moderation/tvc-moderation` |
+| PH-16 | 🟡 | **Hai biểu tượng cột `Action` ở TVC Moderation không có `title` lẫn `aria-label`.** Vừa là lỗi trợ năng, vừa khiến automation **không có thuộc tính ngữ nghĩa nào để bám locator** — buộc phải dùng vị trí, vốn dễ gãy | `/moderation/tvc-moderation` |
+| PH-17 | ~~🟡~~ ✅ | ~~**Dropdown `Contract` cho chọn hợp đồng đã `Expired`**~~ — **ĐÃ ĐÍNH CHÍNH 2026-09-15 khi recon module `CAMP`.** Kiểm lại trên trang vừa tải mới: hợp đồng `Expired` **bị khoá** (`ant-select-item-option-disabled`), chỉ mục `Approved` chọn được. Quan sát sai ở đợt khám phá do đọc DOM khi trang còn modal cũ chồng lên. Hệ thống **nhất quán**: cả `Contract` và `CMS Campaign` đều khoá mục hết hiệu lực → thành `REQ-CAMP-04` và `REQ-CAMP-06` | Form Create Campaign |
+| PH-18 | 🟡 | **Dữ liệu thật vượt ngoài Transcode Guideline.** Guideline công bố 3 profile `1080p`/`720p`/`480p`, nhưng creative thật có `3840×2160` (4K) và `800×500`. Cần PO xác nhận Guideline là ràng buộc cứng hay khuyến nghị | Guideline ↔ dữ liệu campaign 1188 |
+| PH-08 | ⚪ | **Workspace nhiều tab được giữ qua reload.** Tab đã mở vẫn còn sau khi tải lại trang, và pane của tab cũ **vẫn nằm trong DOM** ở trạng thái ẩn. ⚠️ **Ảnh hưởng trực tiếp tới automation**: locator không khoanh vùng pane đang hiện sẽ bắt nhầm phần tử của tab khác. Bật/tắt ở drawer tuỳ chọn giao diện (`Multi Tab`) | Xác định qua DOM |
 
 ---
 
-## 9. Nhật ký khám phá
+## Bản đồ tài liệu
 
-| Ngày | Mode | Phạm vi | Kết quả |
+| File | Module bao phủ | Prefix | Thứ tự khảo sát |
 |---|---|---|---|
-| 2026-08-14 | Recon `PRJ` | Module 5 | **Lệch so với bản đồ:** ước 60–80 REQ, thực tế **104 REQ** — lần thứ ba liên tiếp thực tế vượt ước lượng. Nguyên nhân bổ sung: bản đồ đếm 17 tab nhưng không tính **biểu mẫu 2 tab** (`Project` · `Project Settings` — riêng tab cấu hình đã 11 REQ với 18 công tắc quyền), **4 hộp thoại** (`Copy Project` · `Additional action required!` · `Project Invoice Info` · `Members`) và lớp kiểm tra dữ liệu. **Module đầu tiên phải tách file** (> 80 REQ). **Xác nhận đúng bản đồ:** route, 17 tab, CRUD gồm Copy/Export, có status flow, risk 🔴, `POST /admin/projects/table`. **Bổ sung cho bản đồ:** (1) thanh tab **không dàn phẳng 17 mục** mà gom 6 tab bán hàng vào nhóm `Sales` → hiển thị 12 mục; (2) có thêm **trang Gantt tổng** `/admin/projects/gantt` mà bản đồ chưa ghi; (3) tồn tại các điểm cuối `pin_action`, `remove_team_member`, `save_note`, `get_pre_invoice_project_info`, `export_project_data`. **Đã gỡ 3/4 vùng chưa xác minh** mà bản đồ nêu (field spec biểu mẫu · danh sách trạng thái và quy tắc chuyển · cơ chế `Visible Tabs`); còn lại **hành vi Copy Project** chưa chạy được — xem `AMB-38`. **Cảnh báo cho các module sau:** ước lượng REQ ở tầng khám phá đang **thấp hơn thực tế 30–190%** một cách hệ thống vì chỉ đếm màn hình và tab, bỏ qua hộp thoại · trường điều kiện · thông báo lỗi · cấu hình |
-| 2026-08-14 | Recon `CUST` | Module 2 | **Lệch so với bản đồ:** ước 45–65 REQ, thực tế **79 REQ** — lặp lại đúng xu hướng đã ghi nhận ở `LOGIN`. Nguyên nhân bổ sung: bản đồ đếm 19 tab nhưng không đếm **màn hình Import CSV** (8 REQ) và các **tab phụ trợ thuộc chính module** (Notes · Statement · Vault · Map · Reminders — 9 REQ). **Xác nhận đúng bản đồ:** route, 19 tab, risk 🔴, cơ chế `POST /admin/clients/table` không có REST API. **Bổ sung cho bản đồ:** biểu mẫu tạo mới có 2 tab, biểu mẫu sửa có 3 tab (thêm `Customer Admins`); tồn tại endpoint `check_duplicate_customer_name` và `change_client_status`. **Đã gỡ 3/3 vùng chưa xác minh** mà bản đồ nêu (field spec biểu mẫu · nội dung `Vault`/`Statement`/`Map` · luồng Import — luồng Import mới tới mức đặc tả giao diện, chưa chạy được, xem `AMB-26`) |
-| 2026-08-14 | Recon `LOGIN` | Module 1 | **Lệch so với bản đồ:** ước 12–18 REQ, thực tế **35 REQ**. Nguyên nhân: bản đồ chỉ đếm 2 form/5 field, chưa tính lớp bảo vệ phiên (chuyển hướng 2 chiều, CSRF), luồng đăng xuất có nhánh cảnh báo timer, và điểm cuối `reset_password`. **Rút kinh nghiệm cho các module sau: ước lượng REQ ở tầng khám phá đang thấp hơn thực tế vì chỉ đếm field trên form, bỏ qua điều hướng · phân quyền · thông báo lỗi.** Xác nhận đúng bản đồ: route, loại màn hình, số tab (0), risk 🔴 |
-| 2026-08-14 | UI | Toàn bộ menu sidebar + quick-create + dropdown hồ sơ + chi tiết `CUST`/`PRJ` + tầng network | Khởi tạo bản đồ: **23 module** được cấp prefix, 21 file khám phá, 30 ảnh evidence. Xác định khu Setup bị 403 → ngoài phạm vi. Loại Calendar/Media/Bulk PDF khỏi phạm vi theo chốt của user. Chốt tiền tố TC ID `CRM_` và thứ tự khảo sát *phụ thuộc → rủi ro* |
+| [modules/module_01_dang_nhap.md](modules/module_01_dang_nhap.md) | Đăng nhập & Phiên | `LOGIN` | 1 |
+| [modules/module_02_vai_tro_va_quyen.md](modules/module_02_vai_tro_va_quyen.md) | Vai trò & Quyền | `ROLE` | 2 |
+| [modules/module_03_nguoi_dung.md](modules/module_03_nguoi_dung.md) | Người dùng | `USER` | 3 |
+| [modules/module_04_nha_quang_cao_va_nha_xuat_ban.md](modules/module_04_nha_quang_cao_va_nha_xuat_ban.md) | Nhà quảng cáo · Nhà xuất bản & Kho QC | `ADV` · `PUB` | 4 · 5 |
+| [modules/module_05_chien_dich.md](modules/module_05_chien_dich.md) | Chiến dịch | `CAMP` | 6 |
+| [modules/module_10_flight_creative.md](modules/module_10_flight_creative.md) | Flight | `FLIGHT` | 6b |
+| [modules/module_11_creative.md](modules/module_11_creative.md) | Creative | `CRTV` | 6c |
+| [modules/module_06_kiem_duyet_tvc_media.md](modules/module_06_kiem_duyet_tvc_media.md) | Kiểm duyệt TVC & Media | `MOD` | 7 |
+| [modules/module_07_nham_muc_tieu.md](modules/module_07_nham_muc_tieu.md) | Nhắm mục tiêu | `TGT` | 8 |
+| [modules/module_08_cau_hinh_he_thong.md](modules/module_08_cau_hinh_he_thong.md) | Cấu hình hệ thống | `CFG` | 9 |
+| [modules/module_09_bao_cao_dashboard.md](modules/module_09_bao_cao_dashboard.md) | Báo cáo & Dashboard | `DASH` | 10 |
+
+**11 file · 12 module** — mỗi module thuộc đúng một file, không mồ côi, không trùng.
+
+> ⚠️ File `module_10_flight_creative.md` **giữ nguyên tên** dù nội dung Creative đã chuyển sang `module_11_creative.md` — theo quy tắc *không đổi tên file module đã có* để link cũ không gãy. Thứ tự khảo sát cập nhật ở mục 6, không ở tên file.
+Trạng thái recon **chỉ** ghi ở [`../README.md`](../README.md); file module ở đây tham chiếu, không nhân bản.
+
+---
+
+## 8. Nhật ký khám phá
+
+| Ngày | Mode | Mặt | Phạm vi | Kết quả | Nguồn |
+|---|---|---|---|---|---|
+| 2026-09-15 | UI | Web | Khảo sát lần đầu toàn hệ thống. Crawl 7 nhóm menu → 29 màn lá · thăm dò 7 route ẩn · đọc 34 role + 248 permission · mở 1 campaign ở chế độ xem · thu 30 endpoint | Khởi tạo bản đồ **10 module**, cấp prefix `LOGIN` `ROLE` `USER` `ADV` `PUB` `CAMP` `MOD` `TGT` `CFG` `DASH`. Chốt tiền tố TC ID `CMS_`. Ghi nhận 8 phát hiện PH-01→PH-08. **Không** cấp mã REQ nào | `/discover-system` mode UI · UI thực tế |
+| 2026-09-15 | — | Web | **Recon cấp module `CAMP`** (`/generate-requirements-from-website`) | Sinh `REQ-CAMP-01`→`38`. **Đính chính PH-17** — hợp đồng `Expired` thực tế **có** bị khoá, quan sát sai ở đợt 2 do modal cũ chồng lên. **Phát hiện lỗi chặn mới:** không tạo được chiến dịch — submit form hợp lệ nhưng không có `POST` nào, không báo lỗi (tái hiện 2 lần) → `AMB-01` 🔴 | `/generate-requirements-from-website CAMP` |
+| 2026-09-15 | ADD | Web | **Đợt 2 — khảo sát sâu `CAMP` + `MOD`** theo yêu cầu user. Mở đủ 3 form tạo (Campaign 9 field · Flight 29 field · Creative form động 7→11 field) · kiểm chuỗi phụ thuộc dropdown · đọc dữ liệu tham chiếu **campaign 1188** (21 flight · 103 creative) qua `GET /api/campaigns/1188?includes=…` · đọc Transcode Guideline · submit 1 form thiếu dữ liệu để bắt validation message. **Không upload file, không tạo bản ghi nào** | **Tách `CAMP` thành 3 module**: `CAMP` (Campaign) · **`FLIGHT`** (mới) · **`CRTV`** (mới) → tổng **12 module**. Dựng được chuỗi `MOD → CRTV → FLIGHT → thiết bị`. Ghi nhận 10 phát hiện mới PH-09→PH-18, trong đó **3 mức 🔴**. Cập nhật `module_05` · `module_06`, thêm `module_10` · `module_11`. **Không** cấp mã REQ nào | `/discover-system` mode ADD · UI thực tế + tầng network |
