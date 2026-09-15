@@ -22,8 +22,8 @@
 | Tình huống | Vào từ đâu |
 |---|---|
 | Đã có bộ TC review xong (flow manual chặng 3) | ✅ Đường chính — chặng 0 → 1 |
-| Chưa có TC, chỉ biết "vào trang này click cái kia" | Chặng 1 nhánh `/generate-automation-from-ui-flow` — **chấp nhận không có TC ID**, RTM sẽ báo test mồ côi ⚪ |
-| Hệ thống API, có Swagger | Chặng 1 nhánh `/generate-api-tests-from-swagger` mode FULL — nó tự lo cả TC lẫn script |
+| Chưa có TC, chỉ biết "vào trang này click cái kia" (web) hoặc "mở app, đăng nhập, tạo đơn" (mobile) | Chặng 1 · `/generate-automation-web` hoặc `/generate-automation-mobile` **mode FLOW** — script mang `testId` = `FLOW_<MODULE>_<nnn>`, RTM sẽ báo test mồ côi ⚪ |
+| Hệ thống API, mới có spec (Swagger / Scalar / Postman) | Sinh TC trước bằng `/generate-testcases-api` (flow manual chặng 2) → rồi chặng 1 · `/generate-automation-api`. Không sinh code thẳng từ spec. Muốn TC có REQ neo vào thì chạy `/generate-requirements-from-api` trước nữa |
 
 > ⚠️ **Đừng automate bộ TC chưa qua `/review-testcases`.** TC mơ hồ sinh ra script sai kỳ vọng, và cái sai đó chạy tự động mỗi ngày. Sửa TC thì rẻ, sửa script đã viết xong thì đắt gấp nhiều lần.
 
@@ -37,7 +37,11 @@
 └──────────────────────────────────────────────────────────────────┘
                                   ↓
 ┌─ SINH SCRIPT ────────────────────────────────────────────────────┐
-│  1. /generate-automation-from-testcases → POM + test, PASS 2 lần │  N lần = số module
+│  1. /generate-automation-from-testcases → tự nhận nền tảng file  │  N lần = số module
+│     ├─ /generate-automation-web         → POM + test (Playwright)│  × số nền tảng
+│     ├─ /generate-automation-mobile      → Screen Object + Appium │
+│     └─ /generate-automation-api         → client + API test      │
+│     PASS 2 lần liên tiếp mới xong                                │
 └──────────────────────────────────────────────────────────────────┘
                                   ↓
 ┌─ KIỂM CHẤT LƯỢNG CODE ───────────────────────────────────────────┐
@@ -102,18 +106,27 @@
 
 ## Chặng 1 — Sinh Automation Scripts
 
-> **Chạy lặp, mỗi lần một module.** Chọn đúng 1 trong 3 nhánh.
+> **Chạy lặp, mỗi lần một module × một nền tảng.** Cửa vào chung là `/generate-automation-from-testcases` — nó đọc đường dẫn file TC (`<module>/web/` · `mobile/` · `api/`) rồi chuyển sang đúng command nền tảng. Biết rõ nền tảng thì gọi thẳng command đó cũng được.
 
-| Nhánh | Command | Prompt mẫu | Input |
+| Có gì trong tay | Command | Prompt mẫu | Chạy trên |
 |---|---|---|---|
-| **Từ manual TC** (đường chính) | `/generate-automation-from-testcases` | [`prompt_05`](prompts/prompt_05_convert_manual_to_automation.txt) · [`prompt_04 PW`](prompts/prompt_04_generate_script_playwright.txt) · [`prompt_04 SE`](prompts/prompt_04_generate_script_selenium.txt) | File TC có cấu trúc (MD/Excel/JSON) |
-| **Từ UI flow (web)** | `/generate-automation-from-ui-flow` | — | Mô tả thao tác bằng lời hoặc chỉ URL |
-| **Từ flow mobile** | `/generate-automation-from-mobile-flow` | — | App (`.apk`/`.ipa`) + flow mô tả — Native Android/iOS, **Flutter**, Hybrid |
-| **API từ Swagger** | `/generate-api-tests-from-swagger` mode FULL | [`prompt_09`](prompts/prompt_09_generate_api_tests.txt) | URL/file OpenAPI spec |
+| **File TC, nền tảng nào cũng được** (đường chính) | `/generate-automation-from-testcases` — bộ định tuyến, mode WEB (mặc định) / MOBILE / API | [`prompt_05`](prompts/prompt_05_convert_manual_to_automation.txt) | Tự nhận từ đường dẫn file TC |
+| File TC **web** | `/generate-automation-web` mode TC | [`prompt_04 PW`](prompts/prompt_04_generate_script_playwright.txt) · [`prompt_04 SE`](prompts/prompt_04_generate_script_selenium.txt) | Playwright MCP |
+| File TC **mobile** | `/generate-automation-mobile` mode TC | [`prompt_26`](prompts/prompt_26_generate_automation_mobile_flow.txt) | Appium MCP — Native Android/iOS, **Flutter**, Hybrid |
+| File TC **API** | `/generate-automation-api` | [`prompt_31`](prompts/prompt_31_generate_automation_api.txt) | REST Assured / Playwright API / Pytest / Supertest |
+| **Chưa có TC** — web | `/generate-automation-web` mode FLOW | — | Mô tả thao tác bằng lời hoặc chỉ URL |
+| **Chưa có TC** — app | `/generate-automation-mobile` mode FLOW | [`prompt_26`](prompts/prompt_26_generate_automation_mobile_flow.txt) | App (`.apk`/`.ipa`) + flow mô tả |
+| **Chưa có TC** — API | Sinh TC trước: `/generate-testcases-api` | [`prompt_09`](prompts/prompt_09_generate_api_tests.txt) | Rồi quay lại dòng *File TC API* |
 
 > 📱 **App Flutter:** việc đầu tiên là nhận diện app đã bật **semantics** chưa — chưa bật thì hierarchy chỉ có một node `FlutterView` rỗng và **không có element nào để tìm**. Đây là thoả thuận với dev, không phải việc QA xoay được bằng locator giỏi. Xem [`appium_rules.md`](.claude/rules/appium_rules.md) mục 3.
 
-**AI làm gì (nhánh chính, 6 bước):** đọc & parse TC → mở browser MCP **inspect DOM thật** thu locator → thiết kế POM → sinh test data unique/traceable → sinh test class kèm Allure metadata → chạy + **auto-heal** đến khi PASS **2 lần liên tiếp**.
+**AI làm gì:**
+
+| Nền tảng | Các bước |
+|---|---|
+| **Web** | đọc & parse TC → mở browser MCP **inspect DOM thật** thu locator → thiết kế POM → sinh test data unique/traceable → sinh test class kèm Allure metadata → chạy + **auto-heal** đến khi PASS **2 lần liên tiếp** |
+| **Mobile** | mở phiên Appium → **nhận diện loại app** (Native / Flutter / Hybrid) → đi theo từng bước TC trên thiết bị, thu locator từ hierarchy → Screen Object **tách Android/iOS** → test + Allure metadata → chạy + auto-heal, PASS 2 lần |
+| **API** | đọc TC API + `api_map.md` + snapshot spec → client · DTO · fixture token · **fixture 2 tài khoản** cho BOLA → mỗi TC một test, attach request/response đã che → chạy + auto-heal → **dọn dữ liệu** đã tạo |
 
 **⚠️ Ba luật của chặng này**
 
@@ -125,8 +138,10 @@
 
 **Đầu ra:**
 ```
-src/pages/<module>.page.ts        ← POM, locator đã verify
-src/tests/<module>.spec.ts        ← test có label testId, step Arrange/Act/Assert
+src/pages/<module>.page.ts        ← POM web, locator đã verify
+src/screens/<Module>Screen.java   ← Screen Object mobile, locator tách Android/iOS
+src/api/<Resource>Client.java     ← API client + DTO
+src/tests/…                       ← test có label testId = TC ID, step Arrange/Act/Assert
 src/utils/…                       ← test data generator
 task.md                           ← checklist tiến độ + bảng kết quả từng TC
 ```
@@ -239,7 +254,7 @@ Mắt xích **cuối** của chuỗi delta 3 tầng:
 | 🚨 **CẤM sinh lại cả file/module** | Chỉ sửa đúng dòng liên quan TC đã đổi. Sinh lại là xoá sạch mọi fix đã tích luỹ |
 | 🚨 **CẤM xoá file script** của TC bị archive | Đánh dấu skip + báo user, chờ xác nhận mới gỡ |
 | **Giữ nguyên `testId`** sau khi sửa | Đứt TC ID là vỡ RTM |
-| TC **mới hoàn toàn** (➕ trong Impact Report) → route sang `/generate-automation-from-testcases` | Trộn hai việc là mất lý do tồn tại của delta mode |
+| TC **mới hoàn toàn** (➕ trong Impact Report) → route sang `/generate-automation-from-testcases` (tự chuyển tới command nền tảng) | Trộn hai việc là mất lý do tồn tại của delta mode |
 
 > Impact Report ghi `⚠️ chưa rà soát` ở cột TC → dừng, chạy `/generate-traceability-matrix` trước. Không có nguồn map thì workflow này chỉ đoán mò.
 
@@ -261,7 +276,7 @@ Cùng một command với flow manual, nhưng ở đây đọc **tầng 3**: REQ
 | 🟡 | **TC chưa được automate** | Quay lại chặng 1 của flow này |
 | ⚪ | **Test mồ côi** — script không map về TC/REQ nào | Gắn label `testId`, hoặc bổ sung TC gốc |
 
-> ⚪ thường sinh ra từ nhánh `/generate-automation-from-ui-flow` (viết script khi chưa có TC) hoặc từ script quên gắn `testId`. Cả hai đều làm coverage automation thành số không kiểm chứng được.
+> ⚪ thường sinh ra từ **mode FLOW** của `/generate-automation-web` / `-mobile` (viết script khi chưa có TC — `testId` = `FLOW_<MODULE>_<nnn>`) hoặc từ script quên gắn `testId`. Cả hai đều làm coverage automation thành số không kiểm chứng được — sinh TC cho flow đó rồi đổi label sang TC ID thật.
 
 Xem trực quan bằng [`scripts/execution-viewer/bundle.html`](scripts/execution-viewer/README.md) — kéo thả `traceability_matrix.md` vào, nó chỉ ra REQ nào mới automate **một phần**.
 
@@ -282,10 +297,10 @@ Chỉ chạy khi dự án dùng Jira/Xray. Cần lấy requirements/ticket từ 
 | Chặng | Command | Prompt mẫu | Số lần chạy |
 |---|---|---|---|
 | 0 | `/generate-automation-framework` | [`prompt_03`](prompts/prompt_03_create_framework_playwright.txt) | **1 lần** / dự án (bỏ qua nếu đã có framework) |
-| 1 | `/generate-automation-from-testcases` | [`prompt_05`](prompts/prompt_05_convert_manual_to_automation.txt) | **N lần** = số module |
-| 1' | `/generate-automation-from-ui-flow` | — | Khi chưa có TC (web) |
-| 1'' | `/generate-automation-from-mobile-flow` | — | App mobile — Native / Flutter / Hybrid |
-| 1" | `/generate-api-tests-from-swagger` mode FULL | [`prompt_09`](prompts/prompt_09_generate_api_tests.txt) | Hệ thống API |
+| 1 | `/generate-automation-from-testcases` | [`prompt_05`](prompts/prompt_05_convert_manual_to_automation.txt) | **N lần** = số module × nền tảng — tự chuyển tới 3 command dưới |
+| 1 · web | `/generate-automation-web` | [`prompt_04`](prompts/prompt_04_generate_script_playwright.txt) | Mode TC · mode FLOW khi chưa có TC |
+| 1 · mobile | `/generate-automation-mobile` | [`prompt_26`](prompts/prompt_26_generate_automation_mobile_flow.txt) | Mode TC · mode FLOW khi chưa có TC — Native / Flutter / Hybrid |
+| 1 · API | `/generate-automation-api` | [`prompt_31`](prompts/prompt_31_generate_automation_api.txt) | Từ file TC API — TC sinh bằng `/generate-testcases-api` ([`prompt_09`](prompts/prompt_09_generate_api_tests.txt)) |
 | 2 | `/review-automation-code` | [`prompt_06`](prompts/prompt_06_review_automation_code.txt) | 1 lần / bộ script (+ định kỳ) |
 | 3 | `/run-and-fix-tests` | [`prompt_17`](prompts/prompt_17_run_and_fix_tests.txt) | **Mỗi đợt regression / mỗi build** |
 | 4 | `/analyze-test-report` | [`prompt_11`](prompts/prompt_11_analyze_test_report.txt) | Khi nhiều test đỏ |
@@ -324,4 +339,4 @@ Script chạy tốt nhưng RTM không map được về TC/REQ → chặng 6 x�
 | [`.claude/rules/locator_strategy.md`](.claude/rules/locator_strategy.md) | Thứ tự ưu tiên locator (mọi framework) |
 | [`.claude/rules/playwright_rules.md`](.claude/rules/playwright_rules.md) · [`selenium`](.claude/rules/selenium_rules.md) · [`appium`](.claude/rules/appium_rules.md) | Quy tắc riêng từng framework |
 | [`plans/automation/QUICK_START.md`](plans/automation/QUICK_START.md) | Luồng 6 bước bản copy-paste — dùng cho AI agent khác không có slash command của bộ này |
-| [`prompts/README.md`](prompts/README.md) | 32 prompt mẫu copy-paste, chia 7 nhóm tra cứu |
+| [`prompts/README.md`](prompts/README.md) | 35 prompt mẫu copy-paste, chia 7 nhóm tra cứu |

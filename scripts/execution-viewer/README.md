@@ -14,8 +14,8 @@ Mở [`bundle.html`](bundle.html) bằng trình duyệt — double-click là đ�
 Kéo thả, hoặc bấm **+ Import thư mục** / **+ Import file .md** ở góc trên (hai nút này luôn hiện, kể cả sau khi đã nạp dữ liệu — bấm thêm được bất cứ lúc nào), ví dụ:
 
 ```
-docs/executions/customers/run_1785700456/execution_report.md
-docs/executions/customers/retest_1785700999/retest_report.md
+docs/executions/customers/web/run_1785700456/execution_report.md
+docs/executions/customers/web/retest_1785700999/retest_report.md
 traceability_matrix.md
 ```
 

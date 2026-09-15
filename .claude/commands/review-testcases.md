@@ -41,7 +41,7 @@ skills:
 ## Các bước thực hiện
 
 ### Bước 1: Đọc Input
-1. Đọc file TC, xác định format và số lượng
+1. Đọc file TC, xác định format và số lượng. File **index** `test_cases_<module>.md` → theo `## Bản đồ tài liệu` đọc các file nền tảng (index không chứa dòng TC); chấm riêng từng nền tảng khi chúng khác người viết/khác độ phủ
 2. Đọc requirements (nếu có)
 
 ### Bước 2: Review Từng TC

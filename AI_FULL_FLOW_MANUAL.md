@@ -3,6 +3,8 @@
 > Quy trình đầy đủ dùng AI cho **Manual Testing**, từ hệ thống chưa có gì → tài liệu → test cases → chạy tay → bug report → retest → ma trận truy vết → báo cáo release.
 >
 > Áp dụng cho tình huống phổ biến nhất: **hệ thống chỉ có UI, không tài liệu, không bộ test cases**.
+>
+> Hệ thống có thêm **app mobile** hoặc **API** → vẫn đúng các chặng này, mỗi nền tảng một command riêng — xem mục [Ba nền tảng](#ba-nền-tảng--web--mobile--api) ngay dưới.
 
 ---
 
@@ -11,16 +13,19 @@
 ```
 ┌─ CHUẨN BỊ TÀI LIỆU ──────────────────────────────────────────────┐
 │  0. /discover-system                     → bản đồ module + prefix│  1 lần / hệ thống
-│  1. /generate-requirements-from-website  → REQ ID                │  N lần = số module
+│  1. /generate-requirements-from-website  → REQ ID (web)          │  N lần = số module
+│     /generate-requirements-from-mobile   → REQ ID (app)          │  × số nền tảng
+│     /generate-requirements-from-api      → REQ ID (API)          │
 └──────────────────────────────────────────────────────────────────┘
                                   ↓
 ┌─ SINH & KIỂM TEST CASES ─────────────────────────────────────────┐
-│  2. /generate-testcases-manual-rbt       → TC có cột REQ ID      │  N lần = số module
+│  2. /generate-testcases-manual-rbt       → TC web · TC mobile    │  N lần = số module
+│     /generate-testcases-api              → TC API                │
 │  3. /review-testcases                    → chấm rubric, lấp gap  │
 └──────────────────────────────────────────────────────────────────┘
                                   ↓
 ┌─ THỰC THI & XỬ LÝ LỖI ───────────────────────────────────────────┐
-│  4. /execute-test-cases                  → chạy tay, chấm P/F/B/S│  Mỗi đợt kiểm thử
+│  4. /execute-test-cases                  → chạy tay (web)        │  Mỗi đợt kiểm thử
 │  5. /analyze-test-report                 → gom nhóm root cause   │
 │     /create-bug-report                   → bug report chuẩn      │
 │     /retest-fixed-bugs   ←──── dev fix ───┘  → FIXED? regression?│  ↻ lặp tới khi hết bug
@@ -41,6 +46,24 @@
 
 ---
 
+## Ba nền tảng — Web · Mobile · API
+
+Khám phá **một lần** cho cả hệ thống, sau đó mỗi module chạy command của **từng nền tảng** nó có. Đầu ra tự vào tầng `web/` · `mobile/` · `api/` của **cùng** thư mục module — chung prefix, chung dải REQ ID và TC ID (CLAUDE.md mục 6b).
+
+| Chặng | Web | Mobile (Android / iOS) | API |
+|---|---|---|---|
+| 0 · Khám phá | `/discover-system` | `/discover-system` | `/discover-system` |
+| 1 · Requirements | `/generate-requirements-from-website` | `/generate-requirements-from-mobile` | `/generate-requirements-from-api` |
+| 2 · Test cases | `/generate-testcases-manual-rbt` | `/generate-testcases-manual-rbt` — TC gắn `@Android` / `@iOS` | `/generate-testcases-api` |
+| 3 · Review TC | `/review-testcases` | `/review-testcases` | `/review-testcases` |
+| 4 · Chạy tay | `/execute-test-cases` | ⚠️ chưa có — chạy bằng automation | ⚠️ chưa có — chạy bằng automation |
+| 5 · Bug · retest | `/create-bug-report` · `/retest-fixed-bugs` | `/create-bug-report` (retest ⚠️ chưa có) | `/create-bug-report` (retest ⚠️ chưa có) |
+| 6–7 · RTM · báo cáo | `/generate-traceability-matrix` · `/generate-test-summary-report` — gộp mọi nền tảng, độ phủ tính riêng từng nền tảng | ← | ← |
+
+> **Thứ tự nên chạy ở chặng 1:** web → mobile → API. Mặt có giao diện cho tên nghiệp vụ; lượt sau đối chiếu với REQ đã có — rule chạy giống nhau thì REQ được chuyển lên index `requirements_<module>.md` (giữ nguyên mã), rule chạy khác thì tách REQ riêng kèm `AMB` hỏi PO.
+
+---
+
 ## Chặng 0 — Khám phá hệ thống
 
 > **Chạy 1 lần cho cả hệ thống.** Trả lời câu hỏi: *"hệ thống này có những module nào?"*
@@ -51,7 +74,7 @@
 
 📋 Prompt mẫu: [`prompts/prompt_00_discover_system.txt`](prompts/prompt_00_discover_system.txt)
 
-**Cần chuẩn bị:** URL · tài khoản (càng nhiều role càng tốt) · tài liệu sẵn có nếu QA đưa được · môi trường có dùng chung không.
+**Cần chuẩn bị:** URL web · file app hoặc package id + thiết bị (nếu có app) · URL/file tài liệu API — Swagger, Scalar, Postman, `.docx` (nếu có API) · tài khoản (càng nhiều role càng tốt) · tài liệu sẵn có nếu QA đưa được · môi trường có dùng chung không · QA có được gọi API trực tiếp không.
 
 **AI tự chọn mode** — bạn không cần khai:
 
@@ -61,26 +84,27 @@
 | URL + tài liệu (kể cả chỉ một phần) | **HYBRID** |
 | Chưa có account, chỉ có tài liệu | **DOC** |
 
-AI công bố mode ở câu đầu tiên — sai thì chặn ngay lúc đó.
+AI tự nhận luôn hệ thống có **mấy mặt** (web · app · API) từ những gì bạn đưa, và công bố cả mode lẫn mặt ở câu đầu tiên — sai thì chặn ngay lúc đó.
 
 **⏸️ Checkpoint** — AI dừng, hỏi 3 câu. Câu quan trọng nhất: *"có module nào tôi không thấy được vì thiếu quyền / nằm sâu trong menu / chỉ vào được bằng URL?"* — trả lời ở đây rẻ hơn nhiều so với bổ sung sau.
 
 **Đầu ra:**
 ```
 docs/requirements/README.md                    ← danh mục, mọi module đang ⬜
-docs/requirements/_discovery/system_map.md     ← bản đồ (tách modules/ nếu > 8 module)
+docs/requirements/_discovery/system_map.md     ← bản đồ web + app (tách modules/ nếu > 8 module)
+docs/requirements/_discovery/api_map.md        ← bản đồ API — khi có spec
 docs/requirements/_discovery/doc_inventory.md  ← chỉ khi có tài liệu
 ```
 
 > ⚠️ Chặng này **không sinh REQ ID**, chỉ cấp **prefix** (`CUST`, `PRJ`…). Cấp số REQ khi chưa mở form là chắc chắn phải đánh lại.
 
-**Phát hiện sót module về sau:** nói thẳng *"còn thiếu module Báo cáo, vào bằng `/admin/reports`"* → AI chạy **mode ADD**, chỉ xử lý module đó. Muốn rà lại toàn bộ → *"rà lại xem có gì mới"* → **mode DELTA**.
+**Phát hiện sót module về sau:** nói thẳng *"còn thiếu module Báo cáo, vào bằng `/admin/reports`"* → AI chạy **mode ADD**, chỉ xử lý module đó. Hệ thống đã có bản đồ, nay mới có app hoặc Swagger → *"hệ thống còn có app mobile"* → cũng **mode ADD**, chỉ khám phá mặt mới, giữ nguyên prefix. Muốn rà lại toàn bộ → *"rà lại xem có gì mới"* → **mode DELTA**.
 
 ---
 
 ## Chặng 1 — Sinh Requirements
 
-> **Chạy lặp, mỗi lần một module**, theo thứ tự đã chốt ở chặng 0.
+> **Chạy lặp, mỗi lần một module × một nền tảng**, theo thứ tự đã chốt ở chặng 0.
 
 ```
 /generate-requirements-from-website
@@ -90,6 +114,8 @@ docs/requirements/_discovery/doc_inventory.md  ← chỉ khi có tài liệu
 
 | Biến thể | Command | Prompt mẫu |
 |---|---|---|
+| Module là **app mobile** (hoặc thêm mặt app cho module web đã có) | `/generate-requirements-from-mobile` — mỗi nền tảng một lượt, ghi vào `<module>/mobile/`, chung dải REQ với web | [`prompt_30`](prompts/prompt_30_generate_requirements_from_mobile.txt) |
+| Module có **mặt API** — Swagger / Scalar / Postman / tài liệu API `.docx` | `/generate-requirements-from-api` — ghi vào `<module>/api/`, chung prefix và dải REQ với web | [`prompt_29`](prompts/prompt_29_generate_requirements_from_api.txt) |
 | Có ticket Jira thay vì UI | `/analyze-requirement-document` | [`prompt_20`](prompts/prompt_20_analyze_requirement_document.txt) |
 | Tài liệu đã có, ticket sửa đổi | `/update-requirements-from-ticket` | [`prompt_21`](prompts/prompt_21_update_requirements_from_ticket.txt) |
 | Tài liệu vừa đổi, **bộ TC đã có cần đồng bộ** | `/update-testcases-from-impact` | [`prompt_27`](prompts/prompt_27_update_testcases_from_impact.txt) |
@@ -98,8 +124,10 @@ docs/requirements/_discovery/doc_inventory.md  ← chỉ khi có tài liệu
 
 **Đầu ra:**
 ```
-docs/requirements/<module>/requirements_<module>.md   ← tên file BẤT BIẾN
-docs/requirements/<module>/evidence/*.png
+docs/requirements/<module>/requirements_<module>.md          ← INDEX, tên file BẤT BIẾN — REQ dùng chung · Bản đồ tài liệu
+docs/requirements/<module>/web/requirements_<module>_web.md   ← REQ chỉ áp web
+docs/requirements/<module>/web/evidence/*.png
+  (app mobile → mobile/ · API → api/ — cùng thư mục module, chung dải REQ)
 ```
 Cộng thêm: `README.md` cập nhật `Trạng thái recon` ⬜ → ✅.
 
@@ -127,20 +155,25 @@ Cộng thêm: `README.md` cập nhật `Trạng thái recon` ⬜ → ✅.
 
 **Đầu ra tương ứng:** FULL RBT / QUICK → TC chi tiết có steps. CHECKLIST → danh sách tick, **không** có steps.
 
+**Theo nền tảng:**
+- **Web · Mobile** — cùng 3 mode trên. REQ dùng chung sinh **mỗi nền tảng một TC**, cùng `REQ ID`; TC mobile gắn tag `@Android` / `@iOS`
+- **API** — dùng `/generate-testcases-api` ([`prompt_09`](prompts/prompt_09_generate_api_tests.txt)): tự nhận nguồn URL hay file, kiểm chứng gọi thật, đủ 12 status code + OWASP, ghi vào `<module>/api/`
+
 **Ranh giới:** cần **bộ TC lưu trữ / import Jira / giao cho automation** → QUICK hoặc FULL RBT. Cần **tick tay cho nhanh** → CHECKLIST.
 
 💡 **Khuyến nghị:** module đầu tiên của hệ thống làm bằng **FULL RBT** — nó ép trả lời những câu hỏi nghiệp vụ mà sau này kiểu gì cũng phải hỏi. Các module tương tự sau đó dùng QUICK cho nhanh.
 
 **Quy tắc AI bắt buộc tuân thủ ở chặng này:**
-- **Mở toàn bộ evidence trước khi viết TC** — không đọc ảnh mà viết là bịa
+- **Mở toàn bộ evidence của nền tảng đang sinh TC** (`<module>/<nền-tảng>/evidence/`) trước khi viết TC — không đọc ảnh mà viết là bịa
 - **Ảnh thắng tài liệu** khi hai bên mâu thuẫn
 - Evidence thiếu/cắt cụt → TC bị gắn `@NeedsVerify`, **không suy diễn**
 - **Write-first** — ghi thẳng vào file, không in cả bảng TC ra chat
 
 **Đầu ra:**
 ```
-docs/testcases/<module>/test_cases_<module>.md   ← INDEX, tên file BẤT BIẾN
-docs/testcases/<module>/parts/part_NN_<slug>.md  ← khi > 40 TC
+docs/testcases/<module>/test_cases_<module>.md               ← INDEX, tên file BẤT BIẾN — tổng hợp · Bản đồ tài liệu · coverage
+docs/testcases/<module>/<nền-tảng>/test_cases_<module>_<nền-tảng>.md   ← TC của từng nền tảng: web · mobile · api
+docs/testcases/<module>/<nền-tảng>/parts/part_NN_<nền-tảng>_<slug>.md  ← khi file nền tảng > 40 TC
 docs/checklists/checklist_<loại>_<module>.md     ← nếu chạy mode CHECKLIST
 ```
 
@@ -177,10 +210,13 @@ Nói *"sửa luôn"* / *"cải thiện giùm"* → AI tự chuyển sang **FIX**
 
 **AI làm gì:** mở browser thật qua Playwright MCP → chạy từng bước theo TC → đối chiếu Expected vs Actual → chấm **PASS / FAIL / BLOCKED / SKIPPED** → thu evidence.
 
+> ⚠️ **Chặng này chỉ chạy được TC web.** Đưa file index thì AI chỉ lấy file `web/`. TC `@Android` / `@iOS` / `@API` hiện chưa có workflow chạy tay — chạy bằng automation ([`AI_FULL_FLOW_AUTOMATION.md`](AI_FULL_FLOW_AUTOMATION.md) chặng 1).
+
 **Đầu ra:**
 ```
-docs/executions/<module>/run_<timestamp>/execution_report.md
-docs/executions/<module>/run_<timestamp>/evidence/<TC_ID>_<mô_tả>.png
+docs/executions/<module>/web/run_<timestamp>/execution_report.md
+docs/executions/<module>/web/run_<timestamp>/evidence/<TC_ID>_<mô_tả>.png
+  (mỗi lần chạy thuộc đúng một nền tảng — chạy trên trình duyệt nên là web/)
 ```
 
 Report gồm 6 mục: Tổng kết · Kết quả từng TC · Chi tiết FAIL · TC BLOCKED · **Dữ liệu đã tạo & dọn dẹp** · Đề xuất bước tiếp theo.
@@ -200,12 +236,12 @@ Report gồm 6 mục: Tổng kết · Kết quả từng TC · Chi tiết FAIL �
 | **Nhiều TC FAIL**, chưa rõ nguyên nhân | `/analyze-test-report` | [`prompt_11_analyze_test_report.txt`](prompts/prompt_11_analyze_test_report.txt) | **Chạy cái này trước** — 12 TC FAIL thường chỉ là 2 bug |
 | Đã rõ bug, cần báo cáo | `/create-bug-report` | [`prompt_10_create_bug_report.txt`](prompts/prompt_10_create_bug_report.txt) | Tự lấy evidence từ run vừa rồi, tuỳ chọn đẩy Jira |
 | FAIL vì **TC viết sai**, không phải lỗi hệ thống | `/review-testcases` mode FIX | [`prompt_12_review_testcases.txt`](prompts/prompt_12_review_testcases.txt) | Quay lại chặng 3 |
-| **Dev báo đã fix**, cần xác minh | `/retest-fixed-bugs` | [`prompt_23_retest_fixed_bugs.txt`](prompts/prompt_23_retest_fixed_bugs.txt) | Đóng vòng lặp bug — xem dưới |
+| **Dev báo đã fix**, cần xác minh | `/retest-fixed-bugs` | [`prompt_23_retest_fixed_bugs.txt`](prompts/prompt_23_retest_fixed_bugs.txt) | Đóng vòng lặp bug — xem dưới. Hiện chỉ retest được bug **web**; bug mobile/API xác minh bằng cách chạy lại automation |
 
 **Đầu ra:**
 ```
-docs/executions/<module>/analysis_<timestamp>.md ← gom nhóm theo root cause (nhánh MANUAL)
-docs/bugs/<module>/BUG_<module>_<timestamp>_<TC_ID>.md  ← mỗi bug 1 file, hậu tố TC_ID để nhìn tên biết ngay thuộc TC nào
+docs/executions/<module>/<nền-tảng>/analysis_<timestamp>.md ← gom nhóm theo root cause (nhánh MANUAL)
+docs/bugs/<module>/<nền-tảng>/BUG_<module>_<timestamp>_<TC_ID>.md  ← mỗi bug 1 file, hậu tố TC_ID để nhìn tên biết ngay thuộc TC nào
 ```
 
 > Gom nhóm trước rồi mới viết bug report — đỡ tạo 12 bug trùng nhau cho cùng một nguyên nhân.
@@ -230,7 +266,7 @@ TC FAIL → /create-bug-report → dev fix → /retest-fixed-bugs
 1. **Bug Critical/Major luôn chạy mode FULL** — verify xong phải chạy regression quanh vùng fix. Bản fix làm hỏng chỗ khác là chuyện thường xuyên, không phải ngoại lệ.
 2. **TC regression FAIL = bug MỚI**, tách riêng, link về bug gốc. Gộp vào bug cũ là mất dấu vết nguyên nhân.
 
-**Đầu ra:** `docs/executions/<module>/retest_<timestamp>/retest_report.md` + mục `Lịch sử retest` thêm vào bug gốc.
+**Đầu ra:** `docs/executions/<module>/<nền-tảng>/retest_<timestamp>/retest_report.md` + mục `Lịch sử retest` thêm vào bug gốc.
 
 ---
 
@@ -322,7 +358,10 @@ Cột **`TC cần xử lý`** trong Nhật ký thay đổi của tài liệu req
 |---|---|---|---|
 | 0 | `/discover-system` | [`prompt_00`](prompts/prompt_00_discover_system.txt) | **1 lần** / hệ thống (+ ADD/DELTA khi cần) |
 | 1 | `/generate-requirements-from-website` | [`prompt_01`](prompts/prompt_01_generate_requirements.txt) | **N lần** = số module |
-| 2 | `/generate-testcases-manual-rbt` | [`prompt_02`](prompts/prompt_02_generate_test_cases.txt) | **N lần** = số module |
+| 1" | `/generate-requirements-from-mobile` | [`prompt_30`](prompts/prompt_30_generate_requirements_from_mobile.txt) | **N lần** = số module có mặt app × số nền tảng |
+| 1' | `/generate-requirements-from-api` | [`prompt_29`](prompts/prompt_29_generate_requirements_from_api.txt) | **N lần** = số module có mặt API |
+| 2 | `/generate-testcases-manual-rbt` | [`prompt_02`](prompts/prompt_02_generate_test_cases.txt) | **N lần** = số module (web + mobile) |
+| 2" | `/generate-testcases-api` | [`prompt_09`](prompts/prompt_09_generate_api_tests.txt) | **N lần** = số module có mặt API |
 | 2' | `/generate-checklist-test` | [`prompt_15`](prompts/prompt_15_generate_checklist.txt) | Khi cần checklist tick tay |
 | 3 | `/review-testcases` | [`prompt_12`](prompts/prompt_12_review_testcases.txt) | 1 lần / bộ TC |
 | 4 | `/execute-test-cases` | [`prompt_16`](prompts/prompt_16_execute_test_cases.txt) | Mỗi đợt kiểm thử |
@@ -361,5 +400,5 @@ Xem lại cảnh báo ở chặng 6.
 | [`CLAUDE.md`](CLAUDE.md) | Quy tắc bắt buộc · cấu trúc `docs/` · danh sách đầy đủ workflows |
 | [`README.md`](README.md) | Tổng quan bộ kit · cài đặt |
 | [`SETUP_CLAUDE.md`](SETUP_CLAUDE.md) | Cài Claude Code + Playwright MCP |
-| [`prompts/README.md`](prompts/README.md) | 32 prompt mẫu copy-paste, chia 7 nhóm tra cứu |
+| [`prompts/README.md`](prompts/README.md) | 35 prompt mẫu copy-paste, chia 7 nhóm tra cứu |
 | [`plans/manual/QUICK_START.md`](plans/manual/QUICK_START.md) | Luồng 6 bước AI-RBT bản copy-paste — dùng cho AI agent khác (Codex · Antigravity · Kiro · Cursor) không có slash command của bộ này |

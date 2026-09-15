@@ -7,7 +7,7 @@
 
 # MODE
 [Xoá dòng không dùng:]
-- DOC — dùng lại ảnh trong docs/requirements/<module>/evidence/, không mở browser
+- DOC — dùng lại ảnh trong docs/requirements/<module>/<nền-tảng>/evidence/, không mở browser
 - LIVE — mở browser thật, làm từng việc, chụp ảnh mới bằng dữ liệu mẫu
 
 # TÀI KHOẢN (chỉ Mode LIVE)

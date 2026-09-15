@@ -20,8 +20,10 @@ Thư mục này chứa các prompt mẫu dùng nhanh (copy → paste → gửi) 
 
 | # | File | Command Tương Ứng | Skill Tích Hợp | Mô Tả & Cải Tiến Mới |
 |---|------|-------------------|----------------|----------------------|
-| 00 | `prompt_00_discover_system.txt` | `/discover-system` | `skills-requirements-analyzer` | **[Mới]** Chạy **đầu tiên** khi hệ thống không có tài liệu — crawl navigation, lập bản đồ module, gán prefix, khởi tạo danh mục. 3 modes UI/HYBRID/DOC |
+| 00 | `prompt_00_discover_system.txt` | `/discover-system` | `skills-requirements-analyzer` | **[Mới]** Chạy **đầu tiên** khi hệ thống không có tài liệu — tự nhận diện mặt **web / app mobile / API**, lập bản đồ module, gán prefix chung mọi nền tảng, khởi tạo danh mục. 3 modes UI/HYBRID/DOC |
 | 01 | `prompt_01_generate_requirements.txt` | `/generate-requirements-from-website` | `skills-requirements-analyzer` | Phân tích website/sơ đồ để sinh tài liệu Yêu cầu |
+| 30 | `prompt_30_generate_requirements_from_mobile.txt` | `/generate-requirements-from-mobile` | `skills-requirements-analyzer` · `skills-mobile-debug-agent` | **[Mới]** Sinh REQ cho module trên **app mobile** (Native Android/iOS, Flutter, Hybrid) qua Appium MCP — mỗi nền tảng một lượt, ghi vào `<module>/mobile/`, chung prefix và dải REQ với web/API, xét đủ 8 nhóm yêu cầu riêng mobile |
+| 29 | `prompt_29_generate_requirements_from_api.txt` | `/generate-requirements-from-api` | `skills-requirements-analyzer` | **[Mới]** Sinh REQ cho module **API** từ Swagger UI / Scalar / Redoc / OpenAPI / Postman / tài liệu API `.docx` — kiểm chứng bằng gọi thật, không cần Ticket ID, ghi vào `<module>/api/`, chung prefix và dải REQ với web/mobile cùng nghiệp vụ |
 | 20 | `prompt_20_analyze_requirement_document.txt` | `/analyze-requirement-document` | `skills-requirements-analyzer` | **[Mới]** Phân tích ticket/tài liệu (.docx/.xlsx/.pdf/mockup) → `analysis_<TICKET-ID>.md` kèm REQ ID + Ambiguity/Risk. **KHÔNG** sinh test cases |
 | 21 | `prompt_21_update_requirements_from_ticket.txt` | `/update-requirements-from-ticket` | `skills-requirements-analyzer` | **[Mới]** Delta mode cho requirements — sửa tại chỗ tài liệu module, giữ nguyên REQ ID, ghi Nhật ký thay đổi, xuất **Impact Report** (input cho `prompt_27`) |
 
@@ -45,9 +47,10 @@ Thư mục này chứa các prompt mẫu dùng nhanh (copy → paste → gửi) 
 | 03 | `prompt_03_create_framework_appium.txt` | `/generate-automation-framework` | `skills-framework-architect` | Dựng khung dự án Automation Appium Java (Mobile) |
 | 04 | `prompt_04_generate_script_playwright.txt` | `/generate-automation-from-testcases` | `skills-qa-automation-engineer` | Viết kịch bản tự động Playwright TypeScript theo POM |
 | 04 | `prompt_04_generate_script_selenium.txt` | `/generate-automation-from-testcases` | `skills-qa-automation-engineer` | Viết kịch bản tự động Selenium Java theo POM |
-| 05 | `prompt_05_convert_manual_to_automation.txt` | `/generate-automation-from-testcases` | `skills-qa-automation-engineer` | Chuyển đổi Manual Test Cases sang Automation Script |
-| 26 | `prompt_26_generate_automation_mobile_flow.txt` | `/generate-automation-from-mobile-flow` | `skills-mobile-debug-agent` | **[Mới]** Sinh automation Appium từ flow chạy thật trên device — **Native Android/iOS, Flutter, Hybrid**. Nhận diện loại app trước, thu locator từ UI hierarchy, tách locator theo nền tảng |
-| 09 | `prompt_09_generate_api_tests.txt` | `/generate-api-tests-from-swagger` | `skills-qa-automation-engineer` | **[Nâng cấp mới]** Sinh API tests từ Swagger/OpenAPI cover 12 HTTP Status Codes, OWASP API Security (BOLA/IDOR, Mass Assignment, ReDoS), SLA < 2s & Dynamic Auth Token |
+| 05 | `prompt_05_convert_manual_to_automation.txt` | `/generate-automation-from-testcases` | — (bộ định tuyến) | Chuyển Manual Test Cases sang Automation Script — **tự nhận nền tảng** của file TC (`web/` · `mobile/` · `api/`) rồi chuyển sang `/generate-automation-web` · `-mobile` · `-api` |
+| 26 | `prompt_26_generate_automation_mobile_flow.txt` | `/generate-automation-mobile` | `skills-mobile-debug-agent` | **[Mới]** Sinh automation Appium — **Native Android/iOS, Flutter, Hybrid** — mode TC (có file TC mobile) hoặc FLOW (chỉ có mô tả flow). Nhận diện loại app trước, thu locator từ UI hierarchy, Screen Object tách Android/iOS |
+| 09 | `prompt_09_generate_api_tests.txt` | `/generate-testcases-api` | `skills-requirements-analyzer` | **[Nâng cấp mới]** Sinh **API test cases** từ Swagger UI / Scalar / Redoc / OpenAPI / Postman — tự nhận nguồn URL hay file, kiểm chứng gọi thật, 12 HTTP Status Codes, OWASP API Security (BOLA/IDOR, Mass Assignment, ReDoS). KHÔNG sinh code |
+| 31 | `prompt_31_generate_automation_api.txt` | `/generate-automation-api` | `skills-qa-automation-engineer` | **[Mới]** Sinh automation API **từ file TC API** — REST Assured / Playwright API / Pytest / Supertest, fixture 2 tài khoản BOLA, dọn dữ liệu, attach request/response đã che |
 | 14 | `prompt_14_generate_api_mocks.txt` | `/generate-api-mocks` | `skills-api-mocking` | Sinh API mocks (Playwright route / WireMock) + tests cho edge cases |
 
 ### 🔧 Bảo trì Automation

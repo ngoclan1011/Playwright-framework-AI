@@ -17,7 +17,7 @@
 
 # ===== NẾU CHỌN MANUAL =====
 - Module: [VD: Khách hàng]
-- Report path: [để trống = agent tự glob docs/executions/<module>/run_*/ và retest_*/]
+- Report path: [để trống = agent tự glob docs/executions/<module>/<nền-tảng>/run_*/ và retest_*/]
 - Nguồn TC gốc: [VD: docs/testcases/customers/test_cases_customers.md — cần để phân biệt "bug ứng dụng" với "TC viết sai"]
 
 # TÙY CHỌN

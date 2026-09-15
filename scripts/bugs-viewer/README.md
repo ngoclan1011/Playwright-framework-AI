@@ -2,7 +2,7 @@
 
 Trang web nhỏ gọn để **xem và lọc bug report** — thống kê theo Severity/Priority/Trạng thái, xem evidence, xuất Excel.
 
-Dùng để đọc output của `/create-bug-report` (`docs/bugs/<module>/BUG_*.md`) và danh mục `docs/bugs/README.md`.
+Dùng để đọc output của `/create-bug-report` (`docs/bugs/<module>/<nền-tảng>/BUG_*.md`) và danh mục `docs/bugs/README.md`.
 
 ---
 
@@ -14,7 +14,7 @@ Kéo thả, hoặc bấm **+ Import thư mục** / **+ Import file .md** ở gó
 
 ```
 docs/bugs/README.md              ← danh mục — cho cái nhìn tổng quan ngay cả khi chưa nạp từng bug
-docs/bugs/login/BUG_*.md         ← từng file bug — đầy đủ Steps/Expected/Actual/Evidence/Lịch sử retest
+docs/bugs/login/web/BUG_*.md     ← từng file bug, theo nền tảng web · mobile · api — đầy đủ Steps/Expected/Actual/Evidence/Lịch sử retest
 ```
 
 Cách nhanh nhất: kéo thả **nguyên thư mục `docs/bugs/`** — nạp được cả danh mục lẫn mọi file bug, cả module, cùng lúc.
@@ -80,7 +80,7 @@ Riêng bug **chỉ có tóm tắt** (nạp từ danh mục, chưa có file chi t
 
 ## Evidence (ảnh)
 
-Giống `execution-viewer`: trình duyệt không tự đọc được ảnh trên đĩa khi mở qua `file://`, nên ảnh evidence phải do người dùng kéo thả vào trang (khớp theo **tên file**, không theo đường dẫn). Cách nhanh nhất là kéo thả nguyên thư mục `docs/bugs/` **và** thư mục `docs/executions/<module>/run_*/evidence/` chứa ảnh gốc — bug report không nhân bản ảnh, chỉ link tới `executions/`.
+Giống `execution-viewer`: trình duyệt không tự đọc được ảnh trên đĩa khi mở qua `file://`, nên ảnh evidence phải do người dùng kéo thả vào trang (khớp theo **tên file**, không theo đường dẫn). Cách nhanh nhất là kéo thả nguyên thư mục `docs/bugs/` **và** thư mục `docs/executions/<module>/<nền-tảng>/run_*/evidence/` chứa ảnh gốc — bug report không nhân bản ảnh, chỉ link tới `executions/`.
 
 ---
 

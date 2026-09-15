@@ -407,7 +407,7 @@ gh run view --log-failed
 
 | Tên | Loại | Cách cài | Cần OAuth | Dùng cho command/skill nào |
 |---|---|---|---|---|
-| **Playwright** | Local MCP | `npx @playwright/mcp@latest` | Không | `/execute-test-cases`, `/generate-requirements-from-website`, `/generate-automation-from-ui-flow` |
+| **Playwright** | Local MCP | `npx @playwright/mcp@latest` | Không | `/execute-test-cases`, `/generate-requirements-from-website`, `/generate-automation-web` |
 | **Atlassian** | Connector | Settings → Connectors | Có | `/fetch-jira-requirements`, `/update-requirements-from-ticket`, `skills-jira-integration` |
 | **Slack** | Connector | Settings → Connectors | Có | Gửi report, đọc task, Schedule |
 | **GitHub** | Connector / CLI | Connectors hoặc `gh auth login` | Có | Đọc CI result, tạo issue từ `/create-bug-report` |

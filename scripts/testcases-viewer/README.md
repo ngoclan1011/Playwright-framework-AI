@@ -12,7 +12,7 @@ Dùng để đọc output của các workflow sinh test case trong repo này:
 Mở file [`bundle.html`](bundle.html) bằng trình duyệt (double-click là được) — đây là bản build đã đóng gói toàn bộ HTML/CSS/JS vào 1 file duy nhất, chạy offline.
 
 Sau đó **kéo thả** hoặc bấm **+ Import file .md** để nạp file test cases, ví dụ:
-`docs/testcases/test_cases_login.md`
+`docs/testcases/login/web/test_cases_login_web.md` — file theo nền tảng (`web/` · `mobile/` · `api/`); file index `test_cases_login.md` không chứa dòng TC. Các file nền tảng mang hậu tố riêng nên nạp cùng lúc không đè nhau
 
 > Toàn bộ xử lý chạy trong trình duyệt, không gửi dữ liệu đi đâu. File đã import được lưu vào `localStorage` nên lần mở sau vẫn còn.
 

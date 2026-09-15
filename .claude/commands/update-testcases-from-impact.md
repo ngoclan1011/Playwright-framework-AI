@@ -44,7 +44,7 @@ Hai workflow trả lời **hai câu hỏi khác nhau**. Chạy sai cái là bỏ
 - 🚨 **CẤM sinh lại cả file/module TC.** Chỉ sửa đúng dòng của TC nằm trong delta. Sinh lại là xoá sạch công biên tập tay và các TC bổ sung đã tích luỹ
 - 🚨 **CẤM đổi TC ID, CẤM đánh lại số từ `001`** — TC ID là khoá nối sang automation (`allure.label('testId', ...)`) và RTM. Đứt TC ID là vỡ truy vết cả hai chiều
 - 🚨 **CẤM xoá dòng TC** — chức năng bị gỡ thì đổi trạng thái `🗑️ Deprecated` kèm mã ticket, giữ nguyên dòng (đối xứng quy tắc "KHÔNG xoá dòng REQ" của tầng requirements)
-- 🚨 **CẤM sinh file `_improved` / `_v2` / `_new`** — tên index **bất biến** là `test_cases_<module>.md`. Bản trước khi sửa chuyển vào `archive/test_cases_<module>_vN.md`
+- 🚨 **CẤM sinh file `_improved` / `_v2` / `_new`** — tên index **bất biến** là `test_cases_<module>.md`. Bản trước khi sửa chuyển vào `archive/test_cases_<module>_<nền-tảng>_vN.md`
 - **KHÔNG tự viết TC cho REQ mới (nhóm ➕)** — ngoài phạm vi, route sang `/generate-testcases-manual-rbt` hoặc `/generate-testcases-from-requirements`
 - **KHÔNG sửa TC theo suy đoán từ tên TC** — phải đọc **nội dung REQ sau khi đổi** trong tài liệu requirements. Tên TC không chứa đủ thông tin để biết kỳ vọng mới là gì
 - **KHÔNG bịa mapping REQ ↔ TC.** Không map được thì ghi vào mục "cần xác nhận", KHÔNG đoán rồi sửa nhầm TC
@@ -67,11 +67,11 @@ Hai workflow trả lời **hai câu hỏi khác nhau**. Chạy sai cái là bỏ
 
 | Input | Bắt buộc? | Ghi chú |
 |---|---|---|
-| **Impact Report** | ⭐ Bắt buộc (hoặc thay bằng danh sách REQ dưới) | `docs/requirements/<module>/impact/impact_<TICKET-ID>.md` — do `/update-requirements-from-ticket` ghi ra. Hoặc dán trực tiếp nội dung |
+| **Impact Report** | ⭐ Bắt buộc (hoặc thay bằng danh sách REQ dưới) | `docs/requirements/<module>/impact/impact_<TICKET-ID>.md` — do `/update-requirements-from-ticket` ghi ra, hoặc `impact_spec_<YYYY-MM-DD>.md` do `/generate-requirements-from-api` ghi ra khi spec API đổi phiên bản. Hoặc dán trực tiếp nội dung |
 | **Danh sách REQ đã đổi** | Thay thế cho Impact Report | Khi user tự biết REQ nào đổi: REQ ID + đổi cái gì |
 | **Tài liệu requirements hiện hành** | ⭐ Bắt buộc | `docs/requirements/<module>/requirements_<module>.md` — nguồn sự thật của kỳ vọng **mới** |
-| **File test cases hiện hành** | ⭐ Bắt buộc | `docs/testcases/<module>/test_cases_<module>.md` (+ `parts/` nếu có) |
-| **Evidence của module** | ⭕ Khuyến nghị · ⭐ **Bắt buộc khi ticket chạm V1** | `docs/requirements/<module>/evidence/*.png` — **bắt buộc mở** nếu thay đổi đụng nhãn nguyên văn, bố cục, thứ tự field, giá trị mặc định hoặc định dạng hiển thị (4 nhóm không được suy diễn). Chưa có ảnh mới sau khi đổi → gắn `@NeedsVerify`, KHÔNG sửa theo suy đoán |
+| **File test cases hiện hành** | ⭐ Bắt buộc | Index `docs/testcases/<module>/test_cases_<module>.md` → theo `## Bản đồ tài liệu` mở file nền tảng `<nền-tảng>/test_cases_<module>_<nền-tảng>.md` (+ `parts/` nếu có). REQ đổi khai áp nền tảng nào thì mở **đủ** file của các nền tảng đó |
+| **Evidence của module** | ⭕ Khuyến nghị · ⭐ **Bắt buộc khi ticket chạm V1** | `docs/requirements/<module>/<nền-tảng>/evidence/*.png` — **bắt buộc mở** nếu thay đổi đụng nhãn nguyên văn, bố cục, thứ tự field, giá trị mặc định hoặc định dạng hiển thị (4 nhóm không được suy diễn). Chưa có ảnh mới sau khi đổi → gắn `@NeedsVerify`, KHÔNG sửa theo suy đoán |
 | **RTM** | ⭕ Khuyến nghị | Có sẵn thì map REQ → TC nhanh và chắc hơn nhiều |
 
 > Impact Report ghi `⚠️ chưa rà soát` ở cột TC → **dừng**, báo user chạy `/generate-traceability-matrix` trước. Không có nguồn map thì workflow này chỉ đoán mò.
@@ -152,8 +152,8 @@ Mỗi mục ghi: `file:dòng`, TC ID, **vòng · nhánh**, sửa ô nào, có c�
 
 ### Bước 5: Sửa TC (Mode APPLY — chỉ sau khi user duyệt)
 
-1. **Sao lưu trước khi sửa:** copy bản hiện tại sang `archive/test_cases_<module>_v<N>.md` (`N` = số phiên bản kế tiếp). Đây là bước không được bỏ — sửa tại chỗ mà không sao lưu là mất bản đối chiếu
-2. Sửa **tại chỗ** trong `test_cases_<module>.md` (hoặc `parts/part_NN_*.md` nếu đã tách) — **chỉ chạm đúng ô đã liệt kê** ở Bước 3
+1. **Sao lưu trước khi sửa:** copy bản hiện tại của **từng file nền tảng sắp sửa** sang `archive/test_cases_<module>_<nền-tảng>_v<N>.md` (`N` = số phiên bản kế tiếp). Đây là bước không được bỏ — sửa tại chỗ mà không sao lưu là mất bản đối chiếu
+2. Sửa **tại chỗ** trong file nền tảng `<nền-tảng>/test_cases_<module>_<nền-tảng>.md` (hoặc `<nền-tảng>/parts/part_NN_*.md` nếu đã tách) — **chỉ chạm đúng ô đã liệt kê** ở Bước 3. Bộ TC cũ chưa có tầng nền tảng → sửa trong `test_cases_<module>.md` rồi chuyển một lần theo skill rbt (Quy Tắc Xuất File mục 2)
 3. TC bị gỡ → đổi trạng thái, giữ nguyên dòng và TC ID:
    ```
    | CRM_PRJ_TC_031 | Copy Project | ... | 🗑️ Deprecated — gỡ theo TICKET-123 (2026-08-17) |
@@ -222,8 +222,8 @@ Kiểm đủ 7 mục, thiếu mục nào là chưa xong:
 
 ### Mode APPLY
 - Tất cả output Mode PLAN, cộng thêm:
-  - `test_cases_<module>.md` đã sửa **tại chỗ** (tên file không đổi)
-  - `archive/test_cases_<module>_v<N>.md` — bản trước khi sửa
+  - File nền tảng đã sửa **tại chỗ** (tên file không đổi) · index `test_cases_<module>.md` cập nhật Bản đồ tài liệu + Nhật ký
+  - `archive/test_cases_<module>_<nền-tảng>_v<N>.md` — bản trước khi sửa
   - **Bảng Đối soát loại kiểm thử (4 vòng)** đã cập nhật đúng nhánh bị chạm
   - Nhật ký thay đổi ở cuối file TC
   - `docs/testcases/README.md` đã cập nhật

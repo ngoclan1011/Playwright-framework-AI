@@ -39,7 +39,7 @@ Quy tắc đầy đủ (2 kiểu gộp được phép · bảng CẤM gộp · t
 0. **Chốt độ hạt GỘP / TÁCH** theo tham số truyền vào (mặc định `GỘP`) và nêu ra chat cùng kế hoạch batch. **Chưa chốt thì chưa được ghi dòng TC đầu tiên.**
 1. **Đọc và hiểu requirements** được user cung cấp
    - Requirements đã có REQ ID → dùng nguyên mã; chưa có → agent tự gán `REQ-<MODULE>-<SỐ>`
-2. **Mở TOÀN BỘ evidence** — liệt kê `docs/requirements/<module>/evidence/` và `Read` từng ảnh (Quy Tắc Đối Chiếu Evidence trong skill). **Chưa mở xong thì chưa được ghi dòng TC đầu tiên.** Tài liệu ↔ ảnh mâu thuẫn → **ảnh thắng**, ghi `ASM-XX` và báo user. Vùng không có ảnh → TC gắn `@NeedsVerify`
+2. **Mở TOÀN BỘ evidence** — liệt kê `docs/requirements/<module>/<nền-tảng>/evidence/` và `Read` từng ảnh (Quy Tắc Đối Chiếu Evidence trong skill). **Chưa mở xong thì chưa được ghi dòng TC đầu tiên.** Tài liệu ↔ ảnh mâu thuẫn → **ảnh thắng**, ghi `ASM-XX` và báo user. Vùng không có ảnh → TC gắn `@NeedsVerify`
 3. **Ghi nhận Assumptions:** mọi điểm mơ hồ phải ghi rõ giả định đã dùng (`ASM-XX`) — không đoán ngầm
 4. **Xác định các luồng chính:** Happy Path, Negative Path, Boundary Cases, Edge Cases
 4b. **Chấm mức rủi ro rồi lập kế hoạch theo 4 vòng (BẮT BUỘC — TRƯỚC khi ghi dòng TC đầu tiên):**
@@ -101,9 +101,10 @@ Quy tắc đầy đủ (2 kiểu gộp được phép · bảng CẤM gộp · t
 ## Xuất File & Tiến Độ (theo Quy Tắc trong skill)
 
 - ⚠️ **Trước batch đầu tiên:** kiểm tra `docs/testcases/README.md` — chưa tồn tại (dự án mới) thì **tạo file danh mục** với bảng rỗng. Ghi xong TC thì bổ sung/cập nhật dòng của module vào đó
-- **Write-first:** ghi TC thẳng vào `docs/testcases/<module>/test_cases_<module>.md` sau mỗi batch. **KHÔNG** in toàn bộ bảng TC ra chat
+- **Write-first:** ghi TC thẳng vào **file nền tảng** `docs/testcases/<module>/<nền-tảng>/test_cases_<module>_<nền-tảng>.md` sau mỗi batch; index `test_cases_<module>.md` chỉ giữ tổng hợp + `## Bản đồ tài liệu` + Bảng Đối Soát Coverage (skill rbt — Quy Tắc Xuất File mục 2 & 4). **KHÔNG** in toàn bộ bảng TC ra chat
+- **Nền tảng nào:** REQ ở file `web/` → TC web · REQ ở `mobile/` → TC mobile · REQ dùng chung ở index → **mỗi nền tảng nó khai một TC**, cùng `REQ ID`. User chỉ định một nền tảng thì chỉ sinh cho nền tảng đó và ghi rõ nền tảng còn thiếu ở coverage
 - Chat chỉ hiện: kế hoạch batch (đầu) → dòng tiến độ mỗi batch → Bảng Đối Soát Coverage + tóm tắt đường dẫn file (cuối)
-- **Tách file khi vượt ngưỡng** (>40 TC ở độ hạt TÁCH · >50 TC ở độ hạt GỘP) → `<module>/parts/part_01_<slug>.md`, `part_02_...` cắt tại ranh giới nhóm chức năng; có ≥2 part thì `test_cases_<module>.md` trở thành **index** (giữ nguyên tên, KHÔNG đổi thành `*_index.md`)
+- **Tách file khi vượt ngưỡng** — đếm theo **từng nền tảng** (>40 TC ở độ hạt TÁCH · >50 TC ở độ hạt GỘP) → `<module>/<nền-tảng>/parts/part_01_<nền-tảng>_<slug>.md`, `part_02_...` cắt tại ranh giới nhóm chức năng; `test_cases_<module>.md` **luôn là index** (giữ nguyên tên, KHÔNG đổi thành `*_index.md`)
 - **Chạy thẳng hết mọi batch trong 1 lượt** — không dừng hỏi "có tiếp tục không"
 - Dự kiến **>30 TC** → tạo `task.md` (hoặc dùng task list của Claude Code) và cập nhật sau mỗi batch
 

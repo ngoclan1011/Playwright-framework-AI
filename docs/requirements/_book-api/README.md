@@ -113,10 +113,10 @@ docs/
 
 | Tình huống | Workflow | Ghi vào đâu |
 |---|---|---|
-| Sinh REQ chi tiết cho 1 module API | `/analyze-requirement-document` với spec đã snapshot | `_book-api/<module>/requirements_<module>.md` + cập nhật bảng mục 1 |
-| Sinh API test cases | `/generate-api-tests-from-swagger` (Mode SPEC) | `docs/testcases/_book-api/<module>/` |
-| Sinh cả automation script | `/generate-api-tests-from-swagger` (Mode FULL) | Như trên + source code |
-| Spec đổi phiên bản | Snapshot spec mới vào `_discovery/sources/`, so sánh với bản cũ | Nhật ký khám phá ở `api_map.md` |
+| Sinh REQ chi tiết cho 1 module API | `/generate-requirements-from-api <module>` — đọc `api_map.md` + spec đã snapshot, không cần Ticket ID | `_book-api/<module>/requirements_<module>.md` + cập nhật bảng mục 1 |
+| Sinh API test cases | `/generate-testcases-api` — **sau** khi module đã có REQ | `docs/testcases/_book-api/<module>/api/` |
+| Sinh automation script | `/generate-automation-api` — từ file TC API | Source code + `reports/` |
+| Spec đổi phiên bản | `/generate-requirements-from-api <module>` — tự phát hiện `sha256` khác snapshot, chạy delta | Snapshot mới ở `_discovery/sources/` · Nhật ký khám phá ở `api_map.md` · Impact Report `impact_spec_<ngày>.md` |
 | Báo lỗi bảo mật F-01…F-07 | `/create-bug-report` | `docs/bugs/_book-api/<module>/` |
 
 **Thứ tự đề xuất:** `AUTH → USER → BOOK → CAT → PROMO → FILE → ADDR → SYS`
@@ -128,4 +128,5 @@ docs/
 
 | Ngày | Thay đổi |
 |---|---|
+| 2026-09-15 | Sửa mục 6: sinh REQ cho module API chuyển sang `/generate-requirements-from-api` — route cũ `/analyze-requirement-document` bị Bước 0 của nó chặn (spec không có Ticket ID). Luật đã đưa ngược vào skill `skills-requirements-analyzer` mục 3.4 và command mới |
 | 2026-08-14 | Khởi tạo danh mục hệ thống `BK`. Lập bản đồ 35 endpoint / 8 module bằng parse spec + 20 request kiểm chứng. Ghi nhận 15 phát hiện (3 🔴) và 10 ambiguity. **Chưa sinh REQ nào** — chờ chốt AMB-BK-01 và AMB-BK-02 |
