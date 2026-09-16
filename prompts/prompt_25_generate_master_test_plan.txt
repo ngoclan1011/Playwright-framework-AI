@@ -1,49 +1,18 @@
 /generate-master-test-plan
 
-# CONTEXT
-- Mốc: [VD: Release v2.4 / Sprint 12]
-- Module trong phạm vi: [VD: Khách hàng, Đăng nhập, Dự án]
+# CÁCH 1 — ĐIỀN PHIẾU (khuyến nghị)
+1. Mở plans/master-test-plan/test_plan.config.yaml và điền phần sau dấu hai chấm
+   (xem bản đã điền đủ để tham khảo: plans/master-test-plan/test_plan.template.yaml)
+   Chỉ nhóm Mốc và Phạm vi là bắt buộc — chú thích cạnh mỗi ô ghi giá trị hợp lệ
+2. Chưa có thông tin → để trống. Agent ghi ❓ vào plan, KHÔNG bịa
+   Đã quyết định là không → ghi "không"
+   Ngày ghi NGÀY-THÁNG-NĂM, VD 17-09-2026
+3. Gửi đúng dòng lệnh ở trên — agent tự đọc phiếu
 
-# NGOÀI PHẠM VI (quan trọng nhất — đừng để trống)
-[Ghi rõ cái gì KHÔNG kiểm thử đợt này và ai chịu trách nhiệm:]
-- [VD: Hiệu năng/tải — đội Hạ tầng, đợt sau]
-- [VD: Pentest bảo mật — thuê ngoài]
-- [VD: Module Kế toán — không đổi ở release này]
-
-# LỊCH & MỐC
-[Chưa có thì ghi "chưa chốt" — agent sẽ để ❓, KHÔNG bịa ngày:]
-- Hoàn tất viết TC: [ngày]
-- Bắt đầu thực thi: [ngày]
-- Code freeze: [ngày]
-- Release dự kiến: [ngày]
-
-# NHÂN LỰC
-[Chưa có thì ghi "chưa chốt":]
-- QA Lead: [tên]
-- Tester: [tên — module phụ trách]
-
-# MÔI TRƯỜNG
-- Môi trường test: [VD: Staging]
-- Dùng chung với đội khác? [Có / Không]
-- Ai dựng, khi nào sẵn sàng: [VD: DevOps — trước 20/08]
-
-# LOẠI TEST TRONG PHẠM VI
-[Đánh dấu cái đội này làm:]
-- [ ] Kiểm thử chức năng
-- [ ] Regression
-- [ ] Retest bug
-- [ ] Tích hợp cross-module
-- [ ] UAT
-- [ ] Hiệu năng
-- [ ] Bảo mật
-
-# TIÊU CHÍ EXIT
-[Xoá dòng không dùng:]
-- Dùng bộ mặc định của skill (khớp với /generate-test-summary-report)
-- Dự án có bộ riêng: [dán vào đây]
+# CÁCH 2 — KHÔNG ĐIỀN PHIẾU
+Gửi lệnh kèm tên mốc, agent sẽ hỏi một lượt theo đúng các nhóm của phiếu rồi tự ghi vào test_plan.config.yaml:
+- Mốc: [VD: Release 2.0]
 
 # GHI CHÚ
-- Agent tự đọc docs/requirements/README.md để lấy danh sách module, trạng thái recon, ambiguity treo
-- Thông tin nào chưa có thì agent để ❓ và liệt kê ở đầu tài liệu — KHÔNG điền số cho đủ chỗ
-- Đây là tài liệu quản lý, KHÔNG sinh test scenario (việc đó là /generate-application-test-plan)
-- URL và tài khoản để ở .env, KHÔNG ghi vào plan
+- Agent tự đọc docs/ cho phần suy ra được (module, nền tảng, độ phủ, môi trường đã khảo sát, vùng đã loại) — không cần khai lại
+- URL và tài khoản để ở .env, KHÔNG ghi vào phiếu

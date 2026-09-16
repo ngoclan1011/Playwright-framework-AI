@@ -941,7 +941,7 @@ Chia thành User Stories / Use Cases, **mỗi yêu cầu 1 dòng trong bảng c�
 | REQ ID | Tên yêu cầu | Mô tả | Acceptance Criteria | Trạng thái | Cập nhật lần cuối | Nguồn |
 |---|---|---|---|---|---|---|
 | REQ-LOGIN-01 | Đăng nhập bằng email | Là người dùng, tôi muốn... | Nhập đúng email+password → vào Dashboard | 🟢 | — | UI thực tế / AC#1 |
-| REQ-LOGIN-02 | Khóa account sau 5 lần sai | ... | ... | 🟡 | 2026-08-10 · ABC-123 | AC#3 |
+| REQ-LOGIN-02 | Khóa account sau 5 lần sai | ... | ... | 🟡 | 10-08-2026 · ABC-123 | AC#3 |
 
 **Bảng mã trạng thái REQ:**
 
@@ -1016,7 +1016,7 @@ Module không có tài liệu nào → ghi một dòng: *"Không có tài liệu
 | Mã | Câu hỏi | Nguy cơ | Mức độ | Assumption tạm | Trạng thái | Kết luận |
 |---|---|---|---|---|---|---|
 | AMB-04 | Visible Tabs vs quyền khách hàng, cái nào ưu tiên? | ... | 🔴 | Visible Tabs thắng | ❓ Chờ trả lời | — |
-| AMB-02 | Deadline có được sớm hơn Start Date? | ... | 🔴 | Không validate | ✅ Đã trả lời 2026-08-10 | PO xác nhận là lỗi → sinh REQ-PRJ-79 |
+| AMB-02 | Deadline có được sớm hơn Start Date? | ... | 🔴 | Không validate | ✅ Đã trả lời 10-08-2026 | PO xác nhận là lỗi → sinh REQ-PRJ-79 |
 
 **Bảng mã trạng thái AMB:**
 
@@ -1061,10 +1061,10 @@ Kèm theo bảng trên, **BẮT BUỘC** có đủ 4 phần:
 
 | Ngày | Nguồn | REQ ảnh hưởng | Loại | Tóm tắt thay đổi | TC cần xử lý |
 |---|---|---|---|---|---|
-| 2026-08-15 | ABC-140 | REQ-PRJ-58 → 62 | 🔴 Bỏ | Gỡ chức năng Copy Project khỏi phạm vi | TC-PRJ-31 → archive |
-| 2026-08-10 | ABC-123 | REQ-PRJ-42 | 🟡 Sửa | Deadline chuyển thành bắt buộc phải sau Start Date | TC-PRJ-18, TC-PRJ-19 → review |
-| 2026-08-10 | ABC-123 | REQ-PRJ-79 | 🟢 Thêm | Bổ sung field Priority cho dự án | — (viết TC mới) |
-| 2026-08-02 | UI recon | REQ-PRJ-01 → 65 | 🟢 Thêm | Khởi tạo tài liệu từ khảo sát UI thực tế | — |
+| 15-08-2026 | ABC-140 | REQ-PRJ-58 → 62 | 🔴 Bỏ | Gỡ chức năng Copy Project khỏi phạm vi | TC-PRJ-31 → archive |
+| 10-08-2026 | ABC-123 | REQ-PRJ-42 | 🟡 Sửa | Deadline chuyển thành bắt buộc phải sau Start Date | TC-PRJ-18, TC-PRJ-19 → review |
+| 10-08-2026 | ABC-123 | REQ-PRJ-79 | 🟢 Thêm | Bổ sung field Priority cho dự án | — (viết TC mới) |
+| 02-08-2026 | UI recon | REQ-PRJ-01 → 65 | 🟢 Thêm | Khởi tạo tài liệu từ khảo sát UI thực tế | — |
 
 **Quy tắc ghi Nhật ký:**
 - **Mọi** thay đổi đều phải có dòng — kể cả khi chỉ sửa câu chữ mà không đổi hành vi (ghi loại `✏️ Biên tập`)
@@ -1170,7 +1170,7 @@ Evidence là **nguồn sự thật** cho mọi workflow phía sau (`/generate_te
 - **Ghi vị trí nguồn cụ thể** trong cột `Nguồn`, đủ để người review mở đúng chỗ mà đối chiếu:
   ```
   ✅ Ticket ABC-123 · AC#4          ✅ field_spec.xlsx · sheet "Fields" · dòng 12
-  ✅ Comment của PO ngày 2026-07-15  ❌ "theo tài liệu"   ❌ "trong ticket"
+  ✅ Comment của PO ngày 15-07-2026  ❌ "theo tài liệu"   ❌ "trong ticket"
   ```
 - **KHÔNG bỏ qua comments** — comment thường là quyết định mới nhất và **đè lên** phần mô tả gốc.
 - **Xung đột giữa các nguồn KHÔNG được tự giải quyết im lặng** — luôn thành `AMB-XX`, kể cả khi đã áp thứ tự ưu tiên ở mục 3.2 Bước 3.

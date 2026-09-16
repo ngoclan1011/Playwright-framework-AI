@@ -46,7 +46,7 @@ Sử dụng skill này khi:
 - **Test case liên quan:** <TC ID hoặc test file path>
 - **REQ ID liên quan:** <mã REQ — dùng để chọn phạm vi regression khi retest>
 - **Test data đã dùng:** <email/username/id — traceable>
-- **Ngày phát hiện:** <YYYY-MM-DD>
+- **Ngày phát hiện:** <DD-MM-YYYY>
 
 ## Steps to Reproduce
 1. ...
@@ -133,13 +133,13 @@ Danh mục là **điểm vào tầng bug** và cũng là file `scripts/bugs-view
 | Hệ thống | <tên + URL> |
 | Quy ước mã bug | `BUG_<module>_<timestamp>_<TC_ID>` |
 | Đường dẫn file | `docs/bugs/<module>/<nền-tảng>/BUG_<module>_<timestamp>_<TC_ID>.md` |
-| Ngày cập nhật | <YYYY-MM-DD> |
+| Ngày cập nhật | <DD-MM-YYYY> |
 
 ## 1. Danh mục bug
 
 | Mã bug | Module | Nền tảng | Tiêu đề ngắn | Severity | Priority | Trạng thái | TC liên quan | Ngày phát hiện |
 |---|---|---|---|---|---|---|---|---|
-| [BUG_login_1787226514_TC016](login/BUG_login_1787226514_TC016.md) | `LOGIN` | Ô Email không giữ giá trị sau khi đăng nhập thất bại | 🟡 Minor | P2 | 🔴 **Đang mở** | `CRM_LOGIN_TC_016` | 2026-08-20 |
+| [BUG_login_1787226514_TC016](login/BUG_login_1787226514_TC016.md) | `LOGIN` | Ô Email không giữ giá trị sau khi đăng nhập thất bại | 🟡 Minor | P2 | 🔴 **Đang mở** | `CRM_LOGIN_TC_016` | 20-08-2026 |
 ```
 
 > ⚠️ **Tên cột là hợp đồng đọc, không phải nhãn trình bày.** `scripts/bugs-viewer` chỉ nhận bảng danh mục khi có **đồng thời** cột `Mã bug` **và** cột `Trạng thái` — thiếu một trong hai (hoặc dịch sang `Bug ID` / `Status`) thì viewer **bỏ toàn bộ bảng**, không báo lỗi gì. Các cột còn lại khớp theo chuỗi con (`Module`, `Tiêu đề`, `Severity`, `Priority`, `TC liên quan`, `Ngày phát hiện`) — thiếu thì chỉ mất cột đó.

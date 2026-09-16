@@ -330,7 +330,7 @@ Agent PHẢI xuất artifact theo cấu trúc sau:
 - **PHẢI ghi vị trí nguồn cụ thể** ở cột `Nguồn`, đủ để người review mở đúng chỗ đối chiếu:
   ```
   ✅ Ticket ABC-123 · AC#4           ✅ field_spec.xlsx · sheet "Fields" · dòng 12
-  ✅ Comment của PO ngày 2026-07-15   ❌ "theo tài liệu"    ❌ "trong ticket"
+  ✅ Comment của PO ngày 15-07-2026   ❌ "theo tài liệu"    ❌ "trong ticket"
   ```
 - **PHẢI đọc related tickets** nếu được reference trong AC
 - **PHẢI khai thác file bảng đính kèm** (`.xlsx`/`.csv`) — nguồn Field Spec / Validation Message / ma trận tốt nhất

@@ -14,7 +14,7 @@
 | Base URL | `https://book.anhtester.com` — 1 server duy nhất, **Production** |
 | Auth | `BearerAuth` — HTTP bearer, JWT **HS256** |
 | Tổng endpoint | **35 operations** / 8 nhóm |
-| Ngày khám phá | 2026-08-14 |
+| Ngày khám phá | 14-08-2026 |
 | Phương pháp | Parse spec + **gọi thật 20 request** để kiểm chứng (không tin spec suông) |
 
 ---
@@ -122,7 +122,7 @@ Cột **Auth** lấy từ `security` của **từng operation**, không phải `
 
 ## 3. Kết quả kiểm chứng bằng gọi thật
 
-20 request thật ngày 2026-08-14. Cột **Spec khai** vs **Thực tế** cho thấy chỗ nào không được tin spec.
+20 request thật ngày 14-08-2026. Cột **Spec khai** vs **Thực tế** cho thấy chỗ nào không được tin spec.
 
 ### 3.1. Phát hiện mức 🔴 — chặn việc viết TC nếu chưa chốt
 
@@ -196,10 +196,10 @@ Cột **Auth** lấy từ `security` của **từng operation**, không phải `
 
 | Ngày | Thay đổi |
 |---|---|
-| 2026-08-14 | Khởi tạo bản đồ. Parse spec `openapi 3.0.0` (35 op / 8 nhóm) + kiểm chứng bằng **20 request thật**. Cấp 8 mã module, mã hệ thống `BK`. Ghi nhận **15 phát hiện** (3 🔴 · 4 🟠 · 4 🟡 · 4 điểm đúng) và **10 ambiguity**. Snapshot spec vào `sources/openapi_2026-08-14.json`. **Chưa cấp mã REQ** — đúng quy tắc tầng khám phá |
+| 14-08-2026 | Khởi tạo bản đồ. Parse spec `openapi 3.0.0` (35 op / 8 nhóm) + kiểm chứng bằng **20 request thật**. Cấp 8 mã module, mã hệ thống `BK`. Ghi nhận **15 phát hiện** (3 🔴 · 4 🟠 · 4 🟡 · 4 điểm đúng) và **10 ambiguity**. Snapshot spec vào `sources/openapi_2026-08-14.json`. **Chưa cấp mã REQ** — đúng quy tắc tầng khám phá |
 
 ### Sự cố trong lúc khám phá
 
 | Ngày | Sự cố | Khắc phục |
 |---|---|---|
-| 2026-08-14 | Khi kiểm chứng BOLA, đã dùng **bản ghi seed có sẵn** `anhtester@example.com` (id `cmiyq38a300027udmc9666cq1`) làm mục tiêu `PATCH` rồi `DELETE` → xoá mất tài khoản gốc của demo | Tạo lại tài khoản cùng `name`/`email`/`phone`/`address`/`avatarUrl`/`isActive`, mật khẩu về mặc định `anhtester.com` (đã kiểm chứng đăng nhập được). **Không khôi phục được:** ID mới `cmssozna6102s7uk1dda2ujja`, các sách thuộc tài khoản cũ nay mang `auth: null`. Đã bổ sung quy tắc chặn vào workflow `/generate-api-tests-from-swagger` mục "Quy tắc dữ liệu test" *(2026-09-15: workflow đó đã tách thành `/generate-testcases-api` + `/generate-automation-api`; bộ luật nay nằm ở skill `skills-requirements-analyzer` mục 3.4.4)* |
+| 14-08-2026 | Khi kiểm chứng BOLA, đã dùng **bản ghi seed có sẵn** `anhtester@example.com` (id `cmiyq38a300027udmc9666cq1`) làm mục tiêu `PATCH` rồi `DELETE` → xoá mất tài khoản gốc của demo | Tạo lại tài khoản cùng `name`/`email`/`phone`/`address`/`avatarUrl`/`isActive`, mật khẩu về mặc định `anhtester.com` (đã kiểm chứng đăng nhập được). **Không khôi phục được:** ID mới `cmssozna6102s7uk1dda2ujja`, các sách thuộc tài khoản cũ nay mang `auth: null`. Đã bổ sung quy tắc chặn vào workflow `/generate-api-tests-from-swagger` mục "Quy tắc dữ liệu test" *(15-09-2026: workflow đó đã tách thành `/generate-testcases-api` + `/generate-automation-api`; bộ luật nay nằm ở skill `skills-requirements-analyzer` mục 3.4.4)* |

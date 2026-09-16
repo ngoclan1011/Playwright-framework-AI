@@ -3,9 +3,9 @@
 | | |
 |---|---|
 | Phiên bản tài liệu | v1.0 |
-| Áp dụng cho phiên bản phần mềm | Perfex CRM — Anh Tester Demo, trạng thái khảo sát ngày **2026-08-18** |
+| Áp dụng cho phiên bản phần mềm | Perfex CRM — Anh Tester Demo, trạng thái khảo sát ngày **18-08-2026** |
 | Đối tượng đọc | **Nhân viên nội bộ** — vai trò `Admin` và `Project Manager` |
-| Ngày cập nhật | 2026-09-09 |
+| Ngày cập nhật | 09-09-2026 |
 | Cấu trúc tài liệu | Biên soạn theo cấu trúc ISO/IEC/IEEE 26514 |
 | Trạng thái | 🟨 Bản **nội bộ** — mục 6 phải gỡ trước khi phát hành ra ngoài |
 
@@ -118,7 +118,7 @@
 ## 4. Câu hỏi thường gặp
 
 **Tôi tích ô "Remember me" rồi mà lần sau vẫn phải đăng nhập lại?**
-Đúng vậy, và **bạn không làm sai gì cả**. Tính năng ghi nhớ đăng nhập hiện **không hoạt động** — đội phát triển đã xác nhận ngày 2026-08-18. Ô này vẫn hiển thị trên màn hình nhưng tích hay không, lần sau bạn vẫn phải nhập lại email và mật khẩu.
+Đúng vậy, và **bạn không làm sai gì cả**. Tính năng ghi nhớ đăng nhập hiện **không hoạt động** — đội phát triển đã xác nhận ngày 18-08-2026. Ô này vẫn hiển thị trên màn hình nhưng tích hay không, lần sau bạn vẫn phải nhập lại email và mật khẩu.
 
 **Đang làm việc thì bị đưa về trang đăng nhập?**
 Mỗi phiên đăng nhập kéo dài **1 giờ**. Hết thời gian đó, mọi trang trong hệ thống đều đưa bạn về trang đăng nhập. Đăng nhập lại là làm việc tiếp được.
@@ -165,12 +165,12 @@ Giao diện hiển thị tiếng Anh; bảng này để bạn dò nhanh.
 
 | Nội dung | Vì sao chưa xác minh | Ảnh hưởng tới tài liệu |
 |---|---|---|
-| Nhận email đặt lại mật khẩu và đặt mật khẩu mới (mục 3.2 bước 4) | `REQ-LOGIN-27` ⚪ — PO chốt bỏ qua luồng gửi mail ngày 2026-08-18 (`AMB-04`), không có ảnh nào chụp được email hay màn hình đặt mật khẩu mới | Bước 4 mô tả kỳ vọng, **chưa chạy thật**. Không viết được các bước sau khi mở email |
+| Nhận email đặt lại mật khẩu và đặt mật khẩu mới (mục 3.2 bước 4) | `REQ-LOGIN-27` ⚪ — PO chốt bỏ qua luồng gửi mail ngày 18-08-2026 (`AMB-04`), không có ảnh nào chụp được email hay màn hình đặt mật khẩu mới | Bước 4 mô tả kỳ vọng, **chưa chạy thật**. Không viết được các bước sau khi mở email |
 | Hộp thoại `Started tasks timers found!` khi đăng xuất lúc còn bộ đếm giờ (mục 3.3) | `REQ-LOGIN-30` — mới đọc được ở mã nguồn, việc kiểm chứng thực tế đã chuyển sang module `TASK` (`AMB-14`) | Không mô tả được các nút trong hộp thoại và hậu quả từng lựa chọn |
 | Đăng xuất trên điện thoại / màn hình nhỏ | `REQ-LOGIN-29` — nhánh mobile chưa recon, chưa có số liệu nào | Tài liệu chỉ đúng cho máy tính màn hình rộng |
 | Thời hạn phiên 1 giờ tính theo cách nào (mục 4) | `AMB-19` 🟡 còn treo — chưa rõ là 1 giờ không hoạt động hay 1 giờ kể từ lúc đăng nhập | Câu trả lời trong FAQ nói chung chung "kéo dài 1 giờ", chưa nói được chính xác cách tính |
 
-**Nguồn ảnh:** 4 ảnh trong `images/` sao chép từ `docs/requirements/login/evidence/` (đợt khảo sát 2026-08-18), đổi tên theo việc.
+**Nguồn ảnh:** 4 ảnh trong `images/` sao chép từ `docs/requirements/login/evidence/` (đợt khảo sát 18-08-2026), đổi tên theo việc.
 
 > ⚠️ Ảnh `dang-xuat-menu-anh-dai-dien.png` chụp màn hình Dashboard nên có kèm số liệu nghiệp vụ của môi trường demo (số tiền, danh sách việc cần làm). Chấp nhận được với bản nội bộ. **Muốn phát hành ra ngoài thì chụp lại ảnh này** trên môi trường dữ liệu mẫu, hoặc cắt chỉ lấy vùng menu ảnh đại diện.
 
@@ -180,4 +180,4 @@ Giao diện hiển thị tiếng Anh; bảng này để bạn dò nhanh.
 
 | Ngày | Phiên bản | Thay đổi |
 |---|---|---|
-| 2026-09-09 | v1.0 | Bản đầu tiên — 3 thủ tục, 6 câu hỏi thường gặp, 4 ảnh. Sinh bằng `/generate-user-guide` Mode DOC từ `requirements_login.md` (43 REQ) và 9 ảnh evidence |
+| 09-09-2026 | v1.0 | Bản đầu tiên — 3 thủ tục, 6 câu hỏi thường gặp, 4 ảnh. Sinh bằng `/generate-user-guide` Mode DOC từ `requirements_login.md` (43 REQ) và 9 ảnh evidence |

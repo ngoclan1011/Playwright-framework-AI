@@ -179,7 +179,7 @@ Một khái niệm — **một** từ, xuyên suốt tài liệu. Chọn từ **
 | Phiên bản tài liệu | v1.0 |
 | Áp dụng cho phiên bản phần mềm | v2.4 |
 | Đối tượng đọc | Nhân viên kinh doanh (role: Sales) |
-| Ngày cập nhật | 2026-09-09 |
+| Ngày cập nhật | 09-09-2026 |
 | Cấu trúc tài liệu | Biên soạn theo cấu trúc ISO/IEC/IEEE 26514 |
 
 ## 1. Trước khi bắt đầu

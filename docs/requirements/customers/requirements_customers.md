@@ -9,7 +9,7 @@
 | **Prefix** | `CUST` |
 | **Route** | `/admin/clients` · `/admin/clients/client` (tạo) · `/admin/clients/client/{id}` (chi tiết/sửa) · `/admin/clients/client/{id}?group=<tab>` · `/admin/clients/import` · `/admin/clients/delete/{id}` |
 | **Nguồn phân tích** | Khảo sát UI thực tế + đọc DOM + tầng network (Playwright MCP, headed 1600×750) |
-| **Ngày phân tích** | 2026-08-14 |
+| **Ngày phân tích** | 14-08-2026 |
 | **Tài khoản dùng khảo sát** | 1 tài khoản duy nhất — "Admin Example", `user-id-2` |
 | **Môi trường dùng chung** | **CÓ** — đã tạo 3 khách hàng thử nghiệm (`13364`, `13365`, `13366`) và **đã xoá sạch**; tổng số bản ghi trở lại đúng **1.571** như trước khi khảo sát |
 | **Tổng số REQ** | **79** |
@@ -56,7 +56,7 @@ Module gồm **4 màn hình chính**:
 
 ## 2. Bản đồ phủ tài liệu
 
-**Không có tài liệu nào cho module này** — toàn bộ 79 REQ sinh từ khảo sát UI thực tế, đọc DOM và quan sát thụ động tầng network ngày 2026-08-14. Không có spec, ticket, file đặc tả trường hay mockup kèm theo.
+**Không có tài liệu nào cho module này** — toàn bộ 79 REQ sinh từ khảo sát UI thực tế, đọc DOM và quan sát thụ động tầng network ngày 14-08-2026. Không có spec, ticket, file đặc tả trường hay mockup kèm theo.
 
 ---
 
@@ -513,4 +513,4 @@ Toàn bộ ảnh chụp full-page, lưu tại [`evidence/`](evidence/).
 
 | Ngày | Nguồn | REQ ảnh hưởng | Loại | Tóm tắt thay đổi | TC cần xử lý |
 |---|---|---|---|---|---|
-| 2026-08-14 | UI recon | REQ-CUST-01 → 79 | 🟢 Thêm | Khởi tạo tài liệu từ khảo sát UI thực tế, đọc DOM và tầng network. 79 REQ · 10 Story · 13 AMB (3 mức 🔴) · 7 RISK · 21 ảnh evidence. Đã tạo 3 khách hàng thử nghiệm và xoá sạch sau khi khảo sát | — (viết TC mới) |
+| 14-08-2026 | UI recon | REQ-CUST-01 → 79 | 🟢 Thêm | Khởi tạo tài liệu từ khảo sát UI thực tế, đọc DOM và tầng network. 79 REQ · 10 Story · 13 AMB (3 mức 🔴) · 7 RISK · 21 ảnh evidence. Đã tạo 3 khách hàng thử nghiệm và xoá sạch sau khi khảo sát | — (viết TC mới) |

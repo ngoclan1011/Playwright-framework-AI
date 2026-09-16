@@ -24,11 +24,16 @@
 │  3. /review-testcases                    → chấm rubric, lấp gap  │
 └──────────────────────────────────────────────────────────────────┘
                                   ↓
+┌─ KẾ HOẠCH CHÍNH THỨC (tuỳ chọn) ─────────────────────────────────┐
+│  ⊹ /generate-master-test-plan            → phạm vi + tiêu chí exit│  1 lần / đợt — khi PM/khách cần
+└──────────────────────────────────────────────────────────────────┘
+                                  ↓
 ┌─ THỰC THI & XỬ LÝ LỖI ───────────────────────────────────────────┐
 │  4. /execute-test-cases                  → chạy tay (web)        │  Mỗi đợt kiểm thử
 │  5. /analyze-test-report                 → gom nhóm root cause   │
 │     /create-bug-report                   → bug report chuẩn      │
 │     /retest-fixed-bugs   ←──── dev fix ───┘  → FIXED? regression?│  ↻ lặp tới khi hết bug
+│  ⊹ /generate-test-progress-report        → tiến độ kỳ này        │  Hằng tuần — khi có plan chính thức
 └──────────────────────────────────────────────────────────────────┘
                                   ↓
 ┌─ CHỨNG MINH ĐỘ PHỦ ──────────────────────────────────────────────┐
@@ -36,11 +41,12 @@
 └──────────────────────────────────────────────────────────────────┘
                                   ↓
 ┌─ BÁO CÁO & QUYẾT ĐỊNH ───────────────────────────────────────────┐
-│  7. /generate-test-summary-report        → go / no-go có căn cứ  │  Mỗi mốc release
+│  7. /generate-test-summary-report        → báo cáo tổng kết đợt  │  Mỗi mốc release
+│                                            + có nên release không│
 └──────────────────────────────────────────────────────────────────┘
 ```
 
-> 📋 **Đợt kiểm thử có kế hoạch chính thức** (khách hàng/PM yêu cầu tài liệu duyệt) → chạy `/generate-master-test-plan` **trước chặng 4**. Nó công bố tiêu chí exit mà chặng 7 sẽ chấm lại.
+> 📋 **Bước ⊹ chỉ chạy khi đợt kiểm thử cần kế hoạch chính thức** (khách hàng/PM yêu cầu tài liệu duyệt). Nó công bố phạm vi và tiêu chí exit **trước chặng 4**, chặng 7 chấm lại đúng bộ đó — xem mục [Kế hoạch kiểm thử chính thức](#kế-hoạch-kiểm-thử-chính-thức--trước-chặng-4-tuỳ-chọn).
 
 **Mắt xích giữ cả chuỗi là `REQ ID`.** Chặng 1 sinh ra → chặng 2 ghi vào cột `REQ ID` của mỗi TC → chặng 6 dùng để tính coverage. Đứt ở đâu thì từ đó trở đi không chứng minh được "đã test đủ".
 
@@ -200,6 +206,83 @@ Nói *"sửa luôn"* / *"cải thiện giùm"* → AI tự chuyển sang **FIX**
 
 ---
 
+## Kế hoạch kiểm thử chính thức — trước chặng 4 (tuỳ chọn)
+
+```
+/generate-master-test-plan
+```
+
+📋 Prompt mẫu: [`prompts/prompt_25_generate_master_test_plan.txt`](prompts/prompt_25_generate_master_test_plan.txt)
+
+📝 Phiếu cần điền: [`plans/master-test-plan/test_plan.config.yaml`](plans/master-test-plan/test_plan.config.yaml) — tên ô tiếng Việt, chú thích ghi sẵn giá trị hợp lệ và ô nào bắt buộc
+
+📘 Bản mẫu đã điền đủ (hệ thống hư cấu): phiếu [`test_plan.template.yaml`](plans/master-test-plan/test_plan.template.yaml) → plan [`test_plan_release_example.md`](plans/master-test-plan/test_plan_release_example.md)
+
+Sinh **Master Test Plan** — tài liệu quản lý để PM/khách hàng **duyệt trước** khi bắt đầu chạy test: kiểm soát tài liệu · mục tiêu & cơ sở kiểm thử · phạm vi · cấp độ, loại, mức độc lập kiểm thử · **kiểm thử phi chức năng** · **chiến lược tự động hoá** · tiêu chí vào/ra · môi trường · **dữ liệu kiểm thử** · **quản lý lỗi** (quy trình, Severity/Priority, thời hạn xử lý) · nhân lực · lịch · **ước lượng công sức & ngân sách** · rủi ro dự án và sản phẩm. Bám cấu trúc ISO/IEC/IEEE 29119-3 và phủ đủ nội dung điển hình của test plan theo **ISTQB CTFL v4.0 mục 5.1.1**. **Không** sinh test scenario, **không** sinh TC.
+
+| Có cần chạy không? | |
+|---|---|
+| ✅ **Cần** | Khách hàng/PM yêu cầu tài liệu kế hoạch để ký · dự án outsourcing, nghiệm thu hợp đồng · đợt release lớn nhiều module, nhiều người |
+| ➖ **Bỏ qua được** | Sprint nội bộ nhỏ, không ai yêu cầu tài liệu duyệt — chặng 7 vẫn chạy được với bộ tiêu chí exit mặc định |
+| ❌ **Nhầm workflow** | Muốn biết *"test cái gì, kịch bản nào"* → `/generate-application-test-plan` · *"hệ thống có module nào"* → `/discover-system` |
+
+**Ai cung cấp gì:**
+
+| AI tự lấy từ `docs/` — **không cần khai** | Bạn điền vào `test_plan.config.yaml` — AI không tự biết |
+|---|---|
+| Danh sách module · nền tảng · số REQ/TC · lần chạy đã có | **Mốc** · module × nền tảng trong đợt · mục tiêu |
+| Môi trường đã khảo sát · năng lực kiểm thử của QA | **Ngoài phạm vi bổ sung** + ai chịu trách nhiệm |
+| Vùng đã loại khỏi phạm vi (`system_map.md`, bảng ISO 25010, REQ ⚪) | Cấp độ kiểm thử · mức độc lập · loại test · cách chạy TC mobile/API · **ngưỡng phi chức năng** · **chiến lược tự động hoá** |
+| Bug đang mở · AMB 🔴 còn treo · rủi ro sản phẩm `RISK-xx` | **Lịch** · **ước lượng công sức** · **ngân sách** · **nhân lực** |
+| Bài học và thời lượng thực tế của báo cáo mốc trước · thang Severity/Priority mặc định | Môi trường · **dữ liệu kiểm thử** đợt này · công cụ · **quy trình lỗi, người phân loại, thời hạn xử lý** · bên liên quan · người review, người duyệt · Test Policy/Strategy tổ chức |
+
+Không muốn điền phiếu → gọi lệnh kèm tên mốc, AI **hỏi một lượt** theo đúng các nhóm của phiếu rồi tự ghi vào `test_plan.config.yaml`. Ô nào bạn chưa có thông tin → AI để `❓` và liệt kê ở **đầu tài liệu**, **không** bịa ngày hay tên người.
+
+**Đầu ra:**
+```
+docs/test-plans/test_plan_<mốc>.md             ← plan (VD test_plan_release_2.0.md)
+docs/test-plans/test_plan_<mốc>.input.yaml      ← bản lưu phiếu đã dùng — để lần cập nhật sau so được đổi gì
+```
+
+### ⚠️ Bốn luật của bước này
+
+**1. Mục "Ngoài phạm vi" không được trống.** Có sự cố production, câu hỏi đầu tiên luôn là *"sao QA không test cái này?"* — plan đã ghi rõ thì đó là quyết định được thống nhất, không phải QA bỏ sót.
+
+**2. PM duyệt plan TRƯỚC chặng 4.** Chưa đạt tiêu chí vào (build, tài khoản đủ role, môi trường, TC đã review) thì chưa chạy — chạy sớm là BLOCKED tràn lan, phải chạy lại.
+
+**3. Báo cáo tiến độ và chặng 7 dùng cùng tên mốc.** `/generate-test-progress-report` theo dõi lịch của plan mỗi kỳ; `/generate-test-summary-report` tự tìm `test_plan_<mốc>.md` và chấm lại đúng bộ tiêu chí exit đã công bố, không hỏi lại.
+
+**4. Phạm vi/lịch đổi giữa đợt → sửa `test_plan.config.yaml` rồi gọi lại workflow, KHÔNG xoá plan viết lại.** AI tăng phiên bản, sửa đúng mục đổi, ghi Lịch sử thay đổi, đưa về trạng thái chờ duyệt. Đổi tiêu chí exit sau khi đã chạy test sẽ bị nêu ra ở báo cáo tổng hợp.
+
+---
+
+## Báo cáo tiến độ — trong suốt chặng 4–6 (khi có plan chính thức)
+
+```
+/generate-test-progress-report
+```
+
+📋 Prompt mẫu: [`prompts/prompt_32_generate_test_progress_report.txt`](prompts/prompt_32_generate_test_progress_report.txt)
+
+Mỗi kỳ (thường hằng tuần) trả lời: **kỳ này làm được gì · có kịp mốc trong plan không · đang vướng gì · kỳ tới làm gì**. Nội dung bám ISTQB CTFL v4.0 mục 5.3.2: kỳ báo cáo · tiến độ so với kế hoạch · trở ngại & cách xử lý · chỉ số · rủi ro mới · kế hoạch kỳ tới — thêm mục **đề xuất điều chỉnh** cho người quản lý.
+
+| So với | Khác ở đâu |
+|---|---|
+| `/analyze-test-report` | Kia phân tích **một lần chạy** fail vì sao — đây gộp **cả kỳ** và so với lịch |
+| `/generate-test-summary-report` (chặng 7) | Kia kết luận **có nên release không** cuối đợt — đây **không** khuyến nghị release, chỉ đề xuất điều chỉnh giữa đợt |
+
+**Đầu ra:** `docs/executions/test_progress_<mốc>_<YYYYMMDD>.md` — ngày cuối kỳ.
+
+### ⚠️ Ba luật của bước này
+
+**1. Không có plan thì không kết luận "trễ" hay "đúng hạn".** Báo cáo vẫn có số liệu, nhưng không có mốc để so.
+
+**2. Số trong kỳ tách khỏi số luỹ kế.** Trộn hai loại là tuần nào cũng thấy "tăng mạnh".
+
+**3. Cần đổi lịch/phạm vi → chỉ đề xuất trong báo cáo, cập nhật plan bằng `/generate-master-test-plan`.** Sửa ngầm trong báo cáo tiến độ là mất dấu thứ đã được duyệt.
+
+---
+
 ## Chặng 4 — Thực thi Manual
 
 ```
@@ -299,7 +382,13 @@ TC FAIL → /create-bug-report → dev fix → /retest-fixed-bugs
 
 📋 Prompt mẫu: [`prompts/prompt_24_generate_test_summary_report.txt`](prompts/prompt_24_generate_test_summary_report.txt)
 
-Gộp **mọi** kết quả của cả đợt — execution report nhiều module + bug đang mở + RTM — thành **một** tài liệu gửi PM/khách hàng, kết thúc bằng khuyến nghị **GO / GO có điều kiện / NO-GO** kèm căn cứ.
+Gộp **mọi** kết quả của cả đợt — execution report nhiều module + bug đang mở + RTM — thành **một** tài liệu gửi PM/khách hàng, kết thúc bằng lời khuyên **có nên release không**, kèm căn cứ:
+
+| Khuyến nghị | Nghĩa |
+|---|---|
+| 🟢 **GO** | Nên release — đạt đủ tiêu chí exit (vẫn liệt kê rủi ro còn lại) |
+| 🟡 **GO có điều kiện** | Release được **nếu** PM chấp nhận vài điểm tồn đọng — báo cáo nêu rõ từng điểm và rủi ro đi kèm |
+| 🔴 **NO-GO** | Chưa nên release — còn bug Critical, hoặc luồng nghiệp vụ chính chưa chạy được |
 
 **Ba luật của chặng này:**
 
@@ -309,7 +398,7 @@ Gộp **mọi** kết quả của cả đợt — execution report nhiều modul
 | **Khuyến nghị GO vẫn phải kèm rủi ro tồn đọng** | GO trơn không nêu tồn đọng là báo cáo vô trách nhiệm — có sự cố thì không ai biết QA đã cảnh báo hay chưa |
 | **Vùng chưa test đứng TRƯỚC mọi tỷ lệ** | Cùng lý do với mục ⬛ của RTM: pass rate đẹp che mất module chưa ai chạm |
 
-**Tiêu chí exit phải chốt TRƯỚC khi nhìn kết quả.** Nhìn số rồi mới đặt ngưỡng là hợp thức hoá kết quả, không phải đánh giá. Đợt có kế hoạch chính thức thì `/generate-master-test-plan` đã công bố bộ tiêu chí này từ đầu — chặng 7 chỉ chấm lại đúng bộ đó.
+**Tiêu chí exit phải chốt TRƯỚC khi nhìn kết quả.** Nhìn số rồi mới đặt ngưỡng là hợp thức hoá kết quả, không phải đánh giá. Đợt có kế hoạch chính thức thì `/generate-master-test-plan` đã công bố bộ tiêu chí này từ đầu — chặng 7 chỉ chấm lại đúng bộ đó ([luật 3](#kế-hoạch-kiểm-thử-chính-thức--trước-chặng-4-tuỳ-chọn)).
 
 **Đầu ra:** `docs/executions/test_summary_<mốc>_<timestamp>.md`
 
@@ -372,7 +461,8 @@ Cột **`TC cần xử lý`** trong Nhật ký thay đổi của tài liệu req
 | 7 | `/generate-test-summary-report` | [`prompt_24`](prompts/prompt_24_generate_test_summary_report.txt) | **Mỗi mốc release / sprint** |
 | ↻ | `/update-requirements-from-ticket` | [`prompt_21`](prompts/prompt_21_update_requirements_from_ticket.txt) | Mỗi ticket sửa yêu cầu |
 | ↻ | `/update-testcases-from-impact` | [`prompt_27`](prompts/prompt_27_update_testcases_from_impact.txt) | **Mỗi Impact Report** — ngay sau command trên |
-| ⊹ | `/generate-master-test-plan` | [`prompt_25`](prompts/prompt_25_generate_master_test_plan.txt) | 1 lần / đợt — khi cần kế hoạch chính thức |
+| ⊹ | `/generate-master-test-plan` | [`prompt_25`](prompts/prompt_25_generate_master_test_plan.txt) | 1 lần / đợt — khi cần kế hoạch chính thức, **trước chặng 4** · gọi lại khi phạm vi/lịch đổi |
+| ⊹ | `/generate-test-progress-report` | [`prompt_32`](prompts/prompt_32_generate_test_progress_report.txt) | **Mỗi kỳ** theo lịch plan (thường hằng tuần) — trong chặng 4–6 |
 | ⊹ | `/generate-user-guide` | [`prompt_28`](prompts/prompt_28_generate_user_guide.txt) | Khi bàn giao — tài liệu cho **người dùng cuối**, không phải cho QA |
 
 **Biến thể của chặng 1–2** (không nằm trên luồng chính): `/analyze-requirement-document` → [`prompt_20`](prompts/prompt_20_analyze_requirement_document.txt) · `/generate-testcases-from-requirements` → [`prompt_22`](prompts/prompt_22_generate_testcases_quick.txt).
@@ -400,5 +490,5 @@ Xem lại cảnh báo ở chặng 6.
 | [`CLAUDE.md`](CLAUDE.md) | Quy tắc bắt buộc · cấu trúc `docs/` · danh sách đầy đủ workflows |
 | [`README.md`](README.md) | Tổng quan bộ kit · cài đặt |
 | [`SETUP_CLAUDE.md`](SETUP_CLAUDE.md) | Cài Claude Code + Playwright MCP |
-| [`prompts/README.md`](prompts/README.md) | 35 prompt mẫu copy-paste, chia 7 nhóm tra cứu |
+| [`prompts/README.md`](prompts/README.md) | 36 prompt mẫu copy-paste, chia 7 nhóm tra cứu |
 | [`plans/manual/QUICK_START.md`](plans/manual/QUICK_START.md) | Luồng 6 bước AI-RBT bản copy-paste — dùng cho AI agent khác (Codex · Antigravity · Kiro · Cursor) không có slash command của bộ này |

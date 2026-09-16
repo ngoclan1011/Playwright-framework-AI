@@ -31,7 +31,7 @@
 
 ## Vùng chưa xác minh
 
-> ✅ **Đã recon chi tiết ngày 2026-08-14, rà soát và kiểm chứng lại 2026-08-18** → [../../login/requirements_login.md](../../login/requirements_login.md) (**40 REQ**). Phần dưới đây giữ nguyên trạng lúc khám phá; những gì đã được giải quyết ghi ở cột ghi chú.
+> ✅ **Đã recon chi tiết ngày 14-08-2026, rà soát và kiểm chứng lại 18-08-2026** → [../../login/requirements_login.md](../../login/requirements_login.md) (**40 REQ**). Phần dưới đây giữ nguyên trạng lúc khám phá; những gì đã được giải quyết ghi ở cột ghi chú.
 
 | Vùng | Trạng thái sau recon |
 |---|---|
@@ -47,7 +47,7 @@
 
 | Ngày | Ghi nhận |
 |---|---|
-| 2026-08-18 | Rà soát chất lượng tài liệu module phát hiện **ước độ lớn sai đáng kể** (12–18 → 40 REQ) và bổ sung route `reset_password` mà tầng khám phá bỏ sót. Phiên đăng nhập có vòng đời trạng thái, khác với ghi nhận ban đầu "Status flow: Không có" |
+| 18-08-2026 | Rà soát chất lượng tài liệu module phát hiện **ước độ lớn sai đáng kể** (12–18 → 40 REQ) và bổ sung route `reset_password` mà tầng khám phá bỏ sót. Phiên đăng nhập có vòng đời trạng thái, khác với ghi nhận ban đầu "Status flow: Không có" |
 
 ## Evidence
 

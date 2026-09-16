@@ -197,6 +197,7 @@ Agent sử dụng skills trong `.claude/skills/` tùy theo nhiệm vụ:
 | `skills-bug-reporter`           | Sinh bug report chuẩn từ test FAIL — evidence, severity/priority, đẩy Jira            |
 | `skills-manual-test-executor`   | Thực thi manual TC trên browser thật qua Playwright MCP — chấm PASS/FAIL/BLOCKED/SKIPPED, xuất execution report |
 | `skills-test-report-analyzer`   | Phân tích test report **một lần chạy** — automation lẫn manual, gom nhóm failure theo root cause, đề xuất thứ tự xử lý |
+| `skills-test-progress-reporter` | Báo cáo tiến độ **một kỳ trong đợt** (ngày/tuần) — so thực tế với lịch plan, chỉ số trong kỳ, trở ngại, rủi ro mới, đề xuất điều chỉnh — ISTQB CTFL v4.0 mục 5.3.2 |
 | `skills-test-summary-reporter`  | Tổng hợp **toàn dự án tại một mốc** — gộp nhiều execution report + bug + RTM, đối chiếu tiêu chí exit, khuyến nghị go/no-go |
 | `skills-testcase-reviewer`      | Review chất lượng manual test cases — rubric 6 tiêu chí, coverage gaps               |
 | `skills-coverage-traceability`  | Sinh ma trận truy vết RTM — Requirements ↔ Test Cases ↔ Automation                    |
@@ -263,8 +264,13 @@ docs/
 │       ├── impact/impact_plan_<TICKET-ID>.md  ← /update-testcases-from-impact
 │       └── archive/test_cases_<module>_<nền-tảng>_vN.md ← phiên bản cũ
 │
+├── test-plans/                                  ← kế hoạch kiểm thử — lập TRƯỚC đợt
+│   ├── test_plan_<mốc>.md                      ← Master Test Plan — công bố phạm vi + tiêu chí exit TRƯỚC đợt
+│   └── test_plan_<mốc>.input.yaml              ← bản lưu phiếu plans/master-test-plan/test_plan.config.yaml đã dùng
+│
 ├── executions/                                 ← kết quả thực thi
-│   ├── test_summary_<mốc>_<timestamp>.md       ← báo cáo tổng hợp, CẮT NGANG mọi module và mọi nền tảng
+│   ├── test_progress_<mốc>_<YYYYMMDD>.md       ← báo cáo tiến độ từng kỳ TRONG đợt
+│   ├── test_summary_<mốc>_<timestamp>.md       ← báo cáo tổng hợp, CẮT NGANG mọi module và mọi nền tảng — chấm lại tiêu chí của plan
 │   └── <module>/<nền-tảng>/                    ← mỗi lần chạy thuộc ĐÚNG MỘT nền tảng
 │       ├── run_<timestamp>/
 │       │   ├── execution_report.md
@@ -287,7 +293,7 @@ docs/
         └── archive/user_guide_<module>_vN.md     ← bản cũ
 ```
 
-> `test_summary_*.md` nằm ở **gốc `executions/`**, không thuộc module nào — nó gộp mọi module tại một mốc release.
+> `test_plan_<mốc>.md` nằm ở **`docs/test-plans/`** — plan là tài liệu **lập và duyệt trước đợt**, không phải kết quả thực thi. `test_progress_<mốc>_*.md` · `test_summary_<mốc>_*.md` nằm ở **gốc `executions/`**. Cả ba không thuộc module nào — chúng cắt ngang mọi module tại một mốc release. **Cùng slug `<mốc>`** (chữ thường, không dấu, VD `release_2.0`) là mối nối: báo cáo tiến độ theo dõi lịch của plan, báo cáo tổng hợp chấm lại đúng bộ tiêu chí exit đã công bố.
 >
 > **Tầng nền tảng `<nền-tảng>/`** — chỉ nhận đúng 3 tên `web` · `mobile` · `api` (Android và iOS chung `mobile/`, phân biệt bằng tiền tố ảnh `android_`/`ios_` và cột/tag nền tảng). Áp cho 4 nhánh `requirements/` · `testcases/` · `executions/` · `bugs/`, **luôn có** kể cả module mới chỉ có một nền tảng — thêm nền tảng thứ hai về sau không phải di chuyển file nào. File index `requirements_<module>.md` / `test_cases_<module>.md` **giữ nguyên tên và vị trí**; workflow phía sau đọc index trước, rồi theo `## Bản đồ tài liệu` sang file nền tảng. Tài liệu cũ chưa có tầng này: **không** di chuyển lịch sử (`run_*`, `BUG_*` giữ nguyên chỗ) — workflow đọc quét cả `<module>/<nền-tảng>/` lẫn `<module>/`; requirements/testcases cũ chuyển sang tầng nền tảng **một lần**, ở lần đầu một workflow sinh/cập nhật chạm lại module đó (ID giữ nguyên, ghi Nhật ký).
 >
@@ -324,6 +330,7 @@ Ba trang tĩnh trong `scripts/`, mở bằng cách double-click, chạy offline,
 | Bug report sống ở **`docs/bugs/<module>/<nền-tảng>/`**, KHÔNG ở gốc repo | Bug là mắt xích thứ tư của chuỗi truy vết; để ngoài `docs/` thì lệnh dọn dự án bỏ sót, để lại bug mồ côi trỏ vào TC/REQ đã đổi nghĩa |
 | Bug **phải trỏ về TC ID và REQ ID đang có hiệu lực**; evidence chỉ **link** tới `executions/`, không nhân bản | Bug trỏ vào mã đã đổi nghĩa còn tệ hơn không trỏ — người đọc tin nhầm. Nhân bản ảnh là tạo hai nguồn sự thật |
 | Thêm module = thêm thư mục + 1 dòng ở `README.md` danh mục | Không đụng gì khác trong repo |
+| 📅 **Ngày trong nội dung tài liệu viết `DD-MM-YYYY`** (VD `17-09-2026`) hoặc `DD/MM/YYYY`; có giờ thì `17-09-2026 14:10`. Áp cho mọi file trong `docs/`, mẫu trong `.claude/`, `plans/`, `prompts/` và phiếu nhập. **Tên file giữ dạng cũ**: `run_<timestamp>`, `test_progress_<mốc>_<YYYYMMDD>.md`, `openapi_<YYYY-MM-DD>.json` · mã có ngày như `PO-2026-08-18` giữ nguyên · dữ liệu nhập vào hệ thống (payload API, giá trị field) viết đúng **định dạng hệ thống yêu cầu**, không đổi theo quy tắc này | Người đọc tài liệu là QA/PM/khách Việt Nam. Tên file cần năm đứng đầu để xếp đúng thứ tự thời gian. Đọc tài liệu cũ (trước 17-09-2026) vẫn gặp `YYYY-MM-DD` → **nhận cả hai**, năm đứng đầu không thể nhầm; **không** bao giờ hiểu `05-10-2026` theo kiểu Mỹ |
 | `_discovery/` **không được** chứa mã `REQ-XXX-NN` — chỉ cấp **prefix** | Tầng khám phá chưa mở form, chưa trigger validation; cấp số REQ ở đó là chắc chắn phải đánh lại |
 | Bản đồ khám phá tách file thì index **vẫn** là `_discovery/system_map.md` + có mục `## Bản đồ tài liệu` | Cùng hợp đồng đọc với `requirements_<module>.md` — workflow sau chỉ nhớ một đường dẫn |
 | Gộp module vào chung 1 file khám phá **KHÔNG** gộp prefix, **KHÔNG** gộp `requirements_<module>.md` | Gộp là để đọc cho gọn; ranh giới truy vết vẫn là prefix. 3 module chung file khám phá vẫn ra 3 tài liệu requirements riêng |
@@ -411,7 +418,7 @@ rm -rf docs .playwright-mcp task.md .claude/settings.local.json
 | | |
 |---|---|
 | **Xoá** | `docs/` (gồm cả `docs/bugs/`) · `.playwright-mcp/` · `task.md` · `.claude/settings.local.json` |
-| **Giữ nguyên** | `.claude/` (trừ `settings.local.json`) · `plans/` · `prompts/` · `scripts/` · `CLAUDE.md` · `README.md` · `.gitignore` — khung dùng lại được, không hardcode hệ thống nào |
+| **Giữ nguyên** | `.claude/` (trừ `settings.local.json`) · `plans/` (xoá hết giá trị trong `plans/master-test-plan/test_plan.config.yaml`, giữ tên ô và chú thích) · `prompts/` · `scripts/` · `CLAUDE.md` · `README.md` · `.gitignore` — khung dùng lại được, không hardcode hệ thống nào |
 
 ✅ **Bug report nằm trong `docs/bugs/`** — xoá `docs/` là xoá luôn, không còn sót như cấu trúc `bug_reports/` ở gốc trước đây.
 
@@ -514,7 +521,8 @@ Agent sử dụng workflows trong `.claude/commands/` qua slash commands:
 | `/execute-test-cases`                   | Thực thi manual TC trên browser thật — chấm PASS/FAIL/BLOCKED/SKIPPED, xuất execution report |
 | `/retest-fixed-bugs`                    | **Đóng vòng lặp bug** — retest bug đã fix trên build mới, chấm FIXED/NOT_FIXED/PARTIAL, chạy regression quanh vùng fix (2 modes: RETEST/FULL) |
 | `/analyze-test-report`                  | Phân tích test report **một lần chạy** — 2 nhánh AUTOMATION / MANUAL, gom nhóm failure, đề xuất xử lý |
-| `/generate-master-test-plan`            | Master Test Plan cấp quản lý — phạm vi & ngoài phạm vi, tiêu chí vào/ra, môi trường, nhân lực, lịch, rủi ro dự án |
+| `/generate-master-test-plan`            | Master Test Plan cấp quản lý — đầu vào phiếu YAML `plans/master-test-plan/test_plan.config.yaml`. Phạm vi **module × nền tảng**, cấp độ · loại · độc lập kiểm thử, chiến lược tự động hoá · phi chức năng, tiêu chí vào/ra, môi trường · dữ liệu kiểm thử, quản lý lỗi, lịch · ước lượng · ngân sách, rủi ro dự án + sản phẩm. Xuất `docs/test-plans/test_plan_<mốc>.md`, bám 29119-3, phủ đủ ISTQB CTFL v4.0 mục 5.1.1 |
+| `/generate-test-progress-report`        | Báo cáo tiến độ **một kỳ** trong đợt — so thực tế với lịch plan, chỉ số trong kỳ, trở ngại, rủi ro mới, kế hoạch kỳ tới, đề xuất điều chỉnh. **Không** khuyến nghị go/no-go |
 | `/generate-test-summary-report`         | Báo cáo tổng hợp tại một mốc release/sprint — gộp mọi kết quả, đối chiếu tiêu chí exit, **khuyến nghị go/no-go** |
 | `/review-testcases`                     | Review chất lượng manual TCs (2 modes: REVIEW/FIX)         |
 | `/generate-traceability-matrix`         | Sinh ma trận truy vết RTM 3 tầng                          |

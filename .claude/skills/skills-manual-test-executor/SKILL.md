@@ -186,7 +186,7 @@ File: `docs/executions/<module>/<nền-tảng>/<run_id>/execution_report.md`
 | Build / Version | (nếu có) |
 | Tài khoản | `<tài khoản test>` (`<role>`) |
 | Người thực hiện | <tên tester> (agent hỗ trợ) |
-| Bắt đầu → Kết thúc | 2026-08-02 09:15 → 10:40 (85 phút) |
+| Bắt đầu → Kết thúc | 02-08-2026 09:15 → 10:40 (85 phút) |
 | Môi trường dùng chung? | Có — auto-skip TC phá huỷ đang BẬT |
 
 ## 1. Tổng kết

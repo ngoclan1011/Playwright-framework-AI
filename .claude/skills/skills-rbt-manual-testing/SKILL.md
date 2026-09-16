@@ -707,7 +707,7 @@ Bảng đối soát 4 vòng có **bốn** trạng thái, không phải ba:
 Mẫu dòng `⏭️` đạt yêu cầu:
 
 ```markdown
-| 4 | Compatibility | ⏭️ Cố ý bỏ | Trang tĩnh, rủi ro Thấp — chỉ kiểm Chrome. **Quyết định: QA lead, 2026-09-11.** Rà lại khi trang có thêm field nhập hoặc khi hệ thống cam kết hỗ trợ trình duyệt mới |
+| 4 | Compatibility | ⏭️ Cố ý bỏ | Trang tĩnh, rủi ro Thấp — chỉ kiểm Chrome. **Quyết định: QA lead, 11-09-2026.** Rà lại khi trang có thêm field nhập hoặc khi hệ thống cam kết hỗ trợ trình duyệt mới |
 ```
 
 ```markdown

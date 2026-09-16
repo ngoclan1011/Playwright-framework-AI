@@ -126,7 +126,7 @@ Evidence: `docs/executions/<module>/<nền-tảng>/retest_<timestamp>/evidence/`
 | Môi trường | `<URL>` — Staging |
 | Tài khoản | `<tài khoản test>` (`<role>`) |
 | Người thực hiện | <tên tester> (agent hỗ trợ) |
-| Thời gian | 2026-08-12 14:10 → 14:55 (45 phút) |
+| Thời gian | 12-08-2026 14:10 → 14:55 (45 phút) |
 | Môi trường dùng chung? | Có — auto-skip TC phá huỷ đang BẬT |
 
 ## 1. Kết quả verify bug
@@ -198,8 +198,8 @@ Thêm mục **Lịch sử retest** vào cuối file `docs/bugs/<module>/<nền-t
 
 | Ngày | Build | Kết quả | Retest report | Ghi chú |
 |---|---|---|---|---|
-| 2026-08-12 | v2.4.3 | ✅ FIXED | [retest_1785700456](../docs/executions/customers/retest_1785700456/retest_report.md) | Kèm 1 regression mới: BUG_CUST_1785700456 |
-| 2026-08-08 | v2.4.2 | ❌ NOT_FIXED | [retest_1785350000](…) | Lỗi vẫn tái hiện 2/2 lần |
+| 12-08-2026 | v2.4.3 | ✅ FIXED | [retest_1785700456](../docs/executions/customers/retest_1785700456/retest_report.md) | Kèm 1 regression mới: BUG_CUST_1785700456 |
+| 08-08-2026 | v2.4.2 | ❌ NOT_FIXED | [retest_1785350000](…) | Lỗi vẫn tái hiện 2/2 lần |
 ```
 
 Bug **đẩy lên Jira** → cập nhật trạng thái tương ứng qua `skills-jira-integration`; **không** tự đóng ticket, chỉ chuyển sang trạng thái chờ xác nhận trừ khi user cho phép rõ ràng.

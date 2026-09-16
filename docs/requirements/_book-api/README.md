@@ -14,9 +14,9 @@
 | Tiền tố REQ | `REQ-BK-<MODULE>-<nn>` |
 | Tiền tố TC ID | `BK_<MODULE>_TC_<3 số>` |
 | Base URL | `https://book.anhtester.com` — **Production, 1 server duy nhất** |
-| Môi trường dùng chung | **KHÔNG** — user chốt 2026-08-14: được thao tác phá huỷ thoải mái |
+| Môi trường dùng chung | **KHÔNG** — user chốt 14-08-2026: được thao tác phá huỷ thoải mái |
 | URL · tài khoản | `.env` (không commit) — **KHÔNG** ghi credentials vào `docs/` |
-| Khởi tạo | 2026-08-14 — parse spec + kiểm chứng 20 request thật |
+| Khởi tạo | 14-08-2026 — parse spec + kiểm chứng 20 request thật |
 
 ---
 
@@ -24,14 +24,14 @@
 
 | Module | Mã | Số endpoint | Trạng thái | Tài liệu | REQ đã dùng | Mã kế tiếp | AMB treo | Cập nhật |
 |---|---|---|---|---|---|---|---|---|
-| Xác thực & Phiên đăng nhập | `AUTH` | 6 | 🟨 Đã lập bản đồ | — | — | `REQ-BK-AUTH-01` | AMB-BK-01, 06 | 2026-08-14 |
-| Người dùng | `USER` | 5 | 🟨 Đã lập bản đồ | — | — | `REQ-BK-USER-01` | AMB-BK-01, 02 | 2026-08-14 |
-| Sách | `BOOK` | 5 | 🟨 Đã lập bản đồ | — | — | `REQ-BK-BOOK-01` | AMB-BK-03 | 2026-08-14 |
-| Danh mục sách | `CAT` | 4 | 🟨 Đã lập bản đồ | — | — | `REQ-BK-CAT-01` | AMB-BK-05 | 2026-08-14 |
-| Khuyến mãi | `PROMO` | 5 | 🟨 Đã lập bản đồ | — | — | `REQ-BK-PROMO-01` | AMB-BK-04, 09 | 2026-08-14 |
-| Tệp tin | `FILE` | 7 | 🟨 Đã lập bản đồ | — | — | `REQ-BK-FILE-01` | AMB-BK-07 | 2026-08-14 |
-| Địa chỉ hành chính | `ADDR` | 2 | 🟨 Đã lập bản đồ | — | — | `REQ-BK-ADDR-01` | — | 2026-08-14 |
-| Tiện ích hệ thống | `SYS` | 1 | 🟨 Đã lập bản đồ | — | — | `REQ-BK-SYS-01` | — | 2026-08-14 |
+| Xác thực & Phiên đăng nhập | `AUTH` | 6 | 🟨 Đã lập bản đồ | — | — | `REQ-BK-AUTH-01` | AMB-BK-01, 06 | 14-08-2026 |
+| Người dùng | `USER` | 5 | 🟨 Đã lập bản đồ | — | — | `REQ-BK-USER-01` | AMB-BK-01, 02 | 14-08-2026 |
+| Sách | `BOOK` | 5 | 🟨 Đã lập bản đồ | — | — | `REQ-BK-BOOK-01` | AMB-BK-03 | 14-08-2026 |
+| Danh mục sách | `CAT` | 4 | 🟨 Đã lập bản đồ | — | — | `REQ-BK-CAT-01` | AMB-BK-05 | 14-08-2026 |
+| Khuyến mãi | `PROMO` | 5 | 🟨 Đã lập bản đồ | — | — | `REQ-BK-PROMO-01` | AMB-BK-04, 09 | 14-08-2026 |
+| Tệp tin | `FILE` | 7 | 🟨 Đã lập bản đồ | — | — | `REQ-BK-FILE-01` | AMB-BK-07 | 14-08-2026 |
+| Địa chỉ hành chính | `ADDR` | 2 | 🟨 Đã lập bản đồ | — | — | `REQ-BK-ADDR-01` | — | 14-08-2026 |
+| Tiện ích hệ thống | `SYS` | 1 | 🟨 Đã lập bản đồ | — | — | `REQ-BK-SYS-01` | — | 14-08-2026 |
 | | | **35** | | | | | | |
 
 **Bảng mã trạng thái:** ⬜ Chưa khảo sát · 🟨 Đã lập bản đồ (có catalog, chưa có REQ) · ✅ Đã có tài liệu REQ · ⏸️ Hoãn
@@ -128,5 +128,5 @@ docs/
 
 | Ngày | Thay đổi |
 |---|---|
-| 2026-09-15 | Sửa mục 6: sinh REQ cho module API chuyển sang `/generate-requirements-from-api` — route cũ `/analyze-requirement-document` bị Bước 0 của nó chặn (spec không có Ticket ID). Luật đã đưa ngược vào skill `skills-requirements-analyzer` mục 3.4 và command mới |
-| 2026-08-14 | Khởi tạo danh mục hệ thống `BK`. Lập bản đồ 35 endpoint / 8 module bằng parse spec + 20 request kiểm chứng. Ghi nhận 15 phát hiện (3 🔴) và 10 ambiguity. **Chưa sinh REQ nào** — chờ chốt AMB-BK-01 và AMB-BK-02 |
+| 15-09-2026 | Sửa mục 6: sinh REQ cho module API chuyển sang `/generate-requirements-from-api` — route cũ `/analyze-requirement-document` bị Bước 0 của nó chặn (spec không có Ticket ID). Luật đã đưa ngược vào skill `skills-requirements-analyzer` mục 3.4 và command mới |
+| 14-08-2026 | Khởi tạo danh mục hệ thống `BK`. Lập bản đồ 35 endpoint / 8 module bằng parse spec + 20 request kiểm chứng. Ghi nhận 15 phát hiện (3 🔴) và 10 ambiguity. **Chưa sinh REQ nào** — chờ chốt AMB-BK-01 và AMB-BK-02 |

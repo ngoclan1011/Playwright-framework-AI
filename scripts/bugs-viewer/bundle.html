@@ -533,14 +533,26 @@ const PRIO_RANK={P1:0,P2:1,P3:2};
 const STATUS_RANK=ALL_ST.reduce((o,s,i)=>(o[s]=i,o),{}); // còn việc phải làm → xong
 const RANKS={severity:SEV_RANK, priority:PRIO_RANK, status:STATUS_RANK};
 
+// Tài liệu viết ngày DD-MM-YYYY / DD/MM/YYYY; tài liệu cũ còn YYYY-MM-DD. So chuỗi sẽ xếp sai
+// ("02-08-2026" đứng trước "20-07-2026") nên quy về số YYYYMMDD. Không đọc được → null, rơi về so chuỗi.
+const DATE_KEYS=new Set(['dateFound']);
+function dateNum(s){
+  let m=String(s).match(/(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})/);
+  if(m) return +m[3]*10000 + +m[2]*100 + +m[1];
+  m=String(s).match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+  return m ? +m[1]*10000 + +m[2]*100 + +m[3] : null;
+}
+
 function rowCmp(key, dir){
   const rank=RANKS[key];
   return (x,y)=>{
     const a=String(x[key]??'').trim(), b=String(y[key]??'').trim();
     // Ô rỗng luôn xuống cuối, bất kể chiều sort — bug thiếu dữ liệu không được chen lên đầu bảng
     if(!a!==!b) return a?-1:1;
+    const da=DATE_KEYS.has(key)?dateNum(a):null, db=DATE_KEYS.has(key)?dateNum(b):null;
     const main = rank
       ? (rank[a]??99)-(rank[b]??99)
+      : (da!==null && db!==null) ? da-db
       : a.localeCompare(b,'vi',{numeric:true,sensitivity:'base'});
     // dir CHỈ áp lên phép so sánh chính. Áp cả lên tie-break thì các dòng cùng giá trị sẽ
     // đảo ngược theo hướng sort, trông như sort sai.

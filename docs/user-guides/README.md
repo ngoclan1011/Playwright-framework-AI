@@ -10,7 +10,7 @@
 
 | Module | Đối tượng đọc | Áp dụng cho phiên bản | Số việc | Phiên bản tài liệu | Còn ⚠️ chưa xác minh | Trạng thái phát hành | Cập nhật |
 |---|---|---|---|---|---|---|---|
-| [Đăng nhập & Đăng xuất](login/user_guide_login.md) | Nhân viên nội bộ (`Admin`, `Project Manager`) | Trạng thái khảo sát 2026-08-18 | 3 thủ tục + 6 FAQ | v1.0 | **4** | 🟨 Nội bộ — chưa gỡ mục 6 | 2026-09-09 |
+| [Đăng nhập & Đăng xuất](login/user_guide_login.md) | Nhân viên nội bộ (`Admin`, `Project Manager`) | Trạng thái khảo sát 18-08-2026 | 3 thủ tục + 6 FAQ | v1.0 | **4** | 🟨 Nội bộ — chưa gỡ mục 6 | 09-09-2026 |
 
 **Bảng mã trạng thái phát hành:** 🟨 Nội bộ (còn mục *Vùng chưa xác minh*) · ✅ Đã gỡ mục 6, sẵn sàng gửi ra ngoài · ⚠️ Nghi lỗi thời (UI đã đổi)
 
@@ -45,4 +45,4 @@ Chỉ viết được hướng dẫn cho module **đã recon** (xem `docs/requir
 
 | Ngày | Thay đổi |
 |---|---|
-| 2026-09-09 | Khởi tạo danh mục. Viết hướng dẫn module `login` bằng `/generate-user-guide` Mode DOC — nguồn `requirements_login.md` (43 REQ) + 9 ảnh evidence đã mở đủ, 4 ảnh được dùng lại |
+| 09-09-2026 | Khởi tạo danh mục. Viết hướng dẫn module `login` bằng `/generate-user-guide` Mode DOC — nguồn `requirements_login.md` (43 REQ) + 9 ảnh evidence đã mở đủ, 4 ảnh được dùng lại |

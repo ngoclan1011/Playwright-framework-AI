@@ -9,7 +9,7 @@
 | **Prefix** | `PRJ` |
 | **Route** | `/admin/projects` · `/admin/projects/project` (tạo) · `/admin/projects/project/{id}` (sửa) · `/admin/projects/view/{id}?group=<tab>` (chi tiết) · `/admin/projects/gantt` · `/admin/projects/delete/{id}` · `/admin/projects/export_project_data/{id}` |
 | **Nguồn phân tích** | Khảo sát UI thực tế + đọc DOM + tầng network (Playwright MCP, headed 1600×750) |
-| **Ngày phân tích** | 2026-08-14 |
+| **Ngày phân tích** | 14-08-2026 |
 | **Tài khoản dùng khảo sát** | 1 tài khoản duy nhất — "Admin Example", `staff-id-2` |
 | **Môi trường dùng chung** | **CÓ** — đã tạo 1 dự án thử nghiệm (`RECON_PRJ_1786652163351`, id `2695`) và **đã xoá sạch**; số bản ghi trở lại đúng **118** như trước khi khảo sát |
 | **Tổng số REQ** | **104** |
@@ -219,7 +219,7 @@ Dự án có đúng **5 trạng thái**. Mã giá trị **không** liên tiếp 
 | Mã | Câu hỏi | Nguy cơ | Mức độ | Assumption tạm | Trạng thái | Kết luận |
 |---|---|---|---|---|---|---|
 | AMB-28 | Xin tài khoản vai trò `Project Manager` và các vai trò khác để kiểm chứng 28 ô đang bỏ trống trong ma trận phân quyền của module `PRJ` | Không kiểm chứng được ranh giới quyền; một vai trò thấp xoá được dự án hoặc xem được tài chính dự án sẽ không bị phát hiện | 🔴 | Mọi vai trò không phải Admin **không** xoá được dự án và **không** đổi được cấu hình `Visible Tabs` | ❓ Chờ trả lời | — |
-| AMB-29 | Bảng tổng quan đếm **67** dự án `In Progress` nhưng bấm vào lọc ra đúng **60** dòng (lệch 7). Bốn trạng thái còn lại khớp chính xác (53 · 2 · 2 · 1). Số nào đúng? | Mọi test khẳng định theo số đếm đều sai; người dùng mất niềm tin vào số liệu tổng quan; Dashboard cũng đang hiển thị `67 / 125` theo nguồn sai này | 🔴 | Số đếm ở bảng tổng quan **sai**; số dòng thật khi lọc mới đúng (53 + 60 + 2 + 2 + 1 = 118 = tổng bảng) | ❓ Chờ trả lời | Kiểm chứng thực tế 2026-08-14 — lọc lần lượt cả 5 trạng thái, chỉ `In Progress` lệch |
+| AMB-29 | Bảng tổng quan đếm **67** dự án `In Progress` nhưng bấm vào lọc ra đúng **60** dòng (lệch 7). Bốn trạng thái còn lại khớp chính xác (53 · 2 · 2 · 1). Số nào đúng? | Mọi test khẳng định theo số đếm đều sai; người dùng mất niềm tin vào số liệu tổng quan; Dashboard cũng đang hiển thị `67 / 125` theo nguồn sai này | 🔴 | Số đếm ở bảng tổng quan **sai**; số dòng thật khi lọc mới đúng (53 + 60 + 2 + 2 + 1 = 118 = tổng bảng) | ❓ Chờ trả lời | Kiểm chứng thực tế 14-08-2026 — lọc lần lượt cả 5 trạng thái, chỉ `In Progress` lệch |
 | AMB-30 | Xoá dự án thành công nhưng hệ thống chuyển tới `/admin/not_found` kèm thông báo **"Something went wrong. Try again"** và **"Project not found"** thay vì quay về danh sách kèm thông báo thành công. Lỗi hay thiết kế? | Người dùng tưởng xoá thất bại và bấm lại; test thủ công báo nhầm FAIL; automation không có mốc nào để khẳng định xoá thành công | 🔴 | Đây là **lỗi** — sau khi xoá phải chuyển về `/admin/projects` kèm thông báo thành công | ❓ Chờ trả lời | Kiểm chứng thực tế trên dự án id `2695` |
 | AMB-31 | `Deadline` sớm hơn `Start Date` được chấp nhận ở **cả** phía client lẫn phía máy chủ; dự án tạo ra chỉ bị gắn nhãn *"This project is overdue by N days"*. Lỗi hay cố ý? | Dữ liệu dự án vô nghĩa đi vào hệ thống rồi lan sang Gantt, mốc tiến độ, báo cáo. Danh sách hiện đã có dự án `Test Date Validation` với `Start 15-05-2026` / `Deadline 14-05-2026` | 🔴 | Đây là **lỗi** — `Deadline` phải ≥ `Start Date` | ❓ Chờ trả lời | Kiểm chứng thực tế: tạo dự án `Start 20-08-2026` / `Deadline 01-08-2026` → lưu thành công |
 | AMB-32 | Thông báo lỗi của trường `Customer` là **"Select and begin typing"** — chính là chuỗi gợi ý (placeholder) của ô chọn, không phải câu báo lỗi. Các trường khác báo đúng "This field is required." | Người dùng không hiểu mình sai gì; test tự động so khớp thông báo lỗi sẽ viết ra khẳng định vô nghĩa | 🟡 | Đây là **lỗi** — phải dùng chung câu "This field is required." | ❓ Chờ trả lời | — |
@@ -295,4 +295,4 @@ Toàn bộ ảnh chụp full-page, lưu tại [`evidence/`](evidence/).
 
 | Ngày | Nguồn | REQ ảnh hưởng | Loại | Tóm tắt thay đổi | TC cần xử lý |
 |---|---|---|---|---|---|
-| 2026-08-14 | UI recon | REQ-PRJ-01 → 104 | 🟢 Thêm | Khởi tạo tài liệu từ khảo sát UI thực tế + đọc DOM + tầng network. 104 REQ, 10 Story, 16 AMB (6 🔴), 7 RISK, 31 ảnh evidence. Đã tạo và xoá 1 dự án thử nghiệm trên môi trường dùng chung | — (viết TC mới) |
+| 14-08-2026 | UI recon | REQ-PRJ-01 → 104 | 🟢 Thêm | Khởi tạo tài liệu từ khảo sát UI thực tế + đọc DOM + tầng network. 104 REQ, 10 Story, 16 AMB (6 🔴), 7 RISK, 31 ảnh evidence. Đã tạo và xoá 1 dự án thử nghiệm trên môi trường dùng chung | — (viết TC mới) |

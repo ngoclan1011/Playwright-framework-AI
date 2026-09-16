@@ -1,6 +1,6 @@
 # Impact Report — `PO-2026-08-18-B` · Module `LOGIN`
 
-> **Nguồn thay đổi:** PO trả lời **13 ambiguity còn lại** và cấp **tài khoản đủ 3 vai trò**, trong phiên làm việc 2026-08-18. Không có file ticket — mã `PO-2026-08-18-B` là đợt quyết định thứ **hai** trong ngày (đợt A: [impact_PO-2026-08-18.md](impact_PO-2026-08-18.md)).
+> **Nguồn thay đổi:** PO trả lời **13 ambiguity còn lại** và cấp **tài khoản đủ 3 vai trò**, trong phiên làm việc 18-08-2026. Không có file ticket — mã `PO-2026-08-18-B` là đợt quyết định thứ **hai** trong ngày (đợt A: [impact_PO-2026-08-18.md](impact_PO-2026-08-18.md)).
 >
 > Tài liệu module: [../requirements_login.md](../requirements_login.md) · Danh mục: [../../README.md](../../README.md)
 
@@ -58,7 +58,7 @@
 
 `AMB-01` là ambiguity 🔴 chặn **ma trận phân quyền của mọi module** từ đầu dự án. Nay đã có tài khoản đủ 3 vai trò.
 
-**Kết quả kiểm chứng thật ngày 2026-08-18:**
+**Kết quả kiểm chứng thật ngày 18-08-2026:**
 
 | Vai trò | Điểm đăng nhập | Định danh | Ghi nhận |
 |---|---|---|---|

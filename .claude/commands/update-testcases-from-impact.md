@@ -156,7 +156,7 @@ Mỗi mục ghi: `file:dòng`, TC ID, **vòng · nhánh**, sửa ô nào, có c�
 2. Sửa **tại chỗ** trong file nền tảng `<nền-tảng>/test_cases_<module>_<nền-tảng>.md` (hoặc `<nền-tảng>/parts/part_NN_*.md` nếu đã tách) — **chỉ chạm đúng ô đã liệt kê** ở Bước 3. Bộ TC cũ chưa có tầng nền tảng → sửa trong `test_cases_<module>.md` rồi chuyển một lần theo skill rbt (Quy Tắc Xuất File mục 2)
 3. TC bị gỡ → đổi trạng thái, giữ nguyên dòng và TC ID:
    ```
-   | CRM_PRJ_TC_031 | Copy Project | ... | 🗑️ Deprecated — gỡ theo TICKET-123 (2026-08-17) |
+   | CRM_PRJ_TC_031 | Copy Project | ... | 🗑️ Deprecated — gỡ theo TICKET-123 (17-08-2026) |
    ```
 4. TC negative/boundary **mới sinh trong phạm vi REQ 🟡** → cấp TC ID **tiếp theo dải hiện có** của module, KHÔNG chèn số vào giữa
 5. Cập nhật **Bảng Đối Soát Coverage** ở index — REQ 🔴 không còn TC active là **đúng**, phải ghi rõ lý do; REQ 🟡 vẫn phải có ≥1 TC active
@@ -186,15 +186,15 @@ Kiểm đủ 7 mục, thiếu mục nào là chưa xong:
 
 | Ngày | Ticket | TC bị ảnh hưởng | Thay đổi | Bản sao lưu |
 |---|---|---|---|---|
-| 2026-08-17 | TICKET-123 | CRM_PRJ_TC_002 | V1 · UI cơ bản: thêm dòng bảng kiểm cho field `Deadline`, cập nhật thứ tự field | `archive/test_cases_project_v2.md` |
-| 2026-08-17 | TICKET-123 | CRM_PRJ_TC_018 | V2 · Required: Deadline tuỳ chọn → bắt buộc — sửa expected result + thêm TC_077 negative | ↑ |
-| 2026-08-17 | TICKET-123 | CRM_PRJ_TC_031 | 🗑️ Deprecated — chức năng Copy Project đã gỡ | ↑ |
+| 17-08-2026 | TICKET-123 | CRM_PRJ_TC_002 | V1 · UI cơ bản: thêm dòng bảng kiểm cho field `Deadline`, cập nhật thứ tự field | `archive/test_cases_project_v2.md` |
+| 17-08-2026 | TICKET-123 | CRM_PRJ_TC_018 | V2 · Required: Deadline tuỳ chọn → bắt buộc — sửa expected result + thêm TC_077 negative | ↑ |
+| 17-08-2026 | TICKET-123 | CRM_PRJ_TC_031 | 🗑️ Deprecated — chức năng Copy Project đã gỡ | ↑ |
 ```
 
 2. Xuất **Delta TC List** ra chat — đây là input trực tiếp cho `/update-automation-from-impact`:
 
 ```markdown
-## Delta TC List — TICKET-123 · 2026-08-17
+## Delta TC List — TICKET-123 · 17-08-2026
 
 | TC ID | Vòng · Nhánh | Hành động đã làm | Đổi cái gì (cho automation) |
 |---|---|---|---|

@@ -77,7 +77,8 @@ Thư mục này chứa các prompt mẫu dùng nhanh (copy → paste → gửi) 
 
 | # | File | Command Tương Ứng | Skill Tích Hợp | Mô Tả & Cải Tiến Mới |
 |---|------|-------------------|----------------|----------------------|
-| 25 | `prompt_25_generate_master_test_plan.txt` | `/generate-master-test-plan` | `skills-test-summary-reporter` | **[Mới]** Master Test Plan — phạm vi & **ngoài phạm vi**, tiêu chí vào/ra, môi trường, nhân lực, lịch, rủi ro dự án. Tài liệu để PM/khách duyệt, **không** sinh test scenario |
+| 25 | `prompt_25_generate_master_test_plan.txt` | `/generate-master-test-plan` | `skills-test-summary-reporter` | **[Mới]** Master Test Plan — đầu vào là phiếu YAML `plans/master-test-plan/test_plan.config.yaml` (mẫu đã điền: `test_plan.template.yaml`). Phạm vi **module × nền tảng**, cấp độ · loại · độc lập kiểm thử, phi chức năng, chiến lược tự động hoá, tiêu chí vào/ra, dữ liệu kiểm thử, quản lý lỗi, lịch · **ước lượng · ngân sách**, rủi ro dự án + sản phẩm. Xuất `docs/test-plans/`. Bám 29119-3, phủ đủ nội dung ISTQB CTFL v4.0 mục 5.1.1 |
+| 32 | `prompt_32_generate_test_progress_report.txt` | `/generate-test-progress-report` | `skills-test-progress-reporter` | **[Mới]** Báo cáo tiến độ **một kỳ** (ngày/tuần) — so thực tế với lịch plan, chỉ số trong kỳ, trở ngại, rủi ro mới, kế hoạch kỳ tới, đề xuất điều chỉnh. Bám ISTQB CTFL v4.0 mục 5.3.2. **Không** khuyến nghị go/no-go |
 | 24 | `prompt_24_generate_test_summary_report.txt` | `/generate-test-summary-report` | `skills-test-summary-reporter` | **[Mới]** Báo cáo tổng hợp tại một mốc — gộp nhiều execution report + bug + RTM, đối chiếu tiêu chí exit, **khuyến nghị go/no-go có căn cứ** |
 
 > 📌 Hai prompt này đi thành cặp: `25` công bố tiêu chí exit **trước** khi test, `24` chấm lại đúng bộ đó **sau** khi test. Dùng lệch bộ tiêu chí là lúc release sẽ cãi nhau về chuẩn.

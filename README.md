@@ -45,7 +45,7 @@ claude-testing-skills/
 │
 │ ══════════ KHUNG — dùng lại cho mọi dự án ══════════
 ├── .claude/
-│   ├── commands/            # 38 lệnh tùy chỉnh (slash commands)
+│   ├── commands/            # 39 lệnh tùy chỉnh (slash commands)
 │   ├── rules/               # 6 quy tắc bắt buộc AI phải tuân theo
 │   ├── skills/              # 20 kỹ năng chuyên biệt cho AI
 │   └── settings.json        # Cấu hình quyền hạn cho Claude Code
@@ -53,7 +53,7 @@ claude-testing-skills/
 │   ├── manual/              # Quy trình 6 bước sinh Manual Test Cases (AI-RBT)
 │   ├── automation/          # Quy trình 6 bước sinh Automation Scripts
 │   └── cross-module/        # Quy trình phân tích Cross-Module & Ma trận kết hợp
-├── prompts/                 # 35 prompt mẫu dùng nhanh (copy → paste → gửi)
+├── prompts/                 # 36 prompt mẫu dùng nhanh (copy → paste → gửi)
 ├── scripts/
 │   ├── testcases-viewer/    # Công cụ web xem/lọc test case
 │   ├── execution-viewer/    # Công cụ web xem kết quả chạy, so sánh các lần chạy & độ phủ automation
@@ -102,9 +102,9 @@ claude-testing-skills/
 
 | Thư mục         | Vai trò                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `commands/`     | 38 slash commands: `/discover-system`, `/generate-automation-web`, `/generate-automation-mobile`, `/generate-automation-api`, `/generate-testcases-api`, `/generate-requirements-from-website`, `/generate-requirements-from-mobile`, `/generate-requirements-from-api`, `/update-requirements-from-ticket`, `/generate-testcases-manual-rbt`, `/update-testcases-from-impact`, `/generate-automation-from-testcases`, `/update-automation-from-impact`, `/run-and-fix-tests`, `/heal-locators`, `/review-automation-code`, `/execute-test-cases`, `/retest-fixed-bugs`, `/analyze-test-report`, `/create-bug-report`, `/review-testcases`, `/generate-traceability-matrix`, `/generate-master-test-plan`, `/generate-test-summary-report`, `/generate-user-guide`, `/generate-api-mocks`... |
+| `commands/`     | 39 slash commands: `/discover-system`, `/generate-automation-web`, `/generate-automation-mobile`, `/generate-automation-api`, `/generate-testcases-api`, `/generate-requirements-from-website`, `/generate-requirements-from-mobile`, `/generate-requirements-from-api`, `/update-requirements-from-ticket`, `/generate-testcases-manual-rbt`, `/update-testcases-from-impact`, `/generate-automation-from-testcases`, `/update-automation-from-impact`, `/run-and-fix-tests`, `/heal-locators`, `/review-automation-code`, `/execute-test-cases`, `/retest-fixed-bugs`, `/analyze-test-report`, `/create-bug-report`, `/review-testcases`, `/generate-traceability-matrix`, `/generate-master-test-plan`, `/generate-test-progress-report`, `/generate-test-summary-report`, `/generate-user-guide`, `/generate-api-mocks`... |
 | `rules/`        | 6 quy tắc bắt buộc: automation chung, reporting (Allure), locator strategy, Playwright, Selenium, Appium                                                                                                                                                                                                                                                                                                                                                                |
-| `skills/`       | 20 kỹ năng chuyên biệt: requirements analyzer, automation engineer, manual testing, manual test executor, UI debug (web), **mobile debug (Appium — Native/Flutter/Hybrid)**, locator healer, test data generator, framework architect, jira integration, bug reporter, test report analyzer, **test summary reporter**, **user guide writer**, testcase reviewer, automation code reviewer, coverage traceability, api mocking...                                                                                                                              |
+| `skills/`       | 21 kỹ năng chuyên biệt: requirements analyzer, automation engineer, manual testing, manual test executor, UI debug (web), **mobile debug (Appium — Native/Flutter/Hybrid)**, locator healer, test data generator, framework architect, jira integration, bug reporter, test report analyzer, **test progress reporter**, **test summary reporter**, **user guide writer**, testcase reviewer, automation code reviewer, coverage traceability, api mocking...                                                                                                                              |
 | `settings.json` | Cấu hình quyền hạn: cho phép/cấm các hành động cụ thể (đọc file, chạy test, push code...). Riêng `settings.local.json` là cấu hình **cục bộ từng máy** — đã gitignore, không commit                                                                                                                                                                                                                                                                 |
 
 > **📌 Lưu ý về cấu trúc:** Trong Claude Code, **workflows** được gọi là **commands** và đặt trong `.claude/commands/`. Tên file dùng dấu gạch dưới (`_`). Ví dụ: `generate-automation-from-testcases.md`.
@@ -164,6 +164,7 @@ Dành cho tác vụ **đơn lẻ**, chỉ cần copy → thay `[...]` bằng d�
 | 29  | `prompt_29_generate_requirements_from_api.txt`  | **[Mới]** Sinh REQ cho module API từ Swagger/Scalar/Postman — kiểm chứng bằng gọi thật |
 | 30  | `prompt_30_generate_requirements_from_mobile.txt` | **[Mới]** Sinh REQ cho module trên app mobile — Native/Flutter/Hybrid, qua Appium MCP |
 | 31  | `prompt_31_generate_automation_api.txt`         | **[Mới]** Sinh automation API từ file TC API — fixture 2 tài khoản BOLA, dọn dữ liệu |
+| 32  | `prompt_32_generate_test_progress_report.txt`   | **[Mới]** Báo cáo tiến độ một kỳ trong đợt — so với lịch plan, trở ngại, rủi ro mới |
 
 > Danh mục đầy đủ chia theo 7 nhóm tra cứu: [`prompts/README.md`](prompts/README.md)
 

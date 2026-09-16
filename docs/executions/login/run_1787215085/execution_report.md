@@ -8,7 +8,7 @@
 | Môi trường | https://crm.anhtester.com — **Dùng chung** |
 | Tài khoản | Admin (`admin@example.com`), PM (`projectmanager@example.com`), Customer (`anvo@example.com`) |
 | Người thực hiện | Agent hỗ trợ (Claude Code) |
-| Bắt đầu → Kết thúc | 2026-08-20 15:39 → 16:02 (~23 phút) |
+| Bắt đầu → Kết thúc | 20-08-2026 15:39 → 16:02 (~23 phút) |
 
 ## 1. Tổng kết
 
@@ -160,7 +160,7 @@
 | **Actual** | Thanh địa chỉ giữ nguyên `http://crm.anhtester.com/admin/authentication` — không chuyển hướng |
 | Evidence | ![](evidence/TC_039_http_not_upgraded.png) |
 | Tái hiện được? | Có |
-| Ghi chú | Xác nhận lại **bug cũ vẫn còn tồn tại** trên build hiện tại — khớp với [BUG_login_1785678750_TC039.md](../../../bugs/login/BUG_login_1785678750_TC039.md) (2026-08-02). Đã cập nhật lại đúng tham chiếu TC ID/REQ ID + evidence mới qua `/create-bug-report` |
+| Ghi chú | Xác nhận lại **bug cũ vẫn còn tồn tại** trên build hiện tại — khớp với [BUG_login_1785678750_TC039.md](../../../bugs/login/BUG_login_1785678750_TC039.md) (02-08-2026). Đã cập nhật lại đúng tham chiếu TC ID/REQ ID + evidence mới qua `/create-bug-report` |
 
 ## 4. TC BLOCKED
 
