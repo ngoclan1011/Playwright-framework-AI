@@ -1,249 +1,146 @@
-# Bản đồ hệ thống — Perfex CRM (Anh Tester Demo)
+# Bản đồ hệ thống — Shan Koe Mee (BacaOcean)
 
-> **Tầng khám phá — KHÔNG chứa mã `REQ-XXX-NN`.** Ở đây chỉ cấp **prefix** cho từng module. Mã REQ được cấp ở tầng module khi chạy `/generate-requirements-from-website`.
->
-> Danh mục toàn hệ thống: [../README.md](../README.md)
-
----
+> **INDEX tầng khám phá — tên file bất biến.** Bản đồ 1 file (6 module ≤ 8, không tách). Không chứa mã `REQ-XXX-NN` — tầng này chỉ cấp **prefix**. Danh mục + trạng thái recon ở [`../README.md`](../README.md).
 
 ## 1. Bối cảnh khảo sát
 
 | Mục | Giá trị |
 |---|---|
-| Ngày khảo sát | 14-08-2026 |
-| Mode | **UI** — repo chưa có `docs/`, không có tài liệu QA kèm theo |
-| Hệ thống | Perfex CRM (bản demo tuỳ biến thương hiệu "ANHTESTER") |
-| Tiền tố TC ID đã chốt | `CRM_` → `CRM_<MODULE>_TC_<3 số>` (VD `CRM_LOGIN_TC_001`) |
-| URL · tài khoản | Lưu ở `.env` — **KHÔNG** ghi vào `docs/` |
-| Role đã dùng | 1 account duy nhất, hiển thị **Admin Example**; **không phải full admin** (xem mục 5) |
-| Môi trường dùng chung | **CÓ** — khảo sát chỉ đọc: không tạo/sửa/xoá, không bấm Save |
-| Phạm vi crawl | Toàn bộ menu sidebar (2 cấp) · dropdown quick-create · dropdown hồ sơ · 1 màn hình chi tiết của Khách hàng và Dự án · tầng network |
-| Kỹ thuật crawl | `browser_navigate` → `browser_evaluate` gom `a[href]` + cột bảng + nút thanh công cụ → `browser_take_screenshot(fullPage)` |
-| Số module phát hiện | **23 module** được cấp prefix, viết trong **21 file** khám phá |
-| Ước tổng REQ | ~560–780 REQ cho toàn hệ thống |
+| Ngày | 17-09-2026 |
+| Mode | **DOC** — chỉ có tài liệu, **chưa mở UI**. Toàn bộ bản đồ là *dự kiến từ spec*, chưa module nào được xác minh trên hệ thống chạy |
+| Mặt hệ thống | **Web + Miniapp** (QA xác nhận). Chưa khảo sát mặt nào. Không có mặt API (QA không có quyền gọi API) |
+| Nguồn | `sources/ShanKoeMee_Gameplay_Spec_v2.docx` · v2.1 · 13/08/2026 · sha256 `9ca84a44…1910` · 12 mục, 6 bảng, 0 ảnh nhúng · wireframe là link Figma ngoài (chưa mở) |
+| Hệ thống chứa | Game **BacaOcean** trong cổng **Fish Hunter**. Spec chỉ thay **luật chơi** bên trong BacaOcean; tên, theme, hình ảnh, âm thanh, vị trí truy cập **không đổi** (spec mục 12) |
+| Đường vào | Home → icon **ShanKoeMee** (QA cung cấp, chưa xác minh) |
+| Tài khoản | 1 tài khoản test (ở `.env`), role chưa rõ. Chưa có tài khoản Banker/Player tách bạch → mọi test nhiều người chơi cần ≥ 2 tài khoản |
+| Môi trường | 🔴 **Dùng chung** — khảo sát **chỉ đọc**, không đặt cược thật khi chưa được phép |
+| Phạm vi crawl | Chưa crawl. Link App Store trong spec (`id1486305282`) là **game tham chiếu để thử luật**, không phải hệ thống cần test |
+| Tầng network | Chưa quan sát. Sẽ dùng DevTools ở lượt DELTA để lộ endpoint (QA không gọi API trực tiếp được) |
 
----
-
-## 2. Sơ đồ điều hướng (nguyên trạng menu)
+## 2. Sơ đồ điều hướng dự kiến (từ spec — chưa xác minh)
 
 ```
-Dashboard                       /admin/
-Customers                       /admin/clients
-Projects                        /admin/projects
-Tasks                           /admin/tasks
-Contracts                       /admin/contracts
-Sales
-├── Proposals                   /admin/proposals
-├── Estimates                   /admin/estimates
-├── Invoices                    /admin/invoices
-├── Payments                    /admin/payments
-├── Credit Notes                /admin/credit_notes
-└── Items                       /admin/invoice_items
-Subscriptions                   /admin/subscriptions
-Expenses                        /admin/expenses
-Support                         /admin/tickets
-Leads                           /admin/leads
-Estimate Request                /admin/estimate_request
-Knowledge Base                  /admin/knowledge_base
-Utilities                                                  ← NGOÀI PHẠM VI (mục 8)
-├── Media                       /admin/utilities/media
-├── Bulk PDF Export             /admin/utilities/bulk_pdf_exporter
-└── Calendar                    /admin/utilities/calendar
-Reports
-├── Sales                       /admin/reports/sales
-├── Expenses                    /admin/reports/expenses
-├── Expenses vs Income          /admin/reports/expenses_vs_income
-├── Leads                       /admin/reports/leads
-├── Timesheets overview         /admin/staff/timesheets?view=all
-└── KB Articles                 /admin/reports/knowledge_base_articles
-
-Ngoài sidebar:
-├── Quick create (+)            invoice · estimate · proposal · credit_note · customer ·
-│                               subscription · project · expense · contract · article ·
-│                               ticket · event
-├── Dropdown hồ sơ              /admin/profile · /admin/staff/timesheets ·
-│                               /admin/staff/edit_profile · /admin/staff/change_language/* (26 ngôn ngữ)
-├── To Do                       /admin/todo
-├── Reminders                   /admin/misc/reminders
-├── Thông báo                   /admin/profile?notifications=true
-└── Đăng xuất                   /admin/authentication/logout
-
-Setup (bánh răng)               KHÔNG tồn tại trong DOM với account hiện tại — xem mục 8
+Home (Fish Hunter / BacaOcean)
+└── icon ShanKoeMee                              ❔ vị trí thật chưa xác minh
+    ├── Màn chọn phòng                             [ROOM]   spec 7.1–7.2 · 10
+    │   ├── Bình dân                               ❔ tên + ngưỡng tài sản "gửi lại sau"
+    │   ├── Trung lưu
+    │   └── Thượng lưu
+    ├── Bàn chơi                                   [TABLE]  spec 2 · 7
+    │   ├── Ghế người chơi (n ghế ❔) + tag Banker
+    │   ├── Khu đặt cược: preset · Raise           [BET]    spec 7.3 · 8
+    │   ├── Bài 2 lá → nút Rút thêm / Dừng + đếm ngược 5s   [DEAL] spec 4 · 7.4–7.7
+    │   ├── Kết quả so bài · hệ số x2/x3/x5 · thanh toán     [RANK]→[BET] spec 5 · 6 · 7.8–7.11
+    │   └── Popup Jackpot                          [JPOT]   spec 9 · 10
+    └── Popup Hướng dẫn chơi                       [TABLE]  spec 10 — ❔ mở từ lobby hay trong bàn
 ```
 
----
+## 3. Bảng module tổng
 
-## 3. Bảng module tổng (23 module)
+| # | Module (tên chuẩn) | Bí danh trong spec | Prefix | Nền tảng | Mục spec | Loại màn hình | CRUD | Status flow | Risk | Ước REQ |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | Chọn phòng | "màn chọn phòng", "điều hướng user tự động chọn vào phòng" | `ROOM` | Web · Miniapp | 7 (b.1–2) · 10 | Lobby | Không | Không | 🟡 | 6–8 |
+| 2 | Bàn chơi & Banker luân phiên | "bàn chơi", "ghế", "tag Banker", "biểu tượng Banker" | `TABLE` | Web · Miniapp | 1 · 2 · 7 (b.2, 12) · 10 | Bàn realtime nhiều người | Không | **Có** — vai Banker luân phiên | 🔴 | 10–14 |
+| 3 | Cược & Thanh toán | "đặt cược", "Raise", "hệ số nhân x2/x3/x5", "trả thưởng", "hoa hồng 5%", "Banker phá sản" | `BET` | Web · Miniapp | 6 · 7 (b.3, 10–11) · 8 | Thao tác trong bàn + settlement | Không | **Có** — cược → chờ → thắng/thua | 🔴 | 14–18 |
+| 4 | Chia bài & rút lá thứ 3 | "chia 2 lá", "Point", "Boke", "Rút thêm (Hit) / Dừng (Stand)", "đếm ngược" | `DEAL` | Web · Miniapp | 3 · 4 · 7 (b.4–7) | Thao tác trong bàn, có timer | Không | **Có** — 2 lá → chọn → 3 lá/dừng | 🔴 | 12–16 |
+| 5 | Xếp hạng bài & Tie-break | "Hand Ranking", "Shan 9 / Shan 8 / Bộ ba / Triple", "Natural", "Tie-Break" | `RANK` | Web · Miniapp | 5 · 5.1 · 11 | Logic thuần — hiển thị qua kết quả so bài | Không | Không | 🔴 | 15–20 |
+| 6 | Jackpot | "Jackpot Pool / Fund", "baseline", "Jackpot Multiplier", "popup Jackpot" | `JPOT` | Web · Miniapp | 9 · 10 · 12 | Popup + quỹ tích luỹ | Không | **Có** — tích luỹ → trúng → reset | 🔴 | 10–12 |
 
-| # | Module (tên UI) | Bí danh | Prefix | File khám phá | Loại màn hình | Risk | Ước REQ |
-|---|---|---|---|---|---|---|---|
-| 1 | Login | Đăng nhập / Xác thực | `LOGIN` | [module_01](modules/module_01_dang_nhap.md) | Form | 🔴 | 12–18 |
-| 2 | Customers | Khách hàng | `CUST` | [module_02](modules/module_02_khach_hang.md) | Danh sách + 19 tab | 🔴 | 45–65 |
-| 3 | Contacts | Liên hệ khách hàng | `CONT` | [module_03](modules/module_03_lien_he_khach_hang.md) | Danh sách + form | 🔴 | 20–30 |
-| 4 | Leads | Khách hàng tiềm năng | `LEAD` | [module_04](modules/module_04_khach_hang_tiem_nang.md) | Danh sách + Kanban | 🟡 | 30–40 |
-| 5 | Projects | Dự án | `PRJ` | [module_05](modules/module_05_du_an.md) | Danh sách + 17 tab | 🔴 | 60–80 |
-| 6 | Tasks | Công việc | `TASK` | [module_06](modules/module_06_cong_viec.md) | Danh sách + timer | 🔴 | 40–55 |
-| 7 | Estimates | Báo giá sơ bộ | `EST` | [module_07](modules/module_07_bao_gia_so_bo.md) | Chứng từ | 🔴 | 30–40 |
-| 8 | Proposals | Đề xuất | `PROP` | [module_08](modules/module_08_de_xuat_bao_gia.md) | Chứng từ | 🔴 | 30–40 |
-| 9 | Invoices | Hoá đơn | `INV` | [module_09](modules/module_09_hoa_don.md) | Chứng từ + 2 màn phụ | 🔴 | 50–70 |
-| 10 | Payments | Thanh toán | `PAY` | [module_10](modules/module_10_thanh_toan.md) | Danh sách tra cứu | 🔴 | 15–20 |
-| 11 | Credit Notes | Giấy báo có | `CN` | [module_11](modules/module_11_giay_bao_co.md) | Chứng từ | 🔴 | 25–35 |
-| 12 | Subscriptions | Đăng ký định kỳ | `SUB` | [module_12](modules/module_12_dang_ky_dinh_ky.md) | Danh sách + form | 🔴 | 25–35 |
-| 13 | Contracts | Hợp đồng | `CTR` | [module_13](modules/module_13_hop_dong.md) | Danh sách + editor | 🟡 | 25–35 |
-| 14 | Expenses | Chi phí | `EXP` | [module_14](modules/module_14_chi_phi.md) | Danh sách + form | 🟡 | 20–28 |
-| 15 | Items | Danh mục hàng hoá/dịch vụ | `ITEM` | [module_15](modules/module_15_danh_muc_hang_hoa.md) | Danh sách + modal | 🟡 | 15–22 |
-| 16 | Support Tickets | Hỗ trợ | `TICK` | [module_16](modules/module_16_ho_tro_ticket.md) | Danh sách + hội thoại | 🟡 | 30–40 |
-| 17 | Estimate Request | Yêu cầu báo giá | `ESTREQ` | [module_17](modules/module_17_yeu_cau_bao_gia.md) | Form builder | 🟡 | 15–20 |
-| 18 | Knowledge Base | Cơ sở tri thức | `KB` | [module_18](modules/module_18_co_so_tri_thuc.md) | Danh sách + editor | 🟢 | 12–18 |
-| 19 | Reports | Báo cáo | `REP` | [module_19](modules/module_19_bao_cao.md) | Báo cáo (6 trang) | 🟡 | 20–30 |
-| 20 | Dashboard | Trang tổng quan | `DASH` | [module_20](modules/module_20_dashboard_todo_nhac_nho.md) | Dashboard | 🟢 | 8–12 |
-| 21 | My To Do Items | Việc cần làm | `TODO` | [module_20](modules/module_20_dashboard_todo_nhac_nho.md) | Danh sách kéo thả | 🟢 | 8–12 |
-| 22 | Reminders | Nhắc nhở | `REM` | [module_20](modules/module_20_dashboard_todo_nhac_nho.md) | Danh sách | 🟢 | 8–12 |
-| 23 | My Profile / Timesheets | Hồ sơ cá nhân & Chấm công | `PROF` | [module_21](modules/module_21_ho_so_ca_nhan.md) | Form + danh sách | 🟡 | 15–20 |
+**Tổng: 6 module · 6 prefix · ước 67–88 REQ.** Không module nào có CRUD dạng quản trị — toàn bộ là gameplay realtime; "Ước REQ" chủ yếu là business rule, không phải field spec.
 
-**Tự kiểm chứng:** 23 module ↔ 23 prefix ↔ 21 file khám phá (file `module_20` chứa 3 module). Mọi module thuộc **đúng 1 file**, không mồ côi, không trùng.
+**Quyết định ranh giới đã chốt với QA (17-09-2026):**
 
-> Cột `Trạng thái recon` **không** đặt ở đây — nguồn duy nhất là [../README.md](../README.md) để tránh lệch nhau.
+| Quyết định | Lý do |
+|---|---|
+| Cách tính điểm (spec mục 3) → `DEAL` | Điểm là thuộc tính tay bài sau khi chia, quyết định được Hit/Stand hay không |
+| Tie-break (spec 5.1) → `RANK` | Bước cuối của phép so hạng, không test độc lập được |
+| Trình tự lượt (chiều kim đồng hồ từ trái Banker · Banker sau cùng) → `DEAL` | Chỉ xuất hiện ở pha rút bài. Không tách module `ROUND` |
+| Thanh toán + hệ số nhân gộp vào `BET` | Spec tự gộp ở mục 8; hệ số chỉ có nghĩa khi thanh toán |
+| Popup Hướng dẫn chơi → `TABLE` | 1 popup tĩnh, không đáng 1 prefix |
+| **Luồng chơi 1 ván (spec mục 7) KHÔNG là module** | Luồng cắt ngang — mỗi bước đã thuộc 1 module; tạo `FLOW` là nhân đôi REQ. Xem mục 4 |
 
----
-
-## Bản đồ tài liệu
-
-| File | Module bao phủ | Prefix |
-|---|---|---|
-| [modules/module_01_dang_nhap.md](modules/module_01_dang_nhap.md) | Đăng nhập / Xác thực | `LOGIN` |
-| [modules/module_02_khach_hang.md](modules/module_02_khach_hang.md) | Khách hàng | `CUST` |
-| [modules/module_03_lien_he_khach_hang.md](modules/module_03_lien_he_khach_hang.md) | Liên hệ khách hàng | `CONT` |
-| [modules/module_04_khach_hang_tiem_nang.md](modules/module_04_khach_hang_tiem_nang.md) | Khách hàng tiềm năng | `LEAD` |
-| [modules/module_05_du_an.md](modules/module_05_du_an.md) | Dự án | `PRJ` |
-| [modules/module_06_cong_viec.md](modules/module_06_cong_viec.md) | Công việc | `TASK` |
-| [modules/module_07_bao_gia_so_bo.md](modules/module_07_bao_gia_so_bo.md) | Báo giá sơ bộ (Estimates) | `EST` |
-| [modules/module_08_de_xuat_bao_gia.md](modules/module_08_de_xuat_bao_gia.md) | Đề xuất (Proposals) | `PROP` |
-| [modules/module_09_hoa_don.md](modules/module_09_hoa_don.md) | Hoá đơn | `INV` |
-| [modules/module_10_thanh_toan.md](modules/module_10_thanh_toan.md) | Thanh toán | `PAY` |
-| [modules/module_11_giay_bao_co.md](modules/module_11_giay_bao_co.md) | Giấy báo có | `CN` |
-| [modules/module_12_dang_ky_dinh_ky.md](modules/module_12_dang_ky_dinh_ky.md) | Đăng ký định kỳ | `SUB` |
-| [modules/module_13_hop_dong.md](modules/module_13_hop_dong.md) | Hợp đồng | `CTR` |
-| [modules/module_14_chi_phi.md](modules/module_14_chi_phi.md) | Chi phí | `EXP` |
-| [modules/module_15_danh_muc_hang_hoa.md](modules/module_15_danh_muc_hang_hoa.md) | Danh mục hàng hoá/dịch vụ | `ITEM` |
-| [modules/module_16_ho_tro_ticket.md](modules/module_16_ho_tro_ticket.md) | Hỗ trợ (Tickets) | `TICK` |
-| [modules/module_17_yeu_cau_bao_gia.md](modules/module_17_yeu_cau_bao_gia.md) | Yêu cầu báo giá | `ESTREQ` |
-| [modules/module_18_co_so_tri_thuc.md](modules/module_18_co_so_tri_thuc.md) | Cơ sở tri thức | `KB` |
-| [modules/module_19_bao_cao.md](modules/module_19_bao_cao.md) | Báo cáo | `REP` |
-| [modules/module_20_dashboard_todo_nhac_nho.md](modules/module_20_dashboard_todo_nhac_nho.md) | Dashboard · Việc cần làm · Nhắc nhở | `DASH` · `TODO` · `REM` |
-| [modules/module_21_ho_so_ca_nhan.md](modules/module_21_ho_so_ca_nhan.md) | Hồ sơ cá nhân & Chấm công | `PROF` |
-
----
+**Ngoài phạm vi (spec mục 12):** tên gọi · theme · hình ảnh · âm thanh · vị trí truy cập BacaOcean; không mở game bài mới; badge "SHAN 9" chờ Product.
 
 ## 4. Bản đồ entity & phụ thuộc
 
+### 4.1. Entity nghiệp vụ
+
+| Entity | Thuộc module | Thuộc tính chính (từ spec) | Vòng đời |
+|---|---|---|---|
+| Phòng (Room) | `ROOM` | Tên (3 mức) · ngưỡng tài sản ❔ · hạn mức cược (vd 1K/100K/500K/10M) | Tĩnh |
+| Bàn (Table) | `TABLE` | Số ghế ❔ (spec 1: "thường 2–8") · Banker hiện tại · min bet | Mở → chờ đủ người → ván → ván… |
+| Người chơi tại bàn (Seat) | `TABLE` | Tài sản · vị trí ghế · có tag Banker không | Vào bàn → chơi → rời |
+| Ván (Round) | `DEAL` (trình tự) · `BET` (kết quả) | Banker của ván · thứ tự lượt · pha hiện tại | 12 bước ở 4.2 |
+| Cược (Bet) | `BET` | Mức cược · người đặt · kết quả thắng/thua · hệ số nhân · hoa hồng 5% | Đặt → khoá → thanh toán |
+| Tay bài (Hand) | `DEAL` → `RANK` | 2–3 lá · Point (mod 10) · loại (Shan9/Shan8/Bộ ba/Point) · hệ số x2/x3/x5 | Chia 2 lá → Hit/Stand → chốt → xếp hạng |
+| Quỹ Jackpot (Pool) | `JPOT` | Số dư · baseline 100M · tỉ lệ trích 1% · multiplier 100 | Tích luỹ → trúng → reset |
+
+### 4.2. Luồng 1 ván — chuỗi phụ thuộc giữa module (spec mục 7)
+
 ```
-                    ┌──────────────┐
-                    │ LEAD         │  chuyển đổi
-                    └──────┬───────┘
-                           ▼
-   ┌──────────────────────────────────────────────┐
-   │ CUST (Khách hàng)  ── 1..n ──▶ CONT (Liên hệ)│
-   └───┬───────┬───────┬────────┬────────┬────────┘
-       │       │       │        │        │
-       ▼       ▼       ▼        ▼        ▼
-     PRJ     CTR   EST/PROP   TICK    SUB
-       │                │              │
-       ├──▶ TASK        ▼              ▼
-       │             ┌─────┐        (sinh tự động)
-       └──▶ EXP ────▶│ INV │◀───────────┘
-                     └──┬──┘
-                        ├──▶ PAY   (ghi nhận thanh toán)
-                        └──▶ CN    (điều chỉnh giảm)
-
-ITEM   ─── dữ liệu nền cho ▶ EST · PROP · INV · CN
-REP    ─── tổng hợp số liệu từ ▶ INV · EXP · LEAD · TASK · KB
-REM    ─── cắt ngang: tab Reminders trong CUST · PRJ · CTR · LEAD
-ESTREQ ─── biểu mẫu công khai ▶ sinh EST
+[ROOM]  b.1  Chọn game BacaOcean → tự điều hướng vào phòng theo tài sản
+[TABLE] b.2  Xác định Banker của ván (ván đầu: người vào sớm nhất đủ ≥ 50× min bet)
+[BET]   b.3  Người chơi (≠ Banker) đặt cược: preset / Raise / auto-chọn theo tài sản
+[DEAL]  b.4  Chia 2 lá cho Banker + từng người đã cược
+[DEAL]  b.5  Nhận diện Shan9/Shan8 → tự động dừng
+[DEAL]  b.6  Lần lượt từng người (chiều kim đồng hồ, từ trái Banker) chọn Rút/Dừng · 5s · timeout = Dừng
+[DEAL]  b.7  Banker hành động SAU CÙNG, đã biết bài mọi người
+[RANK]  b.8  Xếp hạng cuối từng tay bài (+ tie-break 5.1)
+[RANK]  b.9  So Banker với TỪNG người chơi — độc lập từng cặp
+[BET]   b.10 Xác định hệ số x2/x3/x5 cho bên thắng
+[BET]   b.11 Trả thưởng / trừ cược · hoa hồng 5% · Banker trả từ trái qua phải · phá sản chia tỉ lệ
+[JPOT]  —    Trích 1% vào pool mỗi ván có người thắng · trả Jackpot nếu Bộ ba thắng (D-02, D-04)
+[TABLE] b.12 Kiểm tài sản Banker < 50× min bet → chuyển tag Banker sang người kế tiếp đủ điều kiện
 ```
 
-**Căn cứ quan sát:**
-- 19 tab của màn hình chi tiết Khách hàng liệt kê đúng các module phụ thuộc phía trên.
-- 17 tab của màn hình chi tiết Dự án cho thấy Dự án là điểm gom của Task, chứng từ bán hàng và chi phí.
-- Cột `Project` xuất hiện ở bảng danh sách của INV · EST · PROP · CN · SUB · EXP → mọi chứng từ đều gắn được vào dự án.
+**Phụ thuộc cứng:** `DEAL` cần `TABLE` (ghế, Banker) + `BET` (chỉ chia cho người đã cược) · `RANK` cần `DEAL` (tay bài đã chốt, cờ "2 lá ban đầu" để nhận Shan9/Shan8) · `BET` (thanh toán) cần `RANK` · `JPOT` cần `RANK` + `BET` (bộ ba **và** thắng, số tiền cược) · `TABLE` (chuyển Banker) cần `BET` (tài sản sau thanh toán).
 
-### Phát hiện tầng network (cấp hệ thống)
+**Điểm giao nguy hiểm (ưu tiên cho `/generate-cross-module-test-plan`):**
+- Cờ *"2 lá ban đầu, không qua rút"* sinh ở `DEAL`, tiêu thụ ở `RANK` (Shan9/Shan8) **và** `BET` (x2 chỉ cho bài 2 lá) — một cờ, ba nơi dùng
+- Bộ ba kích hoạt đồng thời: hạng 3 (`RANK`) + x5 (`BET`) + Jackpot (`JPOT`) — nhưng chỉ khi **thắng**
+- Banker phá sản giữa lúc trả tiền (`BET` b.11) rồi chuyển Banker (`TABLE` b.12) — thứ tự hai bước này quyết định ai nhận đủ tiền
 
-| Quan sát | Ý nghĩa |
-|---|---|
-| Bảng dữ liệu nạp qua `POST /admin/<module>/table` (ghi nhận `POST /admin/tasks/table`) | Ứng dụng server-render (CodeIgniter) + DataTables server-side. **Không có REST API `/api/`** → không khai thác được schema entity từ network như hệ thống SPA |
-| `GET /admin/utilities/get_calendar_data?csrf_token_name=…&start=…&end=…` | Mọi request đều mang **CSRF token** — ảnh hưởng thiết kế automation/API test về sau |
-| Không thấy endpoint nào không có UI tương ứng | Không phát hiện module ⚪ *Chưa implement* |
+## 5. Ma trận phân quyền sơ bộ
 
----
+Spec **không đề cập** role hệ thống (admin / user). Chỉ có 2 **vai trò trong ván**, luân phiên giữa các người chơi:
 
-## 5. Ma trận phân quyền sơ bộ (cấp module)
+| Hành động | Player | Banker | Ghi chú |
+|---|---|---|---|
+| Đặt cược | ✅ | ❌ | spec 8: "Người chơi (không phải Banker) chọn mức cược" |
+| Rút thêm / Dừng | ✅ điểm 0–7 tự chọn · Shan 8/9 tự dừng (D-01 chốt) | ✅ cùng luật, hành động sau cùng | spec 4 · 7.7 |
+| Xem bài người khác trước khi quyết định | ❌ | ✅ | spec 7.7 |
+| Nhận Jackpot | ✅ khi Bộ ba **và** thắng | ⚠️ ❔ spec chỉ nói "được bài bộ ba" (D-04) | |
+| Bị chuyển tag Banker | — | ✅ khi tài sản < 50× min bet | spec 2 |
 
-Chỉ có **1 tài khoản**, và **chưa xác định được tên role** của nó (màn hình Roles bị 403). Vì vậy ma trận này chỉ có 1 cột kiểm chứng.
-
-| Khu vực | Tài khoản `admin@example.com` ("Admin Example") | Role khác |
-|---|---|---|
-| 21 module nghiệp vụ (mục 3) | ✅ Truy cập được | ❔ |
-| `/admin/settings` (Cài đặt) | ❌ **Đã kiểm chứng** — chuyển hướng `/admin/access_denied` | ❔ |
-| `/admin/staff` (Nhân viên) | ❌ **Đã kiểm chứng** — `/admin/access_denied` | ❔ |
-| `/admin/roles` (Vai trò) | ❌ **Đã kiểm chứng** — `/admin/access_denied` | ❔ |
-
-**Đã kiểm chứng: 4 ô · Suy diễn: 0 ô · Chưa rõ: mọi role khác** — hệ thống có bao nhiêu role còn chưa biết vì màn hình quản lý vai trò không mở được.
-
-> ⚠️ Ô `❔` **không** được làm tròn thành `❌`. Khi recon từng module, mỗi role thiếu account phải mở một `AMB-XX` 🔴 tại tài liệu module đó.
-
----
+⚠️ Toàn bộ bảng là **suy diễn từ spec**, chưa kiểm chứng trên UI. Không có ô nào đã xác minh.
 
 ## 6. Thứ tự khảo sát đã chốt
 
-Xếp theo **phụ thuộc trước, rủi ro sau** (user chốt ngày 14-08-2026):
+| Thứ tự | Module | Lý do | BLOCKED bởi |
+|---|---|---|---|
+| 1 | `ROOM` | Cửa vào; cần biết phòng nào để vào bàn | Ngưỡng tài sản 3 phòng chưa có (Product "gửi lại sau") |
+| 2 | `TABLE` | Mọi module sau đều chạy trong bàn | Số ghế chưa có (D-06); cần ≥ 2 tài khoản để thấy luân phiên Banker |
+| 3 | `BET` | Cược xảy ra trước chia bài; quyết định ai được chia | Mức cược từng phòng chưa có; môi trường dùng chung → không đặt cược thật khi chưa được phép |
+| 4 | `DEAL` | Sinh tay bài cho `RANK` | Hết mục 🔴 — D-01 đã chốt (0–7 tự chọn, Shan 8/9 tự dừng). Còn D-07 · D-08 🟠 |
+| 5 | `RANK` | Logic thuần, test được ngay bằng bảng tổ hợp khi có tay bài | **D-05** (Shan9 vs Shan9) |
+| 6 | `JPOT` | Cuối cùng vì **D-03** có thể đưa ra ngoài phạm vi | D-02 · D-03 · D-04 |
 
-```
-1. LOGIN → 2. CUST → 3. CONT → 4. LEAD → 5. PRJ → 6. TASK
-→ 7. EST → 8. PROP → 9. INV → 10. PAY → 11. CN → 12. SUB
-→ 13. CTR → 14. EXP → 15. ITEM → 16. TICK → 17. ESTREQ
-→ 18. KB → 19. REP → 20. DASH → 21. TODO → 22. REM → 23. PROF
-```
-
-**Module bị chặn / cần điều kiện trước khi recon:**
-
-| Module | Chặn bởi | Cần gì |
-|---|---|---|
-| `ESTREQ` | Bảng dữ liệu **rỗng** — không quan sát được trạng thái và thao tác trên dòng | Dữ liệu mẫu + thống nhất cách dọn (môi trường dùng chung) |
-| `LEAD` · `TICK` · `EXP` · `ITEM` · `CTR` · `PAY` · `SUB` | Master data (Lead Source/Status, Departments, Services, Categories, Taxes, Payment Modes, Contract Types) nằm trong khu Setup đang 403 | Recon vẫn chạy được, nhưng danh sách giá trị chỉ suy được từ dropdown trên form — ghi rõ mức bằng chứng |
-| Mọi module | Chỉ có 1 account, chưa rõ role | Account role thấp hơn để dựng ma trận phân quyền thật |
-
----
+**Lệnh kế tiếp theo thứ tự:** khi có build → `/discover-system DELTA` để xác minh bản đồ này trên UI thật (1 ảnh/module vào `evidence/`), rồi `/generate-requirements-from-website ROOM` → `TABLE` → … Chưa có build mà cần REQ sớm → `/analyze-requirement-document` cho từng module từ spec, đánh dấu mọi REQ `Nguồn: spec v2.1 mục N` và `Nền tảng: ❔ chưa kiểm`.
 
 ## 7. Vùng chưa xác minh
 
-| Vùng | Lý do | Xử lý |
+| Vùng | Vì sao chưa | Cần gì |
 |---|---|---|
-| **Khu Quản trị hệ thống (Setup)** — Settings · Staff · Roles · Departments · Taxes · Currencies · Payment Modes · Custom Fields · Email Templates · Announcements | Menu bánh răng **không có trong DOM**; thử trực tiếp `/admin/settings`, `/admin/staff`, `/admin/roles` đều bị chuyển về `/admin/access_denied` | **Ngoài phạm vi đợt này** (user chốt) — không cấp prefix. Muốn đưa vào sau: xin account quyền cao hơn rồi chạy `/discover-system` Mode ADD |
-| Cổng khách hàng (front-end site) | Nằm ngoài khu `/admin`; các luồng khách ký hợp đồng, bình luận đề xuất, xem KB đều bắt nguồn từ đây | Chưa khảo sát — cần chốt phạm vi riêng |
-| Form tạo/sửa của mọi module | Môi trường dùng chung, tầng khám phá chỉ quan sát danh sách | Recon cấp module sẽ mở form (chỉ xem, không Save) |
-| Số lượng role của hệ thống | Màn hình Roles 403 | Chưa biết hệ thống có mấy role |
+| Toàn bộ UI 6 module | Mode DOC, chưa mở hệ thống | Lượt `/discover-system DELTA` với URL ở `.env` |
+| Miniapp | Chưa rõ app chứa (Zalo / Telegram / khác), cách vào, có khác web không | QA xác nhận app chứa + cách mở |
+| Số ghế / bàn | Spec trỏ mục 10, mục 10 không có (D-06) | Product / wireframe Figma |
+| Tên + ngưỡng tài sản 3 phòng · mức cược preset từng phòng | Spec "gửi lại sau" | Product |
+| Role tài khoản test · có tài khoản thứ 2 không | Chỉ có 1 tài khoản | QA cấp thêm ≥ 1 tài khoản để test Banker vs Player |
+| Tầng network / endpoint | Chưa quan sát | DevTools ở lượt DELTA |
+| Wireframe Figma (`node-id=494-2165`) | Chưa mở — cần quyền truy cập | QA xác nhận link mở được |
 
----
+## 8. Nhật ký khám phá
 
-## 8. Vùng loại khỏi phạm vi (user chốt 14-08-2026)
-
-| Vùng | Route | Ghi chú | Evidence đã có |
+| Ngày | Mode · Mặt | Kết quả | Nguồn |
 |---|---|---|---|
-| Calendar (Lịch & sự kiện) | `/admin/utilities/calendar` | Loại khỏi đợt này — **không cấp prefix** | [calendar_overview_fullpage.png](evidence/calendar_overview_fullpage.png) |
-| Media (File manager) | `/admin/utilities/media` | Loại khỏi đợt này — **không cấp prefix** | [media_overview_fullpage.png](evidence/media_overview_fullpage.png) |
-| Bulk PDF Export | `/admin/utilities/bulk_pdf_exporter` | Loại khỏi đợt này — **không cấp prefix** | [bulk_pdf_export_form_fullpage.png](evidence/bulk_pdf_export_form_fullpage.png) |
-| Quản trị hệ thống (Setup) | `/admin/settings`, `/admin/staff`, `/admin/roles`… | 403 với account hiện tại — **không cấp prefix** | [setup_access_denied_fullpage.png](evidence/setup_access_denied_fullpage.png) |
-
-Evidence của 4 vùng này **được giữ lại** để lần sau muốn đưa vào phạm vi thì không phải khảo sát lại từ đầu.
-
----
-
-## 9. Nhật ký khám phá
-
-| Ngày | Mode | Phạm vi | Kết quả |
-|---|---|---|---|
-| 14-08-2026 | Recon `PRJ` | Module 5 | **Lệch so với bản đồ:** ước 60–80 REQ, thực tế **104 REQ** — lần thứ ba liên tiếp thực tế vượt ước lượng. Nguyên nhân bổ sung: bản đồ đếm 17 tab nhưng không tính **biểu mẫu 2 tab** (`Project` · `Project Settings` — riêng tab cấu hình đã 11 REQ với 18 công tắc quyền), **4 hộp thoại** (`Copy Project` · `Additional action required!` · `Project Invoice Info` · `Members`) và lớp kiểm tra dữ liệu. **Module đầu tiên phải tách file** (> 80 REQ). **Xác nhận đúng bản đồ:** route, 17 tab, CRUD gồm Copy/Export, có status flow, risk 🔴, `POST /admin/projects/table`. **Bổ sung cho bản đồ:** (1) thanh tab **không dàn phẳng 17 mục** mà gom 6 tab bán hàng vào nhóm `Sales` → hiển thị 12 mục; (2) có thêm **trang Gantt tổng** `/admin/projects/gantt` mà bản đồ chưa ghi; (3) tồn tại các điểm cuối `pin_action`, `remove_team_member`, `save_note`, `get_pre_invoice_project_info`, `export_project_data`. **Đã gỡ 3/4 vùng chưa xác minh** mà bản đồ nêu (field spec biểu mẫu · danh sách trạng thái và quy tắc chuyển · cơ chế `Visible Tabs`); còn lại **hành vi Copy Project** chưa chạy được — xem `AMB-38`. **Cảnh báo cho các module sau:** ước lượng REQ ở tầng khám phá đang **thấp hơn thực tế 30–190%** một cách hệ thống vì chỉ đếm màn hình và tab, bỏ qua hộp thoại · trường điều kiện · thông báo lỗi · cấu hình |
-| 14-08-2026 | Recon `CUST` | Module 2 | **Lệch so với bản đồ:** ước 45–65 REQ, thực tế **79 REQ** — lặp lại đúng xu hướng đã ghi nhận ở `LOGIN`. Nguyên nhân bổ sung: bản đồ đếm 19 tab nhưng không đếm **màn hình Import CSV** (8 REQ) và các **tab phụ trợ thuộc chính module** (Notes · Statement · Vault · Map · Reminders — 9 REQ). **Xác nhận đúng bản đồ:** route, 19 tab, risk 🔴, cơ chế `POST /admin/clients/table` không có REST API. **Bổ sung cho bản đồ:** biểu mẫu tạo mới có 2 tab, biểu mẫu sửa có 3 tab (thêm `Customer Admins`); tồn tại endpoint `check_duplicate_customer_name` và `change_client_status`. **Đã gỡ 3/3 vùng chưa xác minh** mà bản đồ nêu (field spec biểu mẫu · nội dung `Vault`/`Statement`/`Map` · luồng Import — luồng Import mới tới mức đặc tả giao diện, chưa chạy được, xem `AMB-26`) |
-| 14-08-2026 | Recon `LOGIN` | Module 1 | **Lệch so với bản đồ:** ước 12–18 REQ, thực tế **35 REQ**. Nguyên nhân: bản đồ chỉ đếm 2 form/5 field, chưa tính lớp bảo vệ phiên (chuyển hướng 2 chiều, CSRF), luồng đăng xuất có nhánh cảnh báo timer, và điểm cuối `reset_password`. **Rút kinh nghiệm cho các module sau: ước lượng REQ ở tầng khám phá đang thấp hơn thực tế vì chỉ đếm field trên form, bỏ qua điều hướng · phân quyền · thông báo lỗi.** Xác nhận đúng bản đồ: route, loại màn hình, số tab (0), risk 🔴 |
-| 14-08-2026 | UI | Toàn bộ menu sidebar + quick-create + dropdown hồ sơ + chi tiết `CUST`/`PRJ` + tầng network | Khởi tạo bản đồ: **23 module** được cấp prefix, 21 file khám phá, 30 ảnh evidence. Xác định khu Setup bị 403 → ngoài phạm vi. Loại Calendar/Media/Bulk PDF khỏi phạm vi theo chốt của user. Chốt tiền tố TC ID `CRM_` và thứ tự khảo sát *phụ thuộc → rủi ro* |
+| 17-09-2026 | **DOC** · chưa mặt nào | Khởi tạo bản đồ từ `ShanKoeMee_Gameplay_Spec_v2.docx` (v2.1, sha256 `9ca84a44f892cd58448736d568fd30062b55fa17e00ce15733a8f40a86601910`). 6 module · 6 prefix · 13 nghi vấn `D-nn` (5 🔴 → D-01 chốt cùng ngày, còn 4 🔴). Chốt với QA: TC ID `SKM_`, nền tảng Web + Miniapp, môi trường dùng chung, QA không có quyền API/CSDL/log, gộp trình tự lượt vào `DEAL`. URL + tài khoản test đã nhận → `.env`; giữ mode DOC, chưa mở UI | Tài liệu QA cung cấp |
