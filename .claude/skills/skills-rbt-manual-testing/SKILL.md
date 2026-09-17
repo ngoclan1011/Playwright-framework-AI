@@ -281,6 +281,8 @@ docs/testcases/
     ├── api/test_cases_<module>_api.md               ← TC gọi API
     ├── <nền-tảng>/parts/part_NN_<nền-tảng>_<slug>.md ← khi file nền tảng vượt ngưỡng
     ├── impact/impact_plan_<TICKET-ID>.md            ← Mode DELTA: kế hoạch sửa theo từng ticket (cấp module)
+    ├── impact/delta_tc_<TICKET-ID>.md               ← Mode DELTA: TC đã sửa xong theo nền tảng — input của /update-automation-from-impact
+    ├── impact/automation_plan_<TICKET-ID>.md        ← do /update-automation-from-impact ghi — script đã sửa theo ticket
     └── archive/test_cases_<module>_<nền-tảng>_vN.md ← phiên bản cũ, giữ để truy vết
 ```
 
@@ -1281,7 +1283,7 @@ Vì vậy Mode DELTA đặt việc **bảo toàn TC ID** lên trên mọi mục 
 - [ ] **4.** Bảng Đối Soát Coverage khớp lại — mọi REQ 🟡/🟢 active có ≥1 TC active
 - [ ] **5.** **Bảng Đối soát loại kiểm thử (4 vòng)** cập nhật **đúng những nhánh ticket chạm tới**, giữ nguyên phần còn lại — KHÔNG rà lại cả module. Ticket đụng thành phần màn hình mà nhánh `V1 · UI cơ bản` không đổi gì = **dấu hiệu đã bỏ sót**
 - [ ] **6.** Số TC ở index khớp tổng các `parts/`
-- [ ] **7.** Có **Nhật ký thay đổi** ở cuối file TC + **Delta TC List** (có cột **Vòng · Nhánh**) xuất ra chat cho automation dùng tiếp
+- [ ] **7.** Có **Nhật ký thay đổi** ở cuối file TC + **Delta TC List ghi ra file** `impact/delta_tc_<TICKET-ID>.md` (cùng hậu tố với Impact Report) — có cột **Nền tảng** và **Vòng · Nhánh**, có đủ dòng `⏸️ @NeedsVerify` của TC chưa sửa được, trỏ đúng bản `archive/` của từng nền tảng
 
 ---
 
@@ -1339,7 +1341,11 @@ Vì vậy Mode DELTA đặt việc **bảo toàn TC ID** lên trên mọi mục 
 - ❌ DELTA sửa TC theo suy đoán từ tên TC, không đọc nội dung REQ sau khi đổi
 - ❌ DELTA tự viết TC cho REQ mới (🟢) — ngoài phạm vi, phải route sang QUICK / FULL RBT
 - ❌ DELTA bỏ qua tác động lan toả (TC dùng field ở bước phụ · TC lấy TC vừa Deprecated làm precondition)
-- ❌ DELTA xong mà không ghi **Nhật ký thay đổi** và không xuất **Delta TC List** — tầng automation mất input
+- ❌ DELTA xong mà không ghi **Nhật ký thay đổi** và không ghi **Delta TC List** — tầng automation mất input
+- ❌ **Delta TC List chỉ nằm trong chat** — tầng automation thường chạy ở phiên khác, đóng phiên là mất. Phải ghi file `impact/delta_tc_<TICKET-ID>.md`
+- ❌ **Delta TC List thiếu cột Nền tảng** — dải TC ID chung toàn module nên nhìn mã không biết TC thuộc web, app hay API; automation không biết sửa ở project nào, chạy lại trên Android hay iOS
+- ❌ **Bỏ TC `@NeedsVerify` khỏi Delta TC List** — automation tưởng TC không bị ảnh hưởng. Ghi dòng `⏸️ chưa sửa` để automation biết mà không chạm
+- ❌ **Ghi Delta TC List ở Mode PLAN** — kế hoạch chưa duyệt có thể bị gạch bớt; automation chỉ được đọc thứ đã thật sự sửa
 - ❌ **Bộ TC không có nhánh `UI cơ bản`** — không TC nào kiểm nhãn nguyên văn, thứ tự field, trạng thái mặc định của màn hình. Validation đầy đủ đến đâu cũng vẫn là thiếu hẳn một lớp
 - ❌ **Nhảy cóc vòng** — sinh validation (V2) trước khi có TC mở form và lưu được (V1). V1 fail thì mọi TC V2 đều BLOCKED, chạy hết mới biết là quá muộn
 - ❌ **Trộn TC của hai vòng vào một batch** — mất ranh giới chia việc và không chấm được bảng đối soát
@@ -1406,7 +1412,7 @@ Vì vậy Mode DELTA đặt việc **bảo toàn TC ID** lên trên mọi mục 
 | `archive/test_cases_<module>_<nền-tảng>_v<N>.md` | Bản trước khi sửa — để đối chiếu |
 | **Bảng Đối soát loại kiểm thử (4 vòng)** | Cập nhật **chỉ nhánh ticket chạm tới** ở cuối index — phần còn lại giữ nguyên |
 | Nhật ký thay đổi | Bảng ở cuối file TC: ngày · ticket · TC bị ảnh hưởng · **vòng · nhánh** · thay đổi · bản sao lưu |
-| **Delta TC List** | Hiển thị trong chat, có cột **Vòng · Nhánh** — input trực tiếp cho `/update-automation-from-impact` |
+| **`impact/delta_tc_<TICKET-ID>.md`** | Delta TC List — **chỉ ghi ở APPLY**, cột **Nền tảng** + **Vòng · Nhánh** + hành động `✏️` / `➕` / `🗑️` / `⏸️`, trỏ bản `archive/` từng nền tảng. Input **bắt buộc** của `/update-automation-from-impact`; chat chỉ hiện tóm tắt + đường dẫn. Mẫu đầy đủ ở command `/update-testcases-from-impact` Bước 7 |
 | Danh sách ngoài phạm vi | REQ 🟢 chưa có TC + command tiếp theo |
 
 Tất cả output phải bằng **Tiếng Việt**, format **Markdown**, và tuân thủ **Quy Tắc Xuất File & Theo Dõi Tiến Độ**: ghi thẳng vào file (`docs/testcases/` hoặc `docs/checklists/`), chat chỉ hiện tiến độ + Bảng Đối Soát Coverage + tóm tắt đường dẫn file.

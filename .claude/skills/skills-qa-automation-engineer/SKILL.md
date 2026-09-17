@@ -229,17 +229,17 @@ Triggers when user asks:
 
 ---
 
-### Update existing automation from Impact Report (delta mode)
+### Update existing automation from Delta TC List (delta mode)
 
-> **Delegate:** skill **`skills-coverage-traceability`** để map TC ID ↔ script.
+> **Delegate:** skill **`skills-coverage-traceability`** để map TC ID ↔ script · recon theo nền tảng: **`skills-ui-debug-agent`** (web) · **`skills-mobile-debug-agent`** (mobile) · `skills-requirements-analyzer` mục 3.4.4 (API).
 
 Use workflow: `update-automation-from-impact`
 
-> Mắt xích **cuối** của chuỗi delta 3 tầng: `update-requirements-from-ticket` → `update-testcases-from-impact` → workflow này. Bỏ tầng giữa là sửa script theo kỳ vọng cũ — TC còn mô tả hành vi cũ thì script sửa xong vẫn sai mà vẫn xanh.
+> Mắt xích **cuối** của chuỗi delta 3 tầng: `update-requirements-from-ticket` → `update-testcases-from-impact` → workflow này. Đầu vào là file **`docs/testcases/<module>/impact/delta_tc_<TICKET-ID>.md`** do tầng giữa ghi ra — chỉ có Impact Report mà chưa có file này nghĩa là TC chưa đồng bộ, phải dừng. Bỏ tầng giữa là sửa script theo kỳ vọng cũ — TC còn mô tả hành vi cũ thì script sửa xong vẫn sai mà vẫn xanh.
 >
-> Requirements/TC đổi → sửa **đúng phần đổi** trong script đã có. 2 modes: PLAN (kế hoạch) và APPLY (sửa + chạy lại).
+> TC đổi → sửa **đúng phần đổi** trong script đã có, **tách theo nền tảng** của TC (web · mobile `@Android`/`@iOS` · API), mỗi nền tảng một lượt. 2 modes: PLAN (kế hoạch) và APPLY (sửa + chạy lại).
 >
-> ⚠️ Rule bất biến: **KHÔNG sinh lại cả module** (đó là `generate-automation-from-testcases`), **KHÔNG xoá file** cho TC bị archive, **KHÔNG bịa mapping** TC ↔ script.
+> ⚠️ Rule bất biến: **KHÔNG sinh lại cả module** (đó là `generate-automation-from-testcases`), **KHÔNG xoá file** cho TC 🗑️ Deprecated, **KHÔNG sửa script** của TC `⏸️ @NeedsVerify` chưa được sửa, **KHÔNG bịa mapping** TC ↔ script.
 
 Triggers when user asks:
 

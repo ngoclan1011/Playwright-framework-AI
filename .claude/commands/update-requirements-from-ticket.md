@@ -103,7 +103,7 @@ Sửa **tại chỗ** `requirements_<module>.md`, theo đúng thứ tự:
 
 Báo cáo riêng cho tester. **PHẢI ghi ra file** `docs/requirements/<module>/impact/impact_<TICKET-ID>.md`, đồng thời hiển thị trong chat và là cột `TC cần xử lý` trong Nhật ký.
 
-> 🚨 **Không được để Impact Report chỉ nằm trong chat.** Nó là input **bắt buộc** của `/update-testcases-from-impact` và `/update-automation-from-impact` — hai workflow này thường chạy ở phiên khác, có khi hôm sau. Đóng phiên là mất, và không có cách nào dựng lại ngoài chạy lại cả workflow.
+> 🚨 **Không được để Impact Report chỉ nằm trong chat.** Nó là input **bắt buộc** của `/update-testcases-from-impact`, và qua file `delta_tc_<TICKET-ID>.md` mà workflow đó ghi ra, là gốc của `/update-automation-from-impact` — hai workflow này thường chạy ở phiên khác, có khi hôm sau. Đóng phiên là mất, và không có cách nào dựng lại ngoài chạy lại cả workflow.
 
 Nội dung file:
 
@@ -173,5 +173,5 @@ Nội dung file:
 | Sau đó — sinh TC cho REQ mới (🟢) | `/generate-testcases-manual-rbt` hoặc `/generate-testcases-from-requirements` |
 | Sau đó — chấm chất lượng bộ TC **sau khi** đã đồng bộ | `/review-testcases` |
 | Sau đó — cập nhật ma trận truy vết | `/generate-traceability-matrix` |
-| Sau đó — cập nhật automation script **đã có** theo Impact Report | `/update-automation-from-impact` |
+| Sau khi TC đã đồng bộ — cập nhật automation script **đã có** (đọc `delta_tc_<TICKET-ID>.md`, **không** đọc thẳng Impact Report) | `/update-automation-from-impact` |
 | Sau đó — automate TC mới hoàn toàn (chưa có script) | `/generate-automation-from-testcases` |

@@ -23,7 +23,7 @@
 # NGUỒN ĐỐI CHIẾU
 - Tài liệu requirements hiện hành: [VD: docs/requirements/project/requirements_project.md]
 - File test cases hiện hành: [VD: docs/testcases/project/test_cases_project.md]
-- Evidence của module (bắt buộc mở nếu thay đổi đụng bố cục/nhãn/thứ tự field): [VD: docs/requirements/project/evidence/ / "Không có"]
+- Evidence của module (bắt buộc mở nếu thay đổi đụng bố cục/nhãn/thứ tự field): [VD: docs/requirements/project/web/evidence/ / "Không có"]
 - RTM (nếu có — map REQ→TC nhanh và chắc hơn): [VD: docs/traceability_matrix.md / "Không có"]
 
 # TÙY CHỌN
@@ -35,4 +35,4 @@
 - Sao lưu bản cũ vào archive/ TRƯỚC khi sửa
 - GIỮ NGUYÊN mọi TC ID. TC mới cấp số tiếp dải hiện có
 - TC của chức năng bị gỡ: đổi trạng thái 🗑️ Deprecated, KHÔNG xoá dòng
-- Xuất Delta TC List ở cuối để chạy tiếp /update-automation-from-impact
+- Mode APPLY: ghi Delta TC List ra docs/testcases/<module>/impact/delta_tc_<TICKET-ID>.md (có cột Nền tảng) — đầu vào của /update-automation-from-impact (prompt_19)

@@ -430,10 +430,15 @@ Hệ thống đang phát triển thì ticket sẽ liên tục sửa yêu cầu. 
    ↓                                               ↓
 REQ mới (🟢) → /generate_testcases_*     TC phải sửa (🟡) + TC bị gỡ (🗑️)
                                               → /update-testcases-from-impact
+                                                   ↓  Delta TC List — impact/delta_tc_<TICKET-ID>.md
+                                              Module đã có automation?
+                                                   → /update-automation-from-impact  (web · mobile · API)
    └────────────────────┬─────────────────────────┘
                         ↓
             /execute-test-cases  (chạy lại phần bị ảnh hưởng)
 ```
+
+> **Tầng thứ ba chỉ chạy khi module đã có automation.** `/update-testcases-from-impact` mode APPLY ghi `delta_tc_<TICKET-ID>.md` — danh sách TC đã sửa kèm nền tảng. `/update-automation-from-impact` đọc đúng file đó, sửa script web · mobile · API tương ứng và chạy lại. Chi tiết: [`AI_FULL_FLOW_AUTOMATION.md`](AI_FULL_FLOW_AUTOMATION.md) chặng 5.
 
 > 🚨 **Không dùng `/review-testcases` mode FIX cho nhánh 🟡.** Nó chấm rubric chất lượng, không đối chiếu với REQ mới — TC viết rất tốt về hành vi **cũ** vẫn đạt 12/12 điểm. Nó cũng sinh file `_improved` lạc tên index. Đồng bộ bằng `/update-testcases-from-impact` trước, chấm chất lượng bằng `/review-testcases` sau.
 
@@ -461,6 +466,7 @@ Cột **`TC cần xử lý`** trong Nhật ký thay đổi của tài liệu req
 | 7 | `/generate-test-summary-report` | [`prompt_24`](prompts/prompt_24_generate_test_summary_report.txt) | **Mỗi mốc release / sprint** |
 | ↻ | `/update-requirements-from-ticket` | [`prompt_21`](prompts/prompt_21_update_requirements_from_ticket.txt) | Mỗi ticket sửa yêu cầu |
 | ↻ | `/update-testcases-from-impact` | [`prompt_27`](prompts/prompt_27_update_testcases_from_impact.txt) | **Mỗi Impact Report** — ngay sau command trên |
+| ↻ | `/update-automation-from-impact` | [`prompt_19`](prompts/prompt_19_update_automation_from_impact.txt) | Ngay sau command trên — **chỉ khi module đã có automation** |
 | ⊹ | `/generate-master-test-plan` | [`prompt_25`](prompts/prompt_25_generate_master_test_plan.txt) | 1 lần / đợt — khi cần kế hoạch chính thức, **trước chặng 4** · gọi lại khi phạm vi/lịch đổi |
 | ⊹ | `/generate-test-progress-report` | [`prompt_32`](prompts/prompt_32_generate_test_progress_report.txt) | **Mỗi kỳ** theo lịch plan (thường hằng tuần) — trong chặng 4–6 |
 | ⊹ | `/generate-user-guide` | [`prompt_28`](prompts/prompt_28_generate_user_guide.txt) | Khi bàn giao — tài liệu cho **người dùng cuối**, không phải cho QA |

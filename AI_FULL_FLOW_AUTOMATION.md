@@ -242,21 +242,29 @@ Chạy **headed** toàn bộ. Locator mới phải match **đúng 1 element** v�
 Mắt xích **cuối** của chuỗi delta 3 tầng:
 
 ```
-/update-requirements-from-ticket   → Impact Report
-/update-testcases-from-impact      → Delta TC List   ← BẮT BUỘC chạy trước
-/update-automation-from-impact     ← workflow này
+/update-requirements-from-ticket   → requirements/<module>/impact/impact_<TICKET-ID>.md
+/update-testcases-from-impact      → testcases/<module>/impact/delta_tc_<TICKET-ID>.md         ← BẮT BUỘC chạy trước (mode APPLY)
+/update-automation-from-impact     → testcases/<module>/impact/automation_plan_<TICKET-ID>.md  ← workflow này
 ```
 
-> ⚠️ **Bỏ tầng giữa là sửa script theo kỳ vọng cũ.** File test cases là nguồn sự thật của kỳ vọng mới; TC còn mô tả hành vi cũ thì script sửa xong vẫn sai — và test vẫn **xanh**, nên không ai phát hiện.
+> ⚠️ **Bỏ tầng giữa là sửa script theo kỳ vọng cũ.** File test cases là nguồn sự thật của kỳ vọng mới; TC còn mô tả hành vi cũ thì script sửa xong vẫn sai — và test vẫn **xanh**, nên không ai phát hiện. Vì vậy workflow này **chỉ nhận `delta_tc_<TICKET-ID>.md`** — đưa Impact Report mà chưa có file đó thì nó dừng.
+
+**Tách theo nền tảng.** Delta TC List có cột `Nền tảng` — workflow sửa và chạy lại **từng nền tảng một lượt**, gọi lại đúng bước recon của command nền tảng:
+
+| Nền tảng | Recon phần bị đổi | Chạy lại |
+|---|---|---|
+| **web** | Playwright MCP inspect DOM (`/generate-automation-web` Bước 2) | PASS 2 lần + hồi quy mọi test dùng Page Object vừa sửa |
+| **mobile** | Appium MCP — nhận diện lại loại app, thu locator **riêng Android / iOS** (`/generate-automation-mobile` Bước 1–3) | PASS 2 lần **mỗi nền tảng** TC gắn tag + hồi quy mọi test dùng Screen vừa sửa |
+| **api** | DTO theo snapshot spec, gọi thật chỉ khi `Gọi API` ✅ (`/generate-automation-api`) | PASS 2 lần + hồi quy mọi test dùng client/DTO vừa sửa, dọn dữ liệu |
 
 | Luật | Vì sao |
 |---|---|
 | 🚨 **CẤM sinh lại cả file/module** | Chỉ sửa đúng dòng liên quan TC đã đổi. Sinh lại là xoá sạch mọi fix đã tích luỹ |
-| 🚨 **CẤM xoá file script** của TC bị archive | Đánh dấu skip + báo user, chờ xác nhận mới gỡ |
+| 🚨 **CẤM xoá file script** của TC 🗑️ Deprecated | Skip kèm lý do + mã ticket (vẫn hiện `SKIPPED` trong report), chờ user xác nhận mới gỡ |
+| 🚨 **CẤM sửa script của TC `⏸️ @NeedsVerify`** | TC đó chưa được sửa vì thiếu bằng chứng màn hình mới — sửa script là đi trước TC |
 | **Giữ nguyên `testId`** sau khi sửa | Đứt TC ID là vỡ RTM |
-| TC **mới hoàn toàn** (➕ trong Impact Report) → route sang `/generate-automation-from-testcases` (tự chuyển tới command nền tảng) | Trộn hai việc là mất lý do tồn tại của delta mode |
-
-> Impact Report ghi `⚠️ chưa rà soát` ở cột TC → dừng, chạy `/generate-traceability-matrix` trước. Không có nguồn map thì workflow này chỉ đoán mò.
+| TC **mới hoàn toàn** (`➕ Mới`) → route sang command nền tảng (hoặc `/generate-automation-from-testcases`) | Trộn hai việc là mất lý do tồn tại của delta mode |
+| Nền tảng không chạy được trên máy này (iOS ngoài macOS, thiếu device) → ghi `⚠️ chưa chạy` | Không chạy thì không được tính là PASS |
 
 ---
 

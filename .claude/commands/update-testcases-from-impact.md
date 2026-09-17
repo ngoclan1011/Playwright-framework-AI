@@ -1,5 +1,5 @@
 ---
-description: Cập nhật manual test cases đã có theo Impact Report (chế độ delta) — sửa TC stale tại chỗ trong index, đánh dấu Deprecated TC của chức năng bị gỡ, ghi Nhật ký thay đổi, xuất Delta TC List cho automation. Hỗ trợ 2 mode — PLAN (chỉ lập kế hoạch) và APPLY (sửa + cập nhật danh mục).
+description: Cập nhật manual test cases đã có theo Impact Report (chế độ delta) — sửa TC stale tại chỗ trong index, đánh dấu Deprecated TC của chức năng bị gỡ, ghi Nhật ký thay đổi, ghi Delta TC List ra file làm đầu vào cho automation. Hỗ trợ 2 mode — PLAN (chỉ lập kế hoạch) và APPLY (sửa + cập nhật danh mục).
 skills:
   - skills-rbt-manual-testing
   - skills-coverage-traceability
@@ -15,12 +15,14 @@ skills:
 Mắt xích **giữa** của chuỗi delta 3 tầng. Requirements đổi → Impact Report chỉ ra TC stale → **workflow này** sửa đúng TC đó → `/update-automation-from-impact` sửa script tương ứng.
 
 ```
-/update-requirements-from-ticket   (tầng requirements — đã có)
-        ↓ Impact Report
+/update-requirements-from-ticket   (tầng requirements)
+        ↓ docs/requirements/<module>/impact/impact_<TICKET-ID>.md
 /update-testcases-from-impact      (tầng test case — WORKFLOW NÀY)
-        ↓ Delta TC List
-/update-automation-from-impact     (tầng automation — đã có)
+        ↓ docs/testcases/<module>/impact/delta_tc_<TICKET-ID>.md
+/update-automation-from-impact     (tầng automation — web · mobile · API)
 ```
+
+> **Một hậu tố cho cả chuỗi.** `<TICKET-ID>` của mọi file sau lấy **đúng hậu tố** của Impact Report nguồn: `impact_TICKET-123.md` → `impact_plan_TICKET-123.md` → `delta_tc_TICKET-123.md` → `automation_plan_TICKET-123.md`. Impact Report do spec API đổi (`impact_spec_2026-09-01.md`) → `delta_tc_spec_2026-09-01.md`. User tự liệt kê REQ, không có ticket → `adhoc_<YYYY-MM-DD>`. Một mã tra ra đủ ba tầng.
 
 ## Workflow này khác gì `/review-testcases`?
 
@@ -59,7 +61,7 @@ Hai workflow trả lời **hai câu hỏi khác nhau**. Chạy sai cái là bỏ
 | Mode | Khi nào sử dụng | Output |
 |---|---|---|
 | **PLAN** (mặc định) | Cần biết ticket này đụng tới TC nào, sửa gì | Bảng ánh xạ REQ → TC + kế hoạch sửa từng TC |
-| **APPLY** | Muốn agent sửa luôn | Như PLAN + TC đã sửa + Nhật ký thay đổi + Delta TC List |
+| **APPLY** | Muốn agent sửa luôn | Như PLAN + TC đã sửa + Nhật ký thay đổi + file `delta_tc_<TICKET-ID>.md` |
 
 > User nói "sửa luôn", "cập nhật TC đi", "apply" → tự động **Mode APPLY**.
 
@@ -191,34 +193,72 @@ Kiểm đủ 7 mục, thiếu mục nào là chưa xong:
 | 17-08-2026 | TICKET-123 | CRM_PRJ_TC_031 | 🗑️ Deprecated — chức năng Copy Project đã gỡ | ↑ |
 ```
 
-2. Xuất **Delta TC List** ra chat — đây là input trực tiếp cho `/update-automation-from-impact`:
+2. **Ghi Delta TC List ra file** `docs/testcases/<module>/impact/delta_tc_<TICKET-ID>.md` — đầu vào **bắt buộc** của `/update-automation-from-impact`:
 
 ```markdown
-## Delta TC List — TICKET-123 · 17-08-2026
+# Delta TC List — TICKET-123 · module `project`
 
-| TC ID | Vòng · Nhánh | Hành động đã làm | Đổi cái gì (cho automation) |
-|---|---|---|---|
-| CRM_PRJ_TC_002 | V1 · UI cơ bản | ✏️ Đã sửa | Thêm dòng bảng kiểm cho field `Deadline` → sửa assertion danh sách thành phần màn hình |
-| CRM_PRJ_TC_018 | V2 · Required | ✏️ Đã sửa | Expected result: giờ báo lỗi khi Deadline trống → sửa assertion |
-| CRM_PRJ_TC_077 | V2 · Required | ➕ Mới (trong REQ 🟡) | TC negative mới → cần viết script mới |
-| CRM_PRJ_TC_031 | V2 · Save/Edit/Delete | 🗑️ Deprecated | Script tương ứng đánh dấu skip, KHÔNG xoá file |
+| Mục | Giá trị |
+|---|---|
+| Ticket | TICKET-123 |
+| Ngày áp | 17-08-2026 |
+| Impact Report nguồn | [`impact_TICKET-123.md`](../../../requirements/project/impact/impact_TICKET-123.md) |
+| Kế hoạch đã duyệt | [`impact_plan_TICKET-123.md`](impact_plan_TICKET-123.md) |
+| Bản TC trước khi sửa | web → [`test_cases_project_web_v2.md`](../archive/test_cases_project_web_v2.md) · mobile → [`test_cases_project_mobile_v1.md`](../archive/test_cases_project_mobile_v1.md) |
+| Trạng thái | ⚠️ CÒN VIỆC NGOÀI PHẠM VI |
 
-> Cột **Vòng · Nhánh** giúp `/update-automation-from-impact` chọn đúng kiểu sửa: TC `V1 · UI cơ bản` thường là assertion trên danh sách phần tử (`Automatable: Partial`), TC `V2 · Validation` thường map sang test data-driven.
+## TC đã xử lý
 
-### Ngoài phạm vi
+| TC ID | Nền tảng | Vòng · Nhánh | Hành động đã làm | Đổi cái gì (cho automation) |
+|---|---|---|---|---|
+| CRM_PRJ_TC_002 | web | V1 · UI cơ bản | ✏️ Đã sửa | Thêm dòng bảng kiểm cho field `Deadline` → sửa assertion danh sách thành phần màn hình |
+| CRM_PRJ_TC_018 | web | V2 · Required | ✏️ Đã sửa | Expected result: giờ báo lỗi khi Deadline trống → sửa assertion |
+| CRM_PRJ_TC_052 | mobile · @Android @iOS | V2 · Required | ✏️ Đã sửa | Như TC_018 trên app — lỗi hiện dưới ô Deadline → sửa assertion cả hai nền tảng |
+| CRM_PRJ_TC_077 | web | V2 · Required | ➕ Mới (trong REQ 🟡) | TC negative mới → cần viết script mới |
+| CRM_PRJ_TC_031 | web | V2 · Save/Edit/Delete | 🗑️ Deprecated | Script tương ứng đánh dấu skip, KHÔNG xoá file |
+| CRM_PRJ_TC_060 | mobile · @Android | V1 · UI cơ bản | ⏸️ @NeedsVerify — chưa sửa | Chưa có ảnh màn hình sau khi đổi → KHÔNG sửa script |
+
+## Ngoài phạm vi
+
 | REQ | Việc còn lại | Command |
 |---|---|---|
 | REQ-PRJ-79 → 81 | Chưa có TC | `/generate-testcases-manual-rbt` |
+
+## Nhật ký
+
+| Ngày | Thay đổi |
+|---|---|
+| 17-08-2026 | Áp lần đầu theo `impact_plan_TICKET-123.md` đã duyệt |
 ```
 
-3. Nhắc user chuỗi tiếp theo: `/update-automation-from-impact` (script đã có) → `/generate-traceability-matrix` (khớp lại RTM)
+**Luật của file này:**
+
+| Luật | Vì sao |
+|---|---|
+| Chỉ ghi ở **Mode APPLY**, sau khi TC đã sửa xong. Mode PLAN **không** ghi | `impact_plan_` là kế hoạch — có thể bị user gạch bớt khi duyệt. Automation chỉ được đọc thứ **đã thật sự sửa** |
+| Cột **Nền tảng** bắt buộc: `web` · `mobile · @Android` / `@iOS` / `@Android @iOS` · `api` | Dải TC ID chung toàn module nên nhìn mã không biết TC thuộc nền tảng nào — thiếu cột này automation không biết chuyển sang Playwright, Appium hay API client, và không biết phải chạy lại trên Android, iOS hay cả hai |
+| Cột **Vòng · Nhánh** bắt buộc | Giúp chọn đúng kiểu sửa script: `V1 · UI cơ bản` thường là assertion trên danh sách phần tử (`Automatable: Partial`), `V2 · Validation` thường map sang test data-driven |
+| TC không sửa được vì thiếu evidence → vẫn ghi, hành động `⏸️ @NeedsVerify — chưa sửa` | Bỏ dòng đi thì automation tưởng TC không bị ảnh hưởng. Ghi rõ để automation **biết mà không chạm** |
+| Dòng **Bản TC trước khi sửa** trỏ đúng file `archive/` của từng nền tảng | Automation so cũ ↔ mới ra đúng ô đã đổi, không phải đoán từ cột mô tả |
+| Chạy APPLY lại cho **cùng ticket** (VD recon xong TC `⏸️`) → sửa **tại chỗ** dòng tương ứng + thêm dòng Nhật ký. KHÔNG tạo `delta_tc_<TICKET-ID>_v2.md` | Một ticket một file — automation chạy lại chỉ nhận những dòng đã đổi hành động |
+
+3. Chat chỉ hiện **tóm tắt theo nền tảng** (VD *"web 3 TC · mobile 1 TC `@Android @iOS` · 1 TC ⏸️ chưa sửa"*) + đường dẫn file. Nhắc user chuỗi tiếp theo: module đã có automation → `/update-automation-from-impact` (đọc đúng file vừa ghi) → `/generate-traceability-matrix` (khớp lại RTM)
+
+> 🚨 **Không được để Delta TC List chỉ nằm trong chat.** `/update-automation-from-impact` thường chạy ở phiên khác, có khi do người khác chạy — đóng phiên là mất, và dựng lại từ Nhật ký thì mất cột Nền tảng lẫn trạng thái `⏸️`.
 
 ## Output
 
 ### Mode PLAN
 - `docs/testcases/<module>/impact/impact_plan_<TICKET-ID>.md`: bảng ánh xạ REQ → TC, kế hoạch sửa từng TC (kèm `Vòng · Nhánh`), **danh sách nhánh 4 vòng bị chạm**, tác động lan toả, danh sách ngoài phạm vi
 
-> Phân biệt hai file cùng gắn với một ticket: `requirements/<module>/impact/impact_<TICKET-ID>.md` là **báo cáo** — nói *cái gì đã đổi*. `testcases/<module>/impact/impact_plan_<TICKET-ID>.md` là **kế hoạch** — nói *sẽ sửa TC nào, sửa gì*.
+> Phân biệt các file cùng gắn với một ticket:
+>
+> | File | Loại | Nói gì | Ai đọc |
+> |---|---|---|---|
+> | `requirements/<module>/impact/impact_<TICKET-ID>.md` | **Báo cáo** | *Cái gì đã đổi* | Workflow này |
+> | `testcases/<module>/impact/impact_plan_<TICKET-ID>.md` | **Kế hoạch** — trước khi duyệt | *Sẽ sửa TC nào, sửa gì* | User duyệt |
+> | `testcases/<module>/impact/delta_tc_<TICKET-ID>.md` | **Kết quả** — sau khi áp | *Đã sửa TC nào, ở nền tảng nào, automation phải làm gì* | `/update-automation-from-impact` |
+> | `testcases/<module>/impact/automation_plan_<TICKET-ID>.md` | Kế hoạch + kết quả tầng automation | *Script nào đã sửa* | Do `/update-automation-from-impact` ghi |
 
 ### Mode APPLY
 - Tất cả output Mode PLAN, cộng thêm:
@@ -227,7 +267,7 @@ Kiểm đủ 7 mục, thiếu mục nào là chưa xong:
   - **Bảng Đối soát loại kiểm thử (4 vòng)** đã cập nhật đúng nhánh bị chạm
   - Nhật ký thay đổi ở cuối file TC
   - `docs/testcases/README.md` đã cập nhật
-  - **Delta TC List** hiển thị trong chat
+  - **`impact/delta_tc_<TICKET-ID>.md`** — Delta TC List có cột Nền tảng + Vòng · Nhánh; chat chỉ hiện tóm tắt + đường dẫn
   - Trạng thái: ✅ ĐÃ ĐỒNG BỘ / ⚠️ CÒN VIỆC NGOÀI PHẠM VI / ❌ CHƯA XỬ LÝ XONG
 
 ## Command liên quan
@@ -237,8 +277,8 @@ Kiểm đủ 7 mục, thiếu mục nào là chưa xong:
 | Trước đó — cập nhật requirements từ ticket | `/update-requirements-from-ticket` |
 | Trước đó — chưa có nguồn map REQ ↔ TC | `/generate-traceability-matrix` |
 | REQ mới hoàn toàn, chưa có TC | `/generate-testcases-manual-rbt` · `/generate-testcases-from-requirements` |
-| Sau đó — cập nhật automation script **đã có** | `/update-automation-from-impact` |
-| Sau đó — automate TC mới hoàn toàn | `/generate-automation-from-testcases` |
+| Sau đó — cập nhật automation script **đã có** (đọc `delta_tc_<TICKET-ID>.md`) | `/update-automation-from-impact` |
+| Sau đó — automate TC mới hoàn toàn | `/generate-automation-from-testcases` (tự chuyển sang command web / mobile / API) |
 | Sau đó — chấm chất lượng bộ TC vừa sửa | `/review-testcases` |
 | Sau đó — chạy lại phần TC bị ảnh hưởng | `/execute-test-cases` |
 | Sau đó — khớp lại ma trận truy vết | `/generate-traceability-matrix` |

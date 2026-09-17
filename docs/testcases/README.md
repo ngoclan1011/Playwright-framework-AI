@@ -55,7 +55,9 @@ docs/testcases/
 └── <module>/
     ├── test_cases_<module>.md                  ← INDEX — TÊN FILE BẤT BIẾN
     ├── parts/part_NN_<slug>.md                 ← khi tách (>40 TC TÁCH · >50 TC GỘP)
-    ├── impact/impact_plan_<TICKET-ID>.md       ← Mode DELTA
+    ├── impact/impact_plan_<TICKET-ID>.md       ← Mode DELTA — kế hoạch, trước khi duyệt
+    ├── impact/delta_tc_<TICKET-ID>.md          ← Mode DELTA APPLY — TC đã sửa theo nền tảng, input của /update-automation-from-impact
+    ├── impact/automation_plan_<TICKET-ID>.md   ← /update-automation-from-impact — script đã sửa theo ticket
     └── archive/test_cases_<module>_vN.md       ← phiên bản cũ
 ```
 
@@ -96,7 +98,8 @@ Xem nhanh bằng web viewer: `scripts/execution-viewer/bundle.html` (mở offlin
 | Module **chưa có** TC, requirements đã rõ | `/generate-testcases-from-requirements` | Mode QUICK — 1 lượt |
 | Module phức tạp, cần đánh giá rủi ro + RTM | `/generate-testcases-manual-rbt` | Mode FULL RBT — 6 bước có checkpoint |
 | Cần checklist tick tay (smoke / hotfix / release) | `/generate-checklist-test` | Không sinh steps chi tiết |
-| **Requirements vừa đổi, bộ TC đã có** | `/update-testcases-from-impact` | Mode DELTA — sửa tại chỗ, giữ nguyên TC ID |
+| **Requirements vừa đổi, bộ TC đã có** | `/update-testcases-from-impact` | Mode DELTA — sửa tại chỗ, giữ nguyên TC ID, APPLY ghi `impact/delta_tc_<TICKET-ID>.md` |
+| **TC vừa đồng bộ, module đã có automation** | `/update-automation-from-impact` | Đọc `delta_tc_<TICKET-ID>.md`, sửa đúng script web · mobile · API bị ảnh hưởng |
 | Chạy TC trên browser thật | `/execute-test-cases` | Xuất execution report vào `docs/executions/` |
 | Review chất lượng TC | `/review-testcases` | Rubric 6 tiêu chí |
 | Chuyển TC sang automation | `/generate-automation-from-testcases` | Map TC ID sang `allure.label('testId', ...)` |
@@ -107,6 +110,7 @@ Xem nhanh bằng web viewer: `scripts/execution-viewer/bundle.html` (mở offlin
 
 | Ngày | Thay đổi |
 |---|---|
+| 17-09-2026 | **Chuỗi delta nối xuống automation.** Delta TC List của Mode DELTA trước đây chỉ hiện trong chat và không có cột nền tảng, nên `/update-automation-from-impact` không nhận được đầu vào ở phiên sau và không biết TC thuộc web, app hay API. Từ nay mode APPLY ghi `impact/delta_tc_<TICKET-ID>.md` (cột Nền tảng · Vòng · Nhánh · dòng `⏸️` cho TC chưa sửa); `/update-automation-from-impact` đọc file này, tách theo nền tảng và ghi kế hoạch vào `impact/automation_plan_<TICKET-ID>.md`. Luật đã vào skill `skills-rbt-manual-testing` (Quality Gate DELTA #7 + anti-pattern) và 2 command. Module `LOGIN` chưa chạy DELTA nào nên không có file cần bổ sung |
 | 11-09-2026 | **Bổ sung 9 TC cho bộ `LOGIN` (`TC_042`→`TC_050`) theo Bản Đồ Loại Kiểm Thử 4 Vòng** — `TC_001`→`TC_041` **giữ nguyên hoàn toàn**, execution report `run_1787215085` và 6 bug đang mở vẫn truy vết đúng. Chấm bảng 4 vòng lên bộ TC đang có phát hiện **6 nhánh trống hoặc nông** trong khi Bảng Đối Soát Coverage vẫn xanh 39/39 REQ: `V2 · UI Behavior` (trống) · `V2 · BVA` (trống) · `V2 · Validation` chưa đối soát đủ mục bảng Email/Password · `V3 · Logging` (chưa chấm) · `V4 · Compatibility` (trống) · `V4 · Responsive` (chỉ có TC_033). Recon thật chốt mốc **64 ký tự** cho phần trước `@` (RFC 5321) và xác nhận ô mật khẩu không chặn dán, không có nút hiện/ẩn. Bổ sung **Bảng Đối soát loại kiểm thử (4 vòng)** + **Bảng ISO/IEC 25010:2023** vào cuối tài liệu TC. ⚠️ Phát hiện của `TC_046` cho thấy ca của bug `BUG_login_1787226515_TC018` là **ranh giới chuẩn RFC, không phải lỗi** — đề nghị xem lại bug đó. Khung 4 vòng đã vào skill `skills-rbt-manual-testing` (tiêu chí 10 Self-Quality Gate) và 5 command |
 | 20-08-2026 | **Viết lại ngôn ngữ kiểm chứng của bộ TC `LOGIN`** theo phản hồi người dùng: TC chứa quá nhiều kiểm chứng thuộc tính HTML mà tester không cần. Toàn bộ `document.*`, `checkValidity()`, `className`, `offsetParent`, selector CSS, mã HTTP và tab Network được gỡ khỏi phần chính; nội dung cấp kỹ thuật tách xuống dòng `🔧 Ghi chú kỹ thuật (cần DevTools)` và TC gắn tag `@TechCheck` (23/41 TC). **TC ID giữ nguyên `001`→`041`**, không cắt case nào, độ phủ vẫn 39/39 REQ. Luật gốc đã vào skill `skills-rbt-manual-testing` mục **Quy Tắc Ngôn Ngữ Kiểm Chứng** + tiêu chí 8 của Self-Quality Gate, và 2 command sinh TC — lần sinh sau không lặp lại lỗi này |
 | 20-08-2026 | **Gộp lại bộ TC `LOGIN`: 82 TC → 41 TC** theo yêu cầu người dùng. Độ phủ REQ không đổi (39/39), không case nào bị bỏ — chỉ đổi cách trình bày sang Bảng biến thể. TC ID đánh lại từ `001` (chấp nhận được vì chưa có script / execution report / RTM nào trỏ vào). Bản TÁCH cũ lưu ở `login/archive/`. Skill và 3 command đã bổ sung tuỳ chọn độ hạt **GỘP / TÁCH** |
