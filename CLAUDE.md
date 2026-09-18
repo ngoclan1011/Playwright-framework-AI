@@ -263,7 +263,8 @@ docs/
 │       ├── <nền-tảng>/parts/part_NN_<nền-tảng>_<slug>.md ← khi file nền tảng > 40 TC
 │       ├── impact/impact_plan_<TICKET-ID>.md  ← /update-testcases-from-impact — kế hoạch, trước khi duyệt
 │       ├── impact/delta_tc_<TICKET-ID>.md     ← /update-testcases-from-impact APPLY — TC đã sửa theo nền tảng, input của automation
-│       └── impact/automation_plan_<TICKET-ID>.md ← /update-automation-from-impact — script đã sửa theo ticket
+│       ├── impact/automation_plan_<TICKET-ID>.md ← /update-automation-from-impact — script đã sửa theo ticket
+│       └── review/testcase_review_report_<nền-tảng>_<YYYYMMDD>.md ← /review-testcases — mode FIX sửa TC TẠI CHỖ, không sinh bản `_improved`
 │
 ├── test-plans/                                  ← kế hoạch kiểm thử — lập TRƯỚC đợt
 │   ├── test_plan_<mốc>.md                      ← Master Test Plan — công bố phạm vi + tiêu chí exit TRƯỚC đợt

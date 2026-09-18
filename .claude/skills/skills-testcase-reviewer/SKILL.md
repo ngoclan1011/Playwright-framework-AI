@@ -24,8 +24,6 @@ Sử dụng skill này khi:
 
 > 🚨 **Phân biệt rõ:** skill này chấm **chất lượng cách viết** theo rubric — một TC mô tả rất tốt về hành vi **đã bị thay đổi** vẫn đạt 12/12 điểm, vì rubric không đối chiếu với REQ mới. Nó **không bắt được TC stale**.
 >
-> Ngoài ra Mode FIX của skill này sinh file `<tên>_improved.md` — **lạc tên index** `test_cases_<module>.md` mà các workflow phía sau đọc theo mẫu. Dùng nó để cập nhật theo ticket là vừa bỏ sót TC stale, vừa để lại hai bộ TC không ai biết bộ nào đang dùng.
->
 > Thứ tự đúng: `/update-testcases-from-impact` đồng bộ nội dung **trước** → skill này chấm chất lượng **sau**.
 
 ---
@@ -98,6 +96,8 @@ Dùng **Bản Đồ Loại Kiểm Thử — 4 Vòng** trong `skills-rbt-manual-t
 
 ## Report Template
 
+Lưu tại `docs/testcases/<module>/review/testcase_review_report_<nền-tảng>_<YYYYMMDD>.md` — cạnh bộ TC được chấm.
+
 ```markdown
 # Báo Cáo Review Test Cases
 
@@ -144,8 +144,24 @@ Dùng **Bản Đồ Loại Kiểm Thử — 4 Vòng** trong `skills-rbt-manual-t
 - [ ] **Đã chạy đối soát 4 vòng** — mọi nhánh được chấm ✅/🟡/🔴/➖, không ô nào bỏ trống
 - [ ] **Đã đối soát bảng 15 loại field cho TỪNG field** — mục thiếu nêu đích danh (VD "Password thiếu: chặn dán, hiện/ẩn, max length")
 - [ ] Gap ghi kèm **vòng/nhánh** tương ứng, không ghi loại chung chung
-- [ ] Không tự ý sửa file TC gốc — chỉ báo cáo, trừ khi user yêu cầu sửa
-- [ ] Nếu user yêu cầu sửa → sinh phiên bản mới, giữ nguyên file gốc
+- [ ] Không tự ý sửa file TC — chỉ báo cáo, trừ khi user yêu cầu sửa
+- [ ] Nếu user yêu cầu sửa → sửa **tại chỗ** theo mục *Sửa TC (Mode FIX)*, **không** sinh bản sao `_improved` / `_v2` / `_new`
+- [ ] Đã đối chiếu execution report của module — ghi chú `⚠️ chưa có evidence` / `@NeedsVerify` đã được giải quyết được đưa vào báo cáo để dọn
+
+---
+
+## Sửa TC (Mode FIX) — TẠI CHỖ, không sinh bản sao
+
+| Việc | Cách làm |
+|---|---|
+| **Ghi vào đâu** | Chính file TC đang dùng — cùng tên, cùng vị trí. 🚨 **CẤM** sinh `<tên>_improved.md` / `_v2` / `_new` hay thư mục `archive/` |
+| **Giữ bản cũ thế nào** | Ghi **mốc git** (`git log -1 --format=%h -- <file>`) vào Nhật ký thay đổi của index; xem lại bằng `git show <mốc>:<file>` |
+| **File chưa được git theo dõi** (Excel/CSV khách gửi) | **Hỏi user** trước khi ghi đè — không có mốc git để lấy lại bản cũ |
+| **TC ID** | Giữ nguyên. TC bỏ hẳn → `🗑️ Deprecated`, không xoá dòng. TC mới → nối tiếp mã kế tiếp |
+| **Phạm vi** | Chỉ các TC user đã duyệt ở checkpoint — không tiện tay sửa TC khác |
+| **Sau khi sửa** | Đồng bộ file index (Assumptions · Coverage · Vùng chưa có evidence · 4 vòng · tổng TC/biến thể · Bộ chạy) + 1 dòng Nhật ký |
+
+> **Vì sao không sinh bản sao:** mọi workflow phía sau đọc file TC theo mẫu tên cố định (`test_cases_<module>.md` → `<nền-tảng>/test_cases_<module>_<nền-tảng>.md`). Bản `_improved` nằm cạnh bản gốc thì các workflow đó **vẫn đọc bản cũ**, và repo có hai bộ TC không ai biết bộ nào có hiệu lực. Việc duyệt trước khi sửa đã có checkpoint + báo cáo review; việc quay lại bản cũ đã có git.
 
 ---
 

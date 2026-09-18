@@ -20,7 +20,7 @@
 | [BUG_login_1785678750_TC039](login/BUG_login_1785678750_TC039.md) | `LOGIN` | Trang đăng nhập phục vụ được qua HTTP thuần, không ép chuyển sang HTTPS, không có HSTS | 🔴 Critical | P1 | 🔴 **Đang mở** | `CRM_LOGIN_TC_039` | 02-08-2026 |
 | [BUG_login_1787226513_TC004](login/BUG_login_1787226513_TC004.md) | `LOGIN` | Bấm logo không dẫn về trang chủ công khai (root URL luôn redirect sang cổng đăng nhập khách hàng) | 🟡 Minor | P3 | 🔴 **Đang mở** | `CRM_LOGIN_TC_004` | 20-08-2026 |
 | [BUG_login_1787226514_TC016](login/BUG_login_1787226514_TC016.md) | `LOGIN` | Ô Email không giữ lại giá trị sau khi đăng nhập thất bại | 🟡 Minor | P2 | 🔴 **Đang mở** | `CRM_LOGIN_TC_016` | 20-08-2026 |
-| [BUG_login_1787226515_TC018](login/BUG_login_1787226515_TC018.md) | `LOGIN` | Email quá dài (260 ký tự) trả thông báo lỗi khác thông báo chuẩn `Invalid email or password` | 🟢 Trivial | P3 | 🔴 **Đang mở** | `CRM_LOGIN_TC_018-a` | 20-08-2026 |
+| [BUG_login_1787226515_TC018](login/BUG_login_1787226515_TC018.md) | `LOGIN` | Email quá dài (260 ký tự) trả thông báo lỗi khác thông báo chuẩn `Invalid email or password` | 🟢 Trivial | P3 | ⚪ **Đã đóng — không phải lỗi** (19-09-2026) | `CRM_LOGIN_TC_018-a` | 20-08-2026 |
 | [BUG_login_1787226516_TC028](login/BUG_login_1787226516_TC028.md) | `LOGIN` | Bỏ trống email ở Quên mật khẩu báo sai bản chất lỗi (`Email not found` thay vì trường bắt buộc) | 🟡 Minor | P2 | 🔴 **Đang mở** | `CRM_LOGIN_TC_028` | 20-08-2026 |
 | [BUG_login_1787226517_TC029](login/BUG_login_1787226517_TC029.md) | `LOGIN` | Ô Email ở Quên mật khẩu không tự reset sau khi submit email không tồn tại | 🟢 Trivial | P3 | 🔴 **Đang mở** | `CRM_LOGIN_TC_029` | 20-08-2026 |
 
@@ -32,9 +32,10 @@
 
 | Trạng thái | Số lượng | Ý nghĩa |
 |---|---|---|
-| 🔴 Đang mở | 6 | Đã xác nhận, chưa fix |
+| 🔴 Đang mở | 5 | Đã xác nhận, chưa fix |
 | 🟡 Đã fix, chờ retest | 0 | Dev báo fix xong → chạy `/retest-fixed-bugs` |
 | 🟢 Đã đóng | 0 | Retest FIXED |
+| ⚪ Đóng — không phải lỗi | 1 | Kiểm chứng lại cho thấy là hành vi đúng thiết kế — không cần fix |
 | ⚠️ Cần rà lại | 0 | Tham chiếu lệch hoặc evidence mất — chưa dùng được |
 
 ---
@@ -80,5 +81,6 @@ docs/bugs/
 
 | Ngày | Thay đổi |
 |---|---|
+| 19-09-2026 | Đóng `BUG_login_1787226515_TC018` — **không phải lỗi**: mốc 64 ký tự phần trước `@` là chuẩn RFC 5321, xác nhận bởi `CRM_LOGIN_TC_046-c` ở `run_1789759574`. Thêm trạng thái ⚪ *Đóng — không phải lỗi* |
 | 20-08-2026 | `/create-bug-report` sau lần chạy `run_1787215085` (regression đầy đủ module Login): mở 5 bug mới (`TC_004`, `TC_016`, `TC_018-a`, `TC_028`, `TC_029`) và **rà lại xong** `BUG_login_1785678750` — sửa tham chiếu TC/REQ lệch nghĩa, bổ sung evidence mới, ghi Lịch sử retest xác nhận lỗi vẫn còn (`NOT_FIXED`). Tổng 6 bug đang mở |
 | 20-08-2026 | **Chuyển `bug_reports/` ở gốc repo vào `docs/bugs/<module>/`.** Lý do: bug là mắt xích thứ tư của chuỗi truy vết, ba tầng còn lại đều nằm trong `docs/` và đều có danh mục — riêng bug đứng ngoài nên không có danh mục và **bị sót khi dọn dự án** (`rm -rf docs` không chạm tới nó). Chính lỗ hổng đó để lại `BUG_login_1785678750` mồ côi với tham chiếu TC/REQ đã lệch nghĩa. Khởi tạo file danh mục này |

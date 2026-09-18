@@ -196,7 +196,7 @@ docs/checklists/checklist_<loại>_<module>.md     ← nếu chạy mode CHECKLI
 | Mode | Làm gì |
 |---|---|
 | **REVIEW** (mặc định) | Chấm rubric 6 tiêu chí, chỉ ra TC mơ hồ / trùng lặp / thiếu negative-boundary / coverage gap |
-| **FIX** | Như trên + sinh file TC phiên bản cải thiện (**giữ nguyên file gốc**) |
+| **FIX** | Như trên + **sửa tại chỗ** các TC bạn duyệt, giữ TC ID, ghi Nhật ký có mốc git — **không** sinh bản sao `_improved` |
 
 Nói *"sửa luôn"* / *"cải thiện giùm"* → AI tự chuyển sang **FIX**.
 
@@ -440,7 +440,7 @@ REQ mới (🟢) → /generate_testcases_*     TC phải sửa (🟡) + TC bị 
 
 > **Tầng thứ ba chỉ chạy khi module đã có automation.** `/update-testcases-from-impact` mode APPLY ghi `delta_tc_<TICKET-ID>.md` — danh sách TC đã sửa kèm nền tảng. `/update-automation-from-impact` đọc đúng file đó, sửa script web · mobile · API tương ứng và chạy lại. Chi tiết: [`AI_FULL_FLOW_AUTOMATION.md`](AI_FULL_FLOW_AUTOMATION.md) chặng 5.
 
-> 🚨 **Không dùng `/review-testcases` mode FIX cho nhánh 🟡.** Nó chấm rubric chất lượng, không đối chiếu với REQ mới — TC viết rất tốt về hành vi **cũ** vẫn đạt 12/12 điểm. Nó cũng sinh file `_improved` lạc tên index. Đồng bộ bằng `/update-testcases-from-impact` trước, chấm chất lượng bằng `/review-testcases` sau.
+> 🚨 **Không dùng `/review-testcases` mode FIX cho nhánh 🟡.** Nó chấm rubric chất lượng, không đối chiếu với REQ mới — TC viết rất tốt về hành vi **cũ** vẫn đạt 12/12 điểm, và nó không sinh Delta TC List cho automation. Đồng bộ bằng `/update-testcases-from-impact` trước, chấm chất lượng bằng `/review-testcases` sau.
 
 Cột **`TC cần xử lý`** trong Nhật ký thay đổi của tài liệu requirements là **mắt xích cảnh báo duy nhất** cho tester biết TC nào đã lỗi thời. Bỏ qua nó là chạy test trên bộ TC sai mà không biết.
 

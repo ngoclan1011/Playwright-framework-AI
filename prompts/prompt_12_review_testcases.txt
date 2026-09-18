@@ -2,7 +2,7 @@
 
 # CONTEXT
 - Module/Tính năng: [Tên module của bộ TC]
-- Mode: [REVIEW (chỉ báo cáo) / FIX (báo cáo + sinh file TC cải thiện)]
+- Mode: [REVIEW (chỉ báo cáo) / FIX (báo cáo + sửa tại chỗ các TC được duyệt)]
 
 # TEST CASES CẦN REVIEW
 [Cung cấp 1 trong các cách sau:]

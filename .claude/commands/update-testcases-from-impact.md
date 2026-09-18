@@ -34,9 +34,10 @@ Hai workflow trả lời **hai câu hỏi khác nhau**. Chạy sai cái là bỏ
 | **Input** | Impact Report + REQ đã đổi | Bộ TC (+ requirements nếu có) |
 | **Bắt được** | TC **stale** — mô tả hành vi đã bị thay | TC mơ hồ, thiếu assertion, trùng lặp, thiếu boundary |
 | **Bỏ sót** | Chất lượng diễn đạt của TC | **TC stale** — TC viết rất tốt về hành vi **cũ** vẫn được 12/12 điểm rubric |
-| **Ghi vào đâu** | Sửa **tại chỗ**, ghi mốc git của bản cũ | Sinh file `<tên>_improved.md` mới, giữ nguyên gốc |
+| **Ghi vào đâu** | Sửa **tại chỗ**, ghi mốc git của bản cũ | Cũng sửa **tại chỗ** — nhưng chỉ các TC user duyệt sau khi chấm rubric |
+| **Đầu ra cho automation** | `impact/delta_tc_<TICKET-ID>.md` — `/update-automation-from-impact` đọc file này | **Không** có Delta TC List |
 
-> 🚨 **KHÔNG dùng `/review-testcases` mode FIX để đồng bộ TC theo ticket.** Nó chấm rubric chất lượng, không đối chiếu với REQ đã đổi, và đẻ ra file `_improved` **lạc tên index** — `/update-automation-from-impact` đọc theo mẫu `docs/testcases/<module>/test_cases_<module>.md` sẽ không thấy bản mới.
+> 🚨 **KHÔNG dùng `/review-testcases` mode FIX để đồng bộ TC theo ticket.** Nó chấm rubric chất lượng, không đối chiếu với REQ đã đổi, nên bỏ sót TC stale — và không sinh Delta TC List, nên `/update-automation-from-impact` không biết script nào phải sửa.
 >
 > Chạy `/review-testcases` **sau** workflow này thì hợp lý: đồng bộ nội dung trước, chấm chất lượng sau.
 
