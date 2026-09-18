@@ -187,7 +187,7 @@ Cập nhật `README.md` danh mục hệ thống (tạo mới nếu chưa có): 
 2. Cấu trúc mỗi file:
    - **Tổng quan** — Base URL, Version, Auth method, số endpoint của module, link ngược về `_discovery/api_map.md` và `requirements_<module>.md`
    - **Endpoint Catalog** — Bảng: `| # | Method | Path | Auth | Mô tả | Số Test Cases |`
-   - **Test Cases chi tiết** — theo từng endpoint, bảng TC dùng **đúng tên cột** của skill `skills-rbt-manual-testing` mục *Bảng Output Standard* (`TC ID · REQ ID · Module · Risk Level · Test Scenario · Pre-Condition · Test Steps · Test Data · Expected Result · Priority · Automatable · Auto Type · Tags`) — `scripts/testcases-viewer` và `/generate-automation-api` đọc theo tên cột. `Auto Type` = `API`, `Tags` có `@API`. Mỗi TC có **TC ID** `<HỆ_THỐNG>_<MODULE>_TC_<nnn>` và **REQ ID** trỏ vào REQ API (hoặc `⚠️ Chưa có REQ` — Bước 2)
+   - **Test Cases chi tiết** — theo từng endpoint, bảng TC dùng **đúng tên cột** của skill `skills-rbt-manual-testing` mục *Bảng Output Standard* (`TC ID · REQ ID · Module · Risk Level · Test Scenario · Pre-Condition · Test Steps · Test Data · Expected Result · Priority · Automation · Auto Type · Tags`) — `scripts/testcases-viewer` và `/generate-automation-api` đọc theo tên cột. `Auto Type` = `API`, `Tags` có `@API`. Mỗi TC có **TC ID** `<HỆ_THỐNG>_<MODULE>_TC_<nnn>` và **REQ ID** trỏ vào REQ API (hoặc `⚠️ Chưa có REQ` — Bước 2)
    - **Test Data Matrix** — data valid/invalid/boundary cho mỗi model
    - **Dependencies & Execution Order** — thứ tự chạy test
    - **TC treo** — TC chưa viết được, kèm mã AMB đang chặn
@@ -222,7 +222,7 @@ Cập nhật `README.md` danh mục hệ thống (tạo mới nếu chưa có): 
 - [ ] Spec lấy bằng tải thô (không `WebFetch`), đã snapshot xuống `_discovery/sources/`, số operation khớp trang tài liệu
 - [ ] Ma trận auth lập theo **từng operation**, đã soi endpoint công khai trả dữ liệu cá nhân
 - [ ] Đã gọi thật kiểm chứng, mỗi sai lệch có mã `F-nn` + bằng chứng nguyên văn
-- [ ] Ambiguity ghi thành `AMB-nn`, AMB 🔴 đã báo user ở checkpoint Bước 2
+- [ ] Ambiguity ghi thành `AMB-<MODULE>-nn`, AMB 🔴 đã báo user ở checkpoint Bước 2
 - [ ] File TC nằm đúng `docs/testcases/[_<hệ-thống>/]<module>/api/`, **không** lạc ra root; TC ID nối tiếp dải chung của module; index có dòng API trong `## Bản đồ tài liệu`
 - [ ] Bảng TC dùng đúng tên cột của Bảng Output Standard — viewer và `/generate-automation-api` đọc được
 - [ ] Mọi TC có `REQ ID` trỏ vào REQ có thật, hoặc ghi `⚠️ Chưa có REQ` và đã báo số TC chưa neo

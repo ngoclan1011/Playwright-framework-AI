@@ -34,7 +34,7 @@ Biểu mẫu sửa dùng lại toàn bộ trường của biểu mẫu tạo (xe
 | `Mark all tasks as completed and stop all timers (No notifications sent to project members)` | Công tắc — `mark_all_tasks_as_completed` | Không | Ẩn khi trạng thái chưa đổi; **hiện** ngay khi chọn trạng thái khác | Tắt | REQ-PRJ-63 |
 | `Send Project Marked as Finished email to customer contacts` | Công tắc — `project_marked_as_finished_email_to_contacts` | Không | **Chỉ hiện** khi `status` = `4` Finished | Tắt | REQ-PRJ-64 |
 
-> 📌 Trường `project_marked_as_finished_email_to_contacts` **cũng tồn tại trong DOM của biểu mẫu tạo** nhưng luôn ẩn ở đó. Automation đọc theo `id` mà không kiểm tra khả năng nhìn thấy sẽ tưởng nhầm biểu mẫu tạo cũng có trường này — xem `RISK-20`.
+> 📌 Trường `project_marked_as_finished_email_to_contacts` **cũng tồn tại trong DOM của biểu mẫu tạo** nhưng luôn ẩn ở đó. Automation đọc theo `id` mà không kiểm tra khả năng nhìn thấy sẽ tưởng nhầm biểu mẫu tạo cũng có trường này — xem `RISK-PRJ-06`.
 
 ### 2.1. Hộp thoại `Additional action required!`
 

@@ -82,8 +82,7 @@ claude-testing-skills/
 │   │   ├── README.md                          # DANH MỤC bộ TC: prefix TC ID, độ phủ REQ↔TC
 │   │   └── <module>/
 │   │       ├── test_cases_<module>.md         # INDEX — tên file bất biến, không chứa dòng TC
-│   │       ├── web/ · mobile/ · api/          # test_cases_<module>_<nền-tảng>.md · parts/ khi > 40 TC
-│   │       └── archive/                       # phiên bản TC cũ
+│   │       └── web/ · mobile/ · api/          # test_cases_<module>_<nền-tảng>.md · parts/ khi > 40 TC
 │   ├── executions/
 │   │   └── <module>/<nền-tảng>/run_<timestamp>/
 │   │       ├── execution_report.md

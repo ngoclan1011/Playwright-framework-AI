@@ -2,7 +2,7 @@
 
 > Về index: [../requirements_projects.md](../requirements_projects.md) · Prefix `PRJ` · REQ bao phủ: `REQ-PRJ-98` → `REQ-PRJ-101` (4 REQ)
 >
-> RISK liên quan: `RISK-15`
+> RISK liên quan: `RISK-PRJ-01`
 
 **Mô tả Story:** Là nhân sự vận hành, tôi muốn thấy công việc, phiếu hỗ trợ, hợp đồng và toàn bộ chứng từ bán hàng gắn với dự án ngay trong dự án, để không phải sang từng module lọc lại theo dự án.
 
@@ -65,9 +65,9 @@
 
 **Quy tắc nghiệp vụ ngầm (rút ra từ hành vi thực tế):**
 
-- Tab nào hiển thị được điều khiển bởi `Visible Tabs` (`REQ-PRJ-45`). Bỏ chọn `Invoices` trong cấu hình dự án thì tab `Invoices` biến mất khỏi nhóm `Sales` — **chưa kiểm chứng** phạm vi tác động (khu quản trị hay chỉ cổng khách hàng), xem `AMB-41`.
+- Tab nào hiển thị được điều khiển bởi `Visible Tabs` (`REQ-PRJ-45`). Bỏ chọn `Invoices` trong cấu hình dự án thì tab `Invoices` biến mất khỏi nhóm `Sales` — **chưa kiểm chứng** phạm vi tác động (khu quản trị hay chỉ cổng khách hàng), xem `AMB-PRJ-14`.
 - `Tasks` là tab chiếu duy nhất có **điểm vào tạo bản ghi** ngay trong dự án (`New Task`). Năm loại chứng từ bán hàng và phiếu hỗ trợ **không** tạo được từ đây — chỉ xem.
-- Cấu hình `Hide project tasks on main tasks table (admin area)` (`REQ-PRJ-52`) tác động ngược lại lên module `TASK`: công việc của dự án bị ẩn khỏi bảng công việc chung. Đây là **liên đới hai chiều** giữa `PRJ` và `TASK` — xem `AMB-42` và `RISK-15`.
+- Cấu hình `Hide project tasks on main tasks table (admin area)` (`REQ-PRJ-52`) tác động ngược lại lên module `TASK`: công việc của dự án bị ẩn khỏi bảng công việc chung. Đây là **liên đới hai chiều** giữa `PRJ` và `TASK` — xem `AMB-PRJ-15` và `RISK-PRJ-01`.
 
 ---
 

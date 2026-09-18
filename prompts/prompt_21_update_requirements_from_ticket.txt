@@ -17,7 +17,7 @@
 - Thư mục test cases (để Impact Report chính xác): [VD: docs/testcases/project/ — để trống thì Impact Report ghi "⚠️ chưa rà soát"]
 
 # TÙY CHỌN
-- Ambiguity vừa được PO/BA trả lời (nếu có): [VD: AMB-03 → "Deadline bắt buộc, phải sau Start Date" — để trống nếu không có]
+- Ambiguity vừa được PO/BA trả lời (nếu có): [VD: AMB-PRJ-03 → "Deadline bắt buộc, phải sau Start Date" — để trống nếu không có]
 - Giới hạn phạm vi: [VD: "Chỉ phần Field Spec" / để trống = áp toàn bộ delta]
 
 # GHI CHÚ

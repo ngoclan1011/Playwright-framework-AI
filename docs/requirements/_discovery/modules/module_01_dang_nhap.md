@@ -36,12 +36,12 @@
 | Vùng | Trạng thái sau recon |
 |---|---|
 | Nội dung form Quên mật khẩu | ✅ Đã xác minh — `REQ-LOGIN-23` → `28` |
-| Luồng email đặt lại mật khẩu | ❌ **Vẫn chưa xác minh** — không gửi mail cho tài khoản thật trên môi trường dùng chung (`AMB-04`, `REQ-LOGIN-27` ⚪) |
-| Cơ chế khoá tài khoản sau N lần sai | ❌ **Vẫn chưa xác minh** — cố ý không thử (`AMB-02`, `RISK-03`) |
+| Luồng email đặt lại mật khẩu | ❌ **Vẫn chưa xác minh** — không gửi mail cho tài khoản thật trên môi trường dùng chung (`AMB-LOGIN-04`, `REQ-LOGIN-27` ⚪) |
+| Cơ chế khoá tài khoản sau N lần sai | ❌ **Vẫn chưa xác minh** — cố ý không thử (`AMB-LOGIN-02`, `RISK-LOGIN-03`) |
 | Thông báo lỗi nguyên văn | ✅ Đã thu đủ — xem mục 5 của tài liệu module |
-| Vai trò thật của `admin@example.com` | ❌ **Vẫn chưa xác minh** — màn hình Roles 403 (`AMB-01`) |
-| Cookie ghi nhớ có tự đăng nhập không | ⚠️ **Một nửa** — đã xác minh **không** tự đăng nhập sau khi đăng xuất chủ động (`REQ-LOGIN-39`); còn trường hợp phiên hết hạn tự nhiên thì chưa (`REQ-LOGIN-40` ⚪, `AMB-15`) |
-| Lối đăng xuất ở viewport mobile | ❌ **Chưa xác minh** — recon chỉ chạy ở desktop `1600×750`, nơi lối đăng xuất trong `mobile-navbar` bị `display:none` (`AMB-16`) |
+| Vai trò thật của `admin@example.com` | ❌ **Vẫn chưa xác minh** — màn hình Roles 403 (`AMB-LOGIN-01`) |
+| Cookie ghi nhớ có tự đăng nhập không | ⚠️ **Một nửa** — đã xác minh **không** tự đăng nhập sau khi đăng xuất chủ động (`REQ-LOGIN-39`); còn trường hợp phiên hết hạn tự nhiên thì chưa (`REQ-LOGIN-40` ⚪, `AMB-LOGIN-15`) |
+| Lối đăng xuất ở viewport mobile | ❌ **Chưa xác minh** — recon chỉ chạy ở desktop `1600×750`, nơi lối đăng xuất trong `mobile-navbar` bị `display:none` (`AMB-LOGIN-16`) |
 
 ## Nhật ký khám phá
 

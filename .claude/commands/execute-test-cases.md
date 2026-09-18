@@ -54,7 +54,7 @@ Chạy bộ manual test cases trực tiếp trên browser thật, đối chiếu
 
 ### Bước 4: Chạy từng TC
 Với mỗi TC theo thứ tự:
-1. **Kiểm tra Auto-Skip** — TC có tag `@ManualOnly`/`Automatable = No` do rủi ro, hoặc steps chứa Mass Delete / Select All / xoá qua URL GET / upload `.exe` → `⏭️ SKIPPED` + ghi lý do, sang TC tiếp
+1. **Kiểm tra Auto-Skip** — TC có tag `@PersonalOnly` (`Automation = No` **không** phải lý do bỏ qua — vẫn chạy bình thường), hoặc steps chứa Mass Delete / Select All / xoá qua URL GET / upload `.exe` → `⏭️ SKIPPED` + ghi lý do, sang TC tiếp
 2. **Dựng Pre-Condition** — không dựng được → `⚠️ BLOCKED` + ghi nguyên nhân
 3. **Thực hiện đúng từng bước** trong Test Steps — không tự thêm/bớt bước
 4. **Verify từng Expected** bằng `snapshot` sau mỗi bước có kết quả quan sát được

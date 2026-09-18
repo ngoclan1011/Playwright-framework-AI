@@ -412,7 +412,7 @@
 
 ### 8.2 Rủi ro SẢN PHẨM — tóm tắt
 
-> **Nguồn chính** là mục `RISK-xx` của tài liệu requirements và đánh giá RBT trong tài liệu test case từng module — bảng này chỉ tóm tắt rủi ro cao nhất. Sửa ở tài liệu nguồn, **không** sửa ở đây.
+> **Nguồn chính** là mục `RISK-<MODULE>-xx` của tài liệu requirements và đánh giá RBT trong tài liệu test case từng module — bảng này chỉ tóm tắt rủi ro cao nhất. Sửa ở tài liệu nguồn, **không** sửa ở đây.
 
 | Module | Rủi ro | Mức | Kiểm soát bằng | Nguồn |
 |---|---|---|---|---|

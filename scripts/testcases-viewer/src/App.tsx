@@ -423,7 +423,7 @@ export default function App() {
                 onChange={(e) => setAutoFilter(e.target.value)}
                 className="h-7 rounded-sm border border-slate-200 bg-white px-1.5 text-[12px] text-slate-600"
               >
-                <option value="">Automatable: tất cả</option>
+                <option value="">Automation: tất cả</option>
                 <option value="yes">Yes</option>
                 <option value="partial">Partial</option>
                 <option value="no">No</option>

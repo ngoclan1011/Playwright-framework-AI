@@ -21,13 +21,17 @@ Kỹ năng này cung cấp các hướng dẫn chi tiết để AI (Claude Code)
 |---|---|---|---|
 | **Requirement** | `REQ-<MODULE>-<SỐ>` | `REQ-LOGIN-01` | Từng yêu cầu chức năng, business rule, validation rule |
 | **Story** | `STORY-<MODULE>-<SỐ>` | `STORY-PRJ-03` | Nhóm REQ thành đơn vị công việc (backlog view) — xem mục 5 |
-| **Ambiguity** | `AMB-<SỐ>` | `AMB-03` | Điểm mơ hồ cần clarify với PO/BA |
-| **Risk** | `RISK-<SỐ>` | `RISK-02` | Rủi ro kiểm thử |
+| **Ambiguity** | `AMB-<MODULE>-<SỐ>` | `AMB-LOGIN-03` | Điểm mơ hồ cần clarify với PO/BA |
+| **Risk** | `RISK-<MODULE>-<SỐ>` | `RISK-PRJ-02` | Rủi ro kiểm thử |
 
 **Quy tắc:**
 - Mỗi yêu cầu **đủ nhỏ để test được độc lập** — nếu 1 câu chứa nhiều rule, tách thành nhiều REQ
 - REQ ID **không đổi** sau khi đã phát hành tài liệu (chỉ thêm mới, không đánh lại số)
 - Test cases sinh ra ở bước sau **PHẢI ghi REQ ID** vào cột `REQ ID` — đây là mắt xích để kiểm chứng "đủ case" và chạy `/generate-traceability-matrix`
+- **AMB và RISK mang prefix module, đánh số RIÊNG từng module từ `01`** — giống hệt REQ. Module mới luôn bắt đầu `AMB-<MODULE>-01` · `RISK-<MODULE>-01`, **không** nối tiếp số của module khác. ❌ `AMB-15` trần: mã không có prefix thì hai module đánh số độc lập sẽ va nhau (đã xảy ra — `AMB-15` vừa là câu hỏi của `LOGIN` vừa là của `CUST`, grep ra hai nghĩa)
+- Hệ thống thứ hai trong namespace `_<hệ-thống>/` thêm mã hệ thống như REQ: `AMB-<HỆ_THỐNG>-<MODULE>-<SỐ>` · `RISK-<HỆ_THỐNG>-<MODULE>-<SỐ>`
+- AMB/RISK **cấp hệ thống** (tầng khám phá, cắt ngang nhiều module, chưa quy được về module nào): `AMB-SYS-<SỐ>` · `RISK-SYS-<SỐ>` cho hệ thống mặc định, `AMB-<HỆ_THỐNG>-<SỐ>` cho namespace. `SYS` là prefix **dành riêng**, không cấp cho module. Khi quy được về module → mở mã mới ở module đó, dòng cũ ghi `→ chuyển thành AMB-<MODULE>-NN`
+- Nhắc tới AMB/RISK ở tài liệu **cắt ngang** (danh mục README, test plan, báo cáo) → luôn ghi **đủ mã có prefix**, không viết tắt `AMB-15`
 
 **Phân vai REQ vs STORY (quan trọng):**
 - `REQ` là **lớp truy vết duy nhất** — bất biến, mọi test case / automation / RTM đều neo vào đây
@@ -64,7 +68,7 @@ Cùng một module có thể được phân tích **nhiều lần bằng nhiều
 **Ràng buộc bổ sung:**
 - ❌ Không "tái sử dụng" mã của REQ đã bị xoá — mã đã cấp là **vĩnh viễn chết**, kể cả khi yêu cầu đó không còn
 - ✅ `<MODULE>` phải **giống hệt** giữa các đợt (`PRJ` thì mãi là `PRJ`, không lúc `PRJ` lúc `PROJECT`)
-- ✅ Cùng nguyên tắc này áp cho `AMB-XX` và `RISK-XX` — đánh tiếp, không đánh lại
+- ✅ Cùng nguyên tắc này áp cho `AMB-<MODULE>-XX` và `RISK-<MODULE>-XX` — đánh tiếp **trong module**, không đánh lại, không nối số của module khác
 - ⚠️ Nếu yêu cầu mới **thay đổi hành vi của một REQ cũ** (không phải thêm mới): **giữ nguyên mã cũ**, sửa nội dung, và ghi chú `Cập nhật bởi ticket ABC-123` — không cấp mã mới cho cùng một hành vi
 
 ### 2.2. Một nghiệp vụ = một prefix, dù chạy trên bao nhiêu nền tảng (BẮT BUỘC)
@@ -78,7 +82,7 @@ Một hệ thống thường có nhiều **mặt**: web, app Android/iOS, API c�
 | Cột **`Nền tảng`** | Giá trị: `Web` · `Android` · `iOS` · `API`, nối bằng ` · ` khi áp nhiều nền tảng, hoặc `Tất cả` = mọi nền tảng module đang có. **Bắt buộc** ở REQ trong index (REQ dùng chung) và ở file `mobile/` (phân biệt Android / iOS); file `web/` và `api/` không cần — nền tảng suy từ file |
 | Rule **giống nhau** trên ≥ 2 nền tảng → **1 REQ, nằm ở index** | "Khoá tài khoản sau 5 lần sai" · `Tất cả` — thường là rule nằm ở server |
 | Rule **khác nhau** → **REQ riêng cho từng nền tảng, nằm ở file nền tảng đó** | Web giữ lại email sau khi đăng nhập lỗi, app xoá trắng → 1 REQ ở `web/`, 1 REQ ở `mobile/`. Mỗi REQ vẫn là một rule kiểm độc lập (4.3.4) |
-| Khác biệt **không rõ chủ đích** → `AMB-XX` | Message lỗi web khác app · độ dài tối đa khác nhau · API nhận giá trị mà UI chặn → hỏi PO *"cố ý hay lỗi?"*. Mặc định nghi là lỗi |
+| Khác biệt **không rõ chủ đích** → `AMB-<MODULE>-XX` | Message lỗi web khác app · độ dài tối đa khác nhau · API nhận giá trị mà UI chặn → hỏi PO *"cố ý hay lỗi?"*. Mặc định nghi là lỗi |
 | **Chưa khảo sát nền tảng nào thì không khai REQ cho nền tảng đó** | REQ khảo sát trên web ghi `Web`, **không** ghi `Tất cả` khi chưa mở app. Nền tảng chưa kiểm là `❔`, không phải "chắc cũng giống" — cùng tinh thần "không suy role B từ role A" (3.1.2) |
 | Mở rộng REQ sang nền tảng mới | Kiểm chứng xong trên nền tảng mới → **chuyển dòng REQ cũ** từ file nền tảng lên index và sửa cột `Nền tảng` (**giữ nguyên mã**, không cấp mã mới), ghi Nhật ký (6.9) loại `🟢 Thêm` · tóm tắt *"Mở rộng nền tảng: + Android — chuyển lên index"* · cột `TC cần xử lý` = `viết mới cho Android`. Evidence cũ **ở lại** `web/evidence/` — ảnh thuộc nền tảng đã chụp ra nó |
 
@@ -129,16 +133,16 @@ Bật `browser_network_requests` trong suốt quá trình recon (không chỉ l�
 | Response **4xx khi submit sai** | ⭐ **Validation server-side** — rule mà UI không chặn · **nguyên văn message** trong body (thường khác message hiện trên UI) | 6.4 Validation Messages |
 | Response chứa enum | Danh sách trạng thái đầy đủ — kể cả trạng thái **chưa từng thấy trên UI** | 6.6 Ma trận Trạng thái |
 | Endpoint gọi khi mở dropdown | Nguồn dữ liệu của dropdown (bảng master nào) · **tổng số option thật** so với số đang hiển thị | 6.3 · phát hiện dropdown bị giới hạn |
-| Endpoint **có nhưng không UI nào gọi** | Tính năng chưa build hoặc đã gỡ giao diện | 6.2 với trạng thái ⚪ + `AMB-XX` |
+| Endpoint **có nhưng không UI nào gọi** | Tính năng chưa build hoặc đã gỡ giao diện | 6.2 với trạng thái ⚪ + `AMB-<MODULE>-XX` |
 | Response `403` khi đổi role | Ranh giới phân quyền thật ở tầng server | 6.5 Ma trận Phân quyền |
 
 **Luật ghi nhận — bắt buộc:**
 
 | Tình huống | Xử lý |
 |---|---|
-| Rule chỉ có ở server, UI **không** chặn | Vẫn gán REQ, cột `Nguồn` ghi `API response · POST /api/x · 422` + mở `AMB-XX` hỏi: chặn ở UI hay cố ý để server chặn? |
-| Message API **khác** message hiện trên UI | Ghi **cả hai nguyên văn** vào 6.4 + `AMB-XX` 🔴 — đây là bug tiềm ẩn, không phải ambiguity thường |
-| Field có trong payload nhưng **không** có trên form | Gán REQ trạng thái ⚪ hoặc mở `AMB-XX` — **không** im lặng bỏ qua |
+| Rule chỉ có ở server, UI **không** chặn | Vẫn gán REQ, cột `Nguồn` ghi `API response · POST /api/x · 422` + mở `AMB-<MODULE>-XX` hỏi: chặn ở UI hay cố ý để server chặn? |
+| Message API **khác** message hiện trên UI | Ghi **cả hai nguyên văn** vào 6.4 + `AMB-<MODULE>-XX` 🔴 — đây là bug tiềm ẩn, không phải ambiguity thường |
+| Field có trong payload nhưng **không** có trên form | Gán REQ trạng thái ⚪ hoặc mở `AMB-<MODULE>-XX` — **không** im lặng bỏ qua |
 | Endpoint không có UI | Ghi nhận, **KHÔNG** gọi thử để "kiểm chứng" |
 
 🚫 **Cấm tuyệt đối:** gọi API trực tiếp (curl/fetch/`browser_evaluate` gọi endpoint) để dò hành vi. Recon chỉ được **quan sát thụ động** request do UI tự phát sinh. Gọi thẳng API là hành vi kiểm thử xâm nhập, càng nguy hiểm trên môi trường dùng chung — và request tự tay tạo ra **không** chứng minh được điều gì về hành vi của UI.
@@ -164,7 +168,7 @@ Thực tế hay gặp: hệ thống có 5 role nhưng QA chỉ đưa 1 account a
 |---|---|---|
 | ✅ **Đã kiểm chứng** | Đăng nhập đúng role đó và thử thật | `✅` / `❌` bình thường |
 | ⚠️ **Suy từ cấu hình** | Đọc từ màn hình phân quyền của hệ thống, chưa đăng nhập thử | `⚠️✅` / `⚠️❌` — kèm chú thích nguồn |
-| ❔ **Chưa có căn cứ** | Không có account, không có màn hình cấu hình | `❔` + **bắt buộc** mở `AMB-XX` 🔴 |
+| ❔ **Chưa có căn cứ** | Không có account, không có màn hình cấu hình | `❔` + **bắt buộc** mở `AMB-<MODULE>-XX` 🔴 |
 
 **Bước 3 — Với account đang có, vẫn khai thác được:**
 - Menu/nút **bị ẩn** vs **hiện nhưng disabled** — hai cái này nghĩa khác nhau, phải đọc DOM để phân biệt (ảnh không cho biết)
@@ -175,7 +179,7 @@ Thực tế hay gặp: hệ thống có 5 role nhưng QA chỉ đưa 1 account a
 - ❌ **Không** suy quyền của role B từ hành vi của role A — "admin làm được nên manager chắc cũng làm được" là bịa
 - ❌ Ô `❔` **không được** làm tròn thành `❌`. "Chưa kiểm chứng" ≠ "không có quyền"
 - ✅ Cuối ma trận 6.5 **bắt buộc** có dòng tổng: `Đã kiểm chứng: N ô · Suy diễn: M ô · Chưa rõ: K ô` — người đọc biết ngay tin được bao nhiêu phần
-- ✅ Mỗi role **chưa có account** = 1 `AMB-XX` 🔴 riêng, nội dung: *"Xin account role X để kiểm chứng N ô đang suy diễn"*
+- ✅ Mỗi role **chưa có account** = 1 `AMB-<MODULE>-XX` 🔴 riêng, nội dung: *"Xin account role X để kiểm chứng N ô đang suy diễn"*
 
 ### 3.2. Nhánh Document Analysis — phân tích tài liệu có sẵn
 
@@ -237,16 +241,16 @@ Lập bảng đối chiếu trước khi viết requirements:
 4. Mockup/wireframe                           ← dễ lỗi thời nhất
 ```
 
-❗ **Xung đột KHÔNG được tự giải quyết im lặng** — mọi mâu thuẫn đều phải thành một `AMB-XX` kèm Assumption tạm, kể cả khi đã chọn được nguồn ưu tiên.
+❗ **Xung đột KHÔNG được tự giải quyết im lặng** — mọi mâu thuẫn đều phải thành một `AMB-<MODULE>-XX` kèm Assumption tạm, kể cả khi đã chọn được nguồn ưu tiên.
 
 #### Bước 4 — Xử lý tài liệu thiếu (rất hay gặp)
 
 | Tình huống | Cách xử lý |
 |---|---|
-| Ticket **không có AC nào**, chỉ 1–2 dòng mô tả | ❌ KHÔNG tự viết AC thay PO. Ghi nhận đúng những gì có, rồi liệt kê **danh sách câu hỏi cần clarify** dạng `AMB-XX` mức 🔴 High. Nêu rõ trong Overview: *"Ticket chưa có AC — tài liệu này chưa đủ để sinh test case"* |
-| AC viết dạng mơ hồ ("hoạt động đúng", "như module cũ") | Gán REQ ID bình thường **nhưng** kèm ngay 1 `AMB-XX` hỏi tiêu chí cụ thể |
-| Tham chiếu "giống module X" | Nếu module X đã có `requirements_<X>.md` → trích REQ tương ứng và **link chéo**. Nếu chưa có → `AMB-XX`, không tự suy diễn |
-| Thiếu hoàn toàn thông tin phân quyền/trạng thái | Ghi "Không đề cập trong tài liệu" (khác với "Không áp dụng") + `AMB-XX` |
+| Ticket **không có AC nào**, chỉ 1–2 dòng mô tả | ❌ KHÔNG tự viết AC thay PO. Ghi nhận đúng những gì có, rồi liệt kê **danh sách câu hỏi cần clarify** dạng `AMB-<MODULE>-XX` mức 🔴 High. Nêu rõ trong Overview: *"Ticket chưa có AC — tài liệu này chưa đủ để sinh test case"* |
+| AC viết dạng mơ hồ ("hoạt động đúng", "như module cũ") | Gán REQ ID bình thường **nhưng** kèm ngay 1 `AMB-<MODULE>-XX` hỏi tiêu chí cụ thể |
+| Tham chiếu "giống module X" | Nếu module X đã có `requirements_<X>.md` → trích REQ tương ứng và **link chéo**. Nếu chưa có → `AMB-<MODULE>-XX`, không tự suy diễn |
+| Thiếu hoàn toàn thông tin phân quyền/trạng thái | Ghi "Không đề cập trong tài liệu" (khác với "Không áp dụng") + `AMB-<MODULE>-XX` |
 
 ### 3.3. Khi có cả tài liệu và UI thực tế
 
@@ -255,8 +259,8 @@ Chạy 3.2 trước để nắm **ý định**, rồi 3.1 để đối chiếu *
 | Kiểu lệch | Nghĩa là | Xử lý |
 |---|---|---|
 | Tài liệu có, UI chưa có | Tính năng chưa build hoặc build thiếu | REQ vẫn giữ, ghi trạng thái `Chưa implement` |
-| UI có, tài liệu không nói | Tính năng ngoài tài liệu (scope creep / di sản) | Vẫn gán REQ, nguồn ghi `UI thực tế — ngoài tài liệu` + `AMB-XX` |
-| Cả hai có nhưng khác nhau | Xung đột thật | `AMB-XX` 🔴 High, ghi cả hai giá trị nguyên văn |
+| UI có, tài liệu không nói | Tính năng ngoài tài liệu (scope creep / di sản) | Vẫn gán REQ, nguồn ghi `UI thực tế — ngoài tài liệu` + `AMB-<MODULE>-XX` |
+| Cả hai có nhưng khác nhau | Xung đột thật | `AMB-<MODULE>-XX` 🔴 High, ghi cả hai giá trị nguyên văn |
 
 ### 3.3.1. Tài liệu bán phần — chia vùng trước khi recon
 
@@ -295,7 +299,7 @@ Sai lầm hay gặp là xử lý cả module theo **một** cách: hoặc tin t�
 - ❌ **Không** dùng tài liệu bán phần để suy ra vùng nó không phủ. Spec form tạo mới **không** nói gì về form sửa — dù hai form nhìn giống nhau
 - ❌ Vùng ⬜ Trắng **không** được rút gọn recon với lý do "module này chắc giống module kia"
 - ✅ **Bản đồ phủ tài liệu phải nằm trong tài liệu đầu ra** (một mục ngay sau Tổng quan) — người đọc cần biết phần nào tin được từ spec, phần nào do agent quan sát
-- ✅ Tài liệu ⚠️ nghi lỗi thời mà **khớp** UI → nâng lên `Tài liệu + kiểm chứng thực tế`; **lệch** → `AMB-XX` kèm nguyên văn cả hai bên
+- ✅ Tài liệu ⚠️ nghi lỗi thời mà **khớp** UI → nâng lên `Tài liệu + kiểm chứng thực tế`; **lệch** → `AMB-<MODULE>-XX` kèm nguyên văn cả hai bên
 - ✅ Khi `/discover-system` đã chạy: đọc `docs/requirements/_discovery/doc_inventory.md` — Bản đồ phủ tài liệu cấp hệ thống đã có sẵn ở đó, chỉ cần chi tiết hoá xuống cấp vùng chức năng
 
 ### 3.4. Nhánh API Spec Analysis — phân tích đặc tả API
@@ -350,7 +354,7 @@ const theoMacDinh = op.security === undefined;   // kế thừa security cấp g
 
 Soi ngay: endpoint **công khai** mà trả **dữ liệu cá nhân** (user, đơn hàng, hồ sơ) → đánh 🔴, là phát hiện giá trị nhất và rẻ nhất.
 
-Spec hầu như **không** khai role (admin/staff). Có vendor extension (`x-roles`, `x-permissions`) hoặc mô tả *"Admin only"* thì dùng, ghi nguồn. Không có → cột role của ma trận là `❔` + `AMB-XX` 🔴, **không** suy từ tên endpoint.
+Spec hầu như **không** khai role (admin/staff). Có vendor extension (`x-roles`, `x-permissions`) hoặc mô tả *"Admin only"* thì dùng, ghi nguồn. Không có → cột role của ma trận là `❔` + `AMB-<MODULE>-XX` 🔴, **không** suy từ tên endpoint.
 
 #### 3.4.4. Kiểm chứng bằng gọi thật — luật RIÊNG của nhánh API
 
@@ -389,15 +393,15 @@ Mỗi sai lệch ở tầng khám phá ghi thành **phát hiện `F-nn`** kèm b
 
 | Dữ kiện trong spec | Thành REQ gì | Ghi chú |
 |---|---|---|
-| Mỗi operation — response thành công | 1 REQ: điều kiện gọi · status · **hình dạng** body chính | Status thật lệch spec → AC theo spec **và** `AMB-XX` ghi cả hai nguyên văn (xem luật lệch pha dưới) |
+| Mỗi operation — response thành công | 1 REQ: điều kiện gọi · status · **hình dạng** body chính | Status thật lệch spec → AC theo spec **và** `AMB-<MODULE>-XX` ghi cả hai nguyên văn (xem luật lệch pha dưới) |
 | Mỗi field `required` (body / path / query / header) | 1 REQ mỗi field: *thiếu field → `<status>` + body lỗi* | Không gộp nhiều field vào một REQ (4.3.4) |
 | Ràng buộc: `minLength` · `maxLength` · `pattern` · `enum` · `minimum` · `maximum` · `format` | 1 REQ mỗi ràng buộc; liệt kê đủ ở Field Spec (3.4.7) | Field Spec là nơi liệt kê, REQ trỏ tới dòng — không chép ràng buộc hai lần |
-| Auth của operation | REQ *"không token → 401"* cho operation 🔒 · REQ *"truy cập không cần token"* cho operation 🌐 | Công khai mà trả dữ liệu cá nhân → REQ vẫn ghi đúng spec **và** mở `RISK-XX` + `AMB-XX` 🔴 |
+| Auth của operation | REQ *"không token → 401"* cho operation 🔒 · REQ *"truy cập không cần token"* cho operation 🌐 | Công khai mà trả dữ liệu cá nhân → REQ vẫn ghi đúng spec **và** mở `RISK-<MODULE>-XX` + `AMB-<MODULE>-XX` 🔴 |
 | Tham số phân trang / sắp xếp / lọc | 1 REQ mỗi tham số | Giá trị mặc định chỉ ghi khi spec khai `default` |
 | Schema lỗi dùng chung (error envelope) | 1 REQ cấp module về hình dạng body lỗi | |
-| `enum` trạng thái + operation đổi trạng thái | Ma trận Trạng thái (6.6) | Chuyển trạng thái nào được phép — spec thường **không** nói → `AMB-XX` |
-| `deprecated: true` | REQ vẫn 🟢 (tính năng còn chạy) + ghi chú *"spec đánh deprecated"* + `AMB-XX` hỏi lịch gỡ | Không nhầm với trạng thái 🔴 Deprecated của REQ |
-| Thứ spec **không** nói: tính duy nhất · ràng buộc liên field · rule nghiệp vụ · rate limit | ❌ Không bịa REQ | `AMB-XX` kèm Assumption tạm |
+| `enum` trạng thái + operation đổi trạng thái | Ma trận Trạng thái (6.6) | Chuyển trạng thái nào được phép — spec thường **không** nói → `AMB-<MODULE>-XX` |
+| `deprecated: true` | REQ vẫn 🟢 (tính năng còn chạy) + ghi chú *"spec đánh deprecated"* + `AMB-<MODULE>-XX` hỏi lịch gỡ | Không nhầm với trạng thái 🔴 Deprecated của REQ |
+| Thứ spec **không** nói: tính duy nhất · ràng buộc liên field · rule nghiệp vụ · rate limit | ❌ Không bịa REQ | `AMB-<MODULE>-XX` kèm Assumption tạm |
 
 **Thang nguồn 4 mức cho cột `Nguồn`** (thay thang ở 3.3.1 Bước 3 khi nguồn là API):
 
@@ -408,7 +412,7 @@ Mỗi sai lệch ở tầng khám phá ghi thành **phát hiện `F-nn`** kèm b
 | `Thực tế — spec không nói · <METHOD> <path> → <status>` | Chỉ quan sát được khi gọi, spec im lặng |
 | `Tài liệu · <file> · <vị trí>` | Từ tài liệu API dạng văn bản (3.4.6) |
 
-**Luật lệch pha spec ↔ thực tế:** REQ ghi theo **ý định đã công bố** (spec/tài liệu), cột `Nguồn` ghi `Spec — ❌ lệch thực tế (F-nn)`, kèm `AMB-XX` 🔴 nguyên văn cả hai bên. **Không** tự hạ REQ theo hành vi thật (là che bug), cũng **không** giấu lệch pha (là để TC FAIL giả). PO trả lời AMB mới quyết định bên nào đúng.
+**Luật lệch pha spec ↔ thực tế:** REQ ghi theo **ý định đã công bố** (spec/tài liệu), cột `Nguồn` ghi `Spec — ❌ lệch thực tế (F-nn)`, kèm `AMB-<MODULE>-XX` 🔴 nguyên văn cả hai bên. **Không** tự hạ REQ theo hành vi thật (là che bug), cũng **không** giấu lệch pha (là để TC FAIL giả). PO trả lời AMB mới quyết định bên nào đúng.
 
 #### 3.4.6. Tài liệu API dạng văn bản (.docx / .pdf)
 
@@ -417,10 +421,10 @@ Hay gặp ở dự án outsource hoặc tích hợp đối tác: không có Open
 1. **Đọc** bằng skill `docx` / `pdf` — không `Read` thẳng file nhị phân
 2. **Tìm 4 loại nội dung:** bảng danh sách endpoint · request/response mẫu · bảng mã lỗi · mô tả xác thực
 3. **Dựng Endpoint Catalog** với vị trí nguồn cụ thể: `api_spec_v3.docx · mục 4.2 · bảng 7`
-4. **JSON mẫu là VÍ DỤ, không phải SCHEMA.** Field xuất hiện trong ví dụ ≠ field bắt buộc; giá trị mẫu ≠ kiểu dữ liệu duy nhất. **Không** suy `required` / kiểu / độ dài từ ví dụ → `❔` + `AMB-XX`
+4. **JSON mẫu là VÍ DỤ, không phải SCHEMA.** Field xuất hiện trong ví dụ ≠ field bắt buộc; giá trị mẫu ≠ kiểu dữ liệu duy nhất. **Không** suy `required` / kiểu / độ dài từ ví dụ → `❔` + `AMB-<MODULE>-XX`
 5. **Bảng mã lỗi** trong tài liệu → Validation Messages (3.4.7), trích nguyên văn mã + message
 6. ❌ **Không** sinh file OpenAPI từ tài liệu rồi đặt vào `sources/` như thể là spec gốc. Bản phác thảo để hỗ trợ automation (nếu cần) đặt ngoài `sources/` và ghi rõ *"suy từ tài liệu, không phải spec của hệ thống"*
-7. Có cả tài liệu **và** spec → đối chiếu theo 3.3: tài liệu = ý định nghiệp vụ, spec = lời khai kỹ thuật, response thật = sự thật. Ba nguồn lệch nhau → `AMB-XX` ghi cả ba
+7. Có cả tài liệu **và** spec → đối chiếu theo 3.3: tài liệu = ý định nghiệp vụ, spec = lời khai kỹ thuật, response thật = sự thật. Ba nguồn lệch nhau → `AMB-<MODULE>-XX` ghi cả ba
 8. Gọi thật được (3.4.4) → kiểm chứng như spec. Không gọi được → mọi REQ dừng ở `Tài liệu · …`, **không** nâng lên mức kiểm chứng
 
 #### 3.4.7. Mục 6 áp cho API — thay đổi so với nhánh UI
@@ -455,7 +459,7 @@ select_device → appium_session_management(create) → appium_get_page_source �
 |---|---|
 | **Native** / **Flutter đã bật semantics** | Đầy đủ theo 3.5.2 |
 | **Hybrid** | Phần native theo 3.5.2; phần WebView đổi context (`appium_context`) rồi đọc như DOM. **Bắt buộc** quay về `NATIVE_APP` sau đó |
-| **Flutter CHƯA bật semantics** (chỉ một `FlutterView` rỗng) | ⚠️ **Chỉ recon được mức hình ảnh**: luồng, text hiển thị, message nhìn thấy. Cột `Nguồn` = `Quan sát ảnh — chưa đọc được phần tử`. **Không** khai thuộc tính (bắt buộc, disabled, độ dài). Mở `AMB-XX` 🔴 *"Dev bật semantics"* kèm 3 câu hỏi của `skills-mobile-debug-agent` mục Flutter. **CẤM** bấm theo toạ độ để dò màn hình — nhờ user dẫn đường |
+| **Flutter CHƯA bật semantics** (chỉ một `FlutterView` rỗng) | ⚠️ **Chỉ recon được mức hình ảnh**: luồng, text hiển thị, message nhìn thấy. Cột `Nguồn` = `Quan sát ảnh — chưa đọc được phần tử`. **Không** khai thuộc tính (bắt buộc, disabled, độ dài). Mở `AMB-<MODULE>-XX` 🔴 *"Dev bật semantics"* kèm 3 câu hỏi của `skills-mobile-debug-agent` mục Flutter. **CẤM** bấm theo toạ độ để dò màn hình — nhờ user dẫn đường |
 
 Ghi vào metadata (6.1) dòng **`Thiết bị khảo sát`** thay cho `Trình duyệt khảo sát`:
 
@@ -485,11 +489,11 @@ Ghi vào metadata (6.1) dòng **`Thiết bị khảo sát`** thay cho `Trình du
 |---|---|---|
 | **Quyền runtime** | Xin quyền gì · lúc nào · từ chối thì app làm gì · chọn "không hỏi lại" thì sao | `appium_mobile_permissions` — Android `action=update` + `permissionChangeAction=revoke` · iOS Simulator `action=reset`; đọc nội dung hộp thoại bằng `appium_alert action=get_text` (chuỗi OS — không làm assertion). iOS máy thật: nhờ user |
 | **Vòng đời app** | Đưa xuống nền rồi mở lại: dữ liệu đang nhập còn không · phiên còn không | `appium_app_lifecycle action=background` (+ `seconds`) |
-| **Mất mạng** | Thông báo gì · dữ liệu đang nhập có mất · có tự thử lại | ⚠️ Appium MCP **không** có tool tắt mạng. Android có `adb`: `adb shell svc wifi disable` + `svc data disable` (bật lại `enable`) · iOS / không có `adb`: nhờ user bật chế độ máy bay. Không làm được → `❔` + `AMB-XX`, **không** ghi đã kiểm |
+| **Mất mạng** | Thông báo gì · dữ liệu đang nhập có mất · có tự thử lại | ⚠️ Appium MCP **không** có tool tắt mạng. Android có `adb`: `adb shell svc wifi disable` + `svc data disable` (bật lại `enable`) · iOS / không có `adb`: nhờ user bật chế độ máy bay. Không làm được → `❔` + `AMB-<MODULE>-XX`, **không** ghi đã kiểm |
 | **Xoay màn hình** | Có hỗ trợ không · xoay có mất dữ liệu | `appium_orientation action=set` |
 | **Bàn phím** | Có che ô nhập/nút gửi · nút Next/Done có chuyển ô | `appium_mobile_keyboard action=is_shown` + so vị trí phần tử (`bounds` Android / `rect` iOS) khi bàn phím mở |
 | **Deep link** | Scheme/host app khai báo · mở link đi tới màn hình nào · chưa đăng nhập thì sao | Lấy danh sách link: `intent-filter` trong AndroidManifest / `CFBundleURLTypes` + associated domains trong Info.plist nếu có công cụ, không có → hỏi user. Mở thử bằng `appium_app_lifecycle action=deep_link` — chỉ link **đọc** |
-| **Push notification** | Loại thông báo · bấm vào đi đâu | Thường không tự tạo được → `❔` + `AMB-XX`. Có thông báo sẵn thì Android xem bằng `appium_mobile_device_control action=open_notifications` |
+| **Push notification** | Loại thông báo · bấm vào đi đâu | Thường không tự tạo được → `❔` + `AMB-<MODULE>-XX`. Có thông báo sẵn thì Android xem bằng `appium_mobile_device_control action=open_notifications` |
 | **Phiên bản tối thiểu / cập nhật bắt buộc** | App cũ có bị chặn không | Hỏi user — không tự hạ phiên bản app |
 
 #### 3.5.4. Android ↔ iOS
@@ -513,7 +517,7 @@ Ghi vào metadata (6.1) dòng **`Thiết bị khảo sát`** thay cho `Trình du
 
 ## 4. Framework Phát Hiện Ambiguity & Risk
 
-### 4.1. Ambiguity (AMB-XX)
+### 4.1. Ambiguity (AMB-<MODULE>-XX)
 
 Với mỗi ambiguity, ghi: **Mã · Câu hỏi · Nguy cơ nếu không giải quyết · Mức độ (🔴 High / 🟡 Medium / 🟢 Low) · Assumption tạm** (nếu không được trả lời thì test theo giả định nào).
 
@@ -526,7 +530,7 @@ Các hướng phát hiện:
 - Phân quyền chưa rõ: role nào được thực hiện hành động này?
 - Trạng thái chưa rõ: từ trạng thái X có được chuyển sang Y không?
 
-### 4.2. Risk (RISK-XX)
+### 4.2. Risk (RISK-<MODULE>-XX)
 
 Với mỗi risk, ghi: **Mã · Tên rủi ro · Mô tả · Mitigation** (cách giảm thiểu khi test).
 
@@ -600,7 +604,7 @@ Tách ra thì **giữ nguyên mã cũ** cho rule ở lại, cấp mã mới cho 
 | Tổ tiên nào ẩn | Duyệt ngược `parentElement`, đọc `getComputedStyle().display` | Chỉ ra **lý do** ẩn: responsive · quyền · trạng thái |
 | Viewport đang đo | `innerWidth × innerHeight` | Kết luận chỉ đúng với **viewport đó** — phải ghi vào AC |
 
-Phần tử chỉ hiện ở viewport khác → **không** kết luận thay cho viewport đó. Mở một `AMB-XX` yêu cầu recon riêng, đừng suy diễn.
+Phần tử chỉ hiện ở viewport khác → **không** kết luận thay cho viewport đó. Mở một `AMB-<MODULE>-XX` yêu cầu recon riêng, đừng suy diễn.
 
 **Nhánh Mobile (3.5) — cùng cái bẫy, khác thuộc tính:** có node trong hierarchy ≠ người dùng bấm được. Đọc `displayed` · `enabled` · `bounds` (kích thước `0×0`, hoặc nằm ngoài màn hình) · có bị **bàn phím** hay dialog che không. Kết luận chỉ đúng với **thiết bị + hướng màn hình** đang đo — ghi vào AC.
 
@@ -626,7 +630,7 @@ Bảng metadata của tài liệu (6.1) **phải** có dòng **Trình duyệt kh
 
 Cookie ghi nhớ · email gửi đi · tệp xuất ra · bản ghi lịch sử · thông báo đẩy — recon rất dễ dừng ở *"đã được tạo ra"* rồi coi là xong. Nhưng **giá trị nghiệp vụ nằm ở chỗ nó dùng được**, và đó mới là thứ có thể hỏng âm thầm.
 
-**Luật:** mỗi tác tạo cần **tối thiểu 2 REQ** — một cho *được tạo đúng hình thái*, một cho *dùng được đúng mục đích*. Không kiểm chứng được vế thứ hai thì vẫn **phải** cấp REQ ở trạng thái ⚪ kèm `AMB-XX`, tuyệt đối không im lặng bỏ qua. Im lặng bỏ qua khiến cả tính năng không có test case nào mà bảng độ phủ vẫn báo xanh.
+**Luật:** mỗi tác tạo cần **tối thiểu 2 REQ** — một cho *được tạo đúng hình thái*, một cho *dùng được đúng mục đích*. Không kiểm chứng được vế thứ hai thì vẫn **phải** cấp REQ ở trạng thái ⚪ kèm `AMB-<MODULE>-XX`, tuyệt đối không im lặng bỏ qua. Im lặng bỏ qua khiến cả tính năng không có test case nào mà bảng độ phủ vẫn báo xanh.
 
 ### 4.3.9. Mã trạng thái / hành vi kỹ thuật bất thường phải **nghi ngờ nhất quán**
 
@@ -919,8 +923,8 @@ Tài liệu format Markdown, lưu artifact (`requirements_<module>.md`). **Nội
 Mở đầu tài liệu bằng bảng metadata, trong đó **BẮT BUỘC** có 2 dòng phục vụ quy tắc nối tiếp mã (mục 2.1):
 
 ```markdown
-| **Dải mã đã dùng** | `REQ-PRJ-01` → `REQ-PRJ-65` · `AMB-01` → `AMB-12` · `RISK-01` → `RISK-12` |
-| **Mã kế tiếp**     | Đợt phân tích sau bắt đầu từ `REQ-PRJ-66` · `AMB-13` · `RISK-13` — **KHÔNG đánh lại từ 01** |
+| **Dải mã đã dùng** | `REQ-PRJ-01` → `REQ-PRJ-65` · `AMB-PRJ-01` → `AMB-PRJ-12` · `RISK-PRJ-01` → `RISK-PRJ-12` |
+| **Mã kế tiếp**     | Đợt phân tích sau bắt đầu từ `REQ-PRJ-66` · `AMB-PRJ-13` · `RISK-PRJ-13` — **KHÔNG đánh lại từ 01** |
 ```
 
 Với **nhánh UI Recon**, bảng metadata còn **BẮT BUỘC** thêm một dòng nữa:
@@ -949,11 +953,11 @@ Chia thành User Stories / Use Cases, **mỗi yêu cầu 1 dòng trong bảng c�
 |---|---|---|
 | 🟢 | **Active** — đang hiệu lực, chưa từng sửa | TC giữ nguyên |
 | 🟡 | **Changed** — đã bị ticket sau sửa nội dung | ⚠️ TC map vào REQ này **phải review lại** |
-| 🔴 | **Deprecated** — tính năng đã bị gỡ bỏ | TC map vào REQ này **phải xoá/archive**. KHÔNG xoá dòng REQ, chỉ đổi trạng thái |
+| 🔴 | **Deprecated** — tính năng đã bị gỡ bỏ | TC map vào REQ này **đổi sang 🗑️ Deprecated** (không xoá dòng TC). KHÔNG xoá dòng REQ, chỉ đổi trạng thái |
 | ⚪ | **Chưa implement** — tài liệu có, hệ thống chưa build | TC viết trước, đánh dấu `skip` cho tới khi build xong |
 
 **Quy tắc:**
-- Cột **`Nền tảng`** đặt ngay sau `Tên yêu cầu` — **bắt buộc** ở bảng REQ của index và của file `mobile/` (mục 2.2, 5.3). Message khác nhau giữa nền tảng thì mỗi nền tảng ghi ở file của nó, **nguyên văn**, kèm `AMB-XX` nếu khác biệt không rõ chủ đích
+- Cột **`Nền tảng`** đặt ngay sau `Tên yêu cầu` — **bắt buộc** ở bảng REQ của index và của file `mobile/` (mục 2.2, 5.3). Message khác nhau giữa nền tảng thì mỗi nền tảng ghi ở file của nó, **nguyên văn**, kèm `AMB-<MODULE>-XX` nếu khác biệt không rõ chủ đích
 - Mặc định mọi REQ mới là 🟢, cột `Cập nhật lần cuối` để `—`
 - Trạng thái ≠ 🟢 thì **BẮT BUỘC** có dòng tương ứng trong Nhật ký thay đổi (mục 6.9) — hai nơi này phải khớp nhau
 - **KHÔNG BAO GIỜ xoá dòng REQ** khỏi tài liệu, kể cả khi tính năng bị gỡ. Xoá dòng là mất dấu vết, và mã REQ đó cũng không được tái sử dụng (mục 2.1)
@@ -982,12 +986,12 @@ Bảng chi tiết từng field — phần cốt lõi cho Tester:
 |---|---|
 | `✅` / `❌` | **Đã kiểm chứng** — đăng nhập đúng role và thử thật |
 | `⚠️✅` / `⚠️❌` | **Suy từ cấu hình** — đọc từ màn hình phân quyền của hệ thống, chưa đăng nhập thử |
-| `❔` | **Chưa có căn cứ** — bắt buộc kèm `AMB-XX` 🔴 |
+| `❔` | **Chưa có căn cứ** — bắt buộc kèm `AMB-<MODULE>-XX` 🔴 |
 
 **Dòng tổng bắt buộc đặt ngay dưới bảng:**
 ```
 Tổng 21 ô = Đã kiểm chứng 13 · Suy diễn 0 · Chưa rõ 7 · Không áp dụng 1
-Ô "không áp dụng" là [<hành động> × <role>] — <lý do>. Role Staff/Guest chưa có account (AMB-07)
+Ô "không áp dụng" là [<hành động> × <role>] — <lý do>. Role Staff/Guest chưa có account (AMB-PRJ-07)
 ```
 
 Không có dòng tổng thì người đọc không biết ma trận này tin được bao nhiêu phần. Ô `❔` **không được** làm tròn thành `❌`.
@@ -1015,8 +1019,8 @@ Module không có tài liệu nào → ghi một dòng: *"Không có tài liệu
 
 | Mã | Câu hỏi | Nguy cơ | Mức độ | Assumption tạm | Trạng thái | Kết luận |
 |---|---|---|---|---|---|---|
-| AMB-04 | Visible Tabs vs quyền khách hàng, cái nào ưu tiên? | ... | 🔴 | Visible Tabs thắng | ❓ Chờ trả lời | — |
-| AMB-02 | Deadline có được sớm hơn Start Date? | ... | 🔴 | Không validate | ✅ Đã trả lời 10-08-2026 | PO xác nhận là lỗi → sinh REQ-PRJ-79 |
+| AMB-PRJ-04 | Visible Tabs vs quyền khách hàng, cái nào ưu tiên? | ... | 🔴 | Visible Tabs thắng | ❓ Chờ trả lời | — |
+| AMB-PRJ-02 | Deadline có được sớm hơn Start Date? | ... | 🔴 | Không validate | ✅ Đã trả lời 10-08-2026 | PO xác nhận là lỗi → sinh REQ-PRJ-79 |
 
 **Bảng mã trạng thái AMB:**
 
@@ -1028,7 +1032,7 @@ Module không có tài liệu nào → ghi một dòng: *"Không có tài liệu
 
 > AMB đã ✅ hoặc ⏭️ **không được xoá khỏi bảng** — giữ lại để biết quyết định đến từ đâu.
 
-**Bảng Risks:** `RISK-XX | Rủi ro | Mô tả | Mitigation`
+**Bảng Risks:** `RISK-<MODULE>-XX | Rủi ro | Mô tả | Mitigation`
 
 ### 6.8. Phân rã Epic / Story (Backlog View) — bắt buộc khi ≥ 25 REQ
 
@@ -1036,7 +1040,7 @@ Chiếu toàn bộ REQ sang cấu trúc backlog để chia việc, **không thay
 
 | Story ID | Tên Story | REQ bao phủ | Số REQ | AMB / RISK liên quan | Ghi chú phạm vi |
 |---|---|---|---|---|---|
-| STORY-PRJ-01 | Danh sách & lọc | REQ-PRJ-01 → REQ-PRJ-13 | 13 | RISK-05 | ... |
+| STORY-PRJ-01 | Danh sách & lọc | REQ-PRJ-01 → REQ-PRJ-13 | 13 | RISK-PRJ-05 | ... |
 
 Kèm theo bảng trên, **BẮT BUỘC** có đủ 4 phần:
 1. **Dòng tổng kiểm chứng:** `Tổng: N Story / M REQ — mọi REQ thuộc đúng một Story, không mồ côi, không trùng`, kèm phép cộng hiện rõ (`7+5+7+6+6+9 = 40 ✔`)
@@ -1044,10 +1048,10 @@ Kèm theo bảng trên, **BẮT BUỘC** có đủ 4 phần:
 
    | Nhóm | Mã | Nằm ở đâu |
    |---|---|---|
-   | AMB thuộc Story | AMB-02…17 | phân bổ ở bảng Story |
-   | AMB cấp Epic | AMB-01 | Ma trận Phân quyền |
-   | RISK thuộc Story | RISK-01…05, 07 | phân bổ ở bảng Story |
-   | RISK cấp Epic | RISK-06 | rủi ro mức module |
+   | AMB thuộc Story | AMB-PRJ-02…17 | phân bổ ở bảng Story |
+   | AMB cấp Epic | AMB-PRJ-01 | Ma trận Phân quyền |
+   | RISK thuộc Story | RISK-PRJ-01…05, 07 | phân bổ ở bảng Story |
+   | RISK cấp Epic | RISK-PRJ-06 | rủi ro mức module |
 
    Mã không xuất hiện ở đâu cả = **không ai chịu trách nhiệm xử lý**. Đây là lỗi hay bị bỏ sót vì bảng Story chỉ được kiểm tổng REQ, không kiểm tổng AMB/RISK.
 3. **Hạng mục cấp Epic:** liệt kê những phần cắt ngang cố ý không gán vào Story nào (ma trận phân quyền, ma trận trạng thái, NFR, RISK mức module…) **kèm lý do**
@@ -1061,7 +1065,7 @@ Kèm theo bảng trên, **BẮT BUỘC** có đủ 4 phần:
 
 | Ngày | Nguồn | REQ ảnh hưởng | Loại | Tóm tắt thay đổi | TC cần xử lý |
 |---|---|---|---|---|---|
-| 15-08-2026 | ABC-140 | REQ-PRJ-58 → 62 | 🔴 Bỏ | Gỡ chức năng Copy Project khỏi phạm vi | TC-PRJ-31 → archive |
+| 15-08-2026 | ABC-140 | REQ-PRJ-58 → 62 | 🔴 Bỏ | Gỡ chức năng Copy Project khỏi phạm vi | TC-PRJ-31 → 🗑️ Deprecated |
 | 10-08-2026 | ABC-123 | REQ-PRJ-42 | 🟡 Sửa | Deadline chuyển thành bắt buộc phải sau Start Date | TC-PRJ-18, TC-PRJ-19 → review |
 | 10-08-2026 | ABC-123 | REQ-PRJ-79 | 🟢 Thêm | Bổ sung field Priority cho dự án | — (viết TC mới) |
 | 02-08-2026 | UI recon | REQ-PRJ-01 → 65 | 🟢 Thêm | Khởi tạo tài liệu từ khảo sát UI thực tế | — |
@@ -1069,7 +1073,7 @@ Kèm theo bảng trên, **BẮT BUỘC** có đủ 4 phần:
 **Quy tắc ghi Nhật ký:**
 - **Mọi** thay đổi đều phải có dòng — kể cả khi chỉ sửa câu chữ mà không đổi hành vi (ghi loại `✏️ Biên tập`)
 - Cột `Nguồn` ghi ticket ID hoặc `UI recon` — phải truy được về đợt phân tích nào
-- Cột `TC cần xử lý` là **mắt xích cảnh báo** cho tester: `review` / `archive` / `viết mới`. Không biết TC nào bị ảnh hưởng thì ghi `⚠️ chưa rà soát`
+- Cột `TC cần xử lý` là **mắt xích cảnh báo** cho tester: `review` / `deprecated` / `viết mới`. Không biết TC nào bị ảnh hưởng thì ghi `⚠️ chưa rà soát`
 - Dòng đầu tiên luôn là dòng khởi tạo tài liệu
 - Nhật ký **chỉ nằm ở file index** khi tài liệu bị tách nhiều file (mục 5.3)
 
@@ -1096,7 +1100,7 @@ Nhật ký (6.9)  ←→  Trạng thái REQ (6.2)  ←→  Dải mã metadata (6
 - **Luôn kiểm tra `docs/requirements/<module>/requirements_<module>.md` trước khi gán mã REQ đầu tiên** và đánh tiếp từ số cuối cùng (mục 2.1) — áp cho MỌI workflow sinh REQ, không riêng nhánh nào.
 - **Dự án mới, chưa có `docs/requirements/README.md` → PHẢI tạo file danh mục trước** khi ghi tài liệu module đầu tiên (mục 5.7.1). Thiếu file này, cơ chế chống trùng prefix và nối tiếp mã REQ im lặng không hoạt động.
 - **Không bao giờ đánh lại số REQ ID** khi tách file, gom Story hay tái cấu trúc tài liệu.
-- **Một nghiệp vụ = một prefix, dù chạy trên web, app hay API** (mục 2.2). Không mở prefix hay tài liệu riêng theo nền tảng; khác biệt giữa nền tảng thể hiện bằng cột `Nền tảng`, khác biệt không rõ chủ đích thành `AMB-XX`.
+- **Một nghiệp vụ = một prefix, dù chạy trên web, app hay API** (mục 2.2). Không mở prefix hay tài liệu riêng theo nền tảng; khác biệt giữa nền tảng thể hiện bằng cột `Nền tảng`, khác biệt không rõ chủ đích thành `AMB-<MODULE>-XX`.
 - **Không khai REQ cho nền tảng chưa khảo sát** — `Tất cả` chỉ được ghi khi đã kiểm trên từng nền tảng module có.
 - **Tầng nền tảng `web/` · `mobile/` · `api/` luôn có** (mục 5.3): REQ chỉ áp một nền tảng ở file nền tảng đó, REQ dùng chung ở index, evidence ở `<nền-tảng>/evidence/`. Không tạo thư mục nền tảng nào khác ngoài 3 tên này.
 - **Đếm số REQ trước khi ghi file** và áp đúng bảng ngưỡng tại mục 5.1 — không tự ý gộp hay tách ngoài quy tắc.
@@ -1118,7 +1122,7 @@ Nhật ký (6.9)  ←→  Trạng thái REQ (6.2)  ←→  Dải mã metadata (6
 - Lưu evidence screenshot vào `docs/requirements/<module>/web/evidence/` — **trong** thư mục nền tảng của module, không tách ra ngoài (mục 5.3).
 - **Bật `browser_network_requests` trong suốt recon** (mục 3.1.1) — kể cả lúc submit form. Hệ thống không có tài liệu mà bỏ tầng network là bỏ mất validation server-side và trạng thái ẩn.
 - 🚫 **CẤM gọi API trực tiếp** (curl / fetch / `browser_evaluate` gọi endpoint) để dò hành vi. Chỉ **quan sát thụ động** request do UI tự phát sinh — gọi thẳng API là kiểm thử xâm nhập, và không chứng minh được gì về hành vi UI.
-- **Không đủ account cho mọi role → KHÔNG bỏ trống mục 6.5, cũng KHÔNG bịa.** Áp thang 3 mức bằng chứng ở mục 3.1.2, kèm dòng tổng `Đã kiểm chứng / Suy diễn / Chưa rõ`, và mỗi role thiếu account = 1 `AMB-XX` 🔴.
+- **Không đủ account cho mọi role → KHÔNG bỏ trống mục 6.5, cũng KHÔNG bịa.** Áp thang 3 mức bằng chứng ở mục 3.1.2, kèm dòng tổng `Đã kiểm chứng / Suy diễn / Chưa rõ`, và mỗi role thiếu account = 1 `AMB-<MODULE>-XX` 🔴.
 - **Ô `❔` không được làm tròn thành `❌`** — "chưa kiểm chứng" khác hẳn "không có quyền".
 - **Có tài liệu bán phần → lập Bản đồ phủ tài liệu TRƯỚC khi mở browser** (mục 3.3.1) và đưa vào tài liệu đầu ra ở mục 6.5.1. Không được recon cả module theo một chiến lược duy nhất.
 - **Không dùng tài liệu của vùng này để suy ra vùng khác** — spec form tạo mới không nói gì về form sửa, dù hai form trông giống nhau.
@@ -1158,14 +1162,14 @@ Evidence là **nguồn sự thật** cho mọi workflow phía sau (`/generate_te
 | Viewport đang đo (`innerWidth × innerHeight`) | Mọi kết luận về hiển thị **chỉ đúng với viewport đó** — phải ghi vào AC, và phần tử responsive cần recon riêng ở viewport khác |
 
 **Checklist trước khi đóng recon:**
-- Mọi REQ có cột `Nguồn` = `UI thực tế` / `Kiểm chứng thực tế` đều phải truy được về ít nhất 1 ảnh trong Danh mục Evidence **hoặc 1 lần đọc DOM có ghi số liệu trong Acceptance Criteria**. Không truy được → hạ về `Chưa kiểm chứng` + mở `AMB-XX`.
+- Mọi REQ có cột `Nguồn` = `UI thực tế` / `Kiểm chứng thực tế` đều phải truy được về ít nhất 1 ảnh trong Danh mục Evidence **hoặc 1 lần đọc DOM có ghi số liệu trong Acceptance Criteria**. Không truy được → hạ về `Chưa kiểm chứng` + mở `AMB-<MODULE>-XX`.
 - **Mọi ảnh trong Danh mục Evidence đã được `Read` lại** và xác nhận đúng trạng thái đang khai.
 - **Đã chạy Cổng Tự Soát REQ (mục 4.3)** trên toàn bộ REQ vừa sinh.
 
 ### 7.3. Chỉ áp cho nhánh Document Analysis (3.2)
 
 - **KHÔNG đọc file nhị phân bằng `Read`** — ủy quyền đúng skill theo bảng ở mục 3.2 Bước 0. Không đọc được thì **dừng và báo user**, không suy đoán từ tên file.
-- **KHÔNG tự viết AC thay PO/BA.** Tài liệu thiếu AC → ghi nhận đúng thực trạng + `AMB-XX` 🔴 High (mục 3.2 Bước 4). Đây là luật tương đương với "không đoán locator" của nhánh UI.
+- **KHÔNG tự viết AC thay PO/BA.** Tài liệu thiếu AC → ghi nhận đúng thực trạng + `AMB-<MODULE>-XX` 🔴 High (mục 3.2 Bước 4). Đây là luật tương đương với "không đoán locator" của nhánh UI.
 - **Trích dẫn nguyên văn** mọi rule, message, giá trị ngưỡng — cấm diễn đạt lại rồi gán REQ.
 - **Ghi vị trí nguồn cụ thể** trong cột `Nguồn`, đủ để người review mở đúng chỗ mà đối chiếu:
   ```
@@ -1173,7 +1177,7 @@ Evidence là **nguồn sự thật** cho mọi workflow phía sau (`/generate_te
   ✅ Comment của PO ngày 15-07-2026  ❌ "theo tài liệu"   ❌ "trong ticket"
   ```
 - **KHÔNG bỏ qua comments** — comment thường là quyết định mới nhất và **đè lên** phần mô tả gốc.
-- **Xung đột giữa các nguồn KHÔNG được tự giải quyết im lặng** — luôn thành `AMB-XX`, kể cả khi đã áp thứ tự ưu tiên ở mục 3.2 Bước 3.
+- **Xung đột giữa các nguồn KHÔNG được tự giải quyết im lặng** — luôn thành `AMB-<MODULE>-XX`, kể cả khi đã áp thứ tự ưu tiên ở mục 3.2 Bước 3.
 - Phân biệt **"Không đề cập trong tài liệu"** (tài liệu thiếu → cần hỏi) với **"Không áp dụng"** (đã cân nhắc và xác định không liên quan). Hai câu này nghĩa khác hẳn nhau.
 - **KHÔNG tự fetch URL Jira/Confluence** — route sang `/fetch-jira-requirements`. MCP chưa authorize thì báo user, tuyệt đối không bịa nội dung ticket.
 
@@ -1184,7 +1188,7 @@ Evidence là **nguồn sự thật** cho mọi workflow phía sau (`/generate_te
 - **Ma trận auth lập theo TỪNG operation** — `security: []` ghi đè cấp gốc; Postman thì auth cấp dưới đè cấp trên (3.4.3).
 - **Gọi thật chỉ khi `Gọi API: ✅`** ở danh mục, và tuân **tuyệt đối** bảng quy tắc dữ liệu 3.4.4: không ghi/xoá bản ghi không do phiên này tạo, BOLA/IDOR chỉ bằng 2 tài khoản tự tạo, dọn sạch và báo số tạo/dọn.
 - Luật "cấm gọi API trực tiếp" của 7.2 **không** áp cho nhánh này — nhưng cũng **không** được mang quyền gọi API sang nhánh UI.
-- **Spec ↔ thực tế lệch → REQ theo spec + `AMB-XX` 🔴 nguyên văn cả hai** (3.4.5). Không tự hạ REQ theo hành vi thật, không giấu lệch pha.
+- **Spec ↔ thực tế lệch → REQ theo spec + `AMB-<MODULE>-XX` 🔴 nguyên văn cả hai** (3.4.5). Không tự hạ REQ theo hành vi thật, không giấu lệch pha.
 - **JSON mẫu trong tài liệu văn bản là ví dụ, không phải schema** — không suy `required`/kiểu/độ dài từ ví dụ (3.4.6). Không đặt OpenAPI tự dựng vào `sources/`.
 - **Mọi operation trong phạm vi phải có ≥ 1 REQ** trong Endpoint Catalog, hoặc ghi lý do loại khỏi phạm vi.
 - 🔒 Request/response chép vào tài liệu **phải che** token, cookie, mật khẩu, dữ liệu cá nhân — ghi hình thái (4.3.3).

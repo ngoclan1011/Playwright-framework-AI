@@ -126,7 +126,7 @@ QA Lead xác nhận ngày 17-09-2026: ngoài những gì thấy trong file, kỳ
 
 | Trở ngại | Từ ngày | Thời lượng | Ảnh hưởng | Cách xử lý / workaround | Trạng thái |
 |---|---|---|---|---|---|
-| Chưa có môi trường test riêng. DEV cam kết bàn giao 27-09-2026 | 17-09-2026 (ngày lập plan) | Dự kiến tới 27-09-2026 | Chưa retest được 6 bug, chưa chạy được 9 TC mới của `LOGIN`, chưa kiểm chứng được `AMB-25` · `26` · `38` · `40` | Trong thời gian chờ, tập trung viết TC `CUST`/`PRJ`. DEV xác nhận lại mốc (R7) | 🟡 Đang chờ, **theo kế hoạch** |
+| Chưa có môi trường test riêng. DEV cam kết bàn giao 27-09-2026 | 17-09-2026 (ngày lập plan) | Dự kiến tới 27-09-2026 | Chưa retest được 6 bug, chưa chạy được 9 TC mới của `LOGIN`, chưa kiểm chứng được `AMB-CUST-11` · `26` · `38` · `40` | Trong thời gian chờ, tập trung viết TC `CUST`/`PRJ`. DEV xác nhận lại mốc (R7) | 🟡 Đang chờ, **theo kế hoạch** |
 | Plan chưa duyệt, còn 18 ô treo | 17-09-2026 | — | Tiêu chí exit "hiệu lực khi plan được duyệt". Báo cáo tiến độ không so được lịch và công sức | Chốt các ô treo 8 · 9 · 12 · 14 trước 30-09-2026 | 🟡 Đang mở |
 
 > Hai dòng trên là **trạng thái đã có kế hoạch**, không phải sự cố. Ghi lại để báo cáo tổng hợp tính được thời gian chờ thực tế.

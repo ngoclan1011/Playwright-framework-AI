@@ -52,7 +52,7 @@ Workflow này giúp bạn phân tích một module hoặc trang web được cun
    - ⚠️ **TRƯỚC KHI GÁN MÃ REQ ĐẦU TIÊN — làm đủ 2 bước:**
      1. Đọc danh mục `docs/requirements/README.md` — biết module nào đã có, **prefix nào đã bị chiếm** (module mới phải chọn prefix chưa dùng), mã kế tiếp của từng module.
         **Dự án mới, file chưa tồn tại → TẠO file danh mục trước** theo mục **5.7.1** của skill, đừng bỏ qua rồi ghi thẳng tài liệu module
-     2. Mở `docs/requirements/<module>/requirements_<module>.md`. Nếu module đã có tài liệu, **đánh tiếp từ số REQ cuối cùng**, KHÔNG đánh lại từ `01` (mục **2.1** của skill). Áp cả cho `AMB-XX` và `RISK-XX`. Tài liệu đã có REQ của **nền tảng khác** (app, API) → rule trùng thì **mở rộng cột `Nền tảng`** của REQ cũ, không cấp mã mới (mục **2.2**)
+     2. Mở `docs/requirements/<module>/requirements_<module>.md`. Nếu module đã có tài liệu, **đánh tiếp từ số REQ cuối cùng**, KHÔNG đánh lại từ `01` (mục **2.1** của skill). Áp cả cho `AMB-<MODULE>-XX` và `RISK-<MODULE>-XX`. Tài liệu đã có REQ của **nền tảng khác** (app, API) → rule trùng thì **mở rộng cột `Nền tảng`** của REQ cũ, không cấp mã mới (mục **2.2**)
    - **TRƯỚC KHI GHI FILE:** đếm tổng số REQ đã sinh, đối chiếu **bảng ngưỡng tại mục 5.1** của skill để quyết định cấu trúc đầu ra (1 file / 1 file + Epic-Story / tách nhiều file). Xem các module đã có trong `docs/requirements/` để giữ đúng convention (mục 5.6).
    - Tuân thủ **Output Format (mục 6)** và **Quy Ước Đánh Mã (mục 2)** trong skill `skills-requirements-analyzer`:
      * **Tổng quan (Overview):** Mục đích của module/trang.
@@ -61,8 +61,8 @@ Workflow này giúp bạn phân tích một module hoặc trang web được cun
      * **Business Rules & Validation Messages:** Error message ghi nguyên văn từ UI, gắn REQ ID.
      * **Bản đồ phủ tài liệu (mục 6.5.1):** BẮT BUỘC khi user có cung cấp tài liệu — vùng nào 🟩 đầy đủ / 🟨 một phần / ⬜ trắng / ⚠️ nghi lỗi thời. Không có tài liệu thì ghi một dòng nêu rõ.
      * **Ma trận Phân quyền** (nếu có nhiều role) và **Ma trận Trạng thái** (nếu có status flow) — không áp dụng thì ghi rõ "Không áp dụng".
-       ⚠️ Thiếu account role → dùng thang 3 mức `✅` / `⚠️✅` / `❔` (mục **6.5**), kèm **dòng tổng** `Đã kiểm chứng / Suy diễn / Chưa rõ` và 1 `AMB-XX` 🔴 cho mỗi role thiếu account.
-     * **Điểm Mơ Hồ & Rủi Ro:** Bảng AMB-XX (kèm Assumption tạm) + RISK-XX theo framework trong skill.
+       ⚠️ Thiếu account role → dùng thang 3 mức `✅` / `⚠️✅` / `❔` (mục **6.5**), kèm **dòng tổng** `Đã kiểm chứng / Suy diễn / Chưa rõ` và 1 `AMB-<MODULE>-XX` 🔴 cho mỗi role thiếu account.
+     * **Điểm Mơ Hồ & Rủi Ro:** Bảng AMB-<MODULE>-XX (kèm Assumption tạm) + RISK-<MODULE>-XX theo framework trong skill.
      * **Luồng xử lý (Business/User Flows):** Các bước để hoàn thành một chức năng chính.
      * **Yêu cầu phi chức năng (Non-functional Requirements - Nếu có thể quan sát):** Tính tương thích, hiệu năng tĩnh.
      * **Phân rã Epic/Story (mục 6.8):** BẮT BUỘC khi ≥ 25 REQ — bảng Story ↔ REQ, dòng tổng kiểm chứng, hạng mục cấp Epic, thứ tự triển khai.

@@ -25,7 +25,7 @@ Sau đó **kéo thả** hoặc bấm **+ Import file .md** để nạp file test
 | **Import** | Kéo thả hoặc chọn file `.md` · nạp **nhiều file** cùng lúc (mỗi file = 1 tài liệu) · import lại cùng tên file sẽ ghi đè |
 | **Sidebar** | Cây `Tài liệu → Nhóm TC` kèm số lượng, click để lọc · nút `✕` gỡ từng file |
 | **Search** | Full-text trên TC ID, REQ ID, Test Scenario, Pre-Condition, Test Steps, Test Data, Expected Result, Tags |
-| **Filter** | Priority (chọn nhiều) · Automatable (Yes/Partial/No) · Tag (`@Smoke`, `@Regression`…) |
+| **Filter** | Priority (chọn nhiều) · Automation (Yes/Partial/No) · Tag (`@Smoke`, `@Regression`…) |
 | **Sort** | Click header để sort: TC ID (số tự nhiên — `TC_002` trước `TC_010`), Test Scenario, Nhóm, Priority, Risk |
 | **Chi tiết** | Click 1 dòng để mở panel Test Steps · Expected Result · Pre-Condition · Test Data (giữ nguyên xuống dòng `<br>` và định dạng `` `code` ``) |
 | **Thống kê** | Đếm TC theo Priority, cập nhật theo bộ lọc đang áp |
@@ -40,7 +40,7 @@ Hai nút `↓ CSV` và `↓ Excel` trên toolbar xuất **đúng những test ca
 và xoá hết bộ lọc trước.
 
 Cả 2 định dạng đều gồm 13 cột: `TC ID · REQ ID · Module · Risk Level · Test Scenario ·
-Pre-Condition · Test Steps · Test Data · Expected Result · Priority · Automatable · Auto Type · Tags`.
+Pre-Condition · Test Steps · Test Data · Expected Result · Priority · Automation · Auto Type · Tags`.
 Thẻ `<br>` được đổi thành xuống dòng thật, markdown inline (`` ` ``, `**`) được gỡ bỏ.
 
 | Định dạng | Đặc điểm |
@@ -63,7 +63,7 @@ Parser quét mọi bảng Markdown có cột **`TC ID`** và tự nhận diện 
 ```
 TC ID · REQ ID · Module · Risk Level · Test Scenario (hoặc Test Title)
 Pre-Condition · Test Steps · Test Data · Expected Result
-Priority · Automatable · Auto Type · Tags
+Priority · Automation · Auto Type · Tags
 ```
 
 Quy ước khác:

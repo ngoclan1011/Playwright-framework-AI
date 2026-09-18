@@ -32,7 +32,7 @@
 
 # NHẮC AGENT
 - Sửa TẠI CHỖ trong test_cases_<module>.md — KHÔNG sinh file _improved / _v2
-- Sao lưu bản cũ vào archive/ TRƯỚC khi sửa
+- Ghi mốc git (hash commit) của file TRƯỚC khi sửa — KHÔNG tạo thư mục archive/; file có thay đổi chưa commit thì dừng, nhắc commit trước
 - GIỮ NGUYÊN mọi TC ID. TC mới cấp số tiếp dải hiện có
 - TC của chức năng bị gỡ: đổi trạng thái 🗑️ Deprecated, KHÔNG xoá dòng
 - Mode APPLY: ghi Delta TC List ra docs/testcases/<module>/impact/delta_tc_<TICKET-ID>.md (có cột Nền tảng) — đầu vào của /update-automation-from-impact (prompt_19)

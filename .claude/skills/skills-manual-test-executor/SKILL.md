@@ -94,9 +94,11 @@ navigate → wait_for(page_load) → snapshot → interact → screenshot(on_fai
 
 Agent **tự động chuyển SKIPPED** và **KHÔNG thực thi** khi TC có bất kỳ dấu hiệu sau:
 
+> ⚠️ `Automation = No` **KHÔNG** phải dấu hiệu bỏ qua — cột đó chỉ nói TC không làm automation, còn chạy tay vẫn chạy bình thường. Chỉ tag `@PersonalOnly` mới đưa TC ra khỏi `/execute-test-cases`.
+
 | Dấu hiệu | Ví dụ |
 |---|---|
-| Tag `@ManualOnly` hoặc `Automatable = No` do rủi ro dữ liệu | TC_030 (Bulk Actions), TC_132 (xoá qua URL GET) |
+| Tag `@PersonalOnly` — QA tự chạy và tự theo dõi ngoài workflow (TC chạy quá lâu, cần thao tác tay đặc biệt…) | TC_026 (chờ 65 phút) |
 | Steps chứa thao tác xoá hàng loạt | `Mass Delete`, `Select All`, chọn nhiều bản ghi rồi xoá |
 | Steps gọi trực tiếp URL phá huỷ | `/admin/clients/delete/{id}` trên thanh địa chỉ |
 | Steps tải lên tệp thực thi | `.exe`, `.sh`, `.bat` |

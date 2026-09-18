@@ -2,11 +2,11 @@
 
 > Về index: [../requirements_projects.md](../requirements_projects.md) · Prefix `PRJ` · REQ bao phủ: `REQ-PRJ-69` → `REQ-PRJ-74` (6 REQ)
 >
-> AMB liên quan: `AMB-38`
+> AMB liên quan: `AMB-PRJ-11`
 
 **Mô tả Story:** Là nhân sự vận hành, tôi muốn nhân bản một dự án đã có kèm công việc và mốc tiến độ, để mở dự án tương tự cho khách hàng khác mà không phải nhập lại từ đầu.
 
-> ⚠️ **Giới hạn kiểm chứng.** Story này được đặc tả tới mức **biểu mẫu và giá trị mặc định** (đọc DOM). Thao tác sao chép **chưa chạy thật** vì môi trường dùng chung và vì một lần sao chép sinh ra hàng loạt bản ghi phái sinh (công việc, mốc tiến độ, thành viên) khó dọn sạch. Kết quả sau khi bấm `Copy Project` — xem `AMB-38`.
+> ⚠️ **Giới hạn kiểm chứng.** Story này được đặc tả tới mức **biểu mẫu và giá trị mặc định** (đọc DOM). Thao tác sao chép **chưa chạy thật** vì môi trường dùng chung và vì một lần sao chép sinh ra hàng loạt bản ghi phái sinh (công việc, mốc tiến độ, thành viên) khó dọn sạch. Kết quả sau khi bấm `Copy Project` — xem `AMB-PRJ-11`.
 
 ---
 
@@ -59,7 +59,7 @@
 
 | REQ ID | Rule / Trigger | Kết quả mong đợi |
 |---|---|---|
-| REQ-PRJ-72 | Bấm `Copy Project` khi thiếu `Project Name` / `Customer` / `Start Date` | Chưa kiểm chứng — xem `AMB-38` |
+| REQ-PRJ-72 | Bấm `Copy Project` khi thiếu `Project Name` / `Customer` / `Start Date` | Chưa kiểm chứng — xem `AMB-PRJ-11` |
 | REQ-PRJ-73 | Mở hộp thoại từ một dự án | `Project Name` điền đúng tên gốc, `Start Date` = hôm nay, `Customer` và `Deadline` để trống |
 
 **Quy tắc nghiệp vụ ngầm (rút ra từ hành vi thực tế):**
@@ -82,5 +82,5 @@
 6. Gõ từ khoá vào "Customer" → chọn khách hàng cho bản sao
 7. Kiểm tra "Start Date" (mặc định hôm nay), nhập "Deadline" nếu có
 8. Bấm "Copy Project"
-   → kết quả chưa kiểm chứng (AMB-38)
+   → kết quả chưa kiểm chứng (AMB-PRJ-11)
 ```

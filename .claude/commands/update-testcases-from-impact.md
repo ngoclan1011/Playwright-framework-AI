@@ -34,7 +34,7 @@ Hai workflow trả lời **hai câu hỏi khác nhau**. Chạy sai cái là bỏ
 | **Input** | Impact Report + REQ đã đổi | Bộ TC (+ requirements nếu có) |
 | **Bắt được** | TC **stale** — mô tả hành vi đã bị thay | TC mơ hồ, thiếu assertion, trùng lặp, thiếu boundary |
 | **Bỏ sót** | Chất lượng diễn đạt của TC | **TC stale** — TC viết rất tốt về hành vi **cũ** vẫn được 12/12 điểm rubric |
-| **Ghi vào đâu** | Sửa **tại chỗ** trong index, sao lưu bản cũ vào `archive/` | Sinh file `<tên>_improved.md` mới, giữ nguyên gốc |
+| **Ghi vào đâu** | Sửa **tại chỗ**, ghi mốc git của bản cũ | Sinh file `<tên>_improved.md` mới, giữ nguyên gốc |
 
 > 🚨 **KHÔNG dùng `/review-testcases` mode FIX để đồng bộ TC theo ticket.** Nó chấm rubric chất lượng, không đối chiếu với REQ đã đổi, và đẻ ra file `_improved` **lạc tên index** — `/update-automation-from-impact` đọc theo mẫu `docs/testcases/<module>/test_cases_<module>.md` sẽ không thấy bản mới.
 >
@@ -46,7 +46,7 @@ Hai workflow trả lời **hai câu hỏi khác nhau**. Chạy sai cái là bỏ
 - 🚨 **CẤM sinh lại cả file/module TC.** Chỉ sửa đúng dòng của TC nằm trong delta. Sinh lại là xoá sạch công biên tập tay và các TC bổ sung đã tích luỹ
 - 🚨 **CẤM đổi TC ID, CẤM đánh lại số từ `001`** — TC ID là khoá nối sang automation (`allure.label('testId', ...)`) và RTM. Đứt TC ID là vỡ truy vết cả hai chiều
 - 🚨 **CẤM xoá dòng TC** — chức năng bị gỡ thì đổi trạng thái `🗑️ Deprecated` kèm mã ticket, giữ nguyên dòng (đối xứng quy tắc "KHÔNG xoá dòng REQ" của tầng requirements)
-- 🚨 **CẤM sinh file `_improved` / `_v2` / `_new`** — tên index **bất biến** là `test_cases_<module>.md`. Bản trước khi sửa chuyển vào `archive/test_cases_<module>_<nền-tảng>_vN.md`
+- 🚨 **CẤM sinh file `_improved` / `_v2` / `_new`** — tên index **bất biến** là `test_cases_<module>.md`. Bản trước khi sửa **không** chép ra đâu cả — ghi **mốc git** (hash commit) và tra bằng `git show`. **KHÔNG** tạo thư mục `archive/`
 - **KHÔNG tự viết TC cho REQ mới (nhóm ➕)** — ngoài phạm vi, route sang `/generate-testcases-manual-rbt` hoặc `/generate-testcases-from-requirements`
 - **KHÔNG sửa TC theo suy đoán từ tên TC** — phải đọc **nội dung REQ sau khi đổi** trong tài liệu requirements. Tên TC không chứa đủ thông tin để biết kỳ vọng mới là gì
 - **KHÔNG bịa mapping REQ ↔ TC.** Không map được thì ghi vào mục "cần xác nhận", KHÔNG đoán rồi sửa nhầm TC
@@ -82,7 +82,7 @@ Hai workflow trả lời **hai câu hỏi khác nhau**. Chạy sai cái là bỏ
 
 ### Bước 1: Đọc Delta
 
-1. Đọc Impact Report, trích bảng **Test case cần xử lý** — 3 nhóm: `⚠️ Review & sửa` / `🗑️ Archive` / `➕ Viết mới`
+1. Đọc Impact Report, trích bảng **Test case cần xử lý** — 3 nhóm: `⚠️ Review & sửa` / `🗑️ Deprecated` / `➕ Viết mới`
 2. Với mỗi REQ trong nhóm 🟡 (SỬA): đọc **nội dung REQ sau khi đổi** trong `requirements_<module>.md` để biết kỳ vọng mới là gì
 3. Đọc **Nhật ký thay đổi** ở cuối tài liệu requirements — nó ghi rõ đổi từ gì sang gì, đây là nguồn chính xác nhất
 4. Ghi rõ **đổi cái gì**: precondition / steps / expected result / test data / message nguyên văn / phân quyền
@@ -154,7 +154,10 @@ Mỗi mục ghi: `file:dòng`, TC ID, **vòng · nhánh**, sửa ô nào, có c�
 
 ### Bước 5: Sửa TC (Mode APPLY — chỉ sau khi user duyệt)
 
-1. **Sao lưu trước khi sửa:** copy bản hiện tại của **từng file nền tảng sắp sửa** sang `archive/test_cases_<module>_<nền-tảng>_v<N>.md` (`N` = số phiên bản kế tiếp). Đây là bước không được bỏ — sửa tại chỗ mà không sao lưu là mất bản đối chiếu
+1. **Ghi mốc git trước khi sửa:** với **từng file sắp sửa**, chạy `git status --short <file>`:
+   - Có dòng (thay đổi chưa commit) → **dừng**, đề nghị user commit trước. Agent **không** tự commit, và sửa đè lên thay đổi chưa commit là mất bản đối chiếu
+   - Sạch → ghi `git log -1 --format=%h -- <file>` làm mốc. Đây là bước không được bỏ — bản cũ xem bằng `git show <hash>:<file>`
+   - File **chưa từng** được commit → ghi `chưa có trong git`, báo user
 2. Sửa **tại chỗ** trong file nền tảng `<nền-tảng>/test_cases_<module>_<nền-tảng>.md` (hoặc `<nền-tảng>/parts/part_NN_*.md` nếu đã tách) — **chỉ chạm đúng ô đã liệt kê** ở Bước 3. Bộ TC cũ chưa có tầng nền tảng → sửa trong `test_cases_<module>.md` rồi chuyển một lần theo skill rbt (Quy Tắc Xuất File mục 2)
 3. TC bị gỡ → đổi trạng thái, giữ nguyên dòng và TC ID:
    ```
@@ -172,7 +175,7 @@ Mỗi mục ghi: `file:dòng`, TC ID, **vòng · nhánh**, sửa ô nào, có c�
 Kiểm đủ 7 mục, thiếu mục nào là chưa xong:
 
 - [ ] **Mọi TC ID giữ nguyên** — không TC nào bị đổi số hay đánh lại
-- [ ] **Tên file index không đổi** — không sinh `_improved` / `_v2` ở ngoài `archive/`
+- [ ] **Tên file index không đổi** — không sinh `_improved` / `_v2` / thư mục `archive/`
 - [ ] **Không dòng TC nào bị xoá** — TC gỡ đều ở trạng thái 🗑️ Deprecated kèm mã ticket
 - [ ] **Bảng Đối Soát Coverage** khớp lại: mọi REQ 🟡/🟢 active có ≥1 TC active
 - [ ] **Bảng Đối soát loại kiểm thử (4 vòng)** đã cập nhật **đúng những nhánh ticket chạm tới** — không rà lại cả module, không để nhánh nào rơi vào trạng thái sai sau khi sửa. Ticket đụng thành phần màn hình mà nhánh `V1 · UI cơ bản` không đổi gì = **dấu hiệu đã bỏ sót**
@@ -186,9 +189,9 @@ Kiểm đủ 7 mục, thiếu mục nào là chưa xong:
 ```markdown
 ## Nhật ký thay đổi
 
-| Ngày | Ticket | TC bị ảnh hưởng | Thay đổi | Bản sao lưu |
+| Ngày | Ticket | TC bị ảnh hưởng | Thay đổi | Mốc git trước khi sửa |
 |---|---|---|---|---|
-| 17-08-2026 | TICKET-123 | CRM_PRJ_TC_002 | V1 · UI cơ bản: thêm dòng bảng kiểm cho field `Deadline`, cập nhật thứ tự field | `archive/test_cases_project_v2.md` |
+| 17-08-2026 | TICKET-123 | CRM_PRJ_TC_002 | V1 · UI cơ bản: thêm dòng bảng kiểm cho field `Deadline`, cập nhật thứ tự field | `web/test_cases_project_web.md` @ `a1b2c3d` |
 | 17-08-2026 | TICKET-123 | CRM_PRJ_TC_018 | V2 · Required: Deadline tuỳ chọn → bắt buộc — sửa expected result + thêm TC_077 negative | ↑ |
 | 17-08-2026 | TICKET-123 | CRM_PRJ_TC_031 | 🗑️ Deprecated — chức năng Copy Project đã gỡ | ↑ |
 ```
@@ -204,7 +207,7 @@ Kiểm đủ 7 mục, thiếu mục nào là chưa xong:
 | Ngày áp | 17-08-2026 |
 | Impact Report nguồn | [`impact_TICKET-123.md`](../../../requirements/project/impact/impact_TICKET-123.md) |
 | Kế hoạch đã duyệt | [`impact_plan_TICKET-123.md`](impact_plan_TICKET-123.md) |
-| Bản TC trước khi sửa | web → [`test_cases_project_web_v2.md`](../archive/test_cases_project_web_v2.md) · mobile → [`test_cases_project_mobile_v1.md`](../archive/test_cases_project_mobile_v1.md) |
+| Mốc git trước khi sửa | web → `web/test_cases_project_web.md` @ `a1b2c3d` · mobile → `mobile/test_cases_project_mobile.md` @ `e4f5a6b` |
 | Trạng thái | ⚠️ CÒN VIỆC NGOÀI PHẠM VI |
 
 ## TC đã xử lý
@@ -237,9 +240,9 @@ Kiểm đủ 7 mục, thiếu mục nào là chưa xong:
 |---|---|
 | Chỉ ghi ở **Mode APPLY**, sau khi TC đã sửa xong. Mode PLAN **không** ghi | `impact_plan_` là kế hoạch — có thể bị user gạch bớt khi duyệt. Automation chỉ được đọc thứ **đã thật sự sửa** |
 | Cột **Nền tảng** bắt buộc: `web` · `mobile · @Android` / `@iOS` / `@Android @iOS` · `api` | Dải TC ID chung toàn module nên nhìn mã không biết TC thuộc nền tảng nào — thiếu cột này automation không biết chuyển sang Playwright, Appium hay API client, và không biết phải chạy lại trên Android, iOS hay cả hai |
-| Cột **Vòng · Nhánh** bắt buộc | Giúp chọn đúng kiểu sửa script: `V1 · UI cơ bản` thường là assertion trên danh sách phần tử (`Automatable: Partial`), `V2 · Validation` thường map sang test data-driven |
+| Cột **Vòng · Nhánh** bắt buộc | Giúp chọn đúng kiểu sửa script: `V1 · UI cơ bản` thường là assertion trên danh sách phần tử (`Automation: Partial`), `V2 · Validation` thường map sang test data-driven |
 | TC không sửa được vì thiếu evidence → vẫn ghi, hành động `⏸️ @NeedsVerify — chưa sửa` | Bỏ dòng đi thì automation tưởng TC không bị ảnh hưởng. Ghi rõ để automation **biết mà không chạm** |
-| Dòng **Bản TC trước khi sửa** trỏ đúng file `archive/` của từng nền tảng | Automation so cũ ↔ mới ra đúng ô đã đổi, không phải đoán từ cột mô tả |
+| Dòng **Mốc git trước khi sửa** ghi đúng hash của từng file nền tảng | Automation chạy `git diff <hash> -- <file>` ra đúng ô đã đổi, không phải đoán từ cột mô tả |
 | Chạy APPLY lại cho **cùng ticket** (VD recon xong TC `⏸️`) → sửa **tại chỗ** dòng tương ứng + thêm dòng Nhật ký. KHÔNG tạo `delta_tc_<TICKET-ID>_v2.md` | Một ticket một file — automation chạy lại chỉ nhận những dòng đã đổi hành động |
 
 3. Chat chỉ hiện **tóm tắt theo nền tảng** (VD *"web 3 TC · mobile 1 TC `@Android @iOS` · 1 TC ⏸️ chưa sửa"*) + đường dẫn file. Nhắc user chuỗi tiếp theo: module đã có automation → `/update-automation-from-impact` (đọc đúng file vừa ghi) → `/generate-traceability-matrix` (khớp lại RTM)
@@ -263,7 +266,7 @@ Kiểm đủ 7 mục, thiếu mục nào là chưa xong:
 ### Mode APPLY
 - Tất cả output Mode PLAN, cộng thêm:
   - File nền tảng đã sửa **tại chỗ** (tên file không đổi) · index `test_cases_<module>.md` cập nhật Bản đồ tài liệu + Nhật ký
-  - `archive/test_cases_<module>_<nền-tảng>_v<N>.md` — bản trước khi sửa
+  - Mốc git trước khi sửa của từng file — ghi ở Nhật ký và `delta_tc_`
   - **Bảng Đối soát loại kiểm thử (4 vòng)** đã cập nhật đúng nhánh bị chạm
   - Nhật ký thay đổi ở cuối file TC
   - `docs/testcases/README.md` đã cập nhật

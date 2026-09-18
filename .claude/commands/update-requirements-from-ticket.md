@@ -13,7 +13,7 @@ Module đang phát triển thì ticket liên tục sửa/bổ sung yêu cầu. W
 ## Khi nào sử dụng
 
 - Module **đã có** `docs/requirements/<module>/requirements_<module>.md`, và có ticket mới sửa/bổ sung yêu cầu
-- PO/BA vừa trả lời một `AMB-XX` đang treo → cần chốt lại thành yêu cầu chính thức
+- PO/BA vừa trả lời một `AMB-<MODULE>-XX` đang treo → cần chốt lại thành yêu cầu chính thức
 - Sprint mới thay đổi phạm vi: gỡ bớt hoặc thêm tính năng vào module đã đặc tả
 - User nói: "ticket này update requirement", "yêu cầu vừa đổi", "bổ sung AC mới"
 
@@ -42,7 +42,7 @@ Module đang phát triển thì ticket liên tục sửa/bổ sung yêu cầu. W
 2. Trích ra và ghi nhớ:
    - Toàn bộ REQ hiện có: mã · tên · nội dung · trạng thái
    - Dòng metadata `Dải mã đã dùng` và `Mã kế tiếp`
-   - Toàn bộ `AMB-XX` kèm trạng thái (❓ / ✅ / ⏭️)
+   - Toàn bộ `AMB-<MODULE>-XX` kèm trạng thái (❓ / ✅ / ⏭️)
    - Nhật ký thay đổi hiện có (mục 6.9)
 3. Nếu tài liệu **bị tách nhiều file** (có mục `## Bản đồ tài liệu`) → đọc index trước, rồi đọc các file con theo bản đồ
 4. **Tóm tắt lại cho user** trước khi đi tiếp: *"Module X hiện có N REQ (a active / b changed / c deprecated), M ambiguity còn treo, mã kế tiếp là REQ-XXX-nn"*
@@ -72,13 +72,13 @@ Theo **mục 3.2** của skill — ủy quyền skill `docx`/`xlsx`/`pdf` đúng
 
 ### Bước 4: Đối chiếu với Ambiguity đang treo
 
-Với mỗi `AMB-XX` trạng thái ❓ trong tài liệu: kiểm tra ticket mới có trả lời không.
+Với mỗi `AMB-<MODULE>-XX` trạng thái ❓ trong tài liệu: kiểm tra ticket mới có trả lời không.
 
 | Nếu ticket trả lời AMB | Hành động |
 |---|---|
 | Kết luận **trùng** với Assumption tạm | Đổi AMB sang ✅, ghi ngày + kết luận. TC hiện có vẫn đúng |
 | Kết luận **khác** Assumption tạm | Đổi AMB sang ✅ + ghi kết luận. ⚠️ **Mọi TC dựa trên assumption cũ đều phải sửa** — bắt buộc đưa vào Impact Report |
-| Kết luận sinh yêu cầu mới | Cấp REQ mới, link ngược `Giải quyết AMB-XX` |
+| Kết luận sinh yêu cầu mới | Cấp REQ mới, link ngược `Giải quyết AMB-<MODULE>-XX` |
 
 Ambiguity **mới** phát hiện từ ticket này → đánh số tiếp theo dải hiện có (mục 2.1), không đánh lại từ 01.
 
@@ -122,17 +122,17 @@ Nội dung file:
 | TC ID | REQ liên quan | Hành động | Lý do |
 |---|---|---|---|
 | TC-PRJ-18 | REQ-PRJ-42 | ⚠️ Review & sửa | Deadline đổi từ tuỳ chọn sang bắt buộc |
-| TC-PRJ-31 | REQ-PRJ-58 | 🗑️ Archive | Chức năng Copy Project đã bị gỡ |
+| TC-PRJ-31 | REQ-PRJ-58 | 🗑️ Deprecated | Chức năng Copy Project đã bị gỡ |
 | — | REQ-PRJ-79 → 81 | ➕ Viết mới | Yêu cầu mới chưa có TC |
 
 ### Ambiguity
 | Mã | Chuyển trạng thái | Ghi chú |
 |---|---|---|
-| AMB-02 | ❓ → ✅ | PO xác nhận là lỗi → sinh REQ-PRJ-79 |
-| AMB-13 | (mới) ❓ | Chưa rõ Priority có ảnh hưởng sắp xếp danh sách không |
+| AMB-PRJ-02 | ❓ → ✅ | PO xác nhận là lỗi → sinh REQ-PRJ-79 |
+| AMB-PRJ-13 | (mới) ❓ | Chưa rõ Priority có ảnh hưởng sắp xếp danh sách không |
 
 ### Cảnh báo
-- ⚠️ AMB-04 vẫn treo sau 2 sprint — STORY-PRJ-03 tiếp tục BLOCKED
+- ⚠️ AMB-PRJ-04 vẫn treo sau 2 sprint — STORY-PRJ-03 tiếp tục BLOCKED
 ```
 
 **Cách xác định TC bị ảnh hưởng:**
@@ -169,7 +169,7 @@ Nội dung file:
 |---|---|
 | Trước đó — tạo tài liệu module lần đầu | `/generate-requirements-from-website` (web) · `/generate-requirements-from-mobile` (app) · `/generate-requirements-from-api` (API) |
 | Trước đó — phân tích ticket độc lập, chưa merge vào module | `/analyze-requirement-document` |
-| Sau đó — **cập nhật TC bị ảnh hưởng (🟡) + archive TC bị gỡ (🗑️)** | `/update-testcases-from-impact` ⭐ mắt xích kế tiếp |
+| Sau đó — **cập nhật TC bị ảnh hưởng (🟡) + đánh dấu Deprecated TC bị gỡ (🗑️)** | `/update-testcases-from-impact` ⭐ mắt xích kế tiếp |
 | Sau đó — sinh TC cho REQ mới (🟢) | `/generate-testcases-manual-rbt` hoặc `/generate-testcases-from-requirements` |
 | Sau đó — chấm chất lượng bộ TC **sau khi** đã đồng bộ | `/review-testcases` |
 | Sau đó — cập nhật ma trận truy vết | `/generate-traceability-matrix` |

@@ -2,7 +2,7 @@
 
 > Về index: [../requirements_projects.md](../requirements_projects.md) · Prefix `PRJ` · REQ bao phủ: `REQ-PRJ-24` → `REQ-PRJ-41` (18 REQ)
 >
-> AMB liên quan: `AMB-33`, `AMB-36`, `AMB-37` · RISK liên quan: `RISK-20`
+> AMB liên quan: `AMB-PRJ-06`, `AMB-PRJ-09`, `AMB-PRJ-10` · RISK liên quan: `RISK-PRJ-06`
 
 **Mô tả Story:** Là nhân sự vận hành, tôi muốn tạo một dự án mới gắn với khách hàng, chọn kiểu tính phí và mốc thời gian, để bắt đầu quản lý công việc cho khách hàng đó.
 
@@ -37,18 +37,18 @@
 
 | Field (Label) | Loại UI | Required | Ràng buộc (min/max/format/default) | REQ liên quan | Ghi chú |
 |---|---|---|---|---|---|
-| `Project Name` | Ô nhập chữ — `name` | **Có** `*` | Không khai báo `maxlength` · không có mặc định | REQ-PRJ-26 | Giới hạn độ dài thật chưa rõ — `AMB-36` |
+| `Project Name` | Ô nhập chữ — `name` | **Có** `*` | Không khai báo `maxlength` · không có mặc định | REQ-PRJ-26 | Giới hạn độ dài thật chưa rõ — `AMB-PRJ-09` |
 | `Customer` | Select một tìm kiếm bất đồng bộ — `clientid` | **Có** `*` | 1 mục rỗng khi mở; nạp theo từ khoá gõ vào | REQ-PRJ-27, 28 | **Không** đặt giá trị bằng cách gán trực tiếp được — phải gõ từng phím để kích hoạt tìm kiếm |
 | `Calculate progress through tasks` | Công tắc — `progress_from_tasks` | Không | **Mặc định BẬT** | REQ-PRJ-29, 30 | Bật thì khoá thanh trượt tiến độ |
 | `Progress` | Thanh trượt + ô ẩn `progress` | Không | Mặc định `0` | REQ-PRJ-30 | Bị khoá khi `progress_from_tasks` bật |
 | `Billing Type` | Select một — `billing_type` | **Có** `*` | 4 lựa chọn kể cả mục rỗng; **mặc định `1` Fixed Rate** | REQ-PRJ-31, 32 | Lựa chọn `3` mang `data-subtext="Based on task hourly rate"` — chính là nhãn hiển thị ở bộ lọc |
 | `Status` | Select một — `status` | Không | 5 lựa chọn `1` `2` `3` `5` `4`; **mặc định `2` In Progress** | REQ-PRJ-33 | ⚠️ `Cancelled`=`5`, `Finished`=`4` |
-| `Total Rate` | Ô nhập số — `project_cost` | Không | Không `min`/`max`/`step`; không mặc định | REQ-PRJ-32, 34 | **Chỉ hiện** khi `Billing Type` = `1`. Vẫn nằm trong DOM khi ẩn — `RISK-20` |
-| `Rate Per Hour` | Ô nhập số — `project_rate_per_hour` | Không | Không `min`/`max`/`step`; không mặc định | REQ-PRJ-32, 35 | **Chỉ hiện** khi `Billing Type` = `2`. Vẫn nằm trong DOM khi ẩn — `RISK-20` |
+| `Total Rate` | Ô nhập số — `project_cost` | Không | Không `min`/`max`/`step`; không mặc định | REQ-PRJ-32, 34 | **Chỉ hiện** khi `Billing Type` = `1`. Vẫn nằm trong DOM khi ẩn — `RISK-PRJ-06` |
+| `Rate Per Hour` | Ô nhập số — `project_rate_per_hour` | Không | Không `min`/`max`/`step`; không mặc định | REQ-PRJ-32, 35 | **Chỉ hiện** khi `Billing Type` = `2`. Vẫn nằm trong DOM khi ẩn — `RISK-PRJ-06` |
 | `Estimated Hours` | Ô nhập số — `estimated_hours` | Không | Không `min`/`max`/`step`; không mặc định | REQ-PRJ-36 | Luôn hiển thị |
 | `Members` | Select nhiều — `project_members[]` | Không | 3 lựa chọn; **mặc định chọn `2` Admin Example** | REQ-PRJ-37 | Thứ tự trong DOM là `3` · `1` · `2`, **không** theo mã tăng dần |
 | `Start Date` | Ô nhập ngày — `start_date` | **Có** `*` | Định dạng `dd-mm-yyyy`; **mặc định ngày hôm nay** | REQ-PRJ-38 | Có lịch chọn ngày |
-| `Deadline` | Ô nhập ngày — `deadline` | Không | Định dạng `dd-mm-yyyy`; mặc định trống | REQ-PRJ-39 | **Không** ràng buộc phải sau `Start Date` — `AMB-31` |
+| `Deadline` | Ô nhập ngày — `deadline` | Không | Định dạng `dd-mm-yyyy`; mặc định trống | REQ-PRJ-39 | **Không** ràng buộc phải sau `Start Date` — `AMB-PRJ-04` |
 | `Tags` | Ô nhập thẻ — `tags` | Không | Không giới hạn số thẻ quan sát được | REQ-PRJ-40 | Ô thật bị ẩn (`tagit-hidden-field`), người dùng gõ vào ô gợi ý `Tag` |
 | `Description` | Trình soạn thảo TinyMCE — `description` | Không | Không giới hạn quan sát được | REQ-PRJ-40 | Ô `<textarea>` gốc bị ẩn — automation phải thao tác qua API của TinyMCE |
 | `Send project created email` | Công tắc — `send_created_email` | Không | **Mặc định TẮT** | REQ-PRJ-42 (Story 03) | Bật thì mở phần cấu hình thông báo ở tab `Project Settings` |
@@ -71,7 +71,7 @@
 
 - Người tạo dự án **tự động** được thêm làm thành viên (`Members` điền sẵn chính mình). Nhật ký hoạt động ghi nhận đúng hai dòng: *"Added new team member Admin Example"* và *"Created the project"*.
 - Biểu mẫu **không có nút Huỷ**. Người dùng muốn bỏ thì phải rời trang bằng điều hướng.
-- **Không** kiểm tra trùng tên dự án ở bất kỳ tầng nào — khác hẳn module `CUST` (có `check_duplicate_customer_name`). Xem `AMB-35`.
+- **Không** kiểm tra trùng tên dự án ở bất kỳ tầng nào — khác hẳn module `CUST` (có `check_duplicate_customer_name`). Xem `AMB-PRJ-08`.
 
 ---
 

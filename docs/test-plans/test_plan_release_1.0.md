@@ -98,11 +98,11 @@
 
 | REQ | Nội dung | Lý do bị loại trước đây | Quyết định theo phiếu |
 |---|---|---|---|
-| `REQ-CUST-79` | Kết quả nhập tệp CSV (`AMB-26`) | Không tải tệp lên môi trường dùng chung | ✅ Đưa lại vào phạm vi |
-| `REQ-PRJ-89` · `91` · `94` | CRUD mốc tiến độ / tệp / thảo luận của dự án (`AMB-40`) | Không chạy CRUD trên môi trường dùng chung | ✅ Đưa lại vào phạm vi |
-| `REQ-PRJ-104` | Nội dung tệp `Export project data` (`AMB-39`) | Không tải tệp về | ✅ Đưa lại vào phạm vi |
+| `REQ-CUST-79` | Kết quả nhập tệp CSV (`AMB-CUST-12`) | Không tải tệp lên môi trường dùng chung | ✅ Đưa lại vào phạm vi |
+| `REQ-PRJ-89` · `91` · `94` | CRUD mốc tiến độ / tệp / thảo luận của dự án (`AMB-PRJ-13`) | Không chạy CRUD trên môi trường dùng chung | ✅ Đưa lại vào phạm vi |
+| `REQ-PRJ-104` | Nội dung tệp `Export project data` (`AMB-PRJ-12`) | Không tải tệp về | ✅ Đưa lại vào phạm vi |
 
-> Anh Tester quyết định đưa lại ngày 17-09-2026. 5 REQ này vẫn mang trạng thái ⚪ trong tài liệu requirements — phải **khảo sát bổ sung trên môi trường mới** bằng `/update-requirements-from-ticket` trước khi sinh TC cho chúng (rủi ro R11). ⚠️ Danh mục `docs/requirements/README.md` ghi REQ ⚪ của `PRJ` là `89, 91, 94`, còn mục `AMB-40` trong tài liệu `PRJ` ghi `89, 91, 93` — plan theo danh mục; cần rà lại khi khảo sát bổ sung.
+> Anh Tester quyết định đưa lại ngày 17-09-2026. 5 REQ này vẫn mang trạng thái ⚪ trong tài liệu requirements — phải **khảo sát bổ sung trên môi trường mới** bằng `/update-requirements-from-ticket` trước khi sinh TC cho chúng (rủi ro R11). ⚠️ Danh mục `docs/requirements/README.md` ghi REQ ⚪ của `PRJ` là `89, 91, 94`, còn mục `AMB-PRJ-13` trong tài liệu `PRJ` ghi `89, 91, 93` — plan theo danh mục; cần rà lại khi khảo sát bổ sung.
 
 ### 2.2 NGOÀI phạm vi (out of scope)
 
@@ -110,12 +110,12 @@
 |---|---|---|---|
 | 20 module CRM còn lại: `CONT` · `LEAD` · `TASK` · `EST` · `PROP` · `INV` · `PAY` · `CN` · `SUB` · `CTR` · `EXP` · `ITEM` · `TICK` · `ESTREQ` · `KB` · `REP` · `DASH` · `TODO` · `REM` · `PROF` | Không thuộc Release 1.0 · 20/20 module chưa khảo sát requirements | Đợt sau | Anh Tester — QA Lead, 17-09-2026 |
 | Hệ thống **Book API** (8 module, namespace `_book-api/`) | Không thuộc Release 1.0 · chưa có REQ, chưa có TC | Đợt sau | Anh Tester — QA Lead, 17-09-2026 |
-| **Cổng khách hàng** (khu front-end ngoài `/admin`) | Loại khỏi phạm vi. Hệ quả: `STORY-PRJ-03` (11 REQ về `Visible Tabs` và công tắc quyền khách hàng) chỉ kiểm được mức *biểu mẫu ghi nhận đúng*, **không** kiểm tác dụng thật phía khách hàng (`AMB-41`). Riêng `REQ-LOGIN-43` — tài khoản khách hàng bị chặn ở khu `/admin` — **vẫn trong phạm vi** | Chưa xếp đợt — chờ PO chốt phạm vi cổng khách hàng | Anh Tester — QA Lead, 17-09-2026 |
+| **Cổng khách hàng** (khu front-end ngoài `/admin`) | Loại khỏi phạm vi. Hệ quả: `STORY-PRJ-03` (11 REQ về `Visible Tabs` và công tắc quyền khách hàng) chỉ kiểm được mức *biểu mẫu ghi nhận đúng*, **không** kiểm tác dụng thật phía khách hàng (`AMB-PRJ-14`). Riêng `REQ-LOGIN-43` — tài khoản khách hàng bị chặn ở khu `/admin` — **vẫn trong phạm vi** | Chưa xếp đợt — chờ PO chốt phạm vi cổng khách hàng | Anh Tester — QA Lead, 17-09-2026 |
 | Khu Quản trị hệ thống (Setup: Settings · Staff · Roles · Departments · Taxes · Currencies · Payment Modes · Custom Fields · Email Templates) | 403 với tài khoản hiện có, kể cả `Project Manager` | Cần tài khoản quyền cao hơn — đợt sau | `system_map.md` — Vùng loại khỏi phạm vi (14-08-2026) |
 | Calendar · Media · Bulk PDF Export | Loại khỏi phạm vi khảo sát | — | `system_map.md` — Vùng loại khỏi phạm vi (14-08-2026) |
-| `REQ-LOGIN-27` — gửi mail đặt lại mật khẩu với email có thật | Không kiểm chứng luồng gửi mail thật (`AMB-04`) | — | Quyết định PO 18-08-2026 |
-| `REQ-LOGIN-34` · `35` — cookie ghi nhớ không bị xoá / đọc được bằng JavaScript | Ghi nhận hiện trạng, không viết TC (`AMB-06` · `AMB-07`) · rủi ro đã chấp nhận `RISK-02` | — | Quyết định PO 18-08-2026 |
-| `REQ-LOGIN-40` — tự đăng nhập bằng cookie ghi nhớ | PO xác nhận tính năng Ghi nhớ đăng nhập **không hoạt động** (`AMB-15`) | — | Quyết định PO 18-08-2026 |
+| `REQ-LOGIN-27` — gửi mail đặt lại mật khẩu với email có thật | Không kiểm chứng luồng gửi mail thật (`AMB-LOGIN-04`) | — | Quyết định PO 18-08-2026 |
+| `REQ-LOGIN-34` · `35` — cookie ghi nhớ không bị xoá / đọc được bằng JavaScript | Ghi nhận hiện trạng, không viết TC (`AMB-LOGIN-06` · `AMB-LOGIN-07`) · rủi ro đã chấp nhận `RISK-LOGIN-02` | — | Quyết định PO 18-08-2026 |
+| `REQ-LOGIN-40` — tự đăng nhập bằng cookie ghi nhớ | PO xác nhận tính năng Ghi nhớ đăng nhập **không hoạt động** (`AMB-LOGIN-15`) | — | Quyết định PO 18-08-2026 |
 | Kiểm thử tải · đo ngưỡng thời gian phản hồi | Chưa có công cụ tải. Chỉ kiểm mức thô (đường truyền chậm — `TC_041`) | Đội Hạ tầng, đợt sau | `test_cases_login.md` — bảng ISO/IEC 25010 |
 | Pentest · quét lỗ hổng | Ngoài năng lực manual TC | Đội bảo mật / đối tác đánh giá độc lập | `test_cases_login.md` — bảng ISO/IEC 25010 |
 | Rà soát WCAG đầy đủ | Cần công cụ chuyên dụng. Chỉ kiểm điều hướng bàn phím (`TC_038`) | Đội Dev / chuyên gia a11y | `test_cases_login.md` — bảng 4 vòng |
@@ -133,11 +133,11 @@
 
 | Loại | Nội dung | Ảnh hưởng tới kiểm thử | Nguồn |
 |---|---|---|---|
-| Giả định | Đợt này chạy trên **môi trường test riêng** do đội DEV dựng — **không** dùng chung | Được chạy TC phá huỷ dữ liệu (xoá, nhập CSV, CRUD tab dự án). Kiểm chứng được `AMB-25` · `AMB-26` · `AMB-38` · `AMB-40` | Phiếu `Môi trường` — Anh Tester 17-09-2026 |
+| Giả định | Đợt này chạy trên **môi trường test riêng** do đội DEV dựng — **không** dùng chung | Được chạy TC phá huỷ dữ liệu (xoá, nhập CSV, CRUD tab dự án). Kiểm chứng được `AMB-CUST-11` · `AMB-CUST-12` · `AMB-PRJ-11` · `AMB-PRJ-13` | Phiếu `Môi trường` — Anh Tester 17-09-2026 |
 | Ràng buộc | Requirements của cả 3 module được khảo sát trên **bản demo dùng chung**, không phải môi trường test đợt này | Cấu hình, dữ liệu nền, phiên bản có thể khác → một số REQ có thể lệch khi chạy trên môi trường mới. Xem rủi ro R2 | `docs/requirements/README.md` |
 | Ràng buộc | QA **không** có quyền gọi API · truy vấn CSDL · kiểm tầng tích hợp | Nhánh Vòng 3 tương ứng do đội Dev xác minh | `docs/requirements/README.md` — Năng lực kiểm thử của QA |
 | Ràng buộc | Tester có DevTools trình duyệt | Chạy được phần 🔧 của TC gắn `@TechCheck` (25 TC ở `LOGIN`) | `docs/requirements/README.md` — Năng lực kiểm thử của QA |
-| Ràng buộc | Còn **10 AMB 🔴** treo: `CUST` 4 (`AMB-15` · `16` · `17` · `25`) · `PRJ` 6 (`AMB-28` · `29` · `30` · `31` · `33` · `41`) | TC của vùng đó có thể phải sửa giữa đợt | `docs/requirements/README.md` |
+| Ràng buộc | Còn **10 AMB 🔴** treo: `CUST` 4 (`AMB-CUST-01` · `16` · `17` · `25`) · `PRJ` 6 (`AMB-PRJ-01` · `29` · `30` · `31` · `33` · `41`) | TC của vùng đó có thể phải sửa giữa đợt | `docs/requirements/README.md` |
 | Ràng buộc | Ma trận phân quyền của `CUST` (24 ô) và `PRJ` (28 ô) chưa kiểm chứng — hai module khảo sát trước khi có tài khoản `Project Manager` | Phải chạy lại phần phân quyền trước khi sinh TC Vòng 3 · Permission | `docs/requirements/README.md` — mục 3.2 |
 | Ràng buộc | Repo **chưa có** project automation | Automation phải dựng framework Playwright + TypeScript từ đầu — xem R5 | Kiểm tra repo 17-09-2026 |
 | Ràng buộc | Không có ngân sách riêng cho kiểm thử | Không thuê thêm công cụ, thiết bị hay nhân lực ngoài — mọi việc dùng nguồn lực sẵn có | Phiếu `Ngân sách` |
@@ -194,7 +194,7 @@
 
 **Tỷ trọng manual/automation:** chạy manual toàn bộ TC trên web · automate bộ Smoke và regression của `LOGIN`, `CUST`, `PRJ` bằng Playwright — chi tiết 3.7.
 
-**Thứ tự ưu tiên thực thi** (theo rủi ro sản phẩm — mục 8.2): `LOGIN` → `CUST` → `PRJ`. Trong mọi bộ chạy, **nhóm B của `LOGIN` (đăng nhập thành công) chạy đầu tiên** — hỏng ở đây là chặn toàn bộ đợt (`RISK-06`). `CUST` chạy trước `PRJ` vì dự án gắn với khách hàng.
+**Thứ tự ưu tiên thực thi** (theo rủi ro sản phẩm — mục 8.2): `LOGIN` → `CUST` → `PRJ`. Trong mọi bộ chạy, **nhóm B của `LOGIN` (đăng nhập thành công) chạy đầu tiên** — hỏng ở đây là chặn toàn bộ đợt (`RISK-LOGIN-06`). `CUST` chạy trước `PRJ` vì dự án gắn với khách hàng.
 
 #### 3.2.1 Kiểm thử phi chức năng
 
@@ -265,7 +265,7 @@
 | Mục tiêu | ❓ (ô treo 10) |
 | Hiện trạng | **Chưa có gì** — repo không có `package.json` / `pom.xml`, không có file CI, 0 script (kiểm tra 17-09-2026) |
 | Tầng kiểm thử (kim tự tháp) | ❓ (ô treo 10). Dữ liệu đã biết: cấp Component **không** thuộc đợt (3.1) và QA **không** có quyền gọi API (2.3) → automation của QA đợt này chỉ đặt được ở **tầng UI** — xem R13 |
-| Tiêu chí chọn TC để tự động | ❓ (ô treo 10). Gợi ý: dùng cột `Automatable` sẵn có của tài liệu TC — `LOGIN` có 38 TC `Yes` · 10 `Partial` · 2 `No` (`TC_034`, `TC_044`) |
+| Tiêu chí chọn TC để tự động | ❓ (ô treo 10). Gợi ý: dùng cột `Automation` sẵn có của tài liệu TC — `LOGIN` có 38 TC `Yes` · 10 `Partial` · 2 `No` (`TC_034`, `TC_044`) |
 | Framework · report | Playwright + TypeScript · Allure Report — output trong `reports/` |
 | Hệ thống CI | ❓ `GitLab Actions CI` — GitLab CI hay GitHub Actions (ô treo 6) |
 | Người bảo trì | Anh Tester — theo phiếu `Nhân lực`, vai trò tự động hoá, **kiêm** QA Lead (R5) |
@@ -364,7 +364,7 @@ Phiếu không khai tiêu chí bổ sung.
 | Tài khoản test | 3 vai trò `Admin` · `Project Manager` · `Customer` — ❓ chưa có **trên môi trường mới** (tài khoản hiện có thuộc bản demo) · mật khẩu ở `.env` |
 | Dữ liệu thật của khách hàng | ❓ — trả lời `có` thì phải nêu cách che trước khi chụp evidence |
 | Quy tắc sinh dữ liệu | Random + traceable theo `CLAUDE.md` mục 7 — nhìn bản ghi biết test nào tạo |
-| Dọn dữ liệu sau khi chạy | ❓ — gợi ý: có, để kết quả các lần chạy sau không bị nhiễu. **Chỉ** xoá bản ghi do test tạo, **chỉ** qua nút `Delete` — thao tác xoá của `CUST` và `PRJ` dùng GET, mở thẳng URL là xoá (`RISK-13`, `RISK-17`) |
+| Dọn dữ liệu sau khi chạy | ❓ — gợi ý: có, để kết quả các lần chạy sau không bị nhiễu. **Chỉ** xoá bản ghi do test tạo, **chỉ** qua nút `Delete` — thao tác xoá của `CUST` và `PRJ` dùng GET, mở thẳng URL là xoá (`RISK-CUST-06`, `RISK-PRJ-03`) |
 | Làm mới dữ liệu nền | ❓ |
 | Người cung cấp | ❓ — Đội DEV dựng môi trường, chưa rõ ai nạp dữ liệu |
 
@@ -460,7 +460,7 @@ Công thức: E = (a + 4m + b) / 6 · SD = (b − a) / 6. E tổng = cộng E c�
 |---|---|---|---|---|---|---|
 | R1 | Tổ chức | **Không kịp sinh và review TC cho `CUST` (79 REQ) và `PRJ` (104 REQ) trước 02-10-2026** — còn 11 ngày làm việc, trong đó 5 REQ phải khảo sát bổ sung trước (R11) | Cao | Trễ ngày bắt đầu, hoặc chạy trên TC chưa review | Lan và Huệ sinh TC song song ngay từ 18-09-2026; review theo từng batch thay vì dồn cuối; không kịp → chạy TC Priority High trước, phần còn lại ghi nợ kiểm thử | `docs/testcases/README.md` |
 | R2 | Kỹ thuật | Requirements khảo sát trên **bản demo**, còn đợt này chạy trên **môi trường mới** — cấu hình, dữ liệu, phiên bản có thể khác | Trung bình | TC FAIL do tài liệu lệch chứ không do lỗi → mở bug sai | Chạy Smoke ngay khi môi trường sẵn sàng 05-10-2026 (tiêu chí vào #10); lệch thì cập nhật requirements bằng `/update-requirements-from-ticket` trước khi mở bug | `docs/requirements/README.md` |
-| R3 | Tổ chức | 10 AMB 🔴 của `CUST`/`PRJ` chưa có câu trả lời, gồm 2 ma trận phân quyền chưa kiểm chứng (`AMB-15`, `AMB-28`) | Cao | TC phân quyền viết theo suy đoán, phải sửa giữa đợt | Gửi danh sách AMB cho PO ngay; dùng tài khoản `Project Manager` trên môi trường mới chạy lại ma trận phân quyền trước khi sinh TC Vòng 3 | `docs/requirements/README.md` — mục 3 |
+| R3 | Tổ chức | 10 AMB 🔴 của `CUST`/`PRJ` chưa có câu trả lời, gồm 2 ma trận phân quyền chưa kiểm chứng (`AMB-CUST-01`, `AMB-PRJ-01`) | Cao | TC phân quyền viết theo suy đoán, phải sửa giữa đợt | Gửi danh sách AMB cho PO ngay; dùng tài khoản `Project Manager` trên môi trường mới chạy lại ma trận phân quyền trước khi sinh TC Vòng 3 | `docs/requirements/README.md` — mục 3 |
 | R4 | Kỹ thuật | Bug Critical `TC_039` (HTTP không chuyển HTTPS) đang mở | Cao | Tiêu chí exit #1 không đạt → khuyến nghị không nên release | Retest trên môi trường mới ngay khi sẵn sàng; báo DEV xử lý cấu hình máy chủ sớm | `docs/bugs/README.md` |
 | R5 | Con người | Repo **chưa có** project automation — phải dựng framework từ đầu, và người phụ trách là **QA Lead kiêm nhiệm** (Anh Tester) | Cao | Việc quản lý đợt (duyệt TC, báo cáo tuần, trả lời tester) chiếm thời gian dựng automation; automation không kịp phủ regression 20-11-2026 | Automation **không** chặn manual; ưu tiên automate bộ Smoke `LOGIN` trước; tới báo cáo tiến độ thứ Sáu đầu tiên sau 06-10-2026 mà chưa chạy được Smoke tự động → cân nhắc thu hẹp phạm vi automation | Phiếu `Nhân lực` · kiểm tra repo 17-09-2026 |
 | R6 | Tổ chức | Dùng song song Jira và file markdown — hai nguồn lệch nhau | Thấp | Báo cáo tổng hợp lấy số sai, bug trùng hoặc sót | Đã chốt nguồn chính: **Jira cho trạng thái bug · repo cho execution report**; đồng bộ qua `/create-bug-report` (đẩy Jira) | Phiếu `Công cụ` |
@@ -470,7 +470,7 @@ Công thức: E = (a + 4m + b) / 6 · SD = (b − a) / 6. E tổng = cộng E c�
 | ~~R10~~ | Tổ chức | ✅ **Đóng ở v1.2** — đã có ngày code freeze, release và ước lượng công sức | — | — | — | Phiếu `Lịch` · `Ước lượng` |
 | R11 | Kỹ thuật | 5 REQ được đưa lại (`REQ-CUST-79` · `REQ-PRJ-89` · `91` · `94` · `104`) vẫn ở trạng thái ⚪, chưa có hành vi đã kiểm chứng; danh mục và tài liệu `PRJ` còn lệch số `94` / `93` | Trung bình | TC cho 5 REQ viết theo suy đoán; môi trường chỉ sẵn sàng 05-10-2026 — sau hạn xong TC 02-10-2026 | Khảo sát bổ sung bằng `/update-requirements-from-ticket` ngay khi có môi trường; TC của 5 REQ được phép hoàn tất sau 02-10-2026 và ghi rõ trong báo cáo tiến độ | Phiếu `Phạm vi` · `docs/requirements/README.md` |
 | R12 | Tổ chức | Ước lượng 19,0 người-ngày **chưa gồm automation** và thấp so với khối lượng (183 REQ chưa có TC · nhiều vòng retest trong 33 ngày thực thi) | Trung bình | Báo cáo tiến độ so công sức thực tế với con số quá thấp → báo *trễ* sai, hoặc che mất việc thật sự thiếu | Bổ sung hạng mục automation (ô treo 5); rà lại con số viết TC và thực thi sau báo cáo tiến độ đầu tiên | Mục 7.2 |
-| R13 | Kỹ thuật | Automation của QA chỉ đặt được ở **tầng UI**: cấp Component không thuộc đợt, QA không có quyền gọi API — kim tự tháp kiểm thử bị lộn ngược | Cao | Suite UI chạy chậm, dễ vỡ khi giao diện đổi; regression tự động không kịp chạy trong 4 ngày hồi quy 20→25-11-2026 | Giữ suite nhỏ: chỉ Smoke và TC Priority High có `Automatable: Yes`; xin quyền gọi API cho QA hoặc đề nghị Dev bổ sung test tầng API cho `CUST`/`PRJ` | Mục 2.3 · 3.1 · 3.7 |
+| R13 | Kỹ thuật | Automation của QA chỉ đặt được ở **tầng UI**: cấp Component không thuộc đợt, QA không có quyền gọi API — kim tự tháp kiểm thử bị lộn ngược | Cao | Suite UI chạy chậm, dễ vỡ khi giao diện đổi; regression tự động không kịp chạy trong 4 ngày hồi quy 20→25-11-2026 | Giữ suite nhỏ: chỉ Smoke và TC Priority High có `Automation: Yes`; xin quyền gọi API cho QA hoặc đề nghị Dev bổ sung test tầng API cho `CUST`/`PRJ` | Mục 2.3 · 3.1 · 3.7 |
 
 ### 8.2 Rủi ro SẢN PHẨM — tóm tắt
 
@@ -478,14 +478,14 @@ Công thức: E = (a + 4m + b) / 6 · SD = (b − a) / 6. E tổng = cộng E c�
 
 | Module | Rủi ro | Mức | Kiểm soát bằng | Nguồn |
 |---|---|---|---|---|
-| `LOGIN` | Không có lớp chống thử vét cạn: không CAPTCHA, không giới hạn tần suất, không khoá tài khoản | — | Ghi nhận hiện trạng, báo đội phát triển · pentest ngoài phạm vi (2.2) | [`RISK-01`](../requirements/login/requirements_login.md) |
-| `LOGIN` | Cookie ghi nhớ đọc được bằng JavaScript (không có cờ `HttpOnly`) | — | Báo đội phát triển (`AMB-07`) · ghép vào kiểm thử bảo mật | [`RISK-02`](../requirements/login/requirements_login.md) |
-| `LOGIN` | Module là cổng vào của toàn hệ thống — hỏng là chặn kiểm thử mọi module khác | — | Nhóm B chạy đầu tiên trong mọi bộ smoke | [`RISK-06`](../requirements/login/requirements_login.md) |
-| `CUST` | Entity trung tâm — hơn 10 module tham chiếu tới khách hàng | — | Sau mỗi lần sửa `CUST`, chạy kèm smoke của module phụ thuộc · kiểm thử cross-module với `PRJ` | [`RISK-08`](../requirements/customers/requirements_customers.md) |
-| `CUST` | Thao tác xoá dùng GET — mở thẳng URL là xoá, không cần xác nhận | — | Cấm đưa URL xoá vào bước điều hướng; chỉ xoá qua nút `Delete` với bản ghi do test tạo | [`RISK-13`](../requirements/customers/requirements_customers.md) |
-| `PRJ` | Module là điểm gom của 9 module khác qua 17 tab trang chi tiết | — | Kiểm thử cross-module · chạy smoke module liên quan khi `PRJ` đổi | [`RISK-15`](../requirements/projects/requirements_projects.md) |
-| `PRJ` | Thao tác xoá dùng GET | — | Như `RISK-13` | [`RISK-17`](../requirements/projects/requirements_projects.md) |
-| `PRJ` | Số liệu tổng quan không khớp bảng — đếm `In Progress` lệch 7 dòng (`AMB-29`) | — | Không viết khẳng định dựa trên số đếm tổng quan cho tới khi `AMB-29` được trả lời | [`RISK-19`](../requirements/projects/requirements_projects.md) |
+| `LOGIN` | Không có lớp chống thử vét cạn: không CAPTCHA, không giới hạn tần suất, không khoá tài khoản | — | Ghi nhận hiện trạng, báo đội phát triển · pentest ngoài phạm vi (2.2) | [`RISK-LOGIN-01`](../requirements/login/requirements_login.md) |
+| `LOGIN` | Cookie ghi nhớ đọc được bằng JavaScript (không có cờ `HttpOnly`) | — | Báo đội phát triển (`AMB-LOGIN-07`) · ghép vào kiểm thử bảo mật | [`RISK-LOGIN-02`](../requirements/login/requirements_login.md) |
+| `LOGIN` | Module là cổng vào của toàn hệ thống — hỏng là chặn kiểm thử mọi module khác | — | Nhóm B chạy đầu tiên trong mọi bộ smoke | [`RISK-LOGIN-06`](../requirements/login/requirements_login.md) |
+| `CUST` | Entity trung tâm — hơn 10 module tham chiếu tới khách hàng | — | Sau mỗi lần sửa `CUST`, chạy kèm smoke của module phụ thuộc · kiểm thử cross-module với `PRJ` | [`RISK-CUST-01`](../requirements/customers/requirements_customers.md) |
+| `CUST` | Thao tác xoá dùng GET — mở thẳng URL là xoá, không cần xác nhận | — | Cấm đưa URL xoá vào bước điều hướng; chỉ xoá qua nút `Delete` với bản ghi do test tạo | [`RISK-CUST-06`](../requirements/customers/requirements_customers.md) |
+| `PRJ` | Module là điểm gom của 9 module khác qua 17 tab trang chi tiết | — | Kiểm thử cross-module · chạy smoke module liên quan khi `PRJ` đổi | [`RISK-PRJ-01`](../requirements/projects/requirements_projects.md) |
+| `PRJ` | Thao tác xoá dùng GET | — | Như `RISK-CUST-06` | [`RISK-PRJ-03`](../requirements/projects/requirements_projects.md) |
+| `PRJ` | Số liệu tổng quan không khớp bảng — đếm `In Progress` lệch 7 dòng (`AMB-PRJ-02`) | — | Không viết khẳng định dựa trên số đếm tổng quan cho tới khi `AMB-PRJ-02` được trả lời | [`RISK-PRJ-05`](../requirements/projects/requirements_projects.md) |
 
 ## 9. Quản lý lỗi
 

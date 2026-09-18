@@ -75,7 +75,7 @@ Quy tắc đầy đủ (2 kiểu gộp được phép · bảng CẤM gộp · t
    - `Expected Result` (đánh số **khớp 1-1** với steps)
    - `Test Data` (**phải cụ thể**, không placeholder)
    - `Priority` (Critical / High / Medium / Low)
-   - `Automatable` (Yes / No / Partial)
+   - `Automation` (Yes / No / Partial)
    - `Auto Type` (UI / API / Unit / N/A)
    - `Tags` (`@Smoke`, `@Regression`, `@CriticalPath`, `@TechCheck` cho TC cần DevTools...)
 10. **Chạy Self-Quality Gate (11 Tiêu chí):** **Độ hạt nhất quán** (toàn bộ theo một độ hạt đã chốt; nếu GỘP thì mọi biến thể có mã riêng, không TC nào quá 6 biến thể, không vi phạm bảng CẤM gộp), Unique TC ID, 1-to-1 Step-Expected matching, Concrete Test Data, Field Validation Coverage, Automation Metadata Ready, **Requirement Coverage** (mọi REQ có ≥1 TC — kèm Bảng Đối Soát Coverage), **Evidence-verified** (đã mở 100% ảnh evidence — kèm Bảng Đối Soát Evidence), **Ngôn ngữ kiểm chứng** (phần TC chính không còn `document.` / `querySelector` / `checkValidity` / `className` / selector / mã HTTP; phần kỹ thuật nằm dưới `🔧 Ghi chú kỹ thuật` + tag `@TechCheck`), **Rà soát đặc tính chất lượng** (chấm đủ 9/9 đặc tính ISO/IEC 25010:2023 — ô `➖` phải ghi ai chịu trách nhiệm, ô 🔴 phải bổ sung TC trước khi xuất; bảng đặt cuối tài liệu TC), và **Đối soát loại kiểm thử 4 vòng** (mọi nhánh V1–V4 được chấm bằng **4 trạng thái** `✅ có TC` / `➖ không áp dụng + lý do kỹ thuật` / `⏭️ cố ý bỏ + lý do + ai quyết + điều kiện rà lại` / `🔴 thiếu`; `➖` và `⏭️` KHÔNG được dùng lẫn; ba nhánh `UI cơ bản`, `Validation`, `Permission` KHÔNG BAO GIỜ được `➖` hay `⏭️`; độ hạt GỘP thì ghi kèm số biến thể; mức rủi ro và độ sâu ghi ở đầu tài liệu kèm dòng "Nâng lên khi…"; bảng đặt cuối tài liệu TC, trước bảng ISO 25010).
@@ -84,7 +84,7 @@ Quy tắc đầy đủ (2 kiểu gộp được phép · bảng CẤM gộp · t
 ## Bảng Output
 
 ```markdown
-| TC ID | REQ ID | Module | Risk Level | Test Scenario | Pre-Condition | Test Steps | Test Data | Expected Result | Priority | Automatable | Auto Type | Tags |
+| TC ID | REQ ID | Module | Risk Level | Test Scenario | Pre-Condition | Test Steps | Test Data | Expected Result | Priority | Automation | Auto Type | Tags |
 ```
 
 ## Quy tắc quan trọng

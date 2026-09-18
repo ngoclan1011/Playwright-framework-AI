@@ -39,8 +39,8 @@ Tab Overview còn có bộ lọc biểu đồ: `this_week` · `last_week` · `th
 
 - ~~Field spec form tạo dự án~~ → đã gỡ, xem `STORY-PRJ-02`
 - ~~Danh sách trạng thái đầy đủ và quy tắc chuyển trạng thái~~ → đã gỡ, xem ma trận trạng thái ở index. Lưu ý mã giá trị **không** liên tục: `Cancelled`=`5`, `Finished`=`4`
-- ~~Cơ chế **Visible Tabs**~~ → đã gỡ ở mức biểu mẫu, xem `STORY-PRJ-03`. **Còn treo:** cấu hình tác động tới khu quản trị hay chỉ cổng khách hàng (`AMB-41`)
-- **Hành vi Copy Project** — vẫn treo, chưa chạy thật vì môi trường dùng chung (`AMB-38`)
+- ~~Cơ chế **Visible Tabs**~~ → đã gỡ ở mức biểu mẫu, xem `STORY-PRJ-03`. **Còn treo:** cấu hình tác động tới khu quản trị hay chỉ cổng khách hàng (`AMB-PRJ-14`)
+- **Hành vi Copy Project** — vẫn treo, chưa chạy thật vì môi trường dùng chung (`AMB-PRJ-11`)
 
 ## ⚠️ Ghi chú môi trường dùng chung
 

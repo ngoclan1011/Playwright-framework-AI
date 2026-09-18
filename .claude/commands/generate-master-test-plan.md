@@ -228,7 +228,7 @@ docs/executions/test_summary_<slug>_<timestamp>.md   ← báo cáo tổng hợp 
 | `docs/requirements/README.md` — danh mục · Vùng chưa cấp prefix · Trạng thái REQ | Module · prefix · trạng thái recon · số REQ · **AMB 🔴 treo** · REQ ⚪ ra ngoài phạm vi (kèm **lý do**) | 1.2 · 2.1 · 2.2 · 4.1 · 8.1 |
 | `docs/requirements/_*/README.md` (namespace) | Danh mục riêng từng hệ thống | 2.1 |
 | `docs/requirements/_discovery/system_map.md` (+ `api_map.md`) | Nền tảng từng module · phụ thuộc · **Vùng chưa xác minh** · **Vùng loại khỏi phạm vi** · module bị chặn | 2.1 · 2.2 · 3.2 · 8.1 |
-| `docs/requirements/<module>/…` — metadata · mục `RISK-xx` · Nhật ký thay đổi | `Trình duyệt khảo sát` / `Thiết bị khảo sát` / `Nguồn spec` · **rủi ro sản phẩm đã ghi** · tên + phiên bản tài liệu làm cơ sở | 1.2 · 5.1 · 8.2 |
+| `docs/requirements/<module>/…` — metadata · mục `RISK-<MODULE>-xx` · Nhật ký thay đổi | `Trình duyệt khảo sát` / `Thiết bị khảo sát` / `Nguồn spec` · **rủi ro sản phẩm đã ghi** · tên + phiên bản tài liệu làm cơ sở | 1.2 · 5.1 · 8.2 |
 | `docs/testcases/README.md` | Module đã có TC · số TC theo nền tảng · REQ bao phủ | 2.1 |
 | `docs/testcases/<module>/test_cases_<module>.md` → file nền tảng (kiểu cũ: chính index) | ⭐ **Bảng ISO/IEC 25010** — ô `➖` kèm người chịu · **Bảng 4 vòng** · kỹ thuật đã dùng · bộ chạy đề xuất · TC phi chức năng đã có (tag, nhóm Non-functional) · rủi ro RBT | 2.2 · 3.2 · 3.2.1 · 3.3 · 3.5 · 3.7 · 8.2 |
 | `docs/executions/<module>/<nền-tảng>/run_*/` · kiểu cũ `docs/executions/<module>/run_*/` | Module × nền tảng **đã từng chạy** | 2.1 |
@@ -674,7 +674,7 @@ File: `docs/test-plans/test_plan_<slug>.md` — thư mục **`docs/test-plans/`*
 
 ### 8.2 Rủi ro SẢN PHẨM — tóm tắt
 
-> **Nguồn chính** vẫn là tài liệu requirements (`RISK-xx`) và tài liệu test case (đánh giá RBT) của từng module — bảng này chỉ **tóm tắt 3–5 rủi ro cao nhất mỗi module** để người duyệt plan thấy ngay, kèm link. Sửa rủi ro ở tài liệu nguồn, **không** sửa ở đây.
+> **Nguồn chính** vẫn là tài liệu requirements (`RISK-<MODULE>-xx`) và tài liệu test case (đánh giá RBT) của từng module — bảng này chỉ **tóm tắt 3–5 rủi ro cao nhất mỗi module** để người duyệt plan thấy ngay, kèm link. Sửa rủi ro ở tài liệu nguồn, **không** sửa ở đây.
 
 | Module | Rủi ro | Mức | Kiểm soát bằng | Nguồn |
 |---|---|---|---|---|

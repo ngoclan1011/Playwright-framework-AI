@@ -23,7 +23,7 @@ Tận dụng tốc độ của AI để thực thi chi tiết, kết hợp với
    - Validation chuyên biệt **15 loại Input Field Types** (Text, Email, Phone, Date, Number, Dropdown, Checkbox/Radio, File Upload, Password, Textarea, OTP/MFA, Date Range, Rich Text, Multi-Select, Range Slider).
    - Tích hợp **Scenarios Chuyên Sâu & Non-Functional** (Race Condition / Double Submit, Session & Network Resilience, Localization & UTF-8 / Emoji, Keyboard Accessibility A11y, HTTP Status Codes).
 6. **Template Mapping & AI Quality Gate (Chuẩn hóa Format & Metadata):**
-   - Đóng gói toàn bộ Test Cases vào bảng Markdown chuẩn kèm Metadata Automation đầy đủ (`Automatable`, `Auto Type`, `Tags`).
+   - Đóng gói toàn bộ Test Cases vào bảng Markdown chuẩn kèm Metadata Automation đầy đủ (`Automation`, `Auto Type`, `Tags`).
    - Kiểm định qua **AI Self-Quality Gate 6 Tiêu Chí** (Unique ID, 1-1 Step-Expected, Concrete Test Data, Field Coverage, Automation Metadata Ready, Requirement Coverage).
 
 *(Mỗi bước trên tương ứng với 1 thư mục con trong thư mục này, bao gồm `README.md` hướng dẫn chi tiết và `prompt.txt` chứa câu lệnh mẫu cho AI).*

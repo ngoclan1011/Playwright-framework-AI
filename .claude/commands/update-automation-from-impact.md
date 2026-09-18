@@ -80,7 +80,7 @@ Mắt xích **cuối** của chuỗi delta 3 tầng: requirements đổi → TC 
 | **Delta TC List** | ⭐ Bắt buộc | `docs/testcases/<module>/impact/delta_tc_<TICKET-ID>.md` — do `/update-testcases-from-impact` mode APPLY ghi ra. User chỉ đưa mã ticket → tìm `docs/testcases/**/impact/delta_tc_<TICKET-ID>.md` (kể cả trong namespace `_<hệ-thống>/`). Ticket chạm nhiều module → **mỗi module một lượt**, mỗi module một file kế hoạch |
 | **Danh sách TC đã đổi** | Thay thế — chỉ khi TC được **sửa tay**, không qua workflow | TC ID + đổi cái gì. **Bắt buộc kiểm** Nhật ký thay đổi của file TC có dòng ghi nhận thay đổi đó — không có thì coi như TC chưa sửa, hỏi user. Không có ticket → hậu tố file kế hoạch là `adhoc_<YYYY-MM-DD>` |
 | **File test cases hiện hành** | ⭐ Agent tự mở | Index `test_cases_<module>.md` → `## Bản đồ tài liệu` → file nền tảng chứa từng TC trong delta. **Nguồn sự thật của kỳ vọng mới** |
-| **Bản TC trước khi sửa** | ⭕ Khuyến nghị | `archive/test_cases_<module>_<nền-tảng>_v<N>.md` — đường dẫn ghi ở đầu Delta TC List. So cũ ↔ mới ra đúng ô đã đổi, khỏi đoán |
+| **Mốc git trước khi sửa** | ⭕ Khuyến nghị | Hash commit của từng file nền tảng — ghi ở đầu Delta TC List. `git diff <hash> -- <file>` ra đúng ô đã đổi, khỏi đoán |
 | **Mã nguồn automation** | ⭐ Agent tự tìm | Grep TC ID trên project. Web · mobile · API có thể nằm ở **project khác nhau** — không thấy thì hỏi user đường dẫn, không kết luận "chưa automate" |
 | **RTM** | ⭕ Khuyến nghị | `traceability_matrix.md` — có sẵn thì map nhanh và chắc hơn |
 | **Truy cập hệ thống** — chỉ hỏi cho nền tảng có trong delta | ⭐ khi cần recon hoặc chạy test | **web:** URL + tài khoản (`.env`) · **mobile:** file app / package id + device + Appium server chạy bộ test · **api:** base URL + tài khoản lấy token (`.env`), dòng `Gọi API` ở `docs/requirements/README.md` phải ✅ |
@@ -104,7 +104,7 @@ Mắt xích **cuối** của chuỗi delta 3 tầng: requirements đổi → TC 
    | `➕ Mới` | ❌ Ngoài phạm vi → command nền tảng sinh script mới |
    | `⏸️ @NeedsVerify — chưa sửa` | ❌ Ngoài phạm vi — TC chưa sửa, **không chạm** script |
 
-4. Với mỗi TC `✏️`: mở **TC hiện hành** và **bản trong `archive/`**, ghi rõ ô nào đổi từ gì sang gì — Precondition / Steps / Test Data / Expected Result / dòng Bảng biến thể / **tag nền tảng** (`@Android` → `@Android @iOS` nghĩa là script phải có thêm locator iOS). Cột *Đổi cái gì (cho automation)* chỉ là gợi ý; lệch với nội dung TC thì **theo TC** và ghi vào mục cần xác nhận
+4. Với mỗi TC `✏️`: mở **TC hiện hành** và **bản cũ theo mốc git** (`git show <hash>:<file>`), ghi rõ ô nào đổi từ gì sang gì — Precondition / Steps / Test Data / Expected Result / dòng Bảng biến thể / **tag nền tảng** (`@Android` → `@Android @iOS` nghĩa là script phải có thêm locator iOS). Cột *Đổi cái gì (cho automation)* chỉ là gợi ý; lệch với nội dung TC thì **theo TC** và ghi vào mục cần xác nhận
 5. Tách theo cột **Nền tảng**. Delta cũ không có cột này → tra TC ID nằm trong file nền tảng nào (mỗi TC nằm ở **đúng một** file nền tảng). Mobile tách tiếp theo tag `@Android` / `@iOS`
 6. **Công bố ngay**, VD: *"TICKET-123 · module `project`: 4 TC trong phạm vi — web 2 ✏️ · mobile 1 ✏️ (`@Android @iOS`) · api 1 🗑️. Ngoài phạm vi: 1 ➕ · 1 ⏸️."*
 

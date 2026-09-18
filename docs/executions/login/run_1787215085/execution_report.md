@@ -73,7 +73,7 @@
 | CRM_LOGIN_TC_031 | Liên kết reset password sai/hết hạn → HTTP 500 | ✅ PASS | — | 2/2 biến thể `a,b` — cả hai đều lỗi 500, trang lỗi mặc định của trình duyệt; giải quyết ⚠️ biến thể `b` chưa có evidence |
 | CRM_LOGIN_TC_032 | Lối đăng xuất duy nhất qua menu ảnh đại diện (desktop) | ✅ PASS | — | Xác nhận đúng 2 phần tử `li.header-logout`, chỉ 1 nhìn thấy; đúng 5 mục theo thứ tự — (bỏ phần 🔧) |
 | CRM_LOGIN_TC_033 | Đăng xuất qua menu thu gọn (mobile 375×812) | ✅ PASS | — | Giải quyết `@NeedsVerify` — đã recon thật, xác nhận hành vi đảo ngược hiển thị giữa 2 `li.header-logout` theo viewport |
-| CRM_LOGIN_TC_034 | Cảnh báo khi còn bộ đếm giờ đang chạy | ⚠️ BLOCKED | — | Không dựng được pre-condition (cần 1 task có bộ đếm giờ đang chạy) trong phạm vi module Login — đúng như `Automatable=No` đã ghi. Hệ thống hiện xác nhận "No started timers found" |
+| CRM_LOGIN_TC_034 | Cảnh báo khi còn bộ đếm giờ đang chạy | ⚠️ BLOCKED | — | Không dựng được pre-condition (cần 1 task có bộ đếm giờ đang chạy) trong phạm vi module Login — đúng như `Automation=No` đã ghi. Hệ thống hiện xác nhận "No started timers found" |
 | CRM_LOGIN_TC_035 | Không có bộ đếm giờ → Logout đi thẳng | ✅ PASS | — | Không hộp thoại nào bật lên |
 | CRM_LOGIN_TC_036 | Đăng xuất kết thúc phiên, URL nội bộ không dùng lại được kể cả Back | ✅ PASS | — | 2/2 biến thể `a,b` |
 | CRM_LOGIN_TC_037 | Cookie ghi nhớ còn lại sau đăng xuất không tự đăng nhập lại | ✅ PASS | — | — (bỏ phần 🔧 cookie) |
@@ -108,7 +108,7 @@
 | **Actual** | Nhập email `notexist_tc016_20260820@auto.test` (không trùng thông tin đã lưu trong trình duyệt) kèm sai mật khẩu → sau khi trang nạp lại, ô Email hiển thị `admin@example.com` — **không phải** email vừa nhập, mà là email trình duyệt tự điền từ lần đăng nhập đúng trước đó. Chứng minh: máy chủ **không** giữ lại giá trị email vừa gửi |
 | Evidence | ![](evidence/TC_016_email_not_retained.png) |
 | Tái hiện được? | Có |
-| Ghi chú | Đúng như dự đoán trong tài liệu TC (`AMB-10` ✅, PO đã xác nhận là lỗi hệ thống). Không chạy được cửa sổ ẩn danh thật qua Playwright MCP nên dùng cách gián tiếp: gửi email lạ không trùng dữ liệu đã lưu để loại trừ khả năng "trình duyệt tự điền đúng khớp email vừa gửi" — kết quả xác nhận rõ ràng hệ thống không giữ lại email |
+| Ghi chú | Đúng như dự đoán trong tài liệu TC (`AMB-LOGIN-10` ✅, PO đã xác nhận là lỗi hệ thống). Không chạy được cửa sổ ẩn danh thật qua Playwright MCP nên dùng cách gián tiếp: gửi email lạ không trùng dữ liệu đã lưu để loại trừ khả năng "trình duyệt tự điền đúng khớp email vừa gửi" — kết quả xác nhận rõ ràng hệ thống không giữ lại email |
 
 ### FAIL #3 — CRM_LOGIN_TC_018-a · Dữ liệu bất thường không làm hệ thống lỗi máy chủ
 
@@ -134,7 +134,7 @@
 | **Actual** | `Email not found` |
 | Evidence | ![](evidence/TC_028_empty_email_wrong_message.png) |
 | Tái hiện được? | Có |
-| Ghi chú | Đúng như dự đoán trong tài liệu TC (`AMB-05` ✅, PO đã xác nhận là lỗi thiếu validate trường bắt buộc). FAIL là kết quả đúng — không sửa TC |
+| Ghi chú | Đúng như dự đoán trong tài liệu TC (`AMB-LOGIN-05` ✅, PO đã xác nhận là lỗi thiếu validate trường bắt buộc). FAIL là kết quả đúng — không sửa TC |
 
 ### FAIL #5 — CRM_LOGIN_TC_029 · Nhập email không tồn tại thì báo không tìm thấy
 

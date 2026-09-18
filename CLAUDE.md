@@ -263,8 +263,7 @@ docs/
 │       ├── <nền-tảng>/parts/part_NN_<nền-tảng>_<slug>.md ← khi file nền tảng > 40 TC
 │       ├── impact/impact_plan_<TICKET-ID>.md  ← /update-testcases-from-impact — kế hoạch, trước khi duyệt
 │       ├── impact/delta_tc_<TICKET-ID>.md     ← /update-testcases-from-impact APPLY — TC đã sửa theo nền tảng, input của automation
-│       ├── impact/automation_plan_<TICKET-ID>.md ← /update-automation-from-impact — script đã sửa theo ticket
-│       └── archive/test_cases_<module>_<nền-tảng>_vN.md ← phiên bản cũ
+│       └── impact/automation_plan_<TICKET-ID>.md ← /update-automation-from-impact — script đã sửa theo ticket
 │
 ├── test-plans/                                  ← kế hoạch kiểm thử — lập TRƯỚC đợt
 │   ├── test_plan_<mốc>.md                      ← Master Test Plan — công bố phạm vi + tiêu chí exit TRƯỚC đợt
@@ -291,8 +290,7 @@ docs/
     └── <module>/
         ├── user_guide_<module>.md               ← INDEX — TÊN FILE BẤT BIẾN
         ├── images/*.png                          ← ảnh minh hoạ, đặt tên theo việc
-        ├── parts/part_NN_<slug>.md               ← chỉ khi > 15 việc
-        └── archive/user_guide_<module>_vN.md     ← bản cũ
+        └── parts/part_NN_<slug>.md               ← chỉ khi > 15 việc
 ```
 
 > `test_plan_<mốc>.md` nằm ở **`docs/test-plans/`** — plan là tài liệu **lập và duyệt trước đợt**, không phải kết quả thực thi. `test_progress_<mốc>_*.md` · `test_summary_<mốc>_*.md` nằm ở **gốc `executions/`**. Cả ba không thuộc module nào — chúng cắt ngang mọi module tại một mốc release. **Cùng slug `<mốc>`** (chữ thường, không dấu, VD `release_2.0`) là mối nối: báo cáo tiến độ theo dõi lịch của plan, báo cáo tổng hợp chấm lại đúng bộ tiêu chí exit đã công bố.
@@ -318,12 +316,13 @@ Ba trang tĩnh trong `scripts/`, mở bằng cách double-click, chạy offline,
 | Quy tắc | Lý do |
 |---|---|
 | Tên file index **luôn** `requirements_<module>.md` / `test_cases_<module>.md` / `user_guide_<module>.md` | Mọi workflow phía sau đọc theo mẫu `docs/<nhánh>/<module>/<file>`. Đổi tên là vỡ chuỗi RTM |
-| **KHÔNG** nhét số phiên bản vào tên index (`_v2`, `_new`, `_index`…) | Bản mới **thay thế** index; bản cũ chuyển vào `archive/` |
+| **KHÔNG** nhét số phiên bản vào tên index (`_v2`, `_new`, `_index`…) | Bản mới **thay thế** index tại chỗ; bản cũ tra bằng **lịch sử git** — `docs/` **không** có thư mục `archive/` |
 | Mỗi module một prefix **duy nhất** (`LOGIN`, `CUST`, `PRJ`…) | Chống trùng mã giữa các module — tra ở danh mục trước khi đặt |
 | **Một nghiệp vụ = một prefix trên mọi nền tảng** — web, app Android/iOS, API của cùng nghiệp vụ chung prefix, chung **thư mục module**, chung **dải REQ ID / TC ID**; nội dung riêng từng nền tảng nằm ở tầng `web/` · `mobile/` · `api/`, REQ áp ≥ 2 nền tảng nằm ở index. ❌ `LOGIN_APP`, `MCUST`, `docs/requirements/login_mobile/` | Tách prefix theo nền tảng là nhân đôi REQ cho cùng một rule — sửa ở web quên sửa ở app, RTM vẫn báo phủ đủ. Namespace `_<hệ-thống>/` **chỉ** dành cho hệ thống khác nghiệp vụ, không cho app/API của cùng hệ thống |
 | **KHÔNG đánh lại mã REQ từ `01`** khi module đã có tài liệu | Đụng mã là vỡ toàn bộ traceability |
+| **AMB / RISK mang prefix module, đánh số riêng từng module**: `AMB-<MODULE>-<nn>` · `RISK-<MODULE>-<nn>` (VD `AMB-CUST-01`). Module mới bắt đầu từ `01`, **không** nối số của module khác. Cấp hệ thống (cắt ngang, chưa quy về module): `AMB-SYS-<nn>` — `SYS` là prefix dành riêng | Mã trần `AMB-15` do hai module tự đánh số sẽ va nhau — một mã, hai câu hỏi. Có prefix thì grep ra đúng một nghĩa |
 | **KHÔNG xoá dòng REQ** — tính năng gỡ thì đổi trạng thái 🔴 Deprecated | Xoá dòng là mất dấu vết |
-| **KHÔNG đổi / đánh lại TC ID** khi cập nhật TC theo ticket — sửa tại chỗ index, bản cũ vào `archive/`, TC bị gỡ đổi trạng thái 🗑️ Deprecated | TC ID là khoá nối sang `allure.label('testId', ...)` trong script, cột TC ID của RTM và execution report cũ. Đổi là cắt cả ba mối nối, không có cách phát hiện tự động |
+| **KHÔNG đổi / đánh lại TC ID** khi cập nhật TC theo ticket — sửa tại chỗ, ghi **mốc git** (hash commit trước khi sửa) vào Nhật ký, TC bị gỡ đổi trạng thái 🗑️ Deprecated | TC ID là khoá nối sang `allure.label('testId', ...)` trong script, cột TC ID của RTM và execution report cũ. Đổi là cắt cả ba mối nối, không có cách phát hiện tự động |
 | Mọi thay đổi requirements phải ghi **Nhật ký thay đổi** ở cuối tài liệu module | Bộ nhớ liền mạch giữa các phiên, và là nơi báo TC nào đã stale |
 | Evidence nằm **cùng** tài liệu sinh ra nó (recon → `<module>/<nền-tảng>/evidence/`, execution → `<module>/<nền-tảng>/run_*/evidence/`) | Di chuyển/xoá không lạc file; link tương đối không gãy |
 | 🔒 **KHÔNG ghi giá trị bí mật thật vào `docs/`** — mật khẩu, token, cookie xác thực, session id, API key. Ghi **hình thái** (`<16 ký tự hex>`) thay cho giá trị | `docs/` được commit và **lịch sử git không xoá được bằng cách sửa file**. Credentials sống ở `.env` (đã `.gitignore`); tài liệu chỉ mô tả *hình dạng* |
@@ -357,7 +356,7 @@ docs/testcases/_book-api/<module>/test_cases_<module>.md
 |---|---|
 | Dấu `_` đầu tên = **không phải module** | Cùng quy ước với `_discovery/`. Workflow quét thư mục module sẽ bỏ qua, không nhầm namespace thành module |
 | Mỗi namespace có **`README.md` danh mục riêng** | Prefix, dải REQ, dải TC ID, AMB của hai hệ thống **không** dùng chung sổ |
-| Mã REQ mang **mã hệ thống**: `REQ-<HỆ_THỐNG>-<MODULE>-<nn>` · TC ID `<HỆ_THỐNG>_<MODULE>_TC_<nnn>` | Grep một mã ra đúng một hệ thống. Hệ thống mặc định giữ dạng cũ `REQ-<MODULE>-<nn>`, không phải đánh lại |
+| Mã REQ mang **mã hệ thống**: `REQ-<HỆ_THỐNG>-<MODULE>-<nn>` · `AMB-<HỆ_THỐNG>-<MODULE>-<nn>` · TC ID `<HỆ_THỐNG>_<MODULE>_TC_<nnn>` | Grep một mã ra đúng một hệ thống. Hệ thống mặc định giữ dạng cũ `REQ-<MODULE>-<nn>`, không phải đánh lại |
 | Hệ thống mặc định **không bị đụng vào** khi thêm namespace | Thêm hệ thống mới = thêm 1 thư mục, không sửa file nào đang có |
 | Chuyển dự án mới: xoá `docs/` là xoá **tất cả** hệ thống | Muốn giữ một cái thì sao lưu namespace đó trước |
 

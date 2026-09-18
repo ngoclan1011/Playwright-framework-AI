@@ -148,7 +148,7 @@ Khi có nhiều hơn một nguồn (mô tả ticket · comment · mockup · file
 
 | Hạng mục | Ticket mô tả | Comment | Mockup | File đính kèm | Kết luận |
 |---|---|---|---|---|---|
-| VD: độ dài tối đa Tên | không nói | 255 | — | 200 | ⚠️ Xung đột → AMB-XX |
+| VD: độ dài tối đa Tên | không nói | 255 | — | 200 | ⚠️ Xung đột → AMB-<MODULE>-XX |
 
 **Thứ tự ưu tiên khi mâu thuẫn** (mục 3.2 Bước 3 của skill) — luôn ghi rõ đã chọn nguồn nào và vì sao:
 
@@ -159,16 +159,16 @@ Khi có nhiều hơn một nguồn (mô tả ticket · comment · mockup · file
 4. Mockup/wireframe                           ← dễ lỗi thời nhất
 ```
 
-❗ **Xung đột KHÔNG được tự giải quyết im lặng** — mọi mâu thuẫn đều phải thành một `AMB-XX`, kể cả khi đã chọn được nguồn ưu tiên.
+❗ **Xung đột KHÔNG được tự giải quyết im lặng** — mọi mâu thuẫn đều phải thành một `AMB-<MODULE>-XX`, kể cả khi đã chọn được nguồn ưu tiên.
 
 ### Bước 4c: Xử lý tài liệu thiếu (rất hay gặp)
 
 | Tình huống | Cách xử lý |
 |---|---|
-| Ticket **không có AC nào**, chỉ 1–2 dòng mô tả | ❌ **KHÔNG tự viết AC thay PO/BA.** Ghi nhận đúng những gì có → liệt kê danh sách câu hỏi cần clarify dạng `AMB-XX` mức 🔴 High → ghi rõ ngay đầu tài liệu: *"Ticket chưa có AC — tài liệu này CHƯA ĐỦ để sinh test case"* |
-| AC mơ hồ ("hoạt động đúng", "như module cũ") | Gán REQ ID bình thường **nhưng** kèm ngay 1 `AMB-XX` hỏi tiêu chí cụ thể |
-| Tham chiếu "giống module X" | Nếu đã có `docs/requirements/<X>/requirements_<X>.md` → trích REQ tương ứng và **link chéo**. Chưa có → `AMB-XX`, không tự suy diễn |
-| Thiếu hoàn toàn thông tin phân quyền/trạng thái | Ghi **"Không đề cập trong tài liệu"** (KHÁC với "Không áp dụng") + `AMB-XX` |
+| Ticket **không có AC nào**, chỉ 1–2 dòng mô tả | ❌ **KHÔNG tự viết AC thay PO/BA.** Ghi nhận đúng những gì có → liệt kê danh sách câu hỏi cần clarify dạng `AMB-<MODULE>-XX` mức 🔴 High → ghi rõ ngay đầu tài liệu: *"Ticket chưa có AC — tài liệu này CHƯA ĐỦ để sinh test case"* |
+| AC mơ hồ ("hoạt động đúng", "như module cũ") | Gán REQ ID bình thường **nhưng** kèm ngay 1 `AMB-<MODULE>-XX` hỏi tiêu chí cụ thể |
+| Tham chiếu "giống module X" | Nếu đã có `docs/requirements/<X>/requirements_<X>.md` → trích REQ tương ứng và **link chéo**. Chưa có → `AMB-<MODULE>-XX`, không tự suy diễn |
+| Thiếu hoàn toàn thông tin phân quyền/trạng thái | Ghi **"Không đề cập trong tài liệu"** (KHÁC với "Không áp dụng") + `AMB-<MODULE>-XX` |
 
 ### Bước 5: Phát hiện Ambiguities & Risks (Trọng tâm)
 
@@ -178,7 +178,7 @@ Khi có nhiều hơn một nguồn (mô tả ticket · comment · mockup · file
 **5.1. Điểm mơ hồ (Ambiguities):**
 
 Áp dụng **Framework Phát Hiện Ambiguity & Risk (mục 4)** trong skill `skills-requirements-analyzer`. Với mỗi ambiguity, ghi rõ:
-- **Mã:** AMB-XX (đánh số tuần tự)
+- **Mã:** AMB-<MODULE>-XX (đánh số tuần tự)
 - **Câu hỏi:** Mô tả rõ ràng điều gì chưa rõ
 - **Nguy cơ:** Impact nếu không được giải quyết
 - **Mức độ:** 🔴 High / 🟡 Medium / 🟢 Low
@@ -195,7 +195,7 @@ Các hướng phát hiện ambiguity:
 **5.2. Rủi ro kiểm thử (Testing Risks):**
 
 Với mỗi risk, ghi rõ:
-- **Mã:** RISK-XX
+- **Mã:** RISK-<MODULE>-XX
 - **Tên rủi ro**
 - **Mô tả**
 - **Mitigation** (cách giảm thiểu)
@@ -265,7 +265,7 @@ Agent PHẢI xuất artifact theo cấu trúc sau:
 ## 1. Tổng Quan Ticket
 (Bảng metadata — BẮT BUỘC có 4 dòng sau, ngoài ID/Type/Priority/Status/Sprint/Assignee)
 | **Nguồn phân tích** | Liệt kê MỌI file/nguồn đã đọc: `ABC-123.docx` · `field_spec.xlsx` · 3 comments · mockup_v2.png |
-| **Dải mã đã dùng**  | `REQ-PRJ-66` → `REQ-PRJ-78` · `AMB-01` → `AMB-05` · `RISK-01` → `RISK-03` |
+| **Dải mã đã dùng**  | `REQ-PRJ-66` → `REQ-PRJ-78` · `AMB-PRJ-01` → `AMB-PRJ-05` · `RISK-PRJ-01` → `RISK-PRJ-03` |
 | **Mã kế tiếp**      | Đợt sau bắt đầu từ `REQ-PRJ-79` — KHÔNG đánh lại từ 01 |
 | **Mức độ đầy đủ**   | Đủ AC để sinh test case / ⚠️ Thiếu AC — chưa đủ (xem mục 7) |
 
@@ -315,13 +315,13 @@ Agent PHẢI xuất artifact theo cấu trúc sau:
 
 - **KHÔNG sinh test cases** — workflow này chỉ phân tích, không tạo TC
 - **KHÔNG chạy khi đầu vào là sản phẩm đầu ra của workflow khác** (`requirements_<module>.md`, `system_map.md`, `analysis_*.md`, `test_cases_*.md`) — xem **Bước 0**. Dừng và hỏi ý định thật, tuyệt đối không sinh một bản diễn đạt lại của tài liệu đã có
-- **KHÔNG tự viết AC thay PO/BA.** Ticket thiếu AC → ghi nhận đúng thực trạng + `AMB-XX` 🔴 High. Đây là luật tương đương "không đoán locator" của nhánh UI — vi phạm là tài liệu mất giá trị hoàn toàn
+- **KHÔNG tự viết AC thay PO/BA.** Ticket thiếu AC → ghi nhận đúng thực trạng + `AMB-<MODULE>-XX` 🔴 High. Đây là luật tương đương "không đoán locator" của nhánh UI — vi phạm là tài liệu mất giá trị hoàn toàn
 - **KHÔNG đánh lại mã REQ từ `01`** nếu module đã có tài liệu — luôn đánh tiếp từ số cuối (mục 2.1 của skill). Đụng mã là vỡ toàn bộ RTM
 - **KHÔNG đọc file nhị phân bằng `Read`** (`.docx`/`.xlsx`/`.pdf`/`.pptx`) — ủy quyền đúng skill. Đọc không được thì **dừng và báo user**, không suy đoán từ tên file
 - **KHÔNG tự fetch URL Jira/Confluence** — route sang `/fetch-jira-requirements`. MCP chưa authorize thì báo user, tuyệt đối không bịa nội dung ticket
 - **KHÔNG tự đoán** business logic nếu document không nói rõ → đưa vào Ambiguities
 - **KHÔNG bỏ qua comments** trong Jira ticket — comments thường là quyết định mới nhất và **đè lên** phần mô tả gốc
-- **KHÔNG tự giải quyết im lặng xung đột giữa các nguồn** — luôn thành `AMB-XX`, kể cả khi đã áp thứ tự ưu tiên
+- **KHÔNG tự giải quyết im lặng xung đột giữa các nguồn** — luôn thành `AMB-<MODULE>-XX`, kể cả khi đã áp thứ tự ưu tiên
 
 ### Bắt buộc (✅)
 

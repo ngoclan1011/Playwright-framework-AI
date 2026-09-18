@@ -119,11 +119,11 @@ Theo skill **3.4.5** (dữ kiện nào thành REQ nào) và **3.4.7** (mục 6 �
 | Tình huống | Xử lý |
 |---|---|
 | Rule API **trùng** một REQ đã có, và gọi thật cho kết quả khớp | **Không** cấp mã mới — REQ cũ đang ở `web/` / `mobile/` thì **chuyển dòng lên index**, cột `Nền tảng` thêm `API`; đã ở index thì chỉ sửa cột. Nhật ký loại `🟢 Thêm` · *"Mở rộng nền tảng: + API"* |
-| Rule trùng nhưng hành vi **khác** (UI chặn, API nhận) | REQ riêng ở `api/` + `AMB-XX` 🔴 *"cố ý hay lỗi?"* — mặc định nghi là lỗi, thường là lỗ hổng bỏ qua validation phía client |
+| Rule trùng nhưng hành vi **khác** (UI chặn, API nhận) | REQ riêng ở `api/` + `AMB-<MODULE>-XX` 🔴 *"cố ý hay lỗi?"* — mặc định nghi là lỗi, thường là lỗ hổng bỏ qua validation phía client |
 | Module cũ chưa có tầng nền tảng (tài liệu một file) | Chuyển một lần theo skill mục 5.3 (REQ chỉ áp web sang `web/`, mã giữ nguyên, ghi Nhật ký) rồi mới ghi phần API |
 | Rule chỉ có ở API | REQ mới nối tiếp mã, ghi ở `api/` |
 
-**Lệch pha spec ↔ thực tế:** REQ theo spec, `Nguồn` = `Spec — ❌ lệch thực tế (F-nn)`, `AMB-XX` 🔴 ghi nguyên văn cả hai (skill 3.4.5). Không hạ REQ theo hành vi thật.
+**Lệch pha spec ↔ thực tế:** REQ theo spec, `Nguồn` = `Spec — ❌ lệch thực tế (F-nn)`, `AMB-<MODULE>-XX` 🔴 ghi nguyên văn cả hai (skill 3.4.5). Không hạ REQ theo hành vi thật.
 
 ### Bước 4: Cổng Tự Soát REQ (skill 4.3) — và 4 điểm riêng của API
 

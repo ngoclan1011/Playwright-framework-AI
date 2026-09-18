@@ -233,7 +233,7 @@ Sinh **Master Test Plan** — tài liệu quản lý để PM/khách hàng **duy
 | Danh sách module · nền tảng · số REQ/TC · lần chạy đã có | **Mốc** · module × nền tảng trong đợt · mục tiêu |
 | Môi trường đã khảo sát · năng lực kiểm thử của QA | **Ngoài phạm vi bổ sung** + ai chịu trách nhiệm |
 | Vùng đã loại khỏi phạm vi (`system_map.md`, bảng ISO 25010, REQ ⚪) | Cấp độ kiểm thử · mức độc lập · loại test · cách chạy TC mobile/API · **ngưỡng phi chức năng** · **chiến lược tự động hoá** |
-| Bug đang mở · AMB 🔴 còn treo · rủi ro sản phẩm `RISK-xx` | **Lịch** · **ước lượng công sức** · **ngân sách** · **nhân lực** |
+| Bug đang mở · AMB 🔴 còn treo · rủi ro sản phẩm `RISK-<MODULE>-xx` | **Lịch** · **ước lượng công sức** · **ngân sách** · **nhân lực** |
 | Bài học và thời lượng thực tế của báo cáo mốc trước · thang Severity/Priority mặc định | Môi trường · **dữ liệu kiểm thử** đợt này · công cụ · **quy trình lỗi, người phân loại, thời hạn xử lý** · bên liên quan · người review, người duyệt · Test Policy/Strategy tổ chức |
 
 Không muốn điền phiếu → gọi lệnh kèm tên mốc, AI **hỏi một lượt** theo đúng các nhóm của phiếu rồi tự ghi vào `test_plan.config.yaml`. Ô nào bạn chưa có thông tin → AI để `❓` và liệt kê ở **đầu tài liệu**, **không** bịa ngày hay tên người.

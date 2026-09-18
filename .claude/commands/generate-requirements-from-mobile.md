@@ -132,7 +132,7 @@ Theo **mục 6** của skill, khác nhánh web ở:
 | Tình huống | Xử lý |
 |---|---|
 | Rule đã có ở web/API, kiểm trên app **khớp** | **Không** cấp mã mới — REQ cũ đang ở `web/` (hoặc `api/`) thì **chuyển dòng lên index**, cột `Nền tảng` thêm `Android`; đã ở index thì chỉ sửa cột. Nhật ký `🟢 Thêm` · *"Mở rộng nền tảng: + Android"* · `TC cần xử lý` = `viết mới cho Android` |
-| Rule có nhưng app chạy **khác** (message khác, độ dài khác, không chặn) | REQ riêng ở `mobile/`, `Nền tảng` = `Android` + `AMB-XX` *"cố ý hay lỗi?"* — mặc định nghi là lỗi |
+| Rule có nhưng app chạy **khác** (message khác, độ dài khác, không chặn) | REQ riêng ở `mobile/`, `Nền tảng` = `Android` + `AMB-<MODULE>-XX` *"cố ý hay lỗi?"* — mặc định nghi là lỗi |
 | Rule chỉ có trên app | REQ mới nối tiếp mã, ghi ở `mobile/`, `Nền tảng` = `Android` |
 | Module cũ chưa có tầng nền tảng (tài liệu một file) | Chuyển một lần theo skill mục 5.3: REQ chỉ áp web sang `web/requirements_<module>_web.md`, evidence sang `web/evidence/`, mã giữ nguyên, ghi Nhật ký — rồi mới ghi phần mobile |
 | Lượt này là iOS, module đã có REQ `Android` | Kiểm từng REQ trên iOS: khớp → `Android · iOS` (vẫn ở `mobile/`); khác → REQ riêng. **Không** tự ghi `iOS` khi chưa kiểm |

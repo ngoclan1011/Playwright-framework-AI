@@ -165,10 +165,10 @@ Giao diện hiển thị tiếng Anh; bảng này để bạn dò nhanh.
 
 | Nội dung | Vì sao chưa xác minh | Ảnh hưởng tới tài liệu |
 |---|---|---|
-| Nhận email đặt lại mật khẩu và đặt mật khẩu mới (mục 3.2 bước 4) | `REQ-LOGIN-27` ⚪ — PO chốt bỏ qua luồng gửi mail ngày 18-08-2026 (`AMB-04`), không có ảnh nào chụp được email hay màn hình đặt mật khẩu mới | Bước 4 mô tả kỳ vọng, **chưa chạy thật**. Không viết được các bước sau khi mở email |
-| Hộp thoại `Started tasks timers found!` khi đăng xuất lúc còn bộ đếm giờ (mục 3.3) | `REQ-LOGIN-30` — mới đọc được ở mã nguồn, việc kiểm chứng thực tế đã chuyển sang module `TASK` (`AMB-14`) | Không mô tả được các nút trong hộp thoại và hậu quả từng lựa chọn |
+| Nhận email đặt lại mật khẩu và đặt mật khẩu mới (mục 3.2 bước 4) | `REQ-LOGIN-27` ⚪ — PO chốt bỏ qua luồng gửi mail ngày 18-08-2026 (`AMB-LOGIN-04`), không có ảnh nào chụp được email hay màn hình đặt mật khẩu mới | Bước 4 mô tả kỳ vọng, **chưa chạy thật**. Không viết được các bước sau khi mở email |
+| Hộp thoại `Started tasks timers found!` khi đăng xuất lúc còn bộ đếm giờ (mục 3.3) | `REQ-LOGIN-30` — mới đọc được ở mã nguồn, việc kiểm chứng thực tế đã chuyển sang module `TASK` (`AMB-LOGIN-14`) | Không mô tả được các nút trong hộp thoại và hậu quả từng lựa chọn |
 | Đăng xuất trên điện thoại / màn hình nhỏ | `REQ-LOGIN-29` — nhánh mobile chưa recon, chưa có số liệu nào | Tài liệu chỉ đúng cho máy tính màn hình rộng |
-| Thời hạn phiên 1 giờ tính theo cách nào (mục 4) | `AMB-19` 🟡 còn treo — chưa rõ là 1 giờ không hoạt động hay 1 giờ kể từ lúc đăng nhập | Câu trả lời trong FAQ nói chung chung "kéo dài 1 giờ", chưa nói được chính xác cách tính |
+| Thời hạn phiên 1 giờ tính theo cách nào (mục 4) | `AMB-LOGIN-19` 🟡 còn treo — chưa rõ là 1 giờ không hoạt động hay 1 giờ kể từ lúc đăng nhập | Câu trả lời trong FAQ nói chung chung "kéo dài 1 giờ", chưa nói được chính xác cách tính |
 
 **Nguồn ảnh:** 4 ảnh trong `images/` sao chép từ `docs/requirements/login/evidence/` (đợt khảo sát 18-08-2026), đổi tên theo việc.
 

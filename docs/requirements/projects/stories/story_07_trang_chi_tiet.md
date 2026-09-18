@@ -2,7 +2,7 @@
 
 > Về index: [../requirements_projects.md](../requirements_projects.md) · Prefix `PRJ` · REQ bao phủ: `REQ-PRJ-75` → `REQ-PRJ-86` (12 REQ)
 >
-> AMB liên quan: `AMB-33`, `AMB-34`
+> AMB liên quan: `AMB-PRJ-06`, `AMB-PRJ-07`
 
 **Mô tả Story:** Là nhân sự vận hành, tôi muốn mở một dự án và thấy ngay tình hình tổng quan cùng các thao tác thường dùng, để nắm việc và xử lý mà không phải đi vòng qua nhiều màn hình.
 
@@ -18,9 +18,9 @@
 | REQ-PRJ-78 | Chuyển nhanh sang dự án khác | Đổi dự án đang xem mà không quay lại danh sách | Ô chọn `#project_top` ở đầu trang liệt kê **toàn bộ dự án** dạng `#<id> - <tên>`, dự án đang xem nằm đầu danh sách dạng `<khách hàng> <tên dự án>` | 🟢 | — | Đọc DOM |
 | REQ-PRJ-79 | Khối thông tin tổng quan | Tab `Overview` tóm tắt thông tin cốt lõi của dự án | Khối `Overview` hiển thị đúng **10 mục**: `Project #` · `Customer` · `Billing Type` · `Total Rate` · `Status` · `Date Created` · `Start Date` · `Deadline` · `Total Logged Hours` · `Description`. Dự án không có mô tả hiển thị **`No description for this project`** | 🟢 | — | Kiểm chứng thực tế |
 | REQ-PRJ-80 | Thanh tiến độ dự án | Hiển thị phần trăm hoàn thành của dự án | Khối `Project Progress` hiển thị phần trăm dạng số kèm thanh tiến độ | 🟢 | — | Kiểm chứng thực tế |
-| REQ-PRJ-81 | Tiến độ của dự án không có công việc | Dự án 0 công việc phải cho tiến độ đúng | ⚠️ **Đang KHÔNG đạt.** Kiểm chứng trên dự án id `2695` (0 công việc, bật `Calculate progress through tasks`): hiển thị **`Project Progress 100%`**, trong khi thẻ công việc cùng trang ghi `0 / 0 Open Tasks 0%` | 🟢 | — | Kiểm chứng thực tế · xem `AMB-33` |
+| REQ-PRJ-81 | Tiến độ của dự án không có công việc | Dự án 0 công việc phải cho tiến độ đúng | ⚠️ **Đang KHÔNG đạt.** Kiểm chứng trên dự án id `2695` (0 công việc, bật `Calculate progress through tasks`): hiển thị **`Project Progress 100%`**, trong khi thẻ công việc cùng trang ghi `0 / 0 Open Tasks 0%` | 🟢 | — | Kiểm chứng thực tế · xem `AMB-PRJ-06` |
 | REQ-PRJ-82 | Thẻ số liệu nhanh | Trang tổng quan có các thẻ tóm tắt số liệu | Hiển thị 3 nhóm thẻ: `Open Tasks` (`0 / 0`, kèm `0%`) · `Days Left` (`0 / N Days Left`, kèm `0%`) · khối chi phí gồm `Total Expenses` · `Billable Expenses` · `Billed Expenses` · `Unbilled Expenses`, mỗi mục kèm số tiền | 🟢 | — | Kiểm chứng thực tế |
-| REQ-PRJ-83 | Số ngày còn lại khi dự án quá hạn | Dự án đã qua hạn chót thì thẻ `Days Left` phản ánh tình trạng | Kiểm chứng trên dự án hạn chót `01-08-2026` xem ngày `14-08-2026`: hiển thị **`0 / -19 Days Left`** — số ngày còn lại là **số âm** | 🟢 | — | Kiểm chứng thực tế · xem `AMB-34` |
+| REQ-PRJ-83 | Số ngày còn lại khi dự án quá hạn | Dự án đã qua hạn chót thì thẻ `Days Left` phản ánh tình trạng | Kiểm chứng trên dự án hạn chót `01-08-2026` xem ngày `14-08-2026`: hiển thị **`0 / -19 Days Left`** — số ngày còn lại là **số âm** | 🟢 | — | Kiểm chứng thực tế · xem `AMB-PRJ-07` |
 | REQ-PRJ-84 | Cảnh báo dự án quá hạn | Dự án qua hạn chót hiển thị băng cảnh báo ở đầu trang | Băng cảnh báo hiển thị nguyên văn **`This project is overdue by 13 days`** (số ngày = ngày hiện tại − `Deadline`); băng hiện ở **mọi** tab của trang chi tiết, không riêng `Overview` | 🟢 | — | Kiểm chứng thực tế |
 | REQ-PRJ-85 | Quản lý thành viên dự án | Thêm hoặc bớt thành viên mà không mở biểu mẫu sửa | Hộp thoại `#add-edit-members` tiêu đề `Members` chứa ô chọn nhiều 3 nhân sự (`3` Project Manager · `1` Admin Anh Tester · `2` Admin Example) kèm `Select All` / `Deselect All` và nút `Save`. Ngoài ra mỗi thành viên trên thanh tiêu đề có liên kết gỡ nhanh `/admin/projects/remove_team_member/{project_id}/{staff_id}` | 🟢 | — | Đọc DOM |
 | REQ-PRJ-86 | Lập hoá đơn cho dự án | Tạo hoá đơn từ dữ liệu dự án | Nút `Invoice Project` gọi `pre_invoice_project({id})` → phát sinh `GET /admin/projects/get_pre_invoice_project_info/{id}?csrf_token_name=…` → mở hộp thoại `#pre_invoice_project_settings` tiêu đề **`Project Invoice Info`** với 3 lựa chọn `invoice_data_type`: `single_line` **Single line [ Fixed Rate ]** (mặc định) · `task_per_item` Task per item · `timesheets_individualy` All timesheets individually; thêm công tắc `timesheets_include_notes`. Dự án 0 công việc hiển thị dòng **`No tasks to bill. Feel free to add whatever you want in the invoice items.`** | 🟢 | — | Kiểm chứng thực tế · API |
@@ -79,12 +79,12 @@
 | REQ-PRJ-79 | Dự án không có mô tả | `No description for this project` |
 | REQ-PRJ-84 | Ngày hiện tại > `Deadline` | `This project is overdue by <N> days` |
 | REQ-PRJ-86 | Mở hộp thoại lập hoá đơn cho dự án 0 công việc | `No tasks to bill. Feel free to add whatever you want in the invoice items.` |
-| REQ-PRJ-81 | Dự án 0 công việc, bật tính tiến độ theo công việc | ⚠️ Hiện `100%` — kỳ vọng đúng phải là `0%`. Xem `AMB-33` |
+| REQ-PRJ-81 | Dự án 0 công việc, bật tính tiến độ theo công việc | ⚠️ Hiện `100%` — kỳ vọng đúng phải là `0%`. Xem `AMB-PRJ-06` |
 
 **Quy tắc nghiệp vụ ngầm (rút ra từ hành vi thực tế):**
 
 - Băng cảnh báo quá hạn tính theo **`Deadline` so với ngày hiện tại**, hoàn toàn không xét `Start Date`. Dự án chưa tới ngày bắt đầu vẫn bị báo quá hạn nếu hạn chót đã qua — đúng tình huống dữ liệu sinh ra từ `REQ-PRJ-58`.
-- Hai số liệu tiến độ trên **cùng một trang mâu thuẫn nhau**: khối `Project Progress` ghi `100%` trong khi thẻ `Open Tasks` ghi `0%`. Test nên khẳng định vào thẻ `Open Tasks` cho tới khi `AMB-33` được trả lời.
+- Hai số liệu tiến độ trên **cùng một trang mâu thuẫn nhau**: khối `Project Progress` ghi `100%` trong khi thẻ `Open Tasks` ghi `0%`. Test nên khẳng định vào thẻ `Open Tasks` cho tới khi `AMB-PRJ-06` được trả lời.
 - Người tạo dự án **tự động** thành thành viên; nhật ký hoạt động ghi nhận hai dòng riêng biệt ngay sau khi tạo (xem `REQ-PRJ-97`).
 
 ---

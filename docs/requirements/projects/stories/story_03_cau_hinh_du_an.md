@@ -2,11 +2,11 @@
 
 > Về index: [../requirements_projects.md](../requirements_projects.md) · Prefix `PRJ` · REQ bao phủ: `REQ-PRJ-42` → `REQ-PRJ-52` (11 REQ)
 >
-> AMB liên quan: `AMB-41`, `AMB-42`
+> AMB liên quan: `AMB-PRJ-14`, `AMB-PRJ-15`
 
 **Mô tả Story:** Là nhân sự vận hành, tôi muốn chọn tab nào và thao tác nào khách hàng được thấy trong dự án, để chỉ chia sẻ đúng phần thông tin mình muốn.
 
-> ⚠️ **Giới hạn kiểm chứng của toàn Story này.** Cổng khách hàng (front-end ngoài `/admin`) **nằm ngoài phạm vi** của dự án khảo sát. Vì vậy mọi REQ dưới đây được kiểm chứng ở mức **biểu mẫu ghi nhận đúng cấu hình**, **không** kiểm chứng được rằng cấu hình đó thực sự tác động tới thứ khách hàng nhìn thấy. Xem `AMB-41`.
+> ⚠️ **Giới hạn kiểm chứng của toàn Story này.** Cổng khách hàng (front-end ngoài `/admin`) **nằm ngoài phạm vi** của dự án khảo sát. Vì vậy mọi REQ dưới đây được kiểm chứng ở mức **biểu mẫu ghi nhận đúng cấu hình**, **không** kiểm chứng được rằng cấu hình đó thực sự tác động tới thứ khách hàng nhìn thấy. Xem `AMB-PRJ-14`.
 
 ---
 

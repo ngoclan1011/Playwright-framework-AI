@@ -51,7 +51,7 @@ Nạp **nhiều file/thư mục** để gộp số liệu và so sánh giữa c�
 Trả lời câu hỏi *"test case manual nào đã có script automation"*.
 
 > ⚠️ **Nguồn phải là `traceability_matrix.md`** do `/generate-traceability-matrix` sinh ra — workflow đó quét **code thật** để biết TC nào có script.
-> **Đừng** dùng cột `Automatable` trong file test case: đó là **dự định** lúc viết TC, không phải **thực tế** đã automate. Hai con số này lệch nhau rất nhanh.
+> **Đừng** dùng cột `Automation` trong file test case: đó là **dự định** lúc viết TC, không phải **thực tế** đã automate. Hai con số này lệch nhau rất nhanh.
 
 **Bốn trạng thái, suy ra từ dữ liệu chứ không đọc cột `Trạng thái` của file:**
 

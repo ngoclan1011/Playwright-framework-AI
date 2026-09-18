@@ -18,7 +18,7 @@ export const EXPORT_COLUMNS = [
   'Test Data',
   'Expected Result',
   'Priority',
-  'Automatable',
+  'Automation',
   'Auto Type',
   'Tags',
 ] as const

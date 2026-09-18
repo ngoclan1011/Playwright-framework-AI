@@ -37,7 +37,7 @@ Chỉ viết được hướng dẫn cho module **đã recon** (xem `docs/requir
 | 🔒 Ảnh phải dùng **dữ liệu mẫu** | Tài liệu này phát ra ngoài. Ảnh có tên người, email, số tiền thật là rò rỉ dữ liệu |
 | Mục *Vùng chưa xác minh* là **nội bộ** — gỡ ở bản phát hành | Đừng gửi khách một tài liệu tự khai chỗ nào chưa kiểm |
 | Mỗi lần sửa: tăng **Phiên bản tài liệu** + cập nhật **Áp dụng cho phiên bản phần mềm** | Hai dòng này là cách duy nhất người đọc biết tài liệu còn dùng được không |
-| UI đổi thì **sửa đúng việc bị ảnh hưởng**, không viết lại cả tài liệu | Bản cũ vào `archive/` khi viết lại lớn |
+| UI đổi thì **sửa đúng việc bị ảnh hưởng**, không viết lại cả tài liệu | Bản cũ tra bằng lịch sử git — không có thư mục `archive/` |
 
 ---
 

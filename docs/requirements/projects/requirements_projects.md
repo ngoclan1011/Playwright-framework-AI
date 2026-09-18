@@ -13,8 +13,8 @@
 | **Tài khoản dùng khảo sát** | 1 tài khoản duy nhất — "Admin Example", `staff-id-2` |
 | **Môi trường dùng chung** | **CÓ** — đã tạo 1 dự án thử nghiệm (`RECON_PRJ_1786652163351`, id `2695`) và **đã xoá sạch**; số bản ghi trở lại đúng **118** như trước khi khảo sát |
 | **Tổng số REQ** | **104** |
-| **Dải mã đã dùng** | `REQ-PRJ-01` → `REQ-PRJ-104` · `AMB-28` → `AMB-43` · `RISK-15` → `RISK-21` |
-| **Mã kế tiếp** | Đợt phân tích sau bắt đầu từ `REQ-PRJ-105` · `AMB-44` · `RISK-22` — **KHÔNG đánh lại từ 01** |
+| **Dải mã đã dùng** | `REQ-PRJ-01` → `REQ-PRJ-104` · `AMB-PRJ-01` → `AMB-PRJ-16` · `RISK-PRJ-01` → `RISK-PRJ-07` |
+| **Mã kế tiếp** | Đợt phân tích sau bắt đầu từ `REQ-PRJ-105` · `AMB-PRJ-17` · `RISK-PRJ-08` — **KHÔNG đánh lại từ 01** |
 
 ---
 
@@ -49,9 +49,9 @@ Module gồm **4 màn hình chính**:
 | Vùng | Lý do |
 |---|---|
 | Nghiệp vụ chi tiết của Công việc, Phiếu hỗ trợ, Hợp đồng, Hoá đơn, Báo giá, Đề xuất, Đăng ký định kỳ, Chi phí, Giấy báo có | Thuộc module riêng, có prefix riêng. Ở đây chỉ đặc tả **màn hình chiếu** trong dự án |
-| Cổng khách hàng (front-end ngoài `/admin`) | Ngoài phạm vi toàn dự án — xem `_discovery/system_map.md` mục 7. Hệ quả: **không kiểm chứng được** 18 công tắc quyền khách hàng có tác dụng thật hay không (`AMB-41`) |
-| Nội dung tệp xuất (Excel/CSV/PDF) và tệp `Export project data` | Không tải tệp về trên môi trường dùng chung — xem `AMB-39` |
-| Thao tác tải tệp lên tab Files | Không tải tệp lên môi trường dùng chung — xem `AMB-40` |
+| Cổng khách hàng (front-end ngoài `/admin`) | Ngoài phạm vi toàn dự án — xem `_discovery/system_map.md` mục 7. Hệ quả: **không kiểm chứng được** 18 công tắc quyền khách hàng có tác dụng thật hay không (`AMB-PRJ-14`) |
+| Nội dung tệp xuất (Excel/CSV/PDF) và tệp `Export project data` | Không tải tệp về trên môi trường dùng chung — xem `AMB-PRJ-12` |
+| Thao tác tải tệp lên tab Files | Không tải tệp lên môi trường dùng chung — xem `AMB-PRJ-13` |
 
 ---
 
@@ -92,16 +92,16 @@ Tài liệu vượt ngưỡng 80 REQ nên được tách theo Story (skill `skil
 
 | Story ID | Tên Story | REQ bao phủ | Số REQ | AMB / RISK liên quan | Ghi chú phạm vi |
 |---|---|---|---|---|---|
-| STORY-PRJ-01 | Danh sách, tìm kiếm, lọc, xuất dữ liệu | REQ-PRJ-01 → 23 | 23 | AMB-29 · RISK-16, 18, 19 | Bảng server-side; số đếm tổng quan **không khớp** số dòng thật |
-| STORY-PRJ-02 | Tạo dự án — thông tin chính | REQ-PRJ-24 → 41 | 18 | AMB-33, 36, 37 · RISK-20 | Trường giá hiện/ẩn theo `Billing Type` |
-| STORY-PRJ-03 | Cấu hình dự án & quyền khách hàng | REQ-PRJ-42 → 52 | 11 | AMB-41, 42 | 18 công tắc quyền; **không kiểm chứng được tác dụng** vì cổng khách hàng ngoài phạm vi |
-| STORY-PRJ-04 | Kiểm tra dữ liệu đầu vào | REQ-PRJ-53 → 59 | 7 | AMB-31, 32, 35, 36, 37 | Kiểm tra phía client; **không có** kiểm tra logic ngày và trùng tên |
+| STORY-PRJ-01 | Danh sách, tìm kiếm, lọc, xuất dữ liệu | REQ-PRJ-01 → 23 | 23 | AMB-PRJ-02 · RISK-PRJ-02, 04, 05 | Bảng server-side; số đếm tổng quan **không khớp** số dòng thật |
+| STORY-PRJ-02 | Tạo dự án — thông tin chính | REQ-PRJ-24 → 41 | 18 | AMB-PRJ-06, 09, 10 · RISK-PRJ-06 | Trường giá hiện/ẩn theo `Billing Type` |
+| STORY-PRJ-03 | Cấu hình dự án & quyền khách hàng | REQ-PRJ-42 → 52 | 11 | AMB-PRJ-14, 15 | 18 công tắc quyền; **không kiểm chứng được tác dụng** vì cổng khách hàng ngoài phạm vi |
+| STORY-PRJ-04 | Kiểm tra dữ liệu đầu vào | REQ-PRJ-53 → 59 | 7 | AMB-PRJ-04, 05, 08, 09, 10 | Kiểm tra phía client; **không có** kiểm tra logic ngày và trùng tên |
 | STORY-PRJ-05 | Sửa dự án & vòng đời trạng thái | REQ-PRJ-60 → 68 | 9 | — | Hai lối đổi trạng thái, tuỳ chọn phụ khi chuyển sang `Finished` |
-| STORY-PRJ-06 | Sao chép dự án | REQ-PRJ-69 → 74 | 6 | AMB-38 | Đặc tả tới mức biểu mẫu; **chưa chạy thật** trên môi trường dùng chung |
-| STORY-PRJ-07 | Trang chi tiết & thao tác nhanh | REQ-PRJ-75 → 86 | 12 | AMB-33, 34 | Progress 100% khi 0 công việc; "Days Left" ra số âm |
-| STORY-PRJ-08 | Các tab nghiệp vụ thuộc dự án | REQ-PRJ-87 → 97 | 11 | AMB-40, 43 | Đặc tả tới mức màn hình + biểu mẫu; **chưa chạy CRUD đầy đủ** |
-| STORY-PRJ-09 | Tab chiếu dữ liệu từ module khác | REQ-PRJ-98 → 101 | 4 | RISK-15 | Chỉ đặc tả cột hiển thị; nghiệp vụ thuộc module gốc |
-| STORY-PRJ-10 | Xoá dự án & xuất dữ liệu dự án | REQ-PRJ-102 → 104 | 3 | AMB-30, 39 · RISK-17 | Xoá thành công nhưng chuyển tới trang lỗi |
+| STORY-PRJ-06 | Sao chép dự án | REQ-PRJ-69 → 74 | 6 | AMB-PRJ-11 | Đặc tả tới mức biểu mẫu; **chưa chạy thật** trên môi trường dùng chung |
+| STORY-PRJ-07 | Trang chi tiết & thao tác nhanh | REQ-PRJ-75 → 86 | 12 | AMB-PRJ-06, 07 | Progress 100% khi 0 công việc; "Days Left" ra số âm |
+| STORY-PRJ-08 | Các tab nghiệp vụ thuộc dự án | REQ-PRJ-87 → 97 | 11 | AMB-PRJ-13, 16 | Đặc tả tới mức màn hình + biểu mẫu; **chưa chạy CRUD đầy đủ** |
+| STORY-PRJ-09 | Tab chiếu dữ liệu từ module khác | REQ-PRJ-98 → 101 | 4 | RISK-PRJ-01 | Chỉ đặc tả cột hiển thị; nghiệp vụ thuộc module gốc |
+| STORY-PRJ-10 | Xoá dự án & xuất dữ liệu dự án | REQ-PRJ-102 → 104 | 3 | AMB-PRJ-03, 12 · RISK-PRJ-03 | Xoá thành công nhưng chuyển tới trang lỗi |
 
 **Tổng: 10 Story / 104 REQ** — mọi REQ thuộc đúng một Story, không mồ côi, không trùng.
 
@@ -122,13 +122,13 @@ Xếp theo phụ thuộc và rủi ro, **không** theo thứ tự đánh số:
 ```
 1. STORY-PRJ-02  Tạo dự án              ← không có dự án thì mọi Story sau vô nghĩa
 2. STORY-PRJ-04  Kiểm tra dữ liệu       ← đi kèm ngay với biểu mẫu tạo
-3. STORY-PRJ-01  Danh sách & lọc        ← BLOCKED một phần bởi AMB-29 (số đếm sai)
-4. STORY-PRJ-07  Trang chi tiết         ← BLOCKED một phần bởi AMB-33 (Progress 100%)
+3. STORY-PRJ-01  Danh sách & lọc        ← BLOCKED một phần bởi AMB-PRJ-02 (số đếm sai)
+4. STORY-PRJ-07  Trang chi tiết         ← BLOCKED một phần bởi AMB-PRJ-06 (Progress 100%)
 5. STORY-PRJ-05  Sửa & vòng đời trạng thái
-6. STORY-PRJ-03  Cấu hình & quyền       ← BLOCKED bởi AMB-41 — cổng khách hàng ngoài phạm vi
-7. STORY-PRJ-10  Xoá & xuất             ← BLOCKED một phần bởi AMB-30 (chuyển tới trang lỗi)
-8. STORY-PRJ-08  Tab nghiệp vụ          ← BLOCKED bởi AMB-40 — cần môi trường riêng để chạy CRUD
-9. STORY-PRJ-06  Sao chép dự án         ← BLOCKED bởi AMB-38 — thao tác sinh dữ liệu hàng loạt
+6. STORY-PRJ-03  Cấu hình & quyền       ← BLOCKED bởi AMB-PRJ-14 — cổng khách hàng ngoài phạm vi
+7. STORY-PRJ-10  Xoá & xuất             ← BLOCKED một phần bởi AMB-PRJ-03 (chuyển tới trang lỗi)
+8. STORY-PRJ-08  Tab nghiệp vụ          ← BLOCKED bởi AMB-PRJ-13 — cần môi trường riêng để chạy CRUD
+9. STORY-PRJ-06  Sao chép dự án         ← BLOCKED bởi AMB-PRJ-11 — thao tác sinh dữ liệu hàng loạt
 10. STORY-PRJ-09 Tab chiếu module khác  ← làm sau cùng, phụ thuộc dữ liệu của module gốc
 ```
 
@@ -159,7 +159,7 @@ Xếp theo phụ thuộc và rủi ro, **không** theo thứ tự đánh số:
 
 ```
 Đã kiểm chứng: 14 ô · Suy diễn: 0 ô · Chưa rõ: 28 ô
-— chưa có tài khoản vai trò "Project Manager" và các vai trò khác (AMB-28);
+— chưa có tài khoản vai trò "Project Manager" và các vai trò khác (AMB-PRJ-01);
   màn hình cấu hình phân quyền 403 nên không suy diễn được ô nào
 ```
 
@@ -218,34 +218,34 @@ Dự án có đúng **5 trạng thái**. Mã giá trị **không** liên tiếp 
 
 | Mã | Câu hỏi | Nguy cơ | Mức độ | Assumption tạm | Trạng thái | Kết luận |
 |---|---|---|---|---|---|---|
-| AMB-28 | Xin tài khoản vai trò `Project Manager` và các vai trò khác để kiểm chứng 28 ô đang bỏ trống trong ma trận phân quyền của module `PRJ` | Không kiểm chứng được ranh giới quyền; một vai trò thấp xoá được dự án hoặc xem được tài chính dự án sẽ không bị phát hiện | 🔴 | Mọi vai trò không phải Admin **không** xoá được dự án và **không** đổi được cấu hình `Visible Tabs` | ❓ Chờ trả lời | — |
-| AMB-29 | Bảng tổng quan đếm **67** dự án `In Progress` nhưng bấm vào lọc ra đúng **60** dòng (lệch 7). Bốn trạng thái còn lại khớp chính xác (53 · 2 · 2 · 1). Số nào đúng? | Mọi test khẳng định theo số đếm đều sai; người dùng mất niềm tin vào số liệu tổng quan; Dashboard cũng đang hiển thị `67 / 125` theo nguồn sai này | 🔴 | Số đếm ở bảng tổng quan **sai**; số dòng thật khi lọc mới đúng (53 + 60 + 2 + 2 + 1 = 118 = tổng bảng) | ❓ Chờ trả lời | Kiểm chứng thực tế 14-08-2026 — lọc lần lượt cả 5 trạng thái, chỉ `In Progress` lệch |
-| AMB-30 | Xoá dự án thành công nhưng hệ thống chuyển tới `/admin/not_found` kèm thông báo **"Something went wrong. Try again"** và **"Project not found"** thay vì quay về danh sách kèm thông báo thành công. Lỗi hay thiết kế? | Người dùng tưởng xoá thất bại và bấm lại; test thủ công báo nhầm FAIL; automation không có mốc nào để khẳng định xoá thành công | 🔴 | Đây là **lỗi** — sau khi xoá phải chuyển về `/admin/projects` kèm thông báo thành công | ❓ Chờ trả lời | Kiểm chứng thực tế trên dự án id `2695` |
-| AMB-31 | `Deadline` sớm hơn `Start Date` được chấp nhận ở **cả** phía client lẫn phía máy chủ; dự án tạo ra chỉ bị gắn nhãn *"This project is overdue by N days"*. Lỗi hay cố ý? | Dữ liệu dự án vô nghĩa đi vào hệ thống rồi lan sang Gantt, mốc tiến độ, báo cáo. Danh sách hiện đã có dự án `Test Date Validation` với `Start 15-05-2026` / `Deadline 14-05-2026` | 🔴 | Đây là **lỗi** — `Deadline` phải ≥ `Start Date` | ❓ Chờ trả lời | Kiểm chứng thực tế: tạo dự án `Start 20-08-2026` / `Deadline 01-08-2026` → lưu thành công |
-| AMB-32 | Thông báo lỗi của trường `Customer` là **"Select and begin typing"** — chính là chuỗi gợi ý (placeholder) của ô chọn, không phải câu báo lỗi. Các trường khác báo đúng "This field is required." | Người dùng không hiểu mình sai gì; test tự động so khớp thông báo lỗi sẽ viết ra khẳng định vô nghĩa | 🟡 | Đây là **lỗi** — phải dùng chung câu "This field is required." | ❓ Chờ trả lời | — |
-| AMB-33 | Dự án **0 công việc** bật `Calculate progress through tasks` hiển thị **Progress 100%**. Đúng hay phải là 0%? | Báo cáo tiến độ sai hoàn toàn với mọi dự án mới; quản lý nhìn dashboard tưởng dự án đã xong | 🔴 | Đây là **lỗi** — 0 công việc phải cho 0% | ❓ Chờ trả lời | Kiểm chứng thực tế trên dự án id `2695` ngay sau khi tạo |
-| AMB-34 | Thẻ `Days Left` hiển thị **số âm** (`0 / -19 Days Left`) khi dự án quá hạn. Có phải cách hiển thị mong muốn không? | Số âm trong ô "còn lại bao nhiêu ngày" khó hiểu; không rõ test nên khẳng định giá trị nào | 🟢 | Chấp nhận được — số âm mang nghĩa "quá hạn N ngày", đã có băng cảnh báo riêng ở đầu trang | ❓ Chờ trả lời | — |
-| AMB-35 | **Tên dự án trùng nhau không bị chặn** ở bất kỳ tầng nào. Danh sách hiện có 2 dự án `Dgrey Project` và hơn 10 dự án `Mua hàng qua app`. Có phải chủ ý không? | Người dùng không phân biệt được dự án nào là dự án nào; automation chọn dự án theo tên sẽ bắt nhầm bản ghi | 🟡 | Là chủ ý — dự án phân biệt bằng `id`, không bằng tên. Khác với `CUST` (có cảnh báo trùng tên, xem `AMB-16`) | ❓ Chờ trả lời | — |
-| AMB-36 | **Không trường text nào khai báo `maxlength`.** Giới hạn độ dài thực tế của `name`, `tags`, `description` là bao nhiêu? | Không viết được test biên; nhập quá dài có thể gây lỗi 500 hoặc cắt dữ liệu âm thầm. Danh sách khách hàng đang có bản ghi tên dài 191 ký tự → nghi giới hạn 191 | 🟡 | Giới hạn theo cột CSDL (thường 191–255 ký tự); test biên tạm dùng 255 và 256 | ❓ Chờ trả lời | Lặp lại đúng vấn đề của `AMB-19` ở module `CUST` |
-| AMB-37 | `Total Rate`, `Rate Per Hour`, `Estimated Hours` đều là `type=number` **không** khai báo `min` / `max` / `step`. Có chấp nhận số âm, số 0, số thập phân không? | Dự án có giá trị âm đi thẳng vào hoá đơn và báo cáo tài chính | 🟡 | Không có kiểm tra — nhập số âm vẫn lưu | ❓ Chờ trả lời | — |
-| AMB-38 | `Copy Project` sao chép chính xác những gì? Tệp, thảo luận, ghi chú có được sao chép không (biểu mẫu chỉ nêu Tasks · checklist · assignees · followers · Milestones · Members)? Dự án mới nhận trạng thái nào? | Không viết được kỳ vọng cho `STORY-PRJ-06`; chạy thử trên môi trường dùng chung sẽ sinh dữ liệu rác hàng loạt | 🟡 | Chỉ sao chép đúng 6 nhóm nêu trên biểu mẫu; dự án mới nhận trạng thái mặc định `Not Started` | ❓ Chờ trả lời | Cần môi trường riêng để chạy |
-| AMB-39 | `Export project data` (`/admin/projects/export_project_data/{id}`) tải về tệp định dạng gì và gồm những dữ liệu nào? | `REQ-PRJ-104` đang ⚪; không viết được kỳ vọng | 🟢 | Tệp nén chứa dữ liệu dự án và tệp đính kèm | ❓ Chờ trả lời | Không tải tệp về trong đợt khảo sát |
-| AMB-40 | Các tab `Milestones` · `Files` · `Discussions` · `Notes` mới đặc tả tới mức **biểu mẫu và cột bảng**, chưa chạy CRUD đầy đủ (tạo · sửa · xoá · tải tệp). Thông báo thành công / lỗi của từng thao tác là gì? | Toàn bộ `STORY-PRJ-08` chưa test được ở mức hành vi; `REQ-PRJ-89, 91, 93` đang ⚪ | 🟡 | Mỗi thao tác cho một thông báo thành công dạng toast, không chuyển trang | ❓ Chờ trả lời | Cần môi trường riêng để chạy |
-| AMB-41 | Bỏ chọn một mục trong `Visible Tabs` thì tab đó biến mất ở **khu quản trị** hay chỉ ở **cổng khách hàng**? Tương tự với 18 công tắc quyền khách hàng | Không kiểm chứng được `STORY-PRJ-03` — 11 REQ đang dựa hoàn toàn vào nhãn trên giao diện. Cổng khách hàng nằm ngoài phạm vi toàn dự án | 🔴 | `Visible Tabs` áp cho **cả hai** khu; 18 công tắc quyền chỉ áp cho cổng khách hàng | ❓ Chờ trả lời | Chốt phạm vi cổng khách hàng thì mới kiểm chứng được |
-| AMB-42 | `Hide project tasks on main tasks table (admin area)` tác động cụ thể thế nào tới module `TASK` — ẩn khỏi bảng chính, hay ẩn khỏi cả bộ lọc và báo cáo? | Ảnh hưởng chéo sang module `TASK` mà bộ test của `PRJ` không phát hiện | 🟡 | Chỉ ẩn khỏi bảng danh sách công việc chính, không ảnh hưởng báo cáo | ❓ Chờ trả lời | — |
-| AMB-43 | Trường `Order` của mốc tiến độ mặc định `1`. Hai mốc cùng số thứ tự thì sắp xếp thế nào? Số thứ tự có bắt buộc duy nhất không? | Thứ tự hiển thị mốc tiến độ không đoán được → test sắp xếp sẽ không ổn định | 🟢 | Cho phép trùng; trùng thì sắp theo ngày tạo | ❓ Chờ trả lời | — |
+| AMB-PRJ-01 | Xin tài khoản vai trò `Project Manager` và các vai trò khác để kiểm chứng 28 ô đang bỏ trống trong ma trận phân quyền của module `PRJ` | Không kiểm chứng được ranh giới quyền; một vai trò thấp xoá được dự án hoặc xem được tài chính dự án sẽ không bị phát hiện | 🔴 | Mọi vai trò không phải Admin **không** xoá được dự án và **không** đổi được cấu hình `Visible Tabs` | ❓ Chờ trả lời | — |
+| AMB-PRJ-02 | Bảng tổng quan đếm **67** dự án `In Progress` nhưng bấm vào lọc ra đúng **60** dòng (lệch 7). Bốn trạng thái còn lại khớp chính xác (53 · 2 · 2 · 1). Số nào đúng? | Mọi test khẳng định theo số đếm đều sai; người dùng mất niềm tin vào số liệu tổng quan; Dashboard cũng đang hiển thị `67 / 125` theo nguồn sai này | 🔴 | Số đếm ở bảng tổng quan **sai**; số dòng thật khi lọc mới đúng (53 + 60 + 2 + 2 + 1 = 118 = tổng bảng) | ❓ Chờ trả lời | Kiểm chứng thực tế 14-08-2026 — lọc lần lượt cả 5 trạng thái, chỉ `In Progress` lệch |
+| AMB-PRJ-03 | Xoá dự án thành công nhưng hệ thống chuyển tới `/admin/not_found` kèm thông báo **"Something went wrong. Try again"** và **"Project not found"** thay vì quay về danh sách kèm thông báo thành công. Lỗi hay thiết kế? | Người dùng tưởng xoá thất bại và bấm lại; test thủ công báo nhầm FAIL; automation không có mốc nào để khẳng định xoá thành công | 🔴 | Đây là **lỗi** — sau khi xoá phải chuyển về `/admin/projects` kèm thông báo thành công | ❓ Chờ trả lời | Kiểm chứng thực tế trên dự án id `2695` |
+| AMB-PRJ-04 | `Deadline` sớm hơn `Start Date` được chấp nhận ở **cả** phía client lẫn phía máy chủ; dự án tạo ra chỉ bị gắn nhãn *"This project is overdue by N days"*. Lỗi hay cố ý? | Dữ liệu dự án vô nghĩa đi vào hệ thống rồi lan sang Gantt, mốc tiến độ, báo cáo. Danh sách hiện đã có dự án `Test Date Validation` với `Start 15-05-2026` / `Deadline 14-05-2026` | 🔴 | Đây là **lỗi** — `Deadline` phải ≥ `Start Date` | ❓ Chờ trả lời | Kiểm chứng thực tế: tạo dự án `Start 20-08-2026` / `Deadline 01-08-2026` → lưu thành công |
+| AMB-PRJ-05 | Thông báo lỗi của trường `Customer` là **"Select and begin typing"** — chính là chuỗi gợi ý (placeholder) của ô chọn, không phải câu báo lỗi. Các trường khác báo đúng "This field is required." | Người dùng không hiểu mình sai gì; test tự động so khớp thông báo lỗi sẽ viết ra khẳng định vô nghĩa | 🟡 | Đây là **lỗi** — phải dùng chung câu "This field is required." | ❓ Chờ trả lời | — |
+| AMB-PRJ-06 | Dự án **0 công việc** bật `Calculate progress through tasks` hiển thị **Progress 100%**. Đúng hay phải là 0%? | Báo cáo tiến độ sai hoàn toàn với mọi dự án mới; quản lý nhìn dashboard tưởng dự án đã xong | 🔴 | Đây là **lỗi** — 0 công việc phải cho 0% | ❓ Chờ trả lời | Kiểm chứng thực tế trên dự án id `2695` ngay sau khi tạo |
+| AMB-PRJ-07 | Thẻ `Days Left` hiển thị **số âm** (`0 / -19 Days Left`) khi dự án quá hạn. Có phải cách hiển thị mong muốn không? | Số âm trong ô "còn lại bao nhiêu ngày" khó hiểu; không rõ test nên khẳng định giá trị nào | 🟢 | Chấp nhận được — số âm mang nghĩa "quá hạn N ngày", đã có băng cảnh báo riêng ở đầu trang | ❓ Chờ trả lời | — |
+| AMB-PRJ-08 | **Tên dự án trùng nhau không bị chặn** ở bất kỳ tầng nào. Danh sách hiện có 2 dự án `Dgrey Project` và hơn 10 dự án `Mua hàng qua app`. Có phải chủ ý không? | Người dùng không phân biệt được dự án nào là dự án nào; automation chọn dự án theo tên sẽ bắt nhầm bản ghi | 🟡 | Là chủ ý — dự án phân biệt bằng `id`, không bằng tên. Khác với `CUST` (có cảnh báo trùng tên, xem `AMB-CUST-02`) | ❓ Chờ trả lời | — |
+| AMB-PRJ-09 | **Không trường text nào khai báo `maxlength`.** Giới hạn độ dài thực tế của `name`, `tags`, `description` là bao nhiêu? | Không viết được test biên; nhập quá dài có thể gây lỗi 500 hoặc cắt dữ liệu âm thầm. Danh sách khách hàng đang có bản ghi tên dài 191 ký tự → nghi giới hạn 191 | 🟡 | Giới hạn theo cột CSDL (thường 191–255 ký tự); test biên tạm dùng 255 và 256 | ❓ Chờ trả lời | Lặp lại đúng vấn đề của `AMB-CUST-05` ở module `CUST` |
+| AMB-PRJ-10 | `Total Rate`, `Rate Per Hour`, `Estimated Hours` đều là `type=number` **không** khai báo `min` / `max` / `step`. Có chấp nhận số âm, số 0, số thập phân không? | Dự án có giá trị âm đi thẳng vào hoá đơn và báo cáo tài chính | 🟡 | Không có kiểm tra — nhập số âm vẫn lưu | ❓ Chờ trả lời | — |
+| AMB-PRJ-11 | `Copy Project` sao chép chính xác những gì? Tệp, thảo luận, ghi chú có được sao chép không (biểu mẫu chỉ nêu Tasks · checklist · assignees · followers · Milestones · Members)? Dự án mới nhận trạng thái nào? | Không viết được kỳ vọng cho `STORY-PRJ-06`; chạy thử trên môi trường dùng chung sẽ sinh dữ liệu rác hàng loạt | 🟡 | Chỉ sao chép đúng 6 nhóm nêu trên biểu mẫu; dự án mới nhận trạng thái mặc định `Not Started` | ❓ Chờ trả lời | Cần môi trường riêng để chạy |
+| AMB-PRJ-12 | `Export project data` (`/admin/projects/export_project_data/{id}`) tải về tệp định dạng gì và gồm những dữ liệu nào? | `REQ-PRJ-104` đang ⚪; không viết được kỳ vọng | 🟢 | Tệp nén chứa dữ liệu dự án và tệp đính kèm | ❓ Chờ trả lời | Không tải tệp về trong đợt khảo sát |
+| AMB-PRJ-13 | Các tab `Milestones` · `Files` · `Discussions` · `Notes` mới đặc tả tới mức **biểu mẫu và cột bảng**, chưa chạy CRUD đầy đủ (tạo · sửa · xoá · tải tệp). Thông báo thành công / lỗi của từng thao tác là gì? | Toàn bộ `STORY-PRJ-08` chưa test được ở mức hành vi; `REQ-PRJ-89, 91, 93` đang ⚪ | 🟡 | Mỗi thao tác cho một thông báo thành công dạng toast, không chuyển trang | ❓ Chờ trả lời | Cần môi trường riêng để chạy |
+| AMB-PRJ-14 | Bỏ chọn một mục trong `Visible Tabs` thì tab đó biến mất ở **khu quản trị** hay chỉ ở **cổng khách hàng**? Tương tự với 18 công tắc quyền khách hàng | Không kiểm chứng được `STORY-PRJ-03` — 11 REQ đang dựa hoàn toàn vào nhãn trên giao diện. Cổng khách hàng nằm ngoài phạm vi toàn dự án | 🔴 | `Visible Tabs` áp cho **cả hai** khu; 18 công tắc quyền chỉ áp cho cổng khách hàng | ❓ Chờ trả lời | Chốt phạm vi cổng khách hàng thì mới kiểm chứng được |
+| AMB-PRJ-15 | `Hide project tasks on main tasks table (admin area)` tác động cụ thể thế nào tới module `TASK` — ẩn khỏi bảng chính, hay ẩn khỏi cả bộ lọc và báo cáo? | Ảnh hưởng chéo sang module `TASK` mà bộ test của `PRJ` không phát hiện | 🟡 | Chỉ ẩn khỏi bảng danh sách công việc chính, không ảnh hưởng báo cáo | ❓ Chờ trả lời | — |
+| AMB-PRJ-16 | Trường `Order` của mốc tiến độ mặc định `1`. Hai mốc cùng số thứ tự thì sắp xếp thế nào? Số thứ tự có bắt buộc duy nhất không? | Thứ tự hiển thị mốc tiến độ không đoán được → test sắp xếp sẽ không ổn định | 🟢 | Cho phép trùng; trùng thì sắp theo ngày tạo | ❓ Chờ trả lời | — |
 
 ### 7.2. Risks
 
 | Mã | Rủi ro | Mô tả | Mitigation |
 |---|---|---|---|
-| RISK-15 | Module là điểm gom của 9 module khác | 17 tab của trang chi tiết chiếu dữ liệu từ `TASK`, `TICK`, `CTR`, `PROP`, `EST`, `INV`, `SUB`, `EXP`, `CN`. Một thay đổi ở `PRJ` có thể làm hỏng màn hình của module khác mà bộ test `PRJ` không thấy | Sau mỗi lần sửa `PRJ`, chạy kèm bộ smoke của `TASK` và `INV`. Ưu tiên sinh RTM để thấy rõ liên đới |
-| RISK-16 | Danh sách ngập dữ liệu rác từ automation cũ | Trong 118 dự án có hơn 50 bản ghi `AUTO_POM_ADD_PROJECT_*`, `AUTO_POM_DELETE_PROJECT_*`, `Project Automation *`, `[AUTO_HT] project *` do các đợt chạy trước để lại và **không dọn** | Mọi bản ghi test dùng tiền tố riêng kèm dấu thời gian và **phải xoá sau khi chạy**. Tuyệt đối **không** khẳng định theo tổng số bản ghi — con số này trôi liên tục |
-| RISK-17 | Thao tác xoá dùng GET | `GET /admin/projects/delete/{id}` xoá ngay khi mở URL; hộp thoại xác nhận chỉ là lớp chặn phía trình duyệt | **Cấm** đưa URL xoá vào bất kỳ bước điều hướng nào của automation. Chỉ xoá qua liên kết `Delete` + hộp thoại xác nhận, và chỉ với bản ghi do test tạo ra |
-| RISK-18 | Bảng nạp bất đồng bộ dễ gây khẳng định sai | Mọi thao tác lọc / tìm / phân trang đều đi qua `POST /admin/projects/table`; đọc DOM ngay sau thao tác sẽ thấy dữ liệu cũ | Chờ dòng `Showing … entries` đổi giá trị hoặc chờ request kết thúc; **không** dùng hard sleep |
-| RISK-19 | Số liệu tổng quan không khớp bảng | `AMB-29` — số đếm `In Progress` lệch 7 so với số dòng thật | **Không** viết khẳng định dựa trên số đếm ở bảng tổng quan cho tới khi `AMB-29` được trả lời. Khẳng định theo số dòng sau khi lọc |
-| RISK-20 | Trường giá hiện/ẩn theo `Billing Type` | `Total Rate` và `Rate Per Hour` **vẫn nằm trong DOM** khi bị ẩn. Automation đọc theo `id` mà không kiểm tra khả năng nhìn thấy sẽ điền vào trường không hiển thị và không hề báo lỗi | Luôn kiểm tra trường **hiển thị** trước khi điền; đổi `Billing Type` xong phải chờ trường tương ứng hiện ra |
-| RISK-21 | Dữ liệu chuẩn thay đổi theo thời gian | Danh sách `Members` (3 nhân sự) và `Customer` (hơn 1.500 khách hàng) đến từ bảng chuẩn mà tài khoản hiện tại không quản lý được | Giả định danh sách cố định trong đợt test; số lượng đổi giữa các lần chạy là do người khác sửa dữ liệu, không phải lỗi sản phẩm |
+| RISK-PRJ-01 | Module là điểm gom của 9 module khác | 17 tab của trang chi tiết chiếu dữ liệu từ `TASK`, `TICK`, `CTR`, `PROP`, `EST`, `INV`, `SUB`, `EXP`, `CN`. Một thay đổi ở `PRJ` có thể làm hỏng màn hình của module khác mà bộ test `PRJ` không thấy | Sau mỗi lần sửa `PRJ`, chạy kèm bộ smoke của `TASK` và `INV`. Ưu tiên sinh RTM để thấy rõ liên đới |
+| RISK-PRJ-02 | Danh sách ngập dữ liệu rác từ automation cũ | Trong 118 dự án có hơn 50 bản ghi `AUTO_POM_ADD_PROJECT_*`, `AUTO_POM_DELETE_PROJECT_*`, `Project Automation *`, `[AUTO_HT] project *` do các đợt chạy trước để lại và **không dọn** | Mọi bản ghi test dùng tiền tố riêng kèm dấu thời gian và **phải xoá sau khi chạy**. Tuyệt đối **không** khẳng định theo tổng số bản ghi — con số này trôi liên tục |
+| RISK-PRJ-03 | Thao tác xoá dùng GET | `GET /admin/projects/delete/{id}` xoá ngay khi mở URL; hộp thoại xác nhận chỉ là lớp chặn phía trình duyệt | **Cấm** đưa URL xoá vào bất kỳ bước điều hướng nào của automation. Chỉ xoá qua liên kết `Delete` + hộp thoại xác nhận, và chỉ với bản ghi do test tạo ra |
+| RISK-PRJ-04 | Bảng nạp bất đồng bộ dễ gây khẳng định sai | Mọi thao tác lọc / tìm / phân trang đều đi qua `POST /admin/projects/table`; đọc DOM ngay sau thao tác sẽ thấy dữ liệu cũ | Chờ dòng `Showing … entries` đổi giá trị hoặc chờ request kết thúc; **không** dùng hard sleep |
+| RISK-PRJ-05 | Số liệu tổng quan không khớp bảng | `AMB-PRJ-02` — số đếm `In Progress` lệch 7 so với số dòng thật | **Không** viết khẳng định dựa trên số đếm ở bảng tổng quan cho tới khi `AMB-PRJ-02` được trả lời. Khẳng định theo số dòng sau khi lọc |
+| RISK-PRJ-06 | Trường giá hiện/ẩn theo `Billing Type` | `Total Rate` và `Rate Per Hour` **vẫn nằm trong DOM** khi bị ẩn. Automation đọc theo `id` mà không kiểm tra khả năng nhìn thấy sẽ điền vào trường không hiển thị và không hề báo lỗi | Luôn kiểm tra trường **hiển thị** trước khi điền; đổi `Billing Type` xong phải chờ trường tương ứng hiện ra |
+| RISK-PRJ-07 | Dữ liệu chuẩn thay đổi theo thời gian | Danh sách `Members` (3 nhân sự) và `Customer` (hơn 1.500 khách hàng) đến từ bảng chuẩn mà tài khoản hiện tại không quản lý được | Giả định danh sách cố định trong đợt test; số lượng đổi giữa các lần chạy là do người khác sửa dữ liệu, không phải lỗi sản phẩm |
 
 ---
 
@@ -285,7 +285,7 @@ Toàn bộ ảnh chụp full-page, lưu tại [`evidence/`](evidence/).
 | `project_detail_tab_credit_notes_fullpage.png` | Chi tiết — tab `Credit Notes` | Rỗng | REQ-PRJ-101 |
 | `project_detail_mark_as_finished_modal_fullpage.png` | Chi tiết — hộp thoại `Additional action required!` | Sau khi bấm `Mark as Finished` | REQ-PRJ-64 → 66 |
 | `project_detail_invoice_project_modal_fullpage.png` | Chi tiết — hộp thoại `Project Invoice Info` | Dự án 0 công việc | REQ-PRJ-85, 86 |
-| `project_delete_after_confirm_notfound_fullpage.png` | Sau khi xác nhận xoá | Trang `/admin/not_found` kèm thông báo lỗi | REQ-PRJ-102, 103 · AMB-30 |
+| `project_delete_after_confirm_notfound_fullpage.png` | Sau khi xác nhận xoá | Trang `/admin/not_found` kèm thông báo lỗi | REQ-PRJ-102, 103 · AMB-PRJ-03 |
 
 **Tổng: 31 ảnh.** Dữ kiện mà ảnh không thể hiện được (số `<option>` thật, `disabled` vs `checked`, `value` của option, phần tử ẩn nhưng còn trong DOM) đã đọc bằng `browser_evaluate` và **chép nguyên số liệu vào Acceptance Criteria** của REQ tương ứng ở các file story.
 

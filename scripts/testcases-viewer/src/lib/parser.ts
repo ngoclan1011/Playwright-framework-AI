@@ -68,7 +68,7 @@ function columnKey(header: string): string | null {
   if (h.includes('test data')) return 'data'
   if (h.includes('expected')) return 'expected'
   if (h === 'priority') return 'priority'
-  if (h === 'automatable') return 'automatable'
+  if (h === 'automation' || h === 'automatable') return 'automatable'
   if (h.includes('auto type')) return 'autoType'
   if (h === 'tags') return 'tags'
   return null

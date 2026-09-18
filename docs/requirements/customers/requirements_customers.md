@@ -13,8 +13,8 @@
 | **Tài khoản dùng khảo sát** | 1 tài khoản duy nhất — "Admin Example", `user-id-2` |
 | **Môi trường dùng chung** | **CÓ** — đã tạo 3 khách hàng thử nghiệm (`13364`, `13365`, `13366`) và **đã xoá sạch**; tổng số bản ghi trở lại đúng **1.571** như trước khi khảo sát |
 | **Tổng số REQ** | **79** |
-| **Dải mã đã dùng** | `REQ-CUST-01` → `REQ-CUST-79` · `AMB-15` → `AMB-27` · `RISK-08` → `RISK-14` |
-| **Mã kế tiếp** | Đợt phân tích sau bắt đầu từ `REQ-CUST-80` · `AMB-28` · `RISK-15` — **KHÔNG đánh lại từ 01** |
+| **Dải mã đã dùng** | `REQ-CUST-01` → `REQ-CUST-79` · `AMB-CUST-01` → `AMB-CUST-13` · `RISK-CUST-01` → `RISK-CUST-07` |
+| **Mã kế tiếp** | Đợt phân tích sau bắt đầu từ `REQ-CUST-80` · `AMB-CUST-14` · `RISK-CUST-08` — **KHÔNG đánh lại từ 01** |
 
 ---
 
@@ -134,8 +134,8 @@ Module gồm **4 màn hình chính**:
 |---|---|---|---|---|---|---|
 | REQ-CUST-40 | Bỏ trống Company thì không lưu được | Gửi biểu mẫu với Company rỗng thì bị chặn và báo lỗi tại trường | Khối chứa Company nhận class `form-group has-error` · sinh phần tử `<p id="company-error" class="text-danger">This field is required.</p>` · `input#company` nhận `aria-describedby="company-error"` · **không** phát sinh request `POST /admin/clients/client` | 🟢 | — | Kiểm chứng thực tế + DOM + Network |
 | REQ-CUST-41 | Nhãn tab đổi màu khi tab đó có lỗi | Lỗi nằm ở tab nào thì nhãn tab đó chuyển sang màu đỏ | Khi Company rỗng, nhãn tab `Customer Details` có màu chữ `rgb(255, 0, 0)` | 🟢 | — | Kiểm chứng thực tế + DOM |
-| REQ-CUST-42 | Lỗi ở tab không hiển thị vẫn giữ nguyên tab đang xem | Bấm Save khi đang ở tab Billing & Shipping thì hệ thống **không** tự chuyển về tab chứa lỗi | Đang ở tab `Billing & Shipping`, Company rỗng, bấm `Save` → tab đang active vẫn là `Billing & Shipping` · thông báo `This field is required.` nằm ở tab ẩn, người dùng **không nhìn thấy**. Xem `AMB-17` | 🟢 | — | Kiểm chứng thực tế + DOM |
-| REQ-CUST-43 | Company chỉ chứa khoảng trắng vẫn được chấp nhận | Nhập toàn dấu cách vào Company thì vượt qua kiểm tra bắt buộc | Nhập `"   "` (3 dấu cách) → khối Company **không** nhận class `has-error`, **không** sinh `#company-error` · hệ thống coi là hợp lệ. Xem `AMB-16` | 🟢 | — | Kiểm chứng thực tế + DOM |
+| REQ-CUST-42 | Lỗi ở tab không hiển thị vẫn giữ nguyên tab đang xem | Bấm Save khi đang ở tab Billing & Shipping thì hệ thống **không** tự chuyển về tab chứa lỗi | Đang ở tab `Billing & Shipping`, Company rỗng, bấm `Save` → tab đang active vẫn là `Billing & Shipping` · thông báo `This field is required.` nằm ở tab ẩn, người dùng **không nhìn thấy**. Xem `AMB-CUST-03` | 🟢 | — | Kiểm chứng thực tế + DOM |
+| REQ-CUST-43 | Company chỉ chứa khoảng trắng vẫn được chấp nhận | Nhập toàn dấu cách vào Company thì vượt qua kiểm tra bắt buộc | Nhập `"   "` (3 dấu cách) → khối Company **không** nhận class `has-error`, **không** sinh `#company-error` · hệ thống coi là hợp lệ. Xem `AMB-CUST-02` | 🟢 | — | Kiểm chứng thực tế + DOM |
 | REQ-CUST-44 | Cảnh báo khi tên công ty đã tồn tại | Rời khỏi ô Company với tên đã có trong hệ thống thì hiện cảnh báo tham khảo | Sự kiện rời ô phát sinh `POST /admin/clients/check_duplicate_customer_name` với body `csrf_token_name=<token>&company=<tên>` · phản hồi JSON `{"exists":true,"message":"It looks that a customer with name <b>{tên}</b> already exists, if you still want to create the customer you can ignore this message."}` · UI hiện banner `.alert.alert-info` nguyên văn: `It looks that a customer with name {tên} already exists, if you still want to create the customer you can ignore this message.` | 🟢 | — | Kiểm chứng thực tế + Network + DOM |
 | REQ-CUST-45 | Cảnh báo trùng tên không chặn việc lưu | Cảnh báo chỉ mang tính tham khảo, hệ thống vẫn cho tạo khách hàng trùng tên | Khối Company **không** nhận class `has-error` khi có cảnh báo · vẫn bấm `Save` được và tạo thành công khách hàng mới trùng tên (kiểm chứng: tạo được `13365` và `13366` cùng tên với `13364`) | 🟢 | — | Kiểm chứng thực tế |
 | REQ-CUST-46 | Biểu mẫu mang mã chống CSRF | Mỗi lần nạp biểu mẫu, hệ thống sinh mã chống giả mạo yêu cầu | Tồn tại `input[type=hidden][name=csrf_token_name]` với giá trị 32 ký tự hex · mã này cũng đi kèm trong request `check_duplicate_customer_name` và `POST /admin/clients/table` | 🟢 | — | DOM + Network |
@@ -150,7 +150,7 @@ Module gồm **4 màn hình chính**:
 | REQ-CUST-50 | Biểu mẫu sửa nạp đúng dữ liệu đã lưu | Mở hồ sơ thì mọi trường hiển thị đúng giá trị đã lưu | 24 trường dữ liệu (không tính trường ẩn) nạp đúng giá trị đã nhập lúc tạo, gồm cả `default_currency=1`, `default_language=vietnamese`, `country=243` và đủ 10 trường billing/shipping | 🟢 | — | Kiểm chứng thực tế + DOM |
 | REQ-CUST-51 | Chế độ sửa chỉ có một nút lưu | Biểu mẫu sửa không còn lối `Save and create contact` | Chân biểu mẫu chỉ có **1** nút `button.btn-primary.only-save.customer-form-submiter` nhãn `Save` | 🟢 | — | DOM |
 | REQ-CUST-52 | Mở nhanh website của khách hàng | Trường Website ở chế độ sửa có nút mở trang web | Ô `#website` được bọc trong nhóm có nút biểu tượng quả cầu đứng ngay bên phải (không có ở chế độ tạo mới) | 🟢 | — | Kiểm chứng thực tế |
-| REQ-CUST-53 | Tuỳ chọn hiển thị tên liên hệ chính trên chứng từ | Có checkbox điều khiển việc in tên liên hệ chính lên chứng từ | Tồn tại `input#show_primary_contact[type=checkbox]` với nhãn nguyên văn `Show primary contact full name on Invoices, Estimates, Payments, Credit Notes`, mặc định **không** tích. Khách hàng chưa có liên hệ nào thì checkbox này **không nằm trong vùng nhìn thấy** (`offsetParent` = null). Xem `AMB-27` | 🟢 | — | DOM |
+| REQ-CUST-53 | Tuỳ chọn hiển thị tên liên hệ chính trên chứng từ | Có checkbox điều khiển việc in tên liên hệ chính lên chứng từ | Tồn tại `input#show_primary_contact[type=checkbox]` với nhãn nguyên văn `Show primary contact full name on Invoices, Estimates, Payments, Credit Notes`, mặc định **không** tích. Khách hàng chưa có liên hệ nào thì checkbox này **không nằm trong vùng nhìn thấy** (`offsetParent` = null). Xem `AMB-CUST-13` | 🟢 | — | DOM |
 | REQ-CUST-54 | Gán quản trị viên phụ trách khách hàng | Tab Customer Admins cho phép gán nhân sự phụ trách | Tab có nút `Assign Admin` mở modal `#customer_admins_assign` tiêu đề `Assign Admin` · select `customer_admins[]` có `multiple`, **3** option: `Project Manager` (`3`) · `Admin Anh Tester` (`1`) · `Admin Example` (`2`) · modal có nút `Close` và `Save` | 🟢 | — | Kiểm chứng thực tế + DOM |
 | REQ-CUST-55 | Bảng danh sách quản trị viên phụ trách | Tab Customer Admins liệt kê nhân sự đã gán | Bảng có 3 cột `Staff Member` · `Date Assigned` · `Options`; khách hàng mới tạo hiển thị `No entries found`; có dropdown số dòng và nút `Export` | 🟢 | — | Kiểm chứng thực tế + DOM |
 
@@ -164,7 +164,7 @@ Module gồm **4 màn hình chính**:
 | REQ-CUST-59 | Giải thích ý nghĩa trạng thái Inactive | Người dùng biết hệ quả của việc tắt trạng thái hoạt động | Công tắc mang chú giải nguyên văn: `Won't be shown in dropdowns when creating new records` | 🟢 | — | DOM |
 | REQ-CUST-60 | Xác nhận trước khi xoá khách hàng | Bấm Delete thì hệ thống hỏi xác nhận trước | Xuất hiện hộp thoại xác nhận của trình duyệt (`confirm`) với nội dung nguyên văn: `Are you sure you want to perform this action?` · huỷ hộp thoại thì không xoá | 🟢 | — | Kiểm chứng thực tế |
 | REQ-CUST-61 | Xoá khách hàng thành công | Đồng ý xác nhận thì khách hàng bị xoá và hệ thống báo kết quả | Trình duyệt quay về `/admin/clients` · hiện thông báo nổi `.float-alert.alert-success` nguyên văn `Customer deleted` · bản ghi biến mất khỏi bảng · tổng số bản ghi giảm đúng 1 | 🟢 | — | Kiểm chứng thực tế + DOM |
-| REQ-CUST-62 | Xoá bằng cách mở thẳng đường dẫn | Đường dẫn xoá là `GET` nên mở thẳng URL cũng thực hiện xoá | `GET /admin/clients/delete/{id}` khi đã đăng nhập → xoá bản ghi và chuyển hướng về `/admin/clients`, **không** qua bước xác nhận nào. Xem `RISK-13` | 🟢 | — | Kiểm chứng thực tế |
+| REQ-CUST-62 | Xoá bằng cách mở thẳng đường dẫn | Đường dẫn xoá là `GET` nên mở thẳng URL cũng thực hiện xoá | `GET /admin/clients/delete/{id}` khi đã đăng nhập → xoá bản ghi và chuyển hướng về `/admin/clients`, **không** qua bước xác nhận nào. Xem `RISK-CUST-06` | 🟢 | — | Kiểm chứng thực tế |
 
 ### 3.9. Các tab phụ trợ của hồ sơ (STORY-CUST-09)
 
@@ -191,7 +191,7 @@ Module gồm **4 màn hình chính**:
 | REQ-CUST-76 | Tệp CSV là trường bắt buộc | Bấm Import khi chưa chọn tệp thì bị chặn và báo lỗi | Bấm `Import` với ô tệp rỗng → sinh `<p id="file_csv-error" class="text-danger">This field is required.</p>` · `input#file_csv` nhận `aria-describedby="file_csv-error"` · trang **không** chuyển hướng | 🟢 | — | Kiểm chứng thực tế + DOM |
 | REQ-CUST-77 | Thiết lập kèm theo khi nhập | Người dùng gán nhóm và đặt mật khẩu mặc định cho toàn bộ bản ghi nhập vào | Biểu mẫu nhập có `select#groups_in[]` (`multiple`, **305** option, nhãn `Groups`) và ô `input#default_pass_all` (nhãn `Default password for all contacts`) | 🟢 | — | DOM |
 | REQ-CUST-78 | Chạy thử trước khi nhập thật | Người dùng kiểm tra tệp trước khi ghi dữ liệu thật | Có đúng **2** nút gửi: `Import` (`button.import.btn-import-submit`) và `Simulate Import` (`button.simulate.btn-import-submit`) | 🟢 | — | DOM |
-| REQ-CUST-79 | Kết quả nhập tệp CSV | Sau khi nhập, hệ thống báo số bản ghi đã tạo và các dòng bị bỏ qua | ❔ **Chưa kiểm chứng** — không tải tệp lên môi trường dùng chung. Xem `AMB-26` | ⚪ | — | Suy diễn từ sự tồn tại của nút `Import` |
+| REQ-CUST-79 | Kết quả nhập tệp CSV | Sau khi nhập, hệ thống báo số bản ghi đã tạo và các dòng bị bỏ qua | ❔ **Chưa kiểm chứng** — không tải tệp lên môi trường dùng chung. Xem `AMB-CUST-12` | ⚪ | — | Suy diễn từ sự tồn tại của nút `Import` |
 
 ---
 
@@ -312,7 +312,7 @@ Hộp thoại `Assign Admin` (REQ-CUST-54) tiết lộ hệ thống có **3 nhâ
 
 ```
 Đã kiểm chứng: 12 ô · Suy diễn: 0 ô · Chưa rõ: 24 ô
-— chưa có tài khoản vai trò "Project Manager" và các vai trò khác (AMB-15); màn hình cấu hình phân quyền 403 nên không suy diễn được ô nào
+— chưa có tài khoản vai trò "Project Manager" và các vai trò khác (AMB-CUST-01); màn hình cấu hình phân quyền 403 nên không suy diễn được ô nào
 ```
 
 > Riêng REQ-CUST-68 cho biết hệ thống **có** phân biệt "quản trị viên" với "nhân sự thường" ở mức dữ liệu Vault (`Visible only to administrators`) — xác nhận mô hình phân quyền tồn tại, nhưng không đủ để dựng ma trận.
@@ -331,7 +331,7 @@ Khách hàng có đúng **2 trạng thái**, điều khiển bằng công tắc 
 | **Inactive** | Gạt công tắc sang bật (`change_client_status/{id}/1`) | **Active** | Admin ✅ · vai trò khác ❔ | REQ-CUST-58 |
 | **Inactive** | Sửa hồ sơ · Xoá | Inactive / *(bị xoá)* | Admin ✅ · vai trò khác ❔ | REQ-CUST-50, 61 |
 
-**Hệ quả nghiệp vụ của trạng thái Inactive:** khách hàng `Inactive` **không xuất hiện trong dropdown khi tạo bản ghi mới** ở các module khác (REQ-CUST-59). Phạm vi chính xác của "bản ghi mới" (hoá đơn? dự án? cả hai?) chưa kiểm chứng được — xem `AMB-24`.
+**Hệ quả nghiệp vụ của trạng thái Inactive:** khách hàng `Inactive` **không xuất hiện trong dropdown khi tạo bản ghi mới** ở các module khác (REQ-CUST-59). Phạm vi chính xác của "bản ghi mới" (hoá đơn? dự án? cả hai?) chưa kiểm chứng được — xem `AMB-CUST-10`.
 
 ---
 
@@ -389,7 +389,7 @@ Danh sách → "Import Customers"     → /admin/clients/import
 | REQ-CUST-07 | Khả năng mở rộng dữ liệu | Bảng dùng DataTables **server-side**, chỉ nạp 25 dòng/lần trên tổng 1.571 bản ghi — không nạp toàn bộ vào trình duyệt |
 | REQ-CUST-44 | Độ trễ kiểm tra trùng tên | `check_duplicate_customer_name` phản hồi trong **61–139 ms** qua 2 lần đo |
 | REQ-CUST-46 | Bảo vệ CSRF | Mọi biểu mẫu và mọi request thay đổi dữ liệu đều kèm `csrf_token_name` 32 ký tự hex |
-| REQ-CUST-62 | Phương thức HTTP của thao tác xoá | Xoá dùng **GET**, không phải POST/DELETE — không đúng chuẩn REST, xem `RISK-13` |
+| REQ-CUST-62 | Phương thức HTTP của thao tác xoá | Xoá dùng **GET**, không phải POST/DELETE — không đúng chuẩn REST, xem `RISK-CUST-06` |
 | REQ-CUST-77 | Hiển thị mật khẩu mặc định khi nhập | `default_pass_all` là `type=text`, mật khẩu hiển thị rõ khi gõ |
 | — | Bộ nhớ đệm | Phản hồi mang `cache-control: no-store, no-cache, must-revalidate` — không lưu đệm dữ liệu khách hàng |
 | — | Máy chủ | Header `server: LiteSpeed` |
@@ -400,16 +400,16 @@ Danh sách → "Import Customers"     → /admin/clients/import
 
 | Story ID | Tên Story | REQ bao phủ | Số REQ | AMB / RISK liên quan | Ghi chú phạm vi |
 |---|---|---|---|---|---|
-| STORY-CUST-01 | Danh sách khách hàng & bảng tổng quan | REQ-CUST-01 → 10 | 10 | RISK-12 | Nền tảng cho mọi luồng khác |
-| STORY-CUST-02 | Tìm kiếm & bộ lọc | REQ-CUST-11 → 17 | 7 | RISK-12 | Bộ lọc lưu sẵn là dữ liệu dùng chung giữa các tester |
-| STORY-CUST-03 | Xuất dữ liệu & thao tác hàng loạt | REQ-CUST-18 → 22 | 5 | RISK-09, RISK-13 | **Không test xoá hàng loạt** trên môi trường dùng chung |
-| STORY-CUST-04 | Tạo khách hàng mới | REQ-CUST-23 → 34 | 12 | AMB-19, AMB-20, AMB-21, RISK-11 | Luồng nghiệp vụ cốt lõi |
+| STORY-CUST-01 | Danh sách khách hàng & bảng tổng quan | REQ-CUST-01 → 10 | 10 | RISK-CUST-05 | Nền tảng cho mọi luồng khác |
+| STORY-CUST-02 | Tìm kiếm & bộ lọc | REQ-CUST-11 → 17 | 7 | RISK-CUST-05 | Bộ lọc lưu sẵn là dữ liệu dùng chung giữa các tester |
+| STORY-CUST-03 | Xuất dữ liệu & thao tác hàng loạt | REQ-CUST-18 → 22 | 5 | RISK-CUST-02, RISK-CUST-06 | **Không test xoá hàng loạt** trên môi trường dùng chung |
+| STORY-CUST-04 | Tạo khách hàng mới | REQ-CUST-23 → 34 | 12 | AMB-CUST-05, AMB-CUST-06, AMB-CUST-07, RISK-CUST-04 | Luồng nghiệp vụ cốt lõi |
 | STORY-CUST-05 | Địa chỉ thanh toán & giao hàng | REQ-CUST-35 → 39 | 5 | — | Độc lập, test được song song |
-| STORY-CUST-06 | Kiểm tra dữ liệu & cảnh báo trùng tên | REQ-CUST-40 → 46 | 7 | AMB-16, AMB-17, AMB-18, RISK-10 | Chứa 2 phát hiện nghi lỗi |
-| STORY-CUST-07 | Hồ sơ khách hàng & chỉnh sửa | REQ-CUST-47 → 55 | 9 | AMB-27, AMB-22 | 19 tab — 11 tab thuộc module khác |
-| STORY-CUST-08 | Trạng thái hoạt động & xoá | REQ-CUST-56 → 62 | 7 | AMB-24, AMB-25, RISK-13, RISK-14 | Thao tác phá huỷ — cần dữ liệu riêng |
-| STORY-CUST-09 | Các tab phụ trợ của hồ sơ | REQ-CUST-63 → 71 | 9 | AMB-23 | Notes · Statement · Vault · Map · Reminders |
-| STORY-CUST-10 | Nhập khách hàng từ CSV | REQ-CUST-72 → 79 | 8 | AMB-26 | `REQ-CUST-79` đang ⚪ Chưa kiểm chứng |
+| STORY-CUST-06 | Kiểm tra dữ liệu & cảnh báo trùng tên | REQ-CUST-40 → 46 | 7 | AMB-CUST-02, AMB-CUST-03, AMB-CUST-04, RISK-CUST-03 | Chứa 2 phát hiện nghi lỗi |
+| STORY-CUST-07 | Hồ sơ khách hàng & chỉnh sửa | REQ-CUST-47 → 55 | 9 | AMB-CUST-13, AMB-CUST-08 | 19 tab — 11 tab thuộc module khác |
+| STORY-CUST-08 | Trạng thái hoạt động & xoá | REQ-CUST-56 → 62 | 7 | AMB-CUST-10, AMB-CUST-11, RISK-CUST-06, RISK-CUST-07 | Thao tác phá huỷ — cần dữ liệu riêng |
+| STORY-CUST-09 | Các tab phụ trợ của hồ sơ | REQ-CUST-63 → 71 | 9 | AMB-CUST-09 | Notes · Statement · Vault · Map · Reminders |
+| STORY-CUST-10 | Nhập khách hàng từ CSV | REQ-CUST-72 → 79 | 8 | AMB-CUST-12 | `REQ-CUST-79` đang ⚪ Chưa kiểm chứng |
 
 **Tổng: 10 Story / 79 REQ — mọi REQ thuộc đúng một Story, không mồ côi, không trùng.**
 
@@ -417,7 +417,7 @@ Danh sách → "Import Customers"     → /admin/clients/import
 
 | Hạng mục | Lý do |
 |---|---|
-| Ma trận Phân quyền (mục 6) | Cắt ngang cả 10 Story; hơn nữa đang bị chặn hoàn toàn bởi `AMB-15` |
+| Ma trận Phân quyền (mục 6) | Cắt ngang cả 10 Story; hơn nữa đang bị chặn hoàn toàn bởi `AMB-CUST-01` |
 | Ma trận Trạng thái (mục 7) | Trạng thái Active/Inactive ảnh hưởng tới hành vi của Story 01, 04, 07, 08 |
 | Yêu cầu phi chức năng (mục 9) | Áp cho toàn module, không thuộc một luồng cụ thể |
 | Bảng Ambiguity & Risk (mục 11) | Đánh số theo toàn module |
@@ -427,17 +427,17 @@ Danh sách → "Import Customers"     → /admin/clients/import
 | # | Story | Lý do xếp trước | Trạng thái |
 |---|---|---|---|
 | 1 | STORY-CUST-04 Tạo khách hàng | Mọi Story khác cần có khách hàng để thao tác | Sẵn sàng |
-| 2 | STORY-CUST-06 Kiểm tra dữ liệu | Đi liền với Story 04, chứa 2 phát hiện nghi lỗi cần chốt sớm | ⚠️ **BLOCKED một phần** bởi `AMB-16` (khoảng trắng) |
+| 2 | STORY-CUST-06 Kiểm tra dữ liệu | Đi liền với Story 04, chứa 2 phát hiện nghi lỗi cần chốt sớm | ⚠️ **BLOCKED một phần** bởi `AMB-CUST-02` (khoảng trắng) |
 | 3 | STORY-CUST-01 Danh sách | Nền tảng để xác minh kết quả của Story 04 | Sẵn sàng |
 | 4 | STORY-CUST-05 Billing & Shipping | Độc lập, rủi ro thấp | Sẵn sàng |
 | 5 | STORY-CUST-07 Hồ sơ & chỉnh sửa | Cần khách hàng đã tạo ở Story 04 | Sẵn sàng |
 | 6 | STORY-CUST-02 Tìm kiếm & lọc | Cần dữ liệu đủ đa dạng | Sẵn sàng |
-| 7 | STORY-CUST-08 Trạng thái & xoá | Thao tác phá huỷ — chạy sau cùng trong nhóm CRUD, cần dữ liệu riêng | ⚠️ **BLOCKED một phần** bởi `AMB-25` (xoá khách hàng có dữ liệu liên quan) |
+| 7 | STORY-CUST-08 Trạng thái & xoá | Thao tác phá huỷ — chạy sau cùng trong nhóm CRUD, cần dữ liệu riêng | ⚠️ **BLOCKED một phần** bởi `AMB-CUST-11` (xoá khách hàng có dữ liệu liên quan) |
 | 8 | STORY-CUST-09 Tab phụ trợ | Rủi ro thấp, không chặn ai | Sẵn sàng |
-| 9 | STORY-CUST-03 Xuất & hàng loạt | Xoá hàng loạt phải hoãn trên môi trường dùng chung | ⚠️ Một phần hoãn (`RISK-09`) |
-| 10 | STORY-CUST-10 Nhập CSV | Cần tệp mẫu và môi trường riêng | ⚠️ **BLOCKED** bởi `AMB-26` |
+| 9 | STORY-CUST-03 Xuất & hàng loạt | Xoá hàng loạt phải hoãn trên môi trường dùng chung | ⚠️ Một phần hoãn (`RISK-CUST-02`) |
+| 10 | STORY-CUST-10 Nhập CSV | Cần tệp mẫu và môi trường riêng | ⚠️ **BLOCKED** bởi `AMB-CUST-12` |
 
-> Ma trận Phân quyền **BLOCKED hoàn toàn** bởi `AMB-15` — không có tài khoản vai trò thấp thì 24/36 ô không kiểm chứng được.
+> Ma trận Phân quyền **BLOCKED hoàn toàn** bởi `AMB-CUST-01` — không có tài khoản vai trò thấp thì 24/36 ô không kiểm chứng được.
 
 ---
 
@@ -447,31 +447,31 @@ Danh sách → "Import Customers"     → /admin/clients/import
 
 | Mã | Câu hỏi | Nguy cơ | Mức độ | Assumption tạm | Trạng thái | Kết luận |
 |---|---|---|---|---|---|---|
-| AMB-15 | Xin tài khoản vai trò `Project Manager` và các vai trò khác để kiểm chứng 24 ô đang bỏ trống trong ma trận phân quyền của module `CUST` | Không kiểm chứng được ranh giới quyền; rò rỉ dữ liệu khách hàng cho vai trò không được phép sẽ không bị phát hiện | 🔴 | Mọi vai trò không phải Admin **không** xoá được khách hàng và **không** thấy mục Vault mức "chỉ quản trị viên" | ❓ Chờ trả lời | — |
-| AMB-16 | Company chỉ chứa khoảng trắng (`"   "`) vượt qua kiểm tra bắt buộc và tạo được khách hàng "tên rỗng" — lỗi hay cố ý? | Danh sách sinh ra bản ghi không có tên, không tìm kiếm được, hiển thị trống ở mọi dropdown của 10+ module tham chiếu | 🔴 | Đây là **lỗi** — kiểm tra bắt buộc phải cắt khoảng trắng trước khi xét | ❓ Chờ trả lời | — |
-| AMB-17 | Khi lỗi bắt buộc nằm ở tab không hiển thị, hệ thống chỉ đổi màu nhãn tab mà **không** tự chuyển sang tab đó — chấp nhận được không? | Người dùng bấm Save nhiều lần mà không hiểu vì sao không lưu được; test thủ công dễ báo nhầm "nút Save hỏng" | 🔴 | Đây là **lỗi trải nghiệm** — cần tự chuyển về tab chứa lỗi đầu tiên | ❓ Chờ trả lời | — |
-| AMB-18 | Cảnh báo trùng tên đôi khi chặn lần bấm `Save` đầu tiên, đôi khi không — phụ thuộc việc phản hồi AJAX về kịp hay chưa | Kết quả test không ổn định; automation sẽ flaky ở đúng bước này | 🟡 | Bấm `Save` khi request kiểm tra đang chạy thì lần bấm đó bị bỏ qua, phải bấm lại | ❓ Chờ trả lời | — |
-| AMB-19 | Không trường text nào khai báo `maxlength`. Giới hạn độ dài thực tế của `company`, `vat`, `phonenumber`, `website`, `city`, `state`, `zip` là bao nhiêu? | Không viết được test biên; nhập quá dài có thể gây lỗi 500 hoặc cắt dữ liệu âm thầm | 🟡 | Giới hạn theo cột CSDL (thường 191–255 ký tự); test biên tạm dùng 255 và 256 | ❓ Chờ trả lời | — |
-| AMB-20 | `Website`, `Phone`, `VAT Number` đều là `type=text` không ràng buộc định dạng. Có quy tắc định dạng nào ở phía máy chủ không? | Dữ liệu bẩn đi vào hệ thống rồi lan sang hoá đơn, hợp đồng, cổng khách hàng | 🟡 | Không có kiểm tra định dạng — nhập gì cũng lưu | ❓ Chờ trả lời | — |
-| AMB-21 | Danh sách Groups có **305** mục với rất nhiều tên trùng nhau (`Information Technology` xuất hiện ~50 lần, `Platinum` ~23 lần, `LUISGR` ~28 lần). Nhóm khách hàng có được phép trùng tên không? | Người dùng không phân biệt được nhóm nào là nhóm nào; báo cáo theo nhóm sai hoàn toàn | 🟡 | Là dữ liệu rác của môi trường demo, không phải quy tắc nghiệp vụ; sản phẩm thật cần chặn trùng tên nhóm | ❓ Chờ trả lời | — |
-| AMB-22 | Cột `Stripe id` có trong tệp CSV nhập nhưng **không** có trường tương ứng trên biểu mẫu UI | Không sửa/xem được giá trị này sau khi nhập; không biết có test được không | 🟡 | Trường chỉ dùng cho tích hợp cổng thanh toán Stripe, không thuộc phạm vi test UI | ❓ Chờ trả lời | — |
-| AMB-23 | `Longitude` / `Latitude` nhập được (qua tab Map và CSV) nhưng bản đồ **không hiển thị** vì thiếu khoá API Google Maps | Không kiểm chứng được toạ độ nhập vào có đúng không; REQ-CUST-70 chỉ test được phần nhập liệu | 🟡 | Chấp nhận test tới mức lưu được toạ độ; phần hiển thị bản đồ ghi `Không test được` | ❓ Chờ trả lời | — |
-| AMB-24 | "Khách hàng Inactive không hiện trong dropdown khi tạo bản ghi mới" — cụ thể là những màn hình nào? Hoá đơn, dự án, hợp đồng, báo giá đều áp dụng chứ? | Không biết phải kiểm chứng ở bao nhiêu module; bỏ sót là để lọt lỗi rò rỉ khách hàng đã ngừng hoạt động | 🟡 | Áp dụng cho **mọi** dropdown chọn khách hàng ở tất cả module | ❓ Chờ trả lời | — |
-| AMB-25 | Xoá khách hàng **đang có** hoá đơn / dự án / hợp đồng thì hệ thống xử lý ra sao — chặn, xoá lan, hay để lại bản ghi mồ côi? | Đây là kịch bản rủi ro cao nhất của module; nếu xoá lan thì mất dữ liệu tài chính | 🔴 | Hệ thống **chặn** và báo lỗi | ❓ Chờ trả lời | Không kiểm chứng được trên môi trường dùng chung — cần môi trường riêng |
-| AMB-26 | Luồng nhập CSV chưa kiểm chứng (không tải tệp lên môi trường dùng chung). Thông báo kết quả nhập, cách báo dòng lỗi, hành vi của `Simulate Import` ra sao? | `REQ-CUST-79` đang ⚪; toàn bộ STORY-CUST-10 chưa test được | 🟡 | `Simulate Import` chỉ hiển thị bản xem trước, không ghi dữ liệu | ❓ Chờ trả lời | Cần môi trường riêng để chạy |
-| AMB-27 | Checkbox `Show primary contact full name…` bị ẩn khi khách hàng chưa có liên hệ. Điều kiện hiển thị chính xác là gì — cần ≥ 1 liên hệ, hay cần một liên hệ được đánh dấu là liên hệ chính? | Viết TC sai điều kiện tiền đề, test sẽ fail giả | 🟢 | Hiện khi khách hàng có ít nhất 1 liên hệ được đánh dấu **Primary Contact** | ❓ Chờ trả lời | — |
+| AMB-CUST-01 | Xin tài khoản vai trò `Project Manager` và các vai trò khác để kiểm chứng 24 ô đang bỏ trống trong ma trận phân quyền của module `CUST` | Không kiểm chứng được ranh giới quyền; rò rỉ dữ liệu khách hàng cho vai trò không được phép sẽ không bị phát hiện | 🔴 | Mọi vai trò không phải Admin **không** xoá được khách hàng và **không** thấy mục Vault mức "chỉ quản trị viên" | ❓ Chờ trả lời | — |
+| AMB-CUST-02 | Company chỉ chứa khoảng trắng (`"   "`) vượt qua kiểm tra bắt buộc và tạo được khách hàng "tên rỗng" — lỗi hay cố ý? | Danh sách sinh ra bản ghi không có tên, không tìm kiếm được, hiển thị trống ở mọi dropdown của 10+ module tham chiếu | 🔴 | Đây là **lỗi** — kiểm tra bắt buộc phải cắt khoảng trắng trước khi xét | ❓ Chờ trả lời | — |
+| AMB-CUST-03 | Khi lỗi bắt buộc nằm ở tab không hiển thị, hệ thống chỉ đổi màu nhãn tab mà **không** tự chuyển sang tab đó — chấp nhận được không? | Người dùng bấm Save nhiều lần mà không hiểu vì sao không lưu được; test thủ công dễ báo nhầm "nút Save hỏng" | 🔴 | Đây là **lỗi trải nghiệm** — cần tự chuyển về tab chứa lỗi đầu tiên | ❓ Chờ trả lời | — |
+| AMB-CUST-04 | Cảnh báo trùng tên đôi khi chặn lần bấm `Save` đầu tiên, đôi khi không — phụ thuộc việc phản hồi AJAX về kịp hay chưa | Kết quả test không ổn định; automation sẽ flaky ở đúng bước này | 🟡 | Bấm `Save` khi request kiểm tra đang chạy thì lần bấm đó bị bỏ qua, phải bấm lại | ❓ Chờ trả lời | — |
+| AMB-CUST-05 | Không trường text nào khai báo `maxlength`. Giới hạn độ dài thực tế của `company`, `vat`, `phonenumber`, `website`, `city`, `state`, `zip` là bao nhiêu? | Không viết được test biên; nhập quá dài có thể gây lỗi 500 hoặc cắt dữ liệu âm thầm | 🟡 | Giới hạn theo cột CSDL (thường 191–255 ký tự); test biên tạm dùng 255 và 256 | ❓ Chờ trả lời | — |
+| AMB-CUST-06 | `Website`, `Phone`, `VAT Number` đều là `type=text` không ràng buộc định dạng. Có quy tắc định dạng nào ở phía máy chủ không? | Dữ liệu bẩn đi vào hệ thống rồi lan sang hoá đơn, hợp đồng, cổng khách hàng | 🟡 | Không có kiểm tra định dạng — nhập gì cũng lưu | ❓ Chờ trả lời | — |
+| AMB-CUST-07 | Danh sách Groups có **305** mục với rất nhiều tên trùng nhau (`Information Technology` xuất hiện ~50 lần, `Platinum` ~23 lần, `LUISGR` ~28 lần). Nhóm khách hàng có được phép trùng tên không? | Người dùng không phân biệt được nhóm nào là nhóm nào; báo cáo theo nhóm sai hoàn toàn | 🟡 | Là dữ liệu rác của môi trường demo, không phải quy tắc nghiệp vụ; sản phẩm thật cần chặn trùng tên nhóm | ❓ Chờ trả lời | — |
+| AMB-CUST-08 | Cột `Stripe id` có trong tệp CSV nhập nhưng **không** có trường tương ứng trên biểu mẫu UI | Không sửa/xem được giá trị này sau khi nhập; không biết có test được không | 🟡 | Trường chỉ dùng cho tích hợp cổng thanh toán Stripe, không thuộc phạm vi test UI | ❓ Chờ trả lời | — |
+| AMB-CUST-09 | `Longitude` / `Latitude` nhập được (qua tab Map và CSV) nhưng bản đồ **không hiển thị** vì thiếu khoá API Google Maps | Không kiểm chứng được toạ độ nhập vào có đúng không; REQ-CUST-70 chỉ test được phần nhập liệu | 🟡 | Chấp nhận test tới mức lưu được toạ độ; phần hiển thị bản đồ ghi `Không test được` | ❓ Chờ trả lời | — |
+| AMB-CUST-10 | "Khách hàng Inactive không hiện trong dropdown khi tạo bản ghi mới" — cụ thể là những màn hình nào? Hoá đơn, dự án, hợp đồng, báo giá đều áp dụng chứ? | Không biết phải kiểm chứng ở bao nhiêu module; bỏ sót là để lọt lỗi rò rỉ khách hàng đã ngừng hoạt động | 🟡 | Áp dụng cho **mọi** dropdown chọn khách hàng ở tất cả module | ❓ Chờ trả lời | — |
+| AMB-CUST-11 | Xoá khách hàng **đang có** hoá đơn / dự án / hợp đồng thì hệ thống xử lý ra sao — chặn, xoá lan, hay để lại bản ghi mồ côi? | Đây là kịch bản rủi ro cao nhất của module; nếu xoá lan thì mất dữ liệu tài chính | 🔴 | Hệ thống **chặn** và báo lỗi | ❓ Chờ trả lời | Không kiểm chứng được trên môi trường dùng chung — cần môi trường riêng |
+| AMB-CUST-12 | Luồng nhập CSV chưa kiểm chứng (không tải tệp lên môi trường dùng chung). Thông báo kết quả nhập, cách báo dòng lỗi, hành vi của `Simulate Import` ra sao? | `REQ-CUST-79` đang ⚪; toàn bộ STORY-CUST-10 chưa test được | 🟡 | `Simulate Import` chỉ hiển thị bản xem trước, không ghi dữ liệu | ❓ Chờ trả lời | Cần môi trường riêng để chạy |
+| AMB-CUST-13 | Checkbox `Show primary contact full name…` bị ẩn khi khách hàng chưa có liên hệ. Điều kiện hiển thị chính xác là gì — cần ≥ 1 liên hệ, hay cần một liên hệ được đánh dấu là liên hệ chính? | Viết TC sai điều kiện tiền đề, test sẽ fail giả | 🟢 | Hiện khi khách hàng có ít nhất 1 liên hệ được đánh dấu **Primary Contact** | ❓ Chờ trả lời | — |
 
 ### 11.2. Risks
 
 | Mã | Rủi ro | Mô tả | Mitigation |
 |---|---|---|---|
-| RISK-08 | Entity trung tâm, phạm vi ảnh hưởng rất rộng | Hơn 10 module tham chiếu tới khách hàng. Một thay đổi ở `CUST` có thể làm hỏng hoá đơn, dự án, hợp đồng mà bộ test của `CUST` không phát hiện | Sau mỗi lần sửa module `CUST`, chạy kèm bộ smoke của `INV`, `PRJ`, `CTR`. Ưu tiên sinh RTM để thấy rõ liên đới |
-| RISK-09 | Môi trường dùng chung chứa dữ liệu thật | 1.571 khách hàng, 361 liên hệ đang hoạt động; ảnh chụp màn hình chứa email và số điện thoại thật | **Cấm** xoá hàng loạt và xoá bản ghi không phải do mình tạo. Mọi bản ghi test dùng tiền tố `auto_recon_` + dấu thời gian và **phải xoá sau khi chạy**. Không commit ảnh evidence lên repo công khai |
-| RISK-10 | Kiểm tra trùng tên gây test không ổn định | Kiểm tra chạy bất đồng bộ khi rời ô `company`; bấm `Save` quá nhanh thì lần bấm đầu bị nuốt (xem `AMB-18`) | Automation phải chờ request `check_duplicate_customer_name` kết thúc trước khi bấm `Save`; **không** dùng hard sleep mà chờ theo trạng thái phản hồi |
-| RISK-11 | Dữ liệu chuẩn nằm sau khu Setup bị 403 | Danh sách nhóm khách hàng (305), tiền tệ (2), quốc gia (251) đến từ bảng chuẩn không xem/sửa được bằng tài khoản hiện tại | Giả định danh sách cố định trong đợt test; nếu số lượng option thay đổi giữa các lần chạy thì đó là dữ liệu bị người khác sửa, không phải lỗi sản phẩm |
-| RISK-12 | Bảng nạp bất đồng bộ dễ gây khẳng định sai | Mọi thao tác lọc/tìm/phân trang đều đi qua `POST /admin/clients/table`; đọc DOM ngay sau thao tác sẽ thấy dữ liệu cũ | Chờ theo dòng trạng thái `Showing … entries` đổi giá trị hoặc chờ request kết thúc; **không** đọc bảng ngay sau khi gõ |
-| RISK-13 | Thao tác xoá dùng GET | `GET /admin/clients/delete/{id}` xoá ngay, không cần xác nhận khi mở thẳng URL. Trình duyệt, trình thu thập hoặc một cú dán URL nhầm đều có thể xoá dữ liệu thật | **Cấm** đưa URL xoá vào bất kỳ bước điều hướng nào của automation. Chỉ xoá qua nút `Delete` + hộp thoại xác nhận, và chỉ với bản ghi do test tạo ra |
-| RISK-14 | Thuộc tính HTML `checked` không phản ánh trạng thái thật của công tắc Active | Sau khi gạt công tắc, thuộc tính `checked` trong HTML **vẫn còn** trong khi thuộc tính DOM `.checked` đã là `false` | Automation phải đọc **property** `.checked`, tuyệt đối không đọc `getAttribute('checked')` hay so khớp chuỗi HTML |
+| RISK-CUST-01 | Entity trung tâm, phạm vi ảnh hưởng rất rộng | Hơn 10 module tham chiếu tới khách hàng. Một thay đổi ở `CUST` có thể làm hỏng hoá đơn, dự án, hợp đồng mà bộ test của `CUST` không phát hiện | Sau mỗi lần sửa module `CUST`, chạy kèm bộ smoke của `INV`, `PRJ`, `CTR`. Ưu tiên sinh RTM để thấy rõ liên đới |
+| RISK-CUST-02 | Môi trường dùng chung chứa dữ liệu thật | 1.571 khách hàng, 361 liên hệ đang hoạt động; ảnh chụp màn hình chứa email và số điện thoại thật | **Cấm** xoá hàng loạt và xoá bản ghi không phải do mình tạo. Mọi bản ghi test dùng tiền tố `auto_recon_` + dấu thời gian và **phải xoá sau khi chạy**. Không commit ảnh evidence lên repo công khai |
+| RISK-CUST-03 | Kiểm tra trùng tên gây test không ổn định | Kiểm tra chạy bất đồng bộ khi rời ô `company`; bấm `Save` quá nhanh thì lần bấm đầu bị nuốt (xem `AMB-CUST-04`) | Automation phải chờ request `check_duplicate_customer_name` kết thúc trước khi bấm `Save`; **không** dùng hard sleep mà chờ theo trạng thái phản hồi |
+| RISK-CUST-04 | Dữ liệu chuẩn nằm sau khu Setup bị 403 | Danh sách nhóm khách hàng (305), tiền tệ (2), quốc gia (251) đến từ bảng chuẩn không xem/sửa được bằng tài khoản hiện tại | Giả định danh sách cố định trong đợt test; nếu số lượng option thay đổi giữa các lần chạy thì đó là dữ liệu bị người khác sửa, không phải lỗi sản phẩm |
+| RISK-CUST-05 | Bảng nạp bất đồng bộ dễ gây khẳng định sai | Mọi thao tác lọc/tìm/phân trang đều đi qua `POST /admin/clients/table`; đọc DOM ngay sau thao tác sẽ thấy dữ liệu cũ | Chờ theo dòng trạng thái `Showing … entries` đổi giá trị hoặc chờ request kết thúc; **không** đọc bảng ngay sau khi gõ |
+| RISK-CUST-06 | Thao tác xoá dùng GET | `GET /admin/clients/delete/{id}` xoá ngay, không cần xác nhận khi mở thẳng URL. Trình duyệt, trình thu thập hoặc một cú dán URL nhầm đều có thể xoá dữ liệu thật | **Cấm** đưa URL xoá vào bất kỳ bước điều hướng nào của automation. Chỉ xoá qua nút `Delete` + hộp thoại xác nhận, và chỉ với bản ghi do test tạo ra |
+| RISK-CUST-07 | Thuộc tính HTML `checked` không phản ánh trạng thái thật của công tắc Active | Sau khi gạt công tắc, thuộc tính `checked` trong HTML **vẫn còn** trong khi thuộc tính DOM `.checked` đã là `false` | Automation phải đọc **property** `.checked`, tuyệt đối không đọc `getAttribute('checked')` hay so khớp chuỗi HTML |
 
 ---
 
@@ -491,15 +491,15 @@ Toàn bộ ảnh chụp full-page, lưu tại [`evidence/`](evidence/).
 | [cust_new_form_billing_shipping_tab_fullpage.png](evidence/cust_new_form_billing_shipping_tab_fullpage.png) | Thêm khách hàng | Tab Billing & Shipping, rỗng | REQ-CUST-35, 36, 39 |
 | [cust_new_form_billing_shipping_filled_fullpage.png](evidence/cust_new_form_billing_shipping_filled_fullpage.png) | Thêm khách hàng | Tab Billing & Shipping sau khi sao chép 2 lần | REQ-CUST-37, 38 |
 | [cust_new_form_company_required_error_fullpage.png](evidence/cust_new_form_company_required_error_fullpage.png) | Thêm khách hàng | Company rỗng, lỗi hiển thị trên tab đang xem | REQ-CUST-40, 41 |
-| [cust_new_form_required_error_hidden_tab_fullpage.png](evidence/cust_new_form_required_error_hidden_tab_fullpage.png) | Thêm khách hàng | Lỗi ở tab ẩn — vẫn đứng ở tab Billing & Shipping | REQ-CUST-42 · `AMB-17` |
-| [cust_new_form_duplicate_name_warning_fullpage.png](evidence/cust_new_form_duplicate_name_warning_fullpage.png) | Thêm khách hàng | Cảnh báo trùng tên với Company toàn khoảng trắng | REQ-CUST-43, 44 · `AMB-16` |
+| [cust_new_form_required_error_hidden_tab_fullpage.png](evidence/cust_new_form_required_error_hidden_tab_fullpage.png) | Thêm khách hàng | Lỗi ở tab ẩn — vẫn đứng ở tab Billing & Shipping | REQ-CUST-42 · `AMB-CUST-03` |
+| [cust_new_form_duplicate_name_warning_fullpage.png](evidence/cust_new_form_duplicate_name_warning_fullpage.png) | Thêm khách hàng | Cảnh báo trùng tên với Company toàn khoảng trắng | REQ-CUST-43, 44 · `AMB-CUST-02` |
 | [cust_new_form_duplicate_name_warning_named_fullpage.png](evidence/cust_new_form_duplicate_name_warning_named_fullpage.png) | Thêm khách hàng | Cảnh báo trùng tên hiển thị đúng tên công ty | REQ-CUST-44, 45 |
 | [cust_save_and_create_contact_result_fullpage.png](evidence/cust_save_and_create_contact_result_fullpage.png) | Hồ sơ khách hàng | Sau "Save and create contact" — modal Add new contact tự mở | REQ-CUST-34 |
 | [cust_detail_after_create_profile_tab_fullpage.png](evidence/cust_detail_after_create_profile_tab_fullpage.png) | Hồ sơ khách hàng | Tab Profile, thấy đủ 19 tab và dữ liệu đã lưu | REQ-CUST-47 → 52 |
 | [cust_detail_customer_admins_tab_fullpage.png](evidence/cust_detail_customer_admins_tab_fullpage.png) | Hồ sơ khách hàng | Tab Customer Admins, chưa có bản ghi | REQ-CUST-54, 55 |
 | [cust_detail_statement_tab_fullpage.png](evidence/cust_detail_statement_tab_fullpage.png) | Hồ sơ khách hàng | Tab Statement, kỳ This Month | REQ-CUST-64, 65, 66 |
 | [cust_detail_vault_tab_fullpage.png](evidence/cust_detail_vault_tab_fullpage.png) | Hồ sơ khách hàng | Tab Vault, trạng thái rỗng | REQ-CUST-67, 68, 69 |
-| [cust_detail_map_tab_fullpage.png](evidence/cust_detail_map_tab_fullpage.png) | Hồ sơ khách hàng | Tab Map, thiếu khoá API Google | REQ-CUST-70 · `AMB-23` |
+| [cust_detail_map_tab_fullpage.png](evidence/cust_detail_map_tab_fullpage.png) | Hồ sơ khách hàng | Tab Map, thiếu khoá API Google | REQ-CUST-70 · `AMB-CUST-09` |
 | [cust_import_form_default_fullpage.png](evidence/cust_import_form_default_fullpage.png) | Nhập từ CSV | Mặc định, thấy đủ 4 hướng dẫn và bảng 27 cột | REQ-CUST-72 → 75, 77, 78 |
 | [cust_import_file_required_error_fullpage.png](evidence/cust_import_file_required_error_fullpage.png) | Nhập từ CSV | Bấm Import khi chưa chọn tệp | REQ-CUST-76 |
 
