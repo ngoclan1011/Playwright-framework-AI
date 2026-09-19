@@ -3,19 +3,19 @@
 > **TẦNG KHÁM PHÁ — cấp hệ thống.** Tài liệu này **KHÔNG chứa mã REQ**, chỉ cấp **mã module** và ghi lại những gì quan sát được từ spec + gọi thật.
 > Mã REQ chi tiết sinh ở tầng module: `docs/requirements/_book-api/<module>/requirements_<module>.md`.
 >
-> Danh mục hệ thống: [`../README.md`](../README.md) · Spec gốc đã snapshot: [`sources/openapi_2026-08-14.json`](sources/openapi_2026-08-14.json)
+> Danh mục hệ thống: [`../README.md`](../README.md) · Spec gốc đã snapshot: [`sources/openapi_2026-09-19.json`](sources/openapi_2026-09-19.json) (mới nhất) · [`sources/openapi_2026-08-14.json`](sources/openapi_2026-08-14.json)
 
 | Mục | Giá trị |
 |---|---|
 | Hệ thống | AnhTester Book Management API |
-| Loại | REST API — **không có UI trong phạm vi tài liệu này** |
+| Loại | REST API. Từ 19-09-2026 hệ thống có thêm **mặt Android** — bản đồ màn hình ở [`system_map.md`](system_map.md); bảng module của file đó là nơi **duy nhất** ghép prefix ↔ màn hình app (cột `Nền tảng`). 8 module ở mục 1 dưới đây giữ nguyên prefix; `DASH` chỉ có trên app, không có operation |
 | Spec | OpenAPI **3.0.0** · version `1.0.0` |
-| Nguồn spec | `https://book.anhtester.com/swagger/json` (trang `/swagger` là Scalar renderer, không phải spec) |
+| Nguồn spec | `https://book.anhtester.com/swagger/json` (trang `/swagger` là Scalar renderer, không phải spec) · snapshot mới nhất 19-09-2026 `sha256 32bb8b39…3f09` |
 | Base URL | `https://book.anhtester.com` — 1 server duy nhất, **Production** |
 | Auth | `BearerAuth` — HTTP bearer, JWT **HS256** |
 | Tổng endpoint | **35 operations** / 8 nhóm |
 | Ngày khám phá | 14-08-2026 |
-| Phương pháp | Parse spec + **gọi thật 20 request** để kiểm chứng (không tin spec suông) |
+| Phương pháp | Parse spec + **gọi thật 20 request** để kiểm chứng (không tin spec suông) · 19-09-2026: thêm 101 request ở tầng module `AUTH` |
 
 ---
 
@@ -25,7 +25,7 @@ Hệ thống dùng mã hệ thống **`BK`** để không đụng dải prefix c
 
 | Mã module | Nhóm tag trong spec | Số op | 🌐 Công khai | 🔒 Cần token | Dải REQ | Dải TC ID |
 |---|---|---|---|---|---|---|
-| `AUTH` | Authentication Management | 6 | 3 | 3 | `REQ-BK-AUTH-nn` | `BK_AUTH_TC_nnn` |
+| `AUTH` | Authentication Management | 6 | 3 | 3 | `REQ-BK-AUTH-01 → 48` ✅ [tài liệu](../auth/requirements_auth.md) | `BK_AUTH_TC_nnn` |
 | `USER` | User Management | 5 | 2 | 3 | `REQ-BK-USER-nn` | `BK_USER_TC_nnn` |
 | `BOOK` | Book Management | 5 | 2 | 3 | `REQ-BK-BOOK-nn` | `BK_BOOK_TC_nnn` |
 | `CAT` | Category Management | 4 | 1 | 3 | `REQ-BK-CAT-nn` | `BK_CAT_TC_nnn` |
@@ -130,7 +130,9 @@ Cột **Auth** lấy từ `security` của **từng operation**, không phải `
 |---|---|---|---|
 | **F-01** | `GET /api/user` và `GET /api/user/{id}` **công khai**, trả về `email` + `phone` + `address` của **mọi** user | `GET /api/user?limit=2` không token → **200**, body chứa `anhtester@example.com`, `0939206009`, địa chỉ đầy đủ | Rò rỉ PII toàn hệ thống. Là nguồn `id` để tấn công các endpoint khác |
 | **F-02** | **Không có mô hình phân quyền.** Tài khoản vừa `register` (user thường, mới tinh) làm được mọi thứ | Cùng 1 token user thường: `POST /api/book` → 200 · `PATCH /api/user/{id_người_khác}` → 200 · `DELETE /api/user/{id_người_khác}` → 200 · `POST /api/user` → 201 | BOLA + BFLA toàn diện. Spec khai `403` ở nhiều endpoint nhưng **không quan sát được trường hợp nào phát sinh 403** |
-| **F-03** | Cookie `accessToken` set **không có** `HttpOnly`, `Secure`, `SameSite` | `Set-Cookie: accessToken=eyJ...; Path=/` — trong khi `refetchToken` cùng response có đủ `HttpOnly; Secure; SameSite=Strict` | XSS đọc được access token. Hai cookie cùng luồng nhưng chuẩn bảo mật lệch nhau |
+| **F-03** | Cookie `accessToken` set **không có** `HttpOnly`, `Secure`, `SameSite` | `Set-Cookie: accessToken=eyJ...; Path=/` — trong khi `refetchToken` cùng response có đủ `HttpOnly; Secure; SameSite=Strict` | XSS đọc được access token. Hai cookie cùng luồng nhưng chuẩn bảo mật lệch nhau. *19-09-2026: tái xác nhận — quy về `AMB-BK-AUTH-04`* |
+| **F-16** *(19-09-2026)* | `PATCH /api/profile` **không dùng được** — mọi body hợp lệ (JSON · form · multipart · có/không bọc `fields`) đều 422 | `{"msg":"Invalid data.","fields":{"fields":["Property 'fields' is missing","Expected object"]}}` · `GET /api/me` sau đó: dữ liệu không đổi. Riêng `email` sai định dạng vẫn ra đúng lỗi `should be email` | Không cập nhật được hồ sơ, không đổi được mật khẩu. `AMB-BK-AUTH-01` |
+| **F-17** *(19-09-2026)* | **Đăng xuất không thu hồi refresh token** phía server | `DELETE /api/logout` → 200, rồi `POST /api/refetch-token` với **cùng** cookie `refetchToken` → **200** (cả khi logout có gửi cookie và nhận `Set-Cookie` xoá) | Cookie bị lộ vẫn sinh token mới sau khi người dùng đã đăng xuất. `AMB-BK-AUTH-02` |
 
 ### 3.2. Phát hiện mức 🟠 — sai lệch dữ liệu
 
@@ -140,6 +142,10 @@ Cột **Auth** lấy từ `security` của **từng operation**, không phải `
 | **F-05** | `categories` trỏ tới danh mục **không tồn tại** vẫn tạo được sách | `POST /api/book` với `categories: ["khong_ton_tai_zzz"]` → **200**. Không kiểm tra khoá ngoại |
 | **F-06** | Xoá user làm **mồ côi** sách của user đó | Sau khi xoá user, `GET /api/book/{id}` của sách cũ trả `auth: null`. Không chặn xoá, không gán lại chủ sở hữu |
 | **F-07** | `POST /api/user` **không nhận** password → gán mặc định `anhtester.com` | Tạo user không truyền password, sau đó `POST /api/login` với password `anhtester.com` → **200**. Mọi user tạo qua endpoint này có mật khẩu đoán được |
+| **F-18** *(19-09-2026)* | Refresh token **không xoay vòng** | Cùng một cookie `refetchToken` gọi `POST /api/refetch-token` 2 lần liên tiếp → 200 cả hai; response không `Set-Cookie` mới |
+| **F-19** *(19-09-2026)* | `default` của `email` **thay cho field bắt buộc bị thiếu** | Snapshot 19-09-2026 thêm `email.default: "user@example.com"` ở 5 operation. Thực tế: `POST /api/register` thiếu `email` → 422 `Email already exists.`; `POST /api/login` thiếu `email` → 400 `Invalid password.`; body `{}` của register **không** có lỗi `email`. `user@example.com` là một tài khoản có thật (không do QA tạo) |
+| **F-20** *(19-09-2026)* | Đăng nhập lộ email nào đã đăng ký | Sai mật khẩu → **400** `Invalid password.` · email không tồn tại → **404** `Email not found, please register.` |
+| **F-23** *(19-09-2026)* | Access token **vẫn dùng được sau đăng xuất** | `GET /api/me` với token vừa logout → **200** (JWT không trạng thái, `exp` 6 ngày — F-11) |
 
 ### 3.3. Phát hiện mức 🟡 — sai lệch spec / lộ thông tin
 
@@ -149,6 +155,8 @@ Cột **Auth** lấy từ `security` của **từng operation**, không phải `
 | **F-09** | `PATCH /api/book/{id}` spec khai **201** — sai chuẩn REST, PATCH nên trả 200 | Đọc spec |
 | **F-10** | Header `Server: nginx/1.24.0 (Ubuntu)` lộ phiên bản web server và OS | Response header mọi endpoint |
 | **F-11** | JWT `exp` = **6 ngày** cho access token | `{"exp":"6d"}` trong response login. Access token sống 6 ngày là dài bất thường |
+| **F-21** *(19-09-2026)* | Cookie `refetchToken` có `Max-Age` mang **mốc epoch** thay vì khoảng thời gian | `Max-Age=1790403538` khi gọi lúc epoch ≈ `1789798737` — chênh ≈ 604 800 s = 7 ngày → trình duyệt giữ cookie ~56 năm |
+| **F-22** *(19-09-2026)* | Không có chính sách mật khẩu; chuỗi rỗng gây body lỗi bất thường | `POST /api/register` với `password: "1"` → 201 · `name: ""` + `password: ""` → 422 với body `fields.fields` như F-16 |
 
 ### 3.4. Điểm hệ thống làm ĐÚNG — vẫn phải có TC để chống hồi quy
 
@@ -157,6 +165,8 @@ Cột **Auth** lấy từ `security` của **từng operation**, không phải `
 | **F-12** | `status` ngoài enum bị chặn đúng | `status: "HACKED"` → **422** `{"fields":{"status":["Expected kind 'UnionEnum'"]}}` |
 | **F-13** | Gọi endpoint cần token mà không có token bị chặn đúng | `POST /api/book` không token → **401** `Missing or invalid Authorization header` |
 | **F-14** | `refetchToken` cookie bảo vệ đúng chuẩn | `HttpOnly; Secure; SameSite=Strict; Max-Age` |
+| **F-24** *(19-09-2026)* | Email so khớp **không phân biệt hoa thường** ở cả đăng nhập lẫn kiểm trùng khi đăng ký | Login bằng email viết hoa → 200 · register email đã có viết hoa → 422 `Email already exists.` |
+| **F-25** *(19-09-2026)* | `GET /api/me` không lộ khoá ngoài schema; endpoint 🔒 chỉ nhận token qua header | Body đúng 7 khoá, không có `password` · chỉ gửi cookie `accessToken` → 401 |
 | **F-15** | ID dùng **cuid** (`cmiyq38a30002...`), không phải số tăng dần | Không đoán tuần tự được — giảm mức độ khai thác của F-01/F-02, nhưng `GET /api/user` công khai đã phát ID sẵn nên lợi thế này mất tác dụng |
 
 ---
@@ -170,7 +180,7 @@ Cột **Auth** lấy từ `security` của **từng operation**, không phải `
 | **AMB-BK-03** 🟠 | `price` có chặn âm không? Sàn là bao nhiêu? | Spec chỉ khai `maximum` | Bộ TC boundary của `BOOK` |
 | **AMB-BK-04** 🟠 | Khuyến mãi `PERCENTAGE` thì `value` giới hạn 0–100? `endDate` bắt buộc sau `startDate`? | Spec khai `value: number` trần, không ràng buộc; 2 ngày chỉ có `default` | Bộ TC boundary + logic của `PROMO` |
 | **AMB-BK-05** 🟠 | Xoá danh mục **đang có sách** (`bookCount > 0`) thì sách xử lý thế nào? | Spec khai 400/404 nhưng không nói trường hợp nào | TC `BK_CAT` nhánh xoá |
-| **AMB-BK-06** 🟠 | Đổi mật khẩu qua `PATCH /api/profile` có **bắt buộc** `password_old` không? | Cả hai field đều optional trong spec | TC bảo mật `AUTH` |
+| **AMB-BK-06** 🟠 | Đổi mật khẩu qua `PATCH /api/profile` có **bắt buộc** `password_old` không? | Cả hai field đều optional trong spec | TC bảo mật `AUTH` — **→ chuyển thành `AMB-BK-AUTH-05`** (19-09-2026) |
 | **AMB-BK-07** 🟡 | Upload file giới hạn dung lượng / định dạng gì? | Spec không khai. Chỉ biết `maxStorage` = 1 GB qua `GET /api/file/info` | TC 413 / 415 của `FILE` |
 | **AMB-BK-08** 🟡 | Hệ thống có **rate limiting** không? | Không endpoint nào khai `429` | TC 429 — hiện **không có căn cứ** để viết |
 | **AMB-BK-09** 🟡 | `GET /api/promotion-book` khai `limit`/`page`/`sort`/`sortBy` là **required**, trong khi `/api/book` và `/api/user` khai **optional** — cố ý hay lỗi spec? | Bất nhất giữa 3 endpoint cùng dạng list | TC pagination của `PROMO` |
@@ -189,6 +199,8 @@ Cột **Auth** lấy từ `security` của **từng operation**, không phải `
 | **Danh mục định danh bằng `name`** | `DELETE /api/category-book/{name}` — tên có dấu cách, tiếng Việt | Phải URL-encode. Dữ liệu thật đang có danh mục tên `" Phương Nam"` (**có khoảng trắng đầu**) |
 | **Dữ liệu rác sẵn có** | 744 sách, nhiều bản ghi `auto_*`, `Parallel Test Book *`, `TestBook-*` từ các đợt automation trước | Mọi khẳng định theo **tổng số bản ghi** đều không tin được. TC phải tự tạo data rồi tự dọn |
 | **`POST /api/status`** | Ép status code + độ trễ tuỳ ý | Dùng thay mock cho TC xử lý lỗi phía client |
+| **`sha256` spec đổi mỗi lần server khởi động lại** *(19-09-2026)* | `startDate`/`endDate` của `PROMO` khai `default` = **thời điểm server khởi động** (snapshot 14-08 mang `2025-12-16T17:55…`, snapshot 19-09 mang `2026-08-23T20:40…`) | So spec giữa hai lần chạy phải **so theo cấu trúc, bỏ qua `default` dạng ngày** — so `sha256` thô sẽ báo đổi giả |
+| **Endpoint 🔒 chỉ đọc header `Authorization`** *(19-09-2026)* | Cookie `accessToken` do login set **không** được endpoint nào đọc; `refetch-token` chỉ đọc cookie `refetchToken`, không trả cookie mới | Client dùng `body.accessToken` làm Bearer; giữ cookie jar chỉ để gọi `refetch-token` |
 
 ---
 
@@ -196,6 +208,8 @@ Cột **Auth** lấy từ `security` của **từng operation**, không phải `
 
 | Ngày | Thay đổi |
 |---|---|
+| 19-09-2026 | `/discover-system` mode ADD — thêm mặt Android, **không** đụng spec hay gọi API. Bản đồ màn hình ở [`system_map.md`](system_map.md). Dải AMB cấp hệ thống nối tiếp: `AMB-BK-11` · `AMB-BK-12` ghi ở [`system_map.md` mục 8](system_map.md#8-ambiguity-cấp-hệ-thống-phát-sinh-ở-mặt-mobile) — số kế tiếp `AMB-BK-13` |
+| 19-09-2026 | `/generate-requirements-from-api` module `AUTH`. Tải lại spec: `sha256` đổi `8d331833…2621` → `32bb8b39…3f09`, snapshot mới [`openapi_2026-09-19.json`](sources/openapi_2026-09-19.json). **35 op — không thêm/bỏ op nào.** 11 op đổi schema: thêm `email.default: "user@example.com"` (login · register · profile · `POST /api/user` · `PATCH /api/user/{id}`) · bỏ `additionalProperties: false` ở request/response của login và `/api/file` (GET · POST) · `POST /api/file/copy` response 200 thêm `newPath`/`newName` bắt buộc + khai thêm 500 · `PUT /api/file/move` khai thêm 403/500 · `default` ngày của `PROMO` (chỉ do server khởi động lại). Chưa module nào có REQ trước lượt này → **không** cần Impact Report. Kiểm chứng 101 request, ghi nhận **F-16 → F-25** (2 🔴 · 4 🟠 · 2 🟡 · 2 điểm đúng). Cấp dải `REQ-BK-AUTH-01 → 48` |
 | 14-08-2026 | Khởi tạo bản đồ. Parse spec `openapi 3.0.0` (35 op / 8 nhóm) + kiểm chứng bằng **20 request thật**. Cấp 8 mã module, mã hệ thống `BK`. Ghi nhận **15 phát hiện** (3 🔴 · 4 🟠 · 4 🟡 · 4 điểm đúng) và **10 ambiguity**. Snapshot spec vào `sources/openapi_2026-08-14.json`. **Chưa cấp mã REQ** — đúng quy tắc tầng khám phá |
 
 ### Sự cố trong lúc khám phá
