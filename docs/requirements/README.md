@@ -21,7 +21,7 @@
 | Module | Prefix | Trạng thái recon | Mức phủ tài liệu | Tài liệu | REQ đã dùng | Mã kế tiếp | AMB treo | Cập nhật |
 |---|---|---|---|---|---|---|---|---|
 | Đăng nhập / Xác thực | `LOGIN` | ✅ Đã có tài liệu | ⬜ Trắng | [login/requirements_login.md](login/requirements_login.md) | `REQ-LOGIN-01` → `REQ-LOGIN-43` (43) | `REQ-LOGIN-44` | **0** — đã xử lý 19/19 | 19-09-2026 |
-| Khách hàng | `CUST` | ✅ Đã có tài liệu | ⬜ Trắng | [customers/requirements_customers.md](customers/requirements_customers.md) | `REQ-CUST-01` → `REQ-CUST-79` (79) | `REQ-CUST-80` | 4 🔴 (AMB-CUST-01→03, AMB-CUST-11) · 8 🟡 · 1 🟢 | 14-08-2026 |
+| Khách hàng | `CUST` | ✅ Đã có tài liệu | ⬜ Trắng | [customers/requirements_customers.md](customers/requirements_customers.md) | `REQ-CUST-01` → `REQ-CUST-83` (83) | `REQ-CUST-84` | 1 🟡 (AMB-CUST-14) — đã xử lý 13/14 | 19-09-2026 |
 | Liên hệ khách hàng | `CONT` | ⬜ Chưa khảo sát | ⬜ Trắng | — | — | `REQ-CONT-01` | — | 14-08-2026 |
 | Khách hàng tiềm năng | `LEAD` | ⬜ Chưa khảo sát | ⬜ Trắng | — | — | `REQ-LEAD-01` | — | 14-08-2026 |
 | Dự án | `PRJ` | ✅ Đã có tài liệu | ⬜ Trắng | [projects/requirements_projects.md](projects/requirements_projects.md) | `REQ-PRJ-01` → `REQ-PRJ-104` (104) | `REQ-PRJ-105` | 6 🔴 (AMB-PRJ-01→04, 06, 14) · 7 🟡 · 3 🟢 | 14-08-2026 |
@@ -70,11 +70,11 @@ CTR · EXP · ITEM · TICK · ESTREQ · KB · REP · DASH · TODO · REM · PROF
 
 | Trạng thái | Số lượng | Chi tiết |
 |---|---|---|
-| 🟢 Active | 203 | `LOGIN` 25 · `CUST` 78 · `PRJ` 100 |
-| 🟡 Changed | 16 | `LOGIN` 16 — 15 REQ sửa trong hai đợt ngày 18-08-2026 (rà soát chất lượng + chốt quyết định PO) · `REQ-LOGIN-42` sửa 19-09-2026 (`AMB-LOGIN-19` ✅). Trong đó **`REQ-LOGIN-16` và `REQ-LOGIN-25` ghi kỳ vọng đúng mà hệ thống chưa đạt** → TC sẽ FAIL, phải mở bug |
+| 🟢 Active | 201 | `LOGIN` 25 · `CUST` 76 · `PRJ` 100 |
+| 🟡 Changed | 21 | `LOGIN` 16 — 15 REQ sửa trong hai đợt ngày 18-08-2026 (rà soát chất lượng + chốt quyết định PO) · `REQ-LOGIN-42` sửa 19-09-2026 (`AMB-LOGIN-19` ✅). Trong đó **`REQ-LOGIN-16` và `REQ-LOGIN-25` ghi kỳ vọng đúng mà hệ thống chưa đạt** → TC sẽ FAIL, phải mở bug · `CUST` 5 — `42`, `43`, `53`, `73`, `79` sửa 19-09-2026 (`PO-2026-09-19`). Trong đó **`REQ-CUST-42` và `REQ-CUST-43` ghi kỳ vọng đúng mà hệ thống chưa đạt** → TC sẽ FAIL, phải mở bug |
 | 🔴 Deprecated | 0 | — |
-| ⚪ Chưa implement | 7 | `LOGIN` 2 — `REQ-LOGIN-27` và `REQ-LOGIN-40`, **cả hai ra ngoài phạm vi kiểm thử** theo quyết định PO 18-08-2026 · `CUST` 1 — `REQ-CUST-79` (kết quả nhập CSV, không tải tệp lên môi trường dùng chung) · `PRJ` 4 — `REQ-PRJ-89`, `91`, `94` (CRUD mốc tiến độ / tệp / thảo luận, không chạy trên môi trường dùng chung) và `REQ-PRJ-104` (nội dung tệp `Export project data`, không tải tệp về) |
-| **Tổng** | **226** | |
+| ⚪ Chưa implement | 7 | `LOGIN` 2 — `REQ-LOGIN-27` và `REQ-LOGIN-40`, **cả hai ra ngoài phạm vi kiểm thử** theo quyết định PO 18-08-2026 · `CUST` 2 — `REQ-CUST-81` (Inactive bị loại khỏi mọi dropdown, chưa rà 11 module) và `REQ-CUST-82` (chặn xoá khách hàng có dữ liệu liên quan, cần môi trường riêng) · `PRJ` 4 — `REQ-PRJ-89`, `91`, `94` (CRUD mốc tiến độ / tệp / thảo luận, không chạy trên môi trường dùng chung) và `REQ-PRJ-104` (nội dung tệp `Export project data`, không tải tệp về) |
+| **Tổng** | **230** | |
 
 > ⚠️ **Toàn bộ REQ 🟡 của `LOGIN` chưa có test case nào** (module chưa tới bước sinh TC). Khi sinh TC, viết theo bản đã sửa — **không** dùng bản trước 18-08-2026.
 >
@@ -89,10 +89,6 @@ CTR · EXP · ITEM · TICK · ESTREQ · KB · REP · DASH · TODO · REM · PROF
 | Mã | Module | Câu hỏi | Chặn cái gì |
 |---|---|---|---|
 | ~~AMB-LOGIN-01~~ | `LOGIN` | ✅ **ĐÃ GỠ 18-08-2026** — 3 vai trò `Admin` · `Project Manager` · `Customer`, **đã được cấp đủ tài khoản** | Đây là nút thắt lớn nhất của toàn dự án. Nay **mọi module đều dựng được ma trận phân quyền thật** |
-| [AMB-CUST-01](customers/requirements_customers.md#111-ambiguities) | `CUST` | Xin tài khoản vai trò `Project Manager` và các vai trò khác để kiểm chứng 24 ô bỏ trống trong ma trận phân quyền | Ma trận phân quyền của `CUST` — BLOCKED hoàn toàn |
-| [AMB-CUST-02](customers/requirements_customers.md#111-ambiguities) | `CUST` | Company chỉ chứa khoảng trắng vẫn tạo được khách hàng "tên rỗng" — lỗi hay cố ý? | STORY-CUST-06 · ảnh hưởng dropdown chọn khách hàng của 10+ module |
-| [AMB-CUST-03](customers/requirements_customers.md#111-ambiguities) | `CUST` | Lỗi bắt buộc ở tab ẩn chỉ đổi màu nhãn tab, **không** tự chuyển tab — chấp nhận được không? | STORY-CUST-06 |
-| [AMB-CUST-11](customers/requirements_customers.md#111-ambiguities) | `CUST` | Xoá khách hàng đang có hoá đơn / dự án / hợp đồng thì hệ thống xử lý ra sao? | STORY-CUST-08 — cần môi trường riêng để kiểm chứng |
 | [AMB-PRJ-01](projects/requirements_projects.md#71-ambiguities) | `PRJ` | Xin tài khoản vai trò `Project Manager` và các vai trò khác để kiểm chứng 28 ô bỏ trống trong ma trận phân quyền | Ma trận phân quyền của `PRJ` — BLOCKED hoàn toàn |
 | [AMB-PRJ-02](projects/requirements_projects.md#71-ambiguities) | `PRJ` | Bảng tổng quan đếm **67** dự án `In Progress` nhưng lọc ra đúng **60** dòng (lệch 7); 4 trạng thái còn lại khớp chính xác. Số nào đúng? | STORY-PRJ-01 · Dashboard cũng hiển thị `67 / 125` theo nguồn sai này |
 | [AMB-PRJ-03](projects/requirements_projects.md#71-ambiguities) | `PRJ` | Xoá dự án **thành công** nhưng chuyển tới `/admin/not_found` kèm `Something went wrong. Try again` — không có thông báo thành công | STORY-PRJ-10 · test thủ công sẽ chấm FAIL nhầm |
@@ -109,14 +105,18 @@ CTR · EXP · ITEM · TICK · ESTREQ · KB · REP · DASH · TODO · REM · PROF
 | AMB-LOGIN-14 | `LOGIN` | ⏭️ Chuyển module 18-08-2026 | Kiểm chứng popup cảnh báo timer giao cho module `TASK` — **nhớ cập nhật ngược `REQ-LOGIN-30`** khi recon `TASK` |
 | AMB-LOGIN-15 | `LOGIN` | ⏭️ Bỏ qua 18-08-2026 | Remember Me không hoạt động → `REQ-LOGIN-40` ra ngoài phạm vi · thêm `RISK-LOGIN-08` (checkbox vẫn hiển thị và vẫn cấp cookie) |
 | AMB-LOGIN-19 | `LOGIN` | ✅ Đã trả lời 19-09-2026 | Phiên 1 giờ tính theo **thời gian không hoạt động**, mỗi thao tác gia hạn lại → `REQ-LOGIN-42` thêm AC gia hạn. `LOGIN` **hết ambiguity treo** |
+| AMB-CUST-01 | `CUST` | ✅ Đã trả lời 19-09-2026 | Dựng lại ma trận phân quyền bằng tài khoản PM: 38/39 ô. **Khác giả định tạm** — PM có giao diện xoá / `Mass Delete` như Admin → tách `AMB-CUST-14` 🟡 + `RISK-CUST-08` |
+| AMB-CUST-02 | `CUST` | ✅ Đã trả lời 19-09-2026 | Company toàn khoảng trắng vẫn lưu được **là lỗi** → `REQ-CUST-43` 🟡, cần mở bug |
+| AMB-CUST-03 | `CUST` | ✅ Đã trả lời 19-09-2026 | Theo giả định: phải tự chuyển về tab chứa lỗi → `REQ-CUST-42` 🟡, cần mở bug |
+| AMB-CUST-11 | `CUST` | ✅ Đã trả lời 19-09-2026 | Hệ thống chặn và báo lỗi → `REQ-CUST-82` ⚪, cần môi trường riêng để kiểm chứng |
 
 ### 3.2. Vấn đề cấp hệ thống đang treo
 
 | Vấn đề | Ảnh hưởng | Cần ai giải quyết |
 |---|---|---|
-| ✅ **ĐÃ GIẢI QUYẾT 18-08-2026** — chỉ có 1 account, chưa biết hệ thống có mấy role | Đã được cấp tài khoản **đủ 3 vai trò**. Ma trận phân quyền của `LOGIN` đã kiểm chứng 100%. ⚠️ **`CUST` và `PRJ` vẫn còn ô `❔`** (24 và 28 ô) — hai module này recon từ trước khi có tài khoản, cần **chạy lại phần ma trận phân quyền** bằng tài khoản `Project Manager` | Việc còn lại: cập nhật ma trận cho `CUST` (`AMB-CUST-01`) và `PRJ` (`AMB-PRJ-01`) |
+| ✅ **ĐÃ GIẢI QUYẾT 18-08-2026** — chỉ có 1 account, chưa biết hệ thống có mấy role | Đã được cấp tài khoản **đủ 3 vai trò**. Ma trận phân quyền của `LOGIN` đã kiểm chứng 100%, của `CUST` 38/39 ô (19-09-2026). ⚠️ **`PRJ` vẫn còn 28 ô `❔`** — recon từ trước khi có tài khoản, cần **chạy lại phần ma trận phân quyền** bằng tài khoản `Project Manager` | Việc còn lại: cập nhật ma trận cho `PRJ` (`AMB-PRJ-01`) |
 | Master data (Taxes · Payment Modes · Departments · Lead Sources · Contract Types…) nằm sau khu Setup 403 | Danh sách giá trị hợp lệ của nhiều dropdown chỉ suy được, không kiểm chứng được. ⚠️ Tài khoản `Project Manager` **cũng bị `access_denied`** ở khu Setup — vấn đề này **chưa** được gỡ | Cần account có quyền vào khu Setup |
-| Không có môi trường riêng để test thao tác phá huỷ | `AMB-CUST-11` (xoá khách hàng có dữ liệu liên quan), `AMB-CUST-12` (nhập CSV), `AMB-PRJ-11` (sao chép dự án) và `AMB-PRJ-13` (CRUD các tab thuộc dự án) không kiểm chứng được. Xoá hàng loạt cũng phải hoãn | Cấp một môi trường staging riêng, hoặc chốt cho phép chạy trong khung giờ thấp điểm |
+| Không có môi trường riêng để test thao tác phá huỷ | `REQ-CUST-82` (xoá khách hàng có dữ liệu liên quan — PO đã chốt hành vi, chưa kiểm chứng), `AMB-PRJ-11` (sao chép dự án) và `AMB-PRJ-13` (CRUD các tab thuộc dự án) không kiểm chứng được. Xoá hàng loạt cũng phải hoãn. Nhập CSV **đã gỡ** — PO cho phép nhập thật trên môi trường dùng chung (19-09-2026) | Cấp một môi trường staging riêng, hoặc chốt cho phép chạy trong khung giờ thấp điểm |
 | Cổng khách hàng nằm ngoài phạm vi | `AMB-PRJ-14` — toàn bộ `STORY-PRJ-03` (11 REQ về `Visible Tabs` và 18 công tắc quyền khách hàng) chỉ kiểm chứng được ở mức "biểu mẫu ghi nhận đúng", không kiểm chứng được tác dụng thật. Cùng vấn đề sẽ lặp lại ở `CTR` (khách ký hợp đồng), `PROP` (khách bình luận đề xuất), `KB` | Chốt phạm vi cổng khách hàng: đưa vào hay xác nhận loại bỏ vĩnh viễn |
 | Dữ liệu rác từ các đợt automation trước | Danh sách dự án có hơn 50 bản ghi `AUTO_POM_*`, `Project Automation *`, `[AUTO_HT] *` không được dọn. Mọi khẳng định theo tổng số bản ghi đều không tin được | Thống nhất quy ước đặt tên + dọn dữ liệu cho mọi đợt chạy automation; cân nhắc một đợt dọn thủ công dữ liệu rác đang tồn |
 
@@ -160,6 +160,7 @@ docs/requirements/
 
 | Ngày | Thay đổi |
 |---|---|
+| 19-09-2026 | **Chốt 13 quyết định PO cho module `CUST`** (`/update-requirements-from-ticket`, nguồn `PO-2026-09-19`) — `AMB-CUST-01` dựng lại ma trận phân quyền bằng tài khoản `Project Manager` (38/39 ô) và phát hiện **PM có giao diện xoá / `Mass Delete` như Admin** → `AMB-CUST-14` + `RISK-CUST-08`. `AMB-CUST-12` nhập thật 2 khách hàng (`14625`, `14626` — ⚠️ **chưa dọn**). `AMB-CUST-02`, `03` chốt là lỗi → `REQ-CUST-42`, `43` ghi kỳ vọng đúng mà hệ thống chưa đạt → **cần mở bug**. Module lên **83 REQ**, ambiguity 🔴 của `CUST` về **0**, **không Story nào còn BLOCKED**. Impact Report: [customers/impact/impact_PO-2026-09-19.md](customers/impact/impact_PO-2026-09-19.md) |
 | 19-09-2026 | **`LOGIN` hết ambiguity treo (19/19).** `AMB-LOGIN-19` ✅ — phiên 1 giờ tính theo thời gian không hoạt động, mỗi thao tác gia hạn lại → `REQ-LOGIN-42` chuyển 🟡 Changed (Active 204 → 203, Changed 15 → 16). Kèm sửa sót `RISK-LOGIN-05` trong `requirements_login.md` (vẫn ghi `AMB-LOGIN-03` treo dù đã ⏭️ từ 18-08-2026). ⚠️ `CRM_LOGIN_TC_026` stale + cần thêm 1 TC cho vế gia hạn — xem Nhật ký của module |
 | 11-09-2026 | **Bổ sung dòng `Năng lực kiểm thử của QA`** vào bảng thuộc tính đầu file — quyền gọi API · truy vấn CSDL · kiểm tầng tích hợp · xem nhật ký hoạt động · DevTools. Đây là đầu vào cho **nhánh Vòng 3** của mọi bộ TC; trước đây không có chỗ lưu nên agent phải hỏi user lại ở **từng module**, dù quyền của QA giống nhau trên toàn hệ thống. Mục nhật ký hoạt động là **kết quả đo thật** chứ không phải câu trả lời từ trí nhớ: `Utilities → Activity Log` trả **Từ chối truy cập** với tài khoản `Admin` demo. Luật *đọc trước · hỏi một lần · ghi lại ngay* đã đưa ngược vào `skills-rbt-manual-testing` (mục Vòng 3 + anti-pattern), `/discover-system` Bước 0 và `CLAUDE.md` — dự án sau không lặp lại |
 | 18-08-2026 | **Chốt 13 quyết định PO còn lại + được cấp tài khoản 3 vai trò** (`/update-requirements-from-ticket`, nguồn `PO-2026-08-18-B`) — **`AMB-LOGIN-01` gỡ được nút thắt lớn nhất của toàn dự án**: có tài khoản `Admin` · `Project Manager` · `Customer`, ma trận phân quyền `LOGIN` kiểm chứng **100%**. Phát hiện `Customer` dùng hệ thống đăng nhập **tách biệt** ở `/login` và không vào được `/admin` → `REQ-LOGIN-43`. Phiên sống **1 giờ** → `REQ-LOGIN-42`. Module lên **43 REQ**, ambiguity còn treo **1**. ⚠️ Hai REQ (`16`, `25`) nay ghi kỳ vọng đúng mà hệ thống chưa đạt → **cần mở bug**. Impact Report: [login/impact/impact_PO-2026-08-18-B.md](login/impact/impact_PO-2026-08-18-B.md) |
