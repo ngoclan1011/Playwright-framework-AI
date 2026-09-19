@@ -4,7 +4,7 @@
 |---|---|
 | **Hệ thống** | Perfex CRM — Anh Tester Demo (`https://crm.anhtester.com`) |
 | **Module** | Đăng nhập / Xác thực · prefix `LOGIN` |
-| **Nguồn requirement** | [requirements_login.md](../../requirements/login/requirements_login.md) — 43 REQ, **39 trong phạm vi** |
+| **Nguồn requirement** | [requirements_login.md](../../requirements/login/requirements_login.md) — 44 REQ, **40 trong phạm vi** |
 | **Mode sinh** | QUICK (`/generate-testcases-from-requirements`) · **độ hạt GỘP**<br>Bổ sung 11-09-2026: 9 TC theo **Bản Đồ Loại Kiểm Thử — 4 Vòng** (`/generate-testcases-manual-rbt`) |
 | **Ngày sinh** | 20-08-2026 · cập nhật ngôn ngữ kiểm chứng 20-08-2026 · bổ sung 4 vòng 11-09-2026 · **DELTA `adhoc_2026-09-19` + chuyển tầng nền tảng 19-09-2026** |
 | **Dải TC ID** | `CRM_LOGIN_TC_001` → `CRM_LOGIN_TC_051` — `001`→`041` gốc, `042`→`050` bổ sung 4 vòng, `051` bổ sung theo `AMB-LOGIN-19` |
@@ -68,7 +68,7 @@ Một số yêu cầu — cookie ghi nhớ, mã chống CSRF, header bảo mật
 | ASM-04 | ✅ **Đã giải quyết** — `run_1787215085` xác nhận **trùng giả định**. Hệ thống xử lý chuỗi toàn khoảng trắng ở trường bắt buộc thế nào? | Giả định **cắt khoảng trắng trước khi kiểm trường bắt buộc**, nhất quán với `REQ-LOGIN-38` | `TC_011-d` — gỡ `@NeedsVerify` |
 | ASM-05 | ✅ **Đã giải quyết 19-09-2026** — đo bằng 3 lần nạp trang cùng phiên và 2 phiên riêng: mã CSRF **cố định trong phiên**, phiên mới mới đổi. **Khác giả định** nhưng khớp đúng `REQ-LOGIN-21` ("đổi theo phiên") → không phải lỗi, không mở AMB · *Ban đầu:* `REQ-LOGIN-21` ghi mã CSRF "đổi theo phiên" — không rõ có sinh lại ở mỗi lần nạp trang không | Giả định **sinh lại ở mỗi lần nạp trang** — đã huỷ | `TC_024` mục 🔧`2` — sửa kỳ vọng, gỡ `@NeedsVerify` |
 | ASM-06 | ✅ **Đã giải quyết 19-09-2026** — dùng tài khoản staff test riêng (`TC014_EMAIL` / `TC014_PASSWORD` trong `.env`). Mật khẩu tài khoản demo là **6 ký tự số** (`RISK-LOGIN-07`) nên không có chữ cái để thử đảo hoa/thường | TC chỉ chạy được khi tài khoản test có mật khẩu chứa chữ cái | `TC_014` — gỡ `@NeedsVerify`, đổi tài khoản |
-| ASM-07 | ✅ **Đã đo** — `run_1787215085`: không chuyển hướng, bug `TC039` đang mở. Requirements mục 9 ghi "toàn bộ qua HTTPS" nhưng **không** khẳng định có chuyển hướng ép buộc từ HTTP | Viết TC theo **chuẩn bảo mật** (phải chuyển sang HTTPS + có HSTS), đối chiếu với bug report cũ | `TC_039` — `@KnownBug`, gỡ `@NeedsVerify` |
+| ASM-07 | ✅ **Đã giải quyết 19-09-2026** — PO chốt bắt buộc ép HTTPS (`AMB-LOGIN-20` → `REQ-LOGIN-44`), trùng giả định · *Ban đầu:* `run_1787215085`: không chuyển hướng, bug `TC039` đang mở. Requirements mục 9 ghi "toàn bộ qua HTTPS" nhưng **không** khẳng định có chuyển hướng ép buộc từ HTTP | Viết TC theo **chuẩn bảo mật** (phải chuyển sang HTTPS + có HSTS), đối chiếu với bug report cũ | `TC_039` — `@KnownBug`, gỡ `@NeedsVerify` |
 | ASM-08 | ✅ **Đã giải quyết** — `run_1787215085` xác nhận **trùng giả định**. Mã CSRF gửi rỗng có bị chặn như mã bị sửa không (chưa có evidence) | Giả định **bị chặn giống nhau** — cùng trang lỗi `419 Page Expired!` | `TC_025-b` — gỡ `@NeedsVerify` |
 | ASM-09 | `REQ-LOGIN-08` (phát hành cookie ghi nhớ) không có hệ quả nghiệp vụ nào kiểm được bằng mắt, vì `REQ-LOGIN-40` ghi nhận tính năng tự đăng nhập lại **không hoạt động** (`AMB-LOGIN-15` ⏭️) | Phần chính của `TC_008`/`TC_009` chỉ chấm tới bước đăng nhập thành công; kiểm chứng cookie đặt ở dòng 🔧 và TC gắn `@TechCheck` | `TC_008`, `TC_009` — `@TechCheck` |
 
@@ -76,11 +76,11 @@ Một số yêu cầu — cookie ghi nhớ, mã chống CSRF, header bảo mật
 
 ---
 
-## Bảng Đối Soát Coverage (39/39 REQ trong phạm vi)
+## Bảng Đối Soát Coverage (40/40 REQ trong phạm vi)
 
 | REQ ID | Mô tả ngắn | Số TC | TC IDs (kèm biến thể) | Đủ Positive/Negative/Boundary? |
 |---|---|---|---|---|
-| REQ-LOGIN-01 | Truy cập trang đăng nhập | 2 | TC_001, TC_039 | ✅ |
+| REQ-LOGIN-01 | Truy cập trang đăng nhập | 1 | TC_001 | ✅ |
 | REQ-LOGIN-02 | Thành phần biểu mẫu đăng nhập | 8 | TC_002 (6 mục), TC_038, TC_042, TC_043, TC_044, TC_048, TC_049, TC_050 | ✅ |
 | REQ-LOGIN-03 | Tự đặt con trỏ vào ô Email | 1 | TC_002-`2` | ✅ |
 | REQ-LOGIN-04 | Logo dẫn về trang chủ | 1 | TC_004 | ✅ |
@@ -119,8 +119,9 @@ Một số yêu cầu — cookie ghi nhớ, mã chống CSRF, header bảo mật
 | REQ-LOGIN-41 | Không khoá tài khoản sau nhiều lần sai | 1 | TC_015-`a`,`b` | ✅ |
 | REQ-LOGIN-42 | Phiên hết hạn sau 1 giờ không hoạt động, thao tác thì gia hạn | 2 | TC_026 (AC1 — để yên thì hết phiên), TC_051 (AC2 — thao tác thì gia hạn) | ✅ |
 | REQ-LOGIN-43 | Customer không đăng nhập được vào `/admin` | 2 | TC_019, TC_020 | ✅ |
+| REQ-LOGIN-44 | Ép truy cập qua HTTPS (chuyển hướng + HSTS) | 1 | TC_039 🐞 — chuyển từ `REQ-LOGIN-01` sang 19-09-2026 | ✅ |
 
-**Kết luận:** 39/39 REQ trong phạm vi có ≥1 TC. **Không có dòng 🔴.** Tổng số **case** kiểm không đổi so với bản trước lần cập nhật ngôn ngữ — chỉ đổi cách phát biểu kỳ vọng.
+**Kết luận:** 40/40 REQ trong phạm vi có ≥1 TC. **Không có dòng 🔴.** Tổng số **case** kiểm không đổi so với bản trước lần cập nhật ngôn ngữ — chỉ đổi cách phát biểu kỳ vọng.
 
 ### REQ cố ý KHÔNG có TC (ngoài phạm vi theo quyết định PO 18-08-2026)
 
@@ -239,6 +240,7 @@ Một số yêu cầu — cookie ghi nhớ, mã chống CSRF, header bảo mật
 
 | Ngày | Nguồn | Thay đổi | TC ảnh hưởng |
 |---|---|---|---|
+| 19-09-2026 | Quyết định PO `AMB-LOGIN-20` → `REQ-LOGIN-44` | **`TC_039`:** cột REQ `REQ-LOGIN-01` → `REQ-LOGIN-44` (REQ cũ không nói gì về HTTPS — truy vết nhầm). Gỡ ghi chú "chưa được xác nhận là yêu cầu đã chốt". Thêm tiền đề **tắt HTTPS-Upgrades của Chrome** — Chrome tự nâng `http://` lên `https://` nên chấm bằng thanh địa chỉ sẽ PASS giả. Đo lại bằng `curl -I`: vẫn `200`, không HSTS → vẫn FAIL, bug giữ mở. `ASM-07` ✅. Độ phủ **40/40 REQ**, số TC không đổi.<br>**Mốc git trước khi sửa:** `5d10845` | `CRM_LOGIN_TC_039` ✏️ — TC ID giữ nguyên |
 | 19-09-2026 | Recon bổ sung vùng chưa có evidence | **`TC_024` mục 🔧`2`:** đổi kỳ vọng từ "sau F5 mã **khác**" sang "mã **giữ nguyên** trong phiên, phiên mới mới đổi" theo kết quả đo (cùng phiên 3 lần nạp → cùng mã; 2 phiên → 2 mã khác). Gỡ `@NeedsVerify`, `ASM-05` ✅. Module **hết vùng chưa có evidence**. Không đổi TC ID, không đổi số TC | (chưa commit) |
 | 19-09-2026 | `/review-testcases` mode FIX — [báo cáo review](review/testcase_review_report_web_20260919.md) · sửa **tại chỗ** theo quyết định user (không sinh file `_improved`) | **5 TC 🟡:** `TC_014` đổi sang tài khoản staff test riêng (`TC014_EMAIL`/`TC014_PASSWORD`) · `TC_018` **bỏ biến thể `a`** (email 260 ký tự) — Expected cũ `Invalid email or password` sai với mốc RFC 5321 đã chốt và trùng `TC_046-c`; đổi Test Scenario sang mật khẩu đa ngôn ngữ · `TC_034` thêm bước 0 dựng task + bật timer và bước 6 dọn dẹp, Expected đổi "hộp thoại" → "lớp xác nhận che toàn màn hình", `Automation` No → Yes · `TC_039` thay ghi chú bug cũ bằng hiện trạng FAIL đã xác nhận · `TC_050` ghi danh sách trình duyệt đã chốt, `Automation` Partial → Yes.<br>**Dọn ghi chú đã cũ ở 8 TC:** gỡ `@NeedsVerify` / `⚠️ chưa có evidence` ở `TC_011`, `025`, `031`, `033` (`Automation` Partial → Yes), `040`, `041`, `049`; `TC_046` gỡ `@KnownBug` (bug đã đóng). `TC_020` bỏ phụ thuộc `TC_019` — tự đăng nhập cổng khách hàng.<br>Đồng bộ index: Assumptions `ASM-02/03/04/06/07/08` ✅ · bảng *Vùng chưa có evidence* còn 1 dòng (`TC_024` 🔧`2`) · 4 vòng, ISO, bộ chạy. Độ phủ REQ không đổi.<br>**Mốc git trước khi sửa:** `web/test_cases_login_web.md` @ `4550fd6` | ✏️ `CRM_LOGIN_TC_011`, `014`, `018`, `020`, `025`, `031`, `033`, `034`, `039`, `040`, `041`, `046`, `049`, `050` — TC ID giữ nguyên |
 | 19-09-2026 | Kết quả chạy [run_1789759574](../../executions/login/web/run_1789759574/execution_report.md) + quyết định user | **`TC_048`: bỏ biến thể `b` (ô `Password` 300 ký tự).** Bước `Ctrl+A` → `Ctrl+C` → đếm **không làm được** trên ô mật khẩu — mọi trình duyệt chặn sao chép nội dung ra khỏi ô mật khẩu, tester chạy tay cũng không copy được. TC giờ chỉ kiểm ô `Email`; đổi Test Scenario thành *"Ô Email không tự cắt bớt ký tự…"*. Phần độ dài ô `Password` giữ ở dòng 🔧 (đo bằng DevTools), chuỗi mật khẩu dài vẫn do `TC_047` phủ. Độ phủ REQ không đổi.<br>**Mốc git trước khi sửa:** `web/test_cases_login_web.md` @ `4550fd6` | `CRM_LOGIN_TC_048` ✏️ — TC ID giữ nguyên |

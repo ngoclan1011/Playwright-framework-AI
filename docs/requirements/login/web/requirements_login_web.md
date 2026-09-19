@@ -9,7 +9,7 @@
 | **Nền tảng** | Web — khu quản trị `/admin` |
 | **Trình duyệt khảo sát** | Google Chrome (Playwright MCP), headed, viewport `1600×750`. Mọi AC dựa trên thông báo mặc định của trình duyệt **chỉ đúng với Chrome** — xem `REQ-LOGIN-13` |
 | **Tầng network** | Quan sát thụ động request do UI tự phát sinh — không gọi API trực tiếp |
-| **REQ trong file** | `REQ-LOGIN-01` → `REQ-LOGIN-43` (43 — toàn bộ REQ của module, chưa có nền tảng thứ hai) |
+| **REQ trong file** | `REQ-LOGIN-01` → `REQ-LOGIN-44` (44 — toàn bộ REQ của module, chưa có nền tảng thứ hai) |
 
 ---
 
@@ -70,6 +70,7 @@
 | REQ-LOGIN-42 | Phiên đăng nhập hết hạn sau 1 giờ | Phiên sống **1 giờ tính theo thời gian không hoạt động** — **mỗi thao tác gia hạn lại** mốc 1 giờ; hết hạn thì mọi URL nội bộ bị đưa về trang đăng nhập | **AC1 — hết hạn khi để yên:** sau khi đăng nhập, **không thao tác gì** quá **1 giờ** rồi mở một URL trong `/admin` → bị chuyển về `/admin/authentication` như trường hợp chưa đăng nhập (`REQ-LOGIN-17`).<br>**AC2 — thao tác thì được gia hạn:** đang dùng liên tục (mỗi lần cách nhau dưới 1 giờ) thì **không** bị đăng xuất, kể cả khi tổng thời gian từ lúc đăng nhập đã quá 1 giờ.<br>⏱️ TC của REQ này chạy **trên 1 giờ**, không xếp vào bộ smoke | 🟡 | 19-09-2026 · `AMB-LOGIN-19` ✅ | Quyết định PO 18-08-2026 — giải quyết `AMB-LOGIN-13` · Quyết định PO 19-09-2026 — giải quyết `AMB-LOGIN-19` |
 | REQ-LOGIN-21 | Biểu mẫu đăng nhập mang mã chống CSRF | Mỗi lần nạp trang đăng nhập, biểu mẫu chứa một trường ẩn chống giả mạo yêu cầu | Tồn tại `input[type=hidden][name=csrf_token_name]` với giá trị 32 ký tự hex · body của `POST /admin/authentication` chứa `csrf_token_name=<token>&email=…&password=…` · mã **cố định trong một phiên** (gắn cookie `csrf_cookie_name`): nạp lại trang không đổi mã, phiên mới mới sinh mã khác — đo 19-09-2026 | 🟢 | 19-09-2026 · ✏️ bổ sung hành vi đã đo | DOM + Network |
 | REQ-LOGIN-22 | Từ chối yêu cầu có mã CSRF sai | Gửi biểu mẫu với mã CSRF bị sửa thì bị chặn, không xử lý đăng nhập | Sửa `csrf_token_name` thành giá trị tuỳ ý rồi gửi → máy chủ trả **HTTP 403**, tiêu đề tab `Error`, nội dung nguyên văn: `419 Page Expired!` và `Sorry, the page has expired, return to previous page and refresh to continue.` | 🟢 | — | Kiểm chứng thực tế + Network |
+| REQ-LOGIN-44 | Ép truy cập qua HTTPS | Mở trang đăng nhập bằng `http://` thì hệ thống phải tự chuyển sang `https://`, và trình duyệt được yêu cầu chỉ dùng HTTPS cho các lần sau | Mở `http://crm.anhtester.com/admin/authentication` → máy chủ trả chuyển hướng vĩnh viễn (`301`/`308`) kèm `Location: https://crm.anhtester.com/admin/authentication`; thanh địa chỉ dừng ở `https://…`, có biểu tượng kết nối an toàn.<br>Phản hồi HTTPS mang header `Strict-Transport-Security`.<br>⚠️ **Chấm theo phản hồi của máy chủ**, không chấm theo thanh địa chỉ của Chrome — Chrome ≥ 115 tự nâng `http://` lên `https://` (HTTPS-Upgrades) nên nhìn thanh địa chỉ có thể tưởng đã đạt.<br>🐞 **Hệ thống chưa đạt:** đo 19-09-2026 bằng `curl -I` — `http://` trả `200`, không `Location`, không HSTS → bug `BUG_login_1785678750_TC039` | 🟢 | 19-09-2026 · `AMB-LOGIN-20` ✅ | Quyết định PO 19-09-2026 — giải quyết `AMB-LOGIN-20` · đo bằng `curl -I` |
 
 ### 3.5. Quên mật khẩu (STORY-LOGIN-05)
 
@@ -190,7 +191,7 @@ Toàn bộ thông báo dưới đây **ghi nguyên văn từ UI thực tế**, h
 
 | Mục | Ghi nhận | REQ / AMB liên quan |
 |---|---|---|
-| Giao thức | Toàn bộ qua HTTPS (`https://crm.anhtester.com`) | — |
+| Giao thức | Toàn bộ qua HTTPS (`https://crm.anhtester.com`). **Bắt buộc** ép chuyển từ HTTP và có HSTS — hiện chưa đạt | REQ-LOGIN-44, AMB-LOGIN-20 |
 | Tải trang đăng nhập | Trang **không nạp bất kỳ tệp JavaScript nào** — 0 script inline, 0 script ngoài. Toàn bộ kiểm tra dữ liệu chạy ở máy chủ | REQ-LOGIN-37, 13 |
 | Máy chủ | `server: LiteSpeed`, ứng dụng server-render (CodeIgniter) | — |
 | Không lưu đệm trang sau đăng nhập | Phản hồi mang `cache-control: no-store, no-cache, must-revalidate` và `pragma: no-cache` — bấm Back sau khi đăng xuất không xem lại được nội dung đã tải. ⚠️ Đây là chống **lưu đệm**, **không** phải chống tấn công phát lại (replay) — hệ thống không có nonce/timestamp nào được quan sát | — |

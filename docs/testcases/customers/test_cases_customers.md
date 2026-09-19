@@ -9,8 +9,8 @@
 | **Ngày sinh** | 19-09-2026 · đồng bộ requirements với DOM thật + thêm `TC_129` 19-09-2026 |
 | **Dải TC ID** | `CRM_CUST_TC_001` → `CRM_CUST_TC_129` — chung mọi nền tảng |
 | **Mã kế tiếp** | `CRM_CUST_TC_130` — **KHÔNG đánh lại từ 001** |
-| **Quy mô** | 129 TC · **155 biến thể** · **74 mục bảng kiểm** · 16 TC `@TechCheck` · 49 TC `@NeedsVerify` · 2 TC thiết kế để FAIL |
-| **Mức rủi ro · độ sâu** | `Cao` → **Đầy đủ** — V1 đủ 6 nhánh, V2 đủ mọi nhánh có điều kiện kích hoạt, V3/V4 đủ nhánh áp dụng được.<br>Căn cứ chấm Cao (đủ **5/5** dấu hiệu, chỉ cần 1): dữ liệu cá nhân khách hàng (email, số điện thoại, thông tin đăng nhập máy chủ ở Vault) · thao tác **không hồi lại được** (xoá bằng đường dẫn không xác nhận, `Mass Delete`) · là **cổng vào** của hơn 10 module khác · đụng phân quyền 3 vai trò · sao kê công nợ là số liệu tài chính.<br>**Rà lại khi:** PO trả lời `AMB-CUST-14`, hoặc module có thêm nền tảng Mobile/API |
+| **Quy mô** | 129 TC · **155 biến thể** · **74 mục bảng kiểm** · 16 TC `@TechCheck` · 51 TC `@NeedsVerify` · 2 TC thiết kế để FAIL |
+| **Mức rủi ro · độ sâu** | `Cao` → **Đầy đủ** — V1 đủ 6 nhánh, V2 đủ mọi nhánh có điều kiện kích hoạt, V3/V4 đủ nhánh áp dụng được.<br>Căn cứ chấm Cao (đủ **5/5** dấu hiệu, chỉ cần 1): dữ liệu cá nhân khách hàng (email, số điện thoại, thông tin đăng nhập máy chủ ở Vault) · thao tác **không hồi lại được** (xoá bằng đường dẫn không xác nhận, `Mass Delete`) · là **cổng vào** của hơn 10 module khác · đụng phân quyền 3 vai trò · sao kê công nợ là số liệu tài chính.<br>**Rà lại khi:** module có thêm nền tảng Mobile/API (`AMB-CUST-14` đã trả lời 19-09-2026 — trùng giả định, mức rủi ro giữ Cao) |
 | **Môi trường** | ⚠️ **Dùng chung** — mọi TC tạo dữ liệu đều tự dọn (`D1`); `Mass Delete` và tạo nhóm khách hàng chỉ chạy trên môi trường riêng (`@PersonalOnly`) |
 | **Trình duyệt chuẩn** | Google Chrome, viewport desktop `1600×750` |
 | **Tài khoản** | 🔒 Lấy từ `.env` (`ADMIN_*`, `PM_*`, `CUSTOMER_*`) — **KHÔNG** ghi mật khẩu thật vào tài liệu |
@@ -86,7 +86,7 @@ Phần chính của mọi TC **quan sát được bằng mắt**. Nội dung c�
 | ASM-07 | ✅ **Đã giải quyết 19-09-2026 — tài liệu đúng, ảnh gây hiểu nhầm.** DOM là `Search...`; ô rộng ~79 px nên trên màn hình bị cắt còn `Search..`. `TC_003`, `TC_072` chấm đạt cả hai · *Ban đầu:* 🔀 **Xung đột.** `REQ-CUST-11` ghi chữ gợi ý ô tìm kiếm của bảng là `Search...` (3 chấm); mọi ảnh danh sách đều là `Search..` (2 chấm). `Search...` 3 chấm là ô tìm kiếm **toàn hệ thống** ở thanh đầu trang | Viết theo ảnh: `Search..` | `TC_003` mục `2` · `TC_072` mục `2` |
 | ASM-08 | `This Week` của sao kê bắt đầu từ thứ Hai hay Chủ nhật? | Không khẳng định — ghi lại ngày bắt đầu tuần khi chạy | `TC_085-b` |
 | ASM-09 | Tài liệu không nêu miền giá trị của `Port` (Vault), `Latitude`, `Longitude` | Dùng miền chuẩn: cổng 1–65535, vĩ độ −90…90, kinh độ −180…180. Giá trị ngoài miền chỉ **ghi nhận** | `TC_091`, `TC_092`, `TC_094`, `TC_095` |
-| ASM-10 | `AMB-CUST-14` còn treo: PM có thật sự được xoá khách hàng, có xem được mục Vault mức "chỉ quản trị viên" không | Theo giả định tạm của AMB: PM **được** xoá (cấu hình cố ý) · PM **không** thấy mục Vault mức 2 | `TC_119`, `TC_120` — `@AssumptionBased` |
+| ASM-10 | ✅ **Đã giải quyết 19-09-2026** — PO trả lời `AMB-CUST-14` **trùng giả định cả hai vế** · *Ban đầu:* `AMB-CUST-14` còn treo: PM có thật sự được xoá khách hàng, có xem được mục Vault mức "chỉ quản trị viên" không | Theo giả định tạm của AMB: PM **được** xoá (cấu hình cố ý) · PM **không** thấy mục Vault mức 2 | `TC_119`, `TC_120` — gỡ `@AssumptionBased` |
 | ASM-11 | `REQ-CUST-81`, `REQ-CUST-82` là quyết định PO **chưa kiểm chứng** (⚪). Đường menu tới biểu mẫu tạo mới của 11 module lấy theo `system_map`, chưa mở lần nào | Viết theo quyết định PO; đường menu ghi lại đường thật nếu khác | `TC_079`, `TC_080`, `TC_081` — `@AssumptionBased` |
 | ASM-12 | Giới hạn 255 ký tự (`AMB-CUST-05`) chốt theo giả định, chưa đo | TC biên 255 phải lưu nguyên vẹn; 256 phải bị chặn **hoặc** báo cắt — lưu cắt âm thầm là FAIL | `TC_045`, `TC_046`, `TC_050-e`, `TC_051-f`, `TC_052-e`, `TC_056-e` |
 
@@ -239,7 +239,7 @@ Phần chính của mọi TC **quan sát được bằng mắt**. Nội dung c�
 | Bộ lọc **sau khi Apply**: kết quả lọc, `Clear Filter`/`Edit` xuất hiện, ô tên khi bật `Save Filter` (dòng điều kiện và cặp `and`/`or` đã có ảnh 19-09-2026) | TC_025, 027, 028, 029 | Áp bộ lọc trên khách hàng test, chụp dropdown và hộp thoại khi bật `Save Filter` |
 | Hành vi sau khi lưu chưa thực thi lúc khảo sát: thông báo sửa hồ sơ, gán nhóm hàng loạt, gán quản trị viên, ghi chú, Vault, nhắc nhở | TC_035, 036, 067, 073, 082, 090, 098 | Chạy thật trên khách hàng test, chụp thông báo |
 | Giới hạn 255/256 ký tự, khoảng trắng đầu/cuối, lỗi tự biến mất | TC_042, 045–047 | Đo trên khách hàng test |
-| Quyết định PO chưa kiểm chứng | TC_079–081, 119, 120 | Xem ASM-10, ASM-11 |
+| Quyết định PO chưa kiểm chứng | TC_079–081 | Xem ASM-11 |
 | Kích thước màn hình khác `1600×750`, thứ tự Tab, `javascript:` ở Website, tab ẩn qua URL | TC_116, 124–126 | Chụp ở 4 kích thước đã chốt |
 | Đoán lỗi: hồ sơ đã xoá, Back, 2 tab, Period ngược, Bulk không chọn dòng, sao chép khi ô nguồn trống, tệp CSV lỗi, dòng trùng email | TC_038, 066, 078, 086, 104, 105, 109, 110 | Ghi lại hành vi ở lần chạy đầu → chốt thành AMB/REQ |
 
@@ -307,5 +307,7 @@ Phần chính của mọi TC **quan sát được bằng mắt**. Nội dung c�
 
 | Ngày | Nguồn | TC | Thay đổi | Mốc git |
 |---|---|---|---|---|
+| 19-09-2026 | Rà soát nhất quán index | — | Sửa số liệu dòng **Quy mô**: `@NeedsVerify` 49 → **51 TC** theo số đếm thật trong 5 part. Không đổi TC nào | `5d10845` |
+| 19-09-2026 | Quyết định PO `AMB-CUST-14` (trả lời qua chat) | ✏️ `TC_119`, `TC_120` | PO trả lời **trùng giả định tạm cả hai vế**: PM được xoá khách hàng, PM không xem được mục Vault mức "chỉ quản trị viên". Gỡ `@AssumptionBased` ở 2 TC, thay ghi chú giả định bằng quyết định PO, ô ma trận phân quyền ❔ → ✅/❌. **Kỳ vọng không đổi**, TC ID giữ nguyên. `ASM-10` ✅ | `5d10845` |
 | 19-09-2026 | Đồng bộ requirements với DOM thật (recon bằng tài khoản `Project Manager`, không ghi dữ liệu) | ✏️ `TC_003`, `TC_006`, `TC_025`, `TC_026`, `TC_027`, `TC_028`, `TC_061`, `TC_072`, `TC_093` · ➕ `TC_129` | Giải quyết `ASM-01`, `02`, `03`, `04`, `05`, `07`. Sửa tại chỗ, **TC ID giữ nguyên**: chữ gợi ý `Search...` (bị cắt trên màn hình) · chú giải `Currency` nguyên văn · dropdown bộ lọc theo tài khoản, `Clear Filter`/`Edit` ẩn khi chưa áp · cặp `and`/`or` mặc định `or` · chú giải nút `G`. Thêm `TC_129` cho `REQ-CUST-84` (khoá đổi tiền tệ khi đã có giao dịch). Chưa có automation/execution nào trỏ vào bộ TC nên không cần Delta TC List | (chưa commit) |
 | 19-09-2026 | `/generate-testcases-from-requirements` Mode QUICK | `TC_001` → `TC_128` | **Sinh lần đầu** bộ TC module `CUST` — 128 TC · 155 biến thể · 5 part, độ hạt GỘP, rủi ro Cao → Đầy đủ. Phủ 83/83 REQ (gồm 5 REQ 🟡 và 2 REQ ⚪ của đợt `PO-2026-09-19`). Mở 26/26 ảnh evidence, ghi 12 giả định (5 xung đột tài liệu ↔ ảnh) | `5c0a0f4` (trước khi sinh) |

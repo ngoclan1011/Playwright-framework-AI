@@ -20,8 +20,8 @@
 
 | Module | Prefix | Trạng thái recon | Mức phủ tài liệu | Tài liệu | REQ đã dùng | Mã kế tiếp | AMB treo | Cập nhật |
 |---|---|---|---|---|---|---|---|---|
-| Đăng nhập / Xác thực | `LOGIN` | ✅ Đã có tài liệu | ⬜ Trắng | [login/requirements_login.md](login/requirements_login.md) | `REQ-LOGIN-01` → `REQ-LOGIN-43` (43) | `REQ-LOGIN-44` | **0** — đã xử lý 19/19 | 19-09-2026 |
-| Khách hàng | `CUST` | ✅ Đã có tài liệu | ⬜ Trắng | [customers/requirements_customers.md](customers/requirements_customers.md) | `REQ-CUST-01` → `REQ-CUST-84` (84) | `REQ-CUST-85` | 1 🟡 (AMB-CUST-14) — đã xử lý 13/14 | 19-09-2026 |
+| Đăng nhập / Xác thực | `LOGIN` | ✅ Đã có tài liệu | ⬜ Trắng | [login/requirements_login.md](login/requirements_login.md) | `REQ-LOGIN-01` → `REQ-LOGIN-44` (44) | `REQ-LOGIN-45` | **0** — đã xử lý 20/20 | 19-09-2026 |
+| Khách hàng | `CUST` | ✅ Đã có tài liệu | ⬜ Trắng | [customers/requirements_customers.md](customers/requirements_customers.md) | `REQ-CUST-01` → `REQ-CUST-84` (84) | `REQ-CUST-85` | **0** — đã xử lý 14/14 | 19-09-2026 |
 | Liên hệ khách hàng | `CONT` | ⬜ Chưa khảo sát | ⬜ Trắng | — | — | `REQ-CONT-01` | — | 14-08-2026 |
 | Khách hàng tiềm năng | `LEAD` | ⬜ Chưa khảo sát | ⬜ Trắng | — | — | `REQ-LEAD-01` | — | 14-08-2026 |
 | Dự án | `PRJ` | ✅ Đã có tài liệu | ⬜ Trắng | [projects/requirements_projects.md](projects/requirements_projects.md) | `REQ-PRJ-01` → `REQ-PRJ-104` (104) | `REQ-PRJ-105` | 6 🔴 (AMB-PRJ-01→04, 06, 14) · 7 🟡 · 3 🟢 | 14-08-2026 |
@@ -70,11 +70,11 @@ CTR · EXP · ITEM · TICK · ESTREQ · KB · REP · DASH · TODO · REM · PROF
 
 | Trạng thái | Số lượng | Chi tiết |
 |---|---|---|
-| 🟢 Active | 198 | `LOGIN` 25 · `CUST` 73 · `PRJ` 100 |
+| 🟢 Active | 199 | `LOGIN` 26 · `CUST` 73 · `PRJ` 100 |
 | 🟡 Changed | 25 | `LOGIN` 16 — 15 REQ sửa trong hai đợt ngày 18-08-2026 (rà soát chất lượng + chốt quyết định PO) · `REQ-LOGIN-42` sửa 19-09-2026 (`AMB-LOGIN-19` ✅). Trong đó **`REQ-LOGIN-16` và `REQ-LOGIN-25` ghi kỳ vọng đúng mà hệ thống chưa đạt** → TC sẽ FAIL, phải mở bug · `CUST` 9 — `42`, `43`, `53`, `73`, `79` sửa 19-09-2026 (`PO-2026-09-19`) · `15`, `17`, `22`, `70` sửa 19-09-2026 (recon đối chiếu evidence). Trong đó **`REQ-CUST-42` và `REQ-CUST-43` ghi kỳ vọng đúng mà hệ thống chưa đạt** → TC sẽ FAIL, phải mở bug |
 | 🔴 Deprecated | 0 | — |
 | ⚪ Chưa implement | 7 | `LOGIN` 2 — `REQ-LOGIN-27` và `REQ-LOGIN-40`, **cả hai ra ngoài phạm vi kiểm thử** theo quyết định PO 18-08-2026 · `CUST` 2 — `REQ-CUST-81` (Inactive bị loại khỏi mọi dropdown, chưa rà 11 module) và `REQ-CUST-82` (chặn xoá khách hàng có dữ liệu liên quan, cần môi trường riêng) · `PRJ` 4 — `REQ-PRJ-89`, `91`, `94` (CRUD mốc tiến độ / tệp / thảo luận, không chạy trên môi trường dùng chung) và `REQ-PRJ-104` (nội dung tệp `Export project data`, không tải tệp về) |
-| **Tổng** | **231** | |
+| **Tổng** | **232** | |
 
 > ⚠️ **Toàn bộ REQ 🟡 của `LOGIN` chưa có test case nào** (module chưa tới bước sinh TC). Khi sinh TC, viết theo bản đã sửa — **không** dùng bản trước 18-08-2026.
 >
@@ -105,7 +105,9 @@ CTR · EXP · ITEM · TICK · ESTREQ · KB · REP · DASH · TODO · REM · PROF
 | AMB-LOGIN-14 | `LOGIN` | ⏭️ Chuyển module 18-08-2026 | Kiểm chứng popup cảnh báo timer giao cho module `TASK` — **nhớ cập nhật ngược `REQ-LOGIN-30`** khi recon `TASK` |
 | AMB-LOGIN-15 | `LOGIN` | ⏭️ Bỏ qua 18-08-2026 | Remember Me không hoạt động → `REQ-LOGIN-40` ra ngoài phạm vi · thêm `RISK-LOGIN-08` (checkbox vẫn hiển thị và vẫn cấp cookie) |
 | AMB-LOGIN-19 | `LOGIN` | ✅ Đã trả lời 19-09-2026 | Phiên 1 giờ tính theo **thời gian không hoạt động**, mỗi thao tác gia hạn lại → `REQ-LOGIN-42` thêm AC gia hạn. `LOGIN` **hết ambiguity treo** |
+| AMB-LOGIN-20 | `LOGIN` | ✅ Đã trả lời 19-09-2026 | Truy cập qua `http://` **bắt buộc** tự chuyển sang HTTPS + HSTS → thêm `REQ-LOGIN-44`. Hệ thống chưa đạt (đo `curl -I`) → bug `TC039` giữ mở |
 | AMB-CUST-01 | `CUST` | ✅ Đã trả lời 19-09-2026 | Dựng lại ma trận phân quyền bằng tài khoản PM: 38/39 ô. **Khác giả định tạm** — PM có giao diện xoá / `Mass Delete` như Admin → tách `AMB-CUST-14` 🟡 + `RISK-CUST-08` |
+| AMB-CUST-14 | `CUST` | ✅ Đã trả lời 19-09-2026 | Trùng giả định: PM **được** xoá khách hàng (cấu hình cố ý) · PM **không** xem mục Vault mức "chỉ quản trị viên". `RISK-CUST-08` → đã chấp nhận. `CUST` **hết ambiguity treo** |
 | AMB-CUST-02 | `CUST` | ✅ Đã trả lời 19-09-2026 | Company toàn khoảng trắng vẫn lưu được **là lỗi** → `REQ-CUST-43` 🟡, cần mở bug |
 | AMB-CUST-03 | `CUST` | ✅ Đã trả lời 19-09-2026 | Theo giả định: phải tự chuyển về tab chứa lỗi → `REQ-CUST-42` 🟡, cần mở bug |
 | AMB-CUST-11 | `CUST` | ✅ Đã trả lời 19-09-2026 | Hệ thống chặn và báo lỗi → `REQ-CUST-82` ⚪, cần môi trường riêng để kiểm chứng |
@@ -165,6 +167,7 @@ docs/requirements/
 
 | Ngày | Thay đổi |
 |---|---|
+| 19-09-2026 | **Hai quyết định PO trả lời qua chat.** `AMB-LOGIN-20` (mở và đóng cùng ngày): ép HTTPS là **bắt buộc** → thêm `REQ-LOGIN-44` 🟢 — `LOGIN` 44 REQ, 40 trong phạm vi; `CRM_LOGIN_TC_039` chuyển truy vết từ `REQ-LOGIN-01` sang REQ mới. `AMB-CUST-14` ✅ trùng giả định, không đổi REQ. Active 198 → 199, Tổng 231 → 232. **Cả `LOGIN` lẫn `CUST` không còn ambiguity treo** |
 | 19-09-2026 | **`CUST` đồng bộ requirements với evidence** — đo lại DOM thật 5 điểm lệch mà bộ TC phát hiện: 4 REQ 🟡 (`15`, `17`, `22`, `70`), 2 REQ chỉ ghi chú hiển thị (`11`, `16`), thêm `REQ-CUST-84` 🟢 (khoá đổi tiền tệ khi đã có giao dịch). Active 201 → 198, Changed 21 → 25, Tổng 230 → 231 |
 | 19-09-2026 | **`LOGIN` và `PRJ` chuyển sang tầng nền tảng** (skill `skills-requirements-analyzer` mục 5.3), cùng chuẩn với `CUST`. `LOGIN`: 43 REQ + mục 2, 3, 4, 5, 8, 9, 12 → `login/web/requirements_login_web.md`, ảnh → `login/web/evidence/`. `PRJ`: `stories/` → `projects/web/stories/`, ảnh → `projects/web/evidence/`, mục 2, 6, 8 → `projects/web/requirements_projects_web.md`. Index giữ tên và vị trí, có `## Bản đồ tài liệu` mới. **Mã REQ, số mục, nội dung không đổi**. Thư mục cũ `login/evidence/`, `projects/evidence/`, `projects/stories/` đã bỏ |
 | 19-09-2026 | **Chuyển `CUST` sang cấu trúc tầng nền tảng** — 83 REQ (toàn bộ chỉ áp web) cùng đặc tả trường, validation, luồng, NFR quan sát và danh mục evidence sang `customers/web/requirements_customers_web.md`; 26 ảnh sang `customers/web/evidence/`. Index `requirements_customers.md` giữ nguyên tên và vị trí, thêm `## Bản đồ tài liệu`. Mã REQ, số mục và nội dung không đổi. Mục 4 của danh mục cập nhật sơ đồ có tầng nền tảng |

@@ -78,7 +78,7 @@ Module gồm **4 màn hình chính**:
 >
 > Cột `Admin` kiểm chứng 14-08-2026. Cột `Project Manager` kiểm chứng 19-09-2026 bằng tài khoản PM (`user-id-3`, `app.user_is_admin` rỗng). Khu Setup (`/admin/roles`, `/admin/staff`) với PM **chuyển hướng về `/admin/clients`** — vẫn không đọc được màn hình cấu hình quyền.
 
-**Ký hiệu:** ✅ đã **thực thi** thành công · ✅ᵁᴵ giao diện hiện đủ chức năng (trang mở được, nút/link có mặt) nhưng **không gửi** thao tác — tránh ghi/xoá dữ liệu trên môi trường dùng chung · ❌ bị chặn · ❔ chưa kiểm chứng
+**Ký hiệu:** ✅ đã **thực thi** thành công · ✅ᵁᴵ giao diện hiện đủ chức năng (trang mở được, nút/link có mặt) nhưng **không gửi** thao tác — tránh ghi/xoá dữ liệu trên môi trường dùng chung · ❌ bị chặn · ❌ᴾᴼ bị chặn **theo quyết định PO**, chưa thử thật · ❔ chưa kiểm chứng
 
 | Hành động | Admin | Project Manager | Customer |
 |---|---|---|---|
@@ -89,20 +89,21 @@ Module gồm **4 màn hình chính**:
 | Tạo khách hàng mới | ✅ | ✅ᵁᴵ biểu mẫu mở được, có nút `Save` · ✅ tạo thật qua Nhập CSV | ❌ |
 | Sửa hồ sơ khách hàng | ✅ | ✅ᵁᴵ biểu mẫu sửa mở được, có nút `Save` | ❌ |
 | Bật/tắt trạng thái hoạt động | ✅ | ✅ gạt `14626` sang Inactive (Inactive 9 → 10) rồi bật lại (10 → 9) | ❌ |
-| Xoá khách hàng | ✅ | ✅ᵁᴵ link `Delete` trên từng dòng | ❌ |
+| Xoá khách hàng | ✅ | ✅ᵁᴵ link `Delete` trên từng dòng · PO xác nhận **được phép** 19-09-2026 (`AMB-CUST-14` ✅) | ❌ |
 | Gán quản trị viên phụ trách | ✅ | ✅ᵁᴵ nút `Assign Admin` | ❌ |
-| Xem mục Vault mức "chỉ quản trị viên" | ✅ | ❔ tab Vault mở được và tạo được mục mới (`New Vault Entry`, đủ 3 mức hiển thị), nhưng chưa có mục mức 2 nào để thử xem | ❌ |
+| Xem mục Vault mức "chỉ quản trị viên" | ✅ | ❌ᴾᴼ theo quyết định PO 19-09-2026 (`AMB-CUST-14` ✅) — chưa thử thật: chưa có mục mức 2 nào | ❌ |
 | Nhập khách hàng từ CSV | ✅ | ✅ nhập thật 2 dòng, `Total Imported: 2` | ❌ |
 | Tạo nhóm khách hàng nhanh từ biểu mẫu | ✅ | ✅ᵁᴵ nút `+` mở `#customer_group_modal` | ❌ |
 | Số tab trong hồ sơ khách hàng | 19 (`REQ-CUST-48`) | 15 — thiếu `Payments` · `Proposals` · `Subscriptions` · `Expenses` (`REQ-CUST-83`) | ❌ |
 
 ```
 Đã kiểm chứng: 38/39 ô — Admin 13 · Project Manager 12 (5 thực thi + 7 mức UI) · Customer 13
-Chưa rõ: 1 ô — PM xem mục Vault "chỉ quản trị viên" (AMB-CUST-14)
+Theo quyết định PO, chưa thử thật: 1 ô — PM xem mục Vault "chỉ quản trị viên" (ᴾᴼ, AMB-CUST-14 ✅)
+Chưa rõ: 0 ô
 Cột Customer: ❌ toàn bộ theo REQ-LOGIN-43 — liên hệ khách hàng không đăng nhập được vào /admin
 ```
 
-> ⚠️ **PM có giao diện đầy đủ như Admin với mọi thao tác phá huỷ** (xoá từng bản ghi, `Mass Delete` toàn bộ khách hàng) — trái giả định tạm của `AMB-CUST-01` (*"vai trò không phải Admin không xoá được"*). Quyền xoá phía server **chưa thực thi** — xem `AMB-CUST-14` và `RISK-CUST-08`.
+> ⚠️ **PM có giao diện đầy đủ như Admin với mọi thao tác phá huỷ** (xoá từng bản ghi, `Mass Delete` toàn bộ khách hàng) — trái giả định tạm của `AMB-CUST-01` (*"vai trò không phải Admin không xoá được"*). PO xác nhận 19-09-2026 đây là **cấu hình cố ý** — PM được phép xoá khách hàng (`AMB-CUST-14` ✅). Rủi ro thao tác nhầm vẫn còn — xem `RISK-CUST-08`.
 >
 > Riêng REQ-CUST-68 cho biết hệ thống **có** phân biệt "quản trị viên" với "nhân sự thường" ở mức dữ liệu Vault (`Visible only to administrators`).
 
@@ -145,7 +146,7 @@ Khách hàng có đúng **2 trạng thái**, điều khiển bằng công tắc 
 
 | Hạng mục | Lý do |
 |---|---|
-| Ma trận Phân quyền (mục 6) | Cắt ngang cả 10 Story. Đã kiểm chứng 38/39 ô ngày 19-09-2026; còn 1 ô treo ở `AMB-CUST-14` |
+| Ma trận Phân quyền (mục 6) | Cắt ngang cả 10 Story. Đã kiểm chứng 38/39 ô ngày 19-09-2026; ô còn lại chốt theo quyết định PO (`AMB-CUST-14` ✅), chưa thử thật |
 | Ma trận Trạng thái (mục 7) | Trạng thái Active/Inactive ảnh hưởng tới hành vi của Story 01, 04, 07, 08 |
 | Yêu cầu phi chức năng (mục 9) | Áp cho toàn module, không thuộc một luồng cụ thể |
 | Bảng Ambiguity & Risk (mục 11) | Đánh số theo toàn module |
@@ -188,7 +189,7 @@ Khách hàng có đúng **2 trạng thái**, điều khiển bằng công tắc 
 | AMB-CUST-11 | Xoá khách hàng **đang có** hoá đơn / dự án / hợp đồng thì hệ thống xử lý ra sao — chặn, xoá lan, hay để lại bản ghi mồ côi? | Đây là kịch bản rủi ro cao nhất của module; nếu xoá lan thì mất dữ liệu tài chính | 🔴 | Hệ thống **chặn** và báo lỗi | ✅ Đã trả lời 19-09-2026 | PO: hệ thống **chặn và báo lỗi** → `REQ-CUST-82` (⚪ — cần môi trường riêng để kiểm chứng) |
 | AMB-CUST-12 | Luồng nhập CSV chưa kiểm chứng (không tải tệp lên môi trường dùng chung). Thông báo kết quả nhập, cách báo dòng lỗi, hành vi của `Simulate Import` ra sao? | `REQ-CUST-79` đang ⚪; toàn bộ STORY-CUST-10 chưa test được | 🟡 | `Simulate Import` chỉ hiển thị bản xem trước, không ghi dữ liệu | ✅ Đã trả lời 19-09-2026 | PO cho phép nhập thật 2 khách hàng trên môi trường dùng chung. `Simulate Import` không ghi dữ liệu (**trùng giả định**) → `REQ-CUST-80`; nhập thật báo `Total Imported: 2` → `REQ-CUST-79` |
 | AMB-CUST-13 | Checkbox `Show primary contact full name…` bị ẩn khi khách hàng chưa có liên hệ. Điều kiện hiển thị chính xác là gì — cần ≥ 1 liên hệ, hay cần một liên hệ được đánh dấu là liên hệ chính? | Viết TC sai điều kiện tiền đề, test sẽ fail giả | 🟢 | Hiện khi khách hàng có ít nhất 1 liên hệ được đánh dấu **Primary Contact** | ✅ Đã trả lời 19-09-2026 | Chốt theo giả định tạm; kiểm chứng được vế "có 1 liên hệ chính → hiện" trên `14625` → `REQ-CUST-53` 🟡 |
-| AMB-CUST-14 | Tài khoản `Project Manager` thấy link `Delete` từng dòng và `Mass Delete` trong `Bulk Actions` giống hệt Admin. (1) PM có **thực sự** được phép xoá khách hàng — kể cả xoá hàng loạt toàn bộ danh sách — không? (2) PM có xem được mục Vault mức `Visible only to administrators` không? | Nhân sự không phải quản trị viên xoá được dữ liệu mà hơn 10 module tham chiếu tới | 🟡 | Đây là **cấu hình quyền cố ý** của môi trường demo (PM được cấp đủ quyền Customers) · PM **không** thấy mục Vault mức 2 | ❓ Chờ trả lời | (1) kiểm chứng được mà không cần môi trường riêng: dùng tài khoản PM xoá `14625` hoặc `14626` (khách hàng nhập 19-09-2026) — vừa kiểm chứng vừa dọn dữ liệu. (2) cần Admin tạo 1 mục Vault mức 2 trên khách hàng test |
+| AMB-CUST-14 | Tài khoản `Project Manager` thấy link `Delete` từng dòng và `Mass Delete` trong `Bulk Actions` giống hệt Admin. (1) PM có **thực sự** được phép xoá khách hàng — kể cả xoá hàng loạt toàn bộ danh sách — không? (2) PM có xem được mục Vault mức `Visible only to administrators` không? | Nhân sự không phải quản trị viên xoá được dữ liệu mà hơn 10 module tham chiếu tới | 🟡 | Đây là **cấu hình quyền cố ý** của môi trường demo (PM được cấp đủ quyền Customers) · PM **không** thấy mục Vault mức 2 | ✅ Đã trả lời 19-09-2026 | **Trùng Giả định tạm cả hai vế.** (1) PM **được phép** xoá khách hàng — cấu hình quyền cố ý. (2) PM **không** xem được mục Vault mức `Visible only to administrators`. Không đổi REQ nào; `CRM_CUST_TC_119`, `120` gỡ `@AssumptionBased`. *Cách kiểm chứng đề xuất trước đó (vẫn dùng được khi chạy TC):* (1) kiểm chứng được mà không cần môi trường riêng: dùng tài khoản PM xoá `14625` hoặc `14626` (khách hàng nhập 19-09-2026) — vừa kiểm chứng vừa dọn dữ liệu. (2) cần Admin tạo 1 mục Vault mức 2 trên khách hàng test |
 
 ### 11.2. Risks
 
@@ -201,7 +202,7 @@ Khách hàng có đúng **2 trạng thái**, điều khiển bằng công tắc 
 | RISK-CUST-05 | Bảng nạp bất đồng bộ dễ gây khẳng định sai | Mọi thao tác lọc/tìm/phân trang đều đi qua `POST /admin/clients/table`; đọc DOM ngay sau thao tác sẽ thấy dữ liệu cũ | Chờ theo dòng trạng thái `Showing … entries` đổi giá trị hoặc chờ request kết thúc; **không** đọc bảng ngay sau khi gõ |
 | RISK-CUST-06 | Thao tác xoá dùng GET | `GET /admin/clients/delete/{id}` xoá ngay, không cần xác nhận khi mở thẳng URL. Trình duyệt, trình thu thập hoặc một cú dán URL nhầm đều có thể xoá dữ liệu thật | **Cấm** đưa URL xoá vào bất kỳ bước điều hướng nào của automation. Chỉ xoá qua nút `Delete` + hộp thoại xác nhận, và chỉ với bản ghi do test tạo ra |
 | RISK-CUST-07 | Thuộc tính HTML `checked` không phản ánh trạng thái thật của công tắc Active | Sau khi gạt công tắc, thuộc tính `checked` trong HTML **vẫn còn** trong khi thuộc tính DOM `.checked` đã là `false` | Automation phải đọc **property** `.checked`, tuyệt đối không đọc `getAttribute('checked')` hay so khớp chuỗi HTML |
-| RISK-CUST-08 | Nhân sự không phải quản trị viên có giao diện xoá hàng loạt | Tài khoản `Project Manager` thấy `Mass Delete` trong `Bulk Actions` và link `Delete` trên mọi dòng (2.031 khách hàng). Nếu quyền phía server cũng mở thì một thao tác nhầm của PM xoá được dữ liệu mà hơn 10 module tham chiếu (xem `AMB-CUST-14`) | Không chạy `Mass Delete` bằng bất kỳ tài khoản nào trên môi trường dùng chung. Kiểm chứng quyền xoá của PM chỉ trên bản ghi do test tạo ra. Đề xuất PO rà lại cấu hình vai trò PM |
+| RISK-CUST-08 | Nhân sự không phải quản trị viên có giao diện xoá hàng loạt | Tài khoản `Project Manager` thấy `Mass Delete` trong `Bulk Actions` và link `Delete` trên mọi dòng (2.031 khách hàng). Nếu quyền phía server cũng mở thì một thao tác nhầm của PM xoá được dữ liệu mà hơn 10 module tham chiếu (xem `AMB-CUST-14`) | Không chạy `Mass Delete` bằng bất kỳ tài khoản nào trên môi trường dùng chung. Kiểm chứng quyền xoá của PM chỉ trên bản ghi do test tạo ra. ⚠️ **Đã chấp nhận 19-09-2026** — PO xác nhận PM được phép xoá là cấu hình cố ý (`AMB-CUST-14` ✅); rủi ro thao tác nhầm vẫn còn, không giảm thiểu thêm |
 
 ---
 
@@ -209,6 +210,7 @@ Khách hàng có đúng **2 trạng thái**, điều khiển bằng công tắc 
 
 | Ngày | Nguồn | REQ ảnh hưởng | Loại | Tóm tắt thay đổi | TC cần xử lý |
 |---|---|---|---|---|---|
+| 19-09-2026 | Quyết định PO (trả lời qua chat) | — · Ma trận Phân quyền | ✏️ Biên tập | `AMB-CUST-14` ✅ — **trùng Giả định tạm cả hai vế**: PM được phép xoá khách hàng (cấu hình cố ý), PM **không** xem được mục Vault mức "chỉ quản trị viên". Không đổi REQ nào. Ma trận: ô Vault × PM từ `❔` → `❌ᴾᴼ` (quyết định PO, chưa thử thật). `RISK-CUST-08` → **đã chấp nhận**. Module **hết ambiguity treo (14/14)** | `CRM_CUST_TC_119`, `CRM_CUST_TC_120` — gỡ `@AssumptionBased`, `ASM-10` ✅ |
 | 19-09-2026 | Recon đối chiếu evidence (sau `/generate-testcases-from-requirements`) | REQ-CUST-11, 15, 16, 17, 22, 70, 84 | 🟡 Sửa · 🟢 Thêm | Bộ TC phát hiện 5 chỗ tài liệu ≠ ảnh evidence (ASM-01/02/03/04/07 của `test_cases_customers.md`); đo lại trên DOM thật bằng tài khoản `Project Manager`. **Tài liệu thiếu** → sửa: `15` cặp kiểu khớp nhãn `and`/`or`, mặc định `or`, chỉ hiện khi có điều kiện · `17` `Clear Filter`/`Edit` ẩn khi chưa áp bộ lọc, bộ lọc đã lưu khác nhau giữa tài khoản, trạng thái rỗng `No saved filters…` · `22` dòng cảnh báo đỏ gỡ hết nhóm · `70` nút `G` *Fetch from google*. **Tài liệu đúng, ảnh gây hiểu nhầm** → chỉ ghi chú (`✏️`, giữ 🟢): `11` chữ gợi ý `Search...` bị cắt còn `Search..` do ô hẹp · `16` `Save Filter` là ô tích hiển thị dạng công tắc. **Phát hiện mới** → `REQ-CUST-84` 🟢: khoá đổi tiền tệ khi khách hàng đã có giao dịch (kiểm chứng trên khách hàng `13339`). 3 ảnh evidence mới. Không tạo/sửa/xoá dữ liệu nào (hộp thoại bộ lọc đóng không Apply) | ✏️ `TC_003`, `TC_006`, `TC_025`, `TC_027`, `TC_028`, `TC_061`, `TC_072`, `TC_093` · ➕ `TC_129` cho `REQ-CUST-84` |
 | 19-09-2026 | Chuyển tầng nền tảng | REQ-CUST-01 → 83 | ✏️ Biên tập | **Chuyển sang cấu trúc tầng nền tảng** (skill `skills-requirements-analyzer` mục 5.3): toàn bộ 83 REQ chỉ áp web → `web/requirements_customers_web.md` cùng mục 2, 3, 4, 5, 8, 9, 12; ảnh `evidence/` → `web/evidence/`. Index giữ metadata, phạm vi, ma trận, Story, AMB/RISK, Nhật ký và thêm `## Bản đồ tài liệu`. **Mã REQ, số mục và nội dung không đổi** | — |
 | 19-09-2026 | `PO-2026-09-19` | REQ-CUST-42, 43 | 🟡 Sửa | PO chốt `AMB-CUST-02` là lỗi, `AMB-CUST-03` theo giả định — hai REQ đổi từ mô tả hành vi thực tế sang **kỳ vọng đúng**. Hệ thống hiện chưa đạt → cần mở bug | ➕ Viết mới — **dự kiến FAIL** |

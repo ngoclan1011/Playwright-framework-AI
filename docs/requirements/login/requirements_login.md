@@ -13,10 +13,10 @@
 | **Ngày phân tích** | 14-08-2026 · **rà soát và kiểm chứng lại 18-08-2026** |
 | **Tài khoản dùng khảo sát** | 1 tài khoản duy nhất — hiển thị "Admin Example", `user-id-2` |
 | **Môi trường dùng chung** | **CÓ** — mọi thao tác đều chỉ đọc hoặc có thể hoàn tác; không gửi mail đặt lại mật khẩu cho tài khoản thật |
-| **Tổng số REQ** | **43** — trong đó **39** nằm trong phạm vi viết TC; 4 REQ ra ngoài phạm vi theo quyết định PO 18-08-2026 (`27`, `34`, `35`, `40`) |
-| **Dải mã đã dùng** | `REQ-LOGIN-01` → `REQ-LOGIN-43` · `AMB-LOGIN-01` → `AMB-LOGIN-19` · `RISK-LOGIN-01` → `RISK-LOGIN-08` |
-| **Mã kế tiếp** | Đợt phân tích sau bắt đầu từ `REQ-LOGIN-44` · `AMB-LOGIN-20` · `RISK-LOGIN-09` — **KHÔNG đánh lại từ 01** |
-| **Ambiguity còn treo** | **0** — đã xử lý **19/19** (`AMB-LOGIN-19` ✅ 19-09-2026) |
+| **Tổng số REQ** | **44** — trong đó **40** nằm trong phạm vi viết TC; 4 REQ ra ngoài phạm vi theo quyết định PO 18-08-2026 (`27`, `34`, `35`, `40`) |
+| **Dải mã đã dùng** | `REQ-LOGIN-01` → `REQ-LOGIN-44` · `AMB-LOGIN-01` → `AMB-LOGIN-20` · `RISK-LOGIN-01` → `RISK-LOGIN-08` |
+| **Mã kế tiếp** | Đợt phân tích sau bắt đầu từ `REQ-LOGIN-45` · `AMB-LOGIN-21` · `RISK-LOGIN-09` — **KHÔNG đánh lại từ 01** |
+| **Ambiguity còn treo** | **0** — đã xử lý **20/20** (`AMB-LOGIN-20` ✅ 19-09-2026) |
 | **Tài khoản kiểm thử** | Đủ **3 vai trò** `Admin` · `Project Manager` · `Customer` — lưu ở `.env`, **KHÔNG** ghi vào tài liệu |
 
 ---
@@ -60,7 +60,7 @@ Module gồm **4 màn hình / điểm cuối**:
 | Nền tảng | File | Story | REQ bao phủ |
 |---|---|---|---|
 | Chung ≥ 2 nền tảng | chính file này | — | — (module mới có một nền tảng) |
-| Web | [web/requirements_login_web.md](web/requirements_login_web.md) | STORY-LOGIN-01 → 06 | `REQ-LOGIN-01` → `REQ-LOGIN-43` (43) |
+| Web | [web/requirements_login_web.md](web/requirements_login_web.md) | STORY-LOGIN-01 → 06 | `REQ-LOGIN-01` → `REQ-LOGIN-44` (44) |
 
 | Nội dung | Ở đâu |
 |---|---|
@@ -138,19 +138,19 @@ Module không có entity nghiệp vụ nào mang vòng đời trạng thái. Tuy
 | STORY-LOGIN-01 | Giao diện trang đăng nhập | REQ-LOGIN-01 → 05 · **36** · **37** | 7 | AMB-LOGIN-11 · RISK-LOGIN-01 | Chỉ kiểm tra hiển thị và cấu trúc, không tương tác nghiệp vụ |
 | STORY-LOGIN-02 | Đăng nhập thành công | REQ-LOGIN-06 → 09 · **38** | 5 | AMB-LOGIN-13 · RISK-LOGIN-07 | Gồm cả tuỳ chọn Ghi nhớ đăng nhập |
 | STORY-LOGIN-03 | Kiểm tra dữ liệu & đăng nhập thất bại | REQ-LOGIN-10 → 16 · **41** · **43** | 9 | AMB-LOGIN-02 ✅ · AMB-LOGIN-09 ✅ · AMB-LOGIN-10 ✅ · RISK-LOGIN-01 · RISK-LOGIN-03 ✅ | ✅ Hết BLOCKED. ⚠️ Chứa `REQ-LOGIN-16` — TC **sẽ FAIL** vì hệ thống lỗi (`AMB-LOGIN-10`), phải mở bug |
-| STORY-LOGIN-04 | Bảo vệ phiên & điều hướng | REQ-LOGIN-17 → 22 · **42** | 7 | AMB-LOGIN-08 ✅ · AMB-LOGIN-12 ⏭️ · AMB-LOGIN-17 ✅ · AMB-LOGIN-19 ✅ | Gồm bảo vệ CSRF và hết hạn phiên. `REQ-LOGIN-42` chạy **1 giờ** — tách khỏi bộ smoke |
+| STORY-LOGIN-04 | Bảo vệ phiên & điều hướng | REQ-LOGIN-17 → 22 · **42** · **44** | 8 | AMB-LOGIN-08 ✅ · AMB-LOGIN-12 ⏭️ · AMB-LOGIN-17 ✅ · AMB-LOGIN-19 ✅ · AMB-LOGIN-20 ✅ | Gồm bảo vệ CSRF, hết hạn phiên và ép HTTPS. ⚠️ `REQ-LOGIN-44` — TC **sẽ FAIL** (chưa ép HTTPS), bug đang mở. `REQ-LOGIN-42` chạy **1 giờ** — tách khỏi bộ smoke |
 | STORY-LOGIN-05 | Quên mật khẩu | REQ-LOGIN-23 → REQ-LOGIN-28 | 6 | AMB-LOGIN-03 ⏭️ · AMB-LOGIN-04 ⏭️ · AMB-LOGIN-05 ✅ · RISK-LOGIN-04 ⚠️ · RISK-LOGIN-05 ⚠️ | ⏭️ **Thu hẹp phạm vi** — `REQ-LOGIN-27` ra ngoài phạm vi (`AMB-LOGIN-04` bỏ qua). 5 REQ còn lại vẫn test bình thường. `AMB-LOGIN-03` ⏭️ — HTTP 500 với mã khoá sai là hiện trạng **được chấp nhận** (`REQ-LOGIN-28`) |
 | STORY-LOGIN-06 | Đăng xuất & vòng đời cookie ghi nhớ | REQ-LOGIN-29 → 35 · **39** · **40** | 9 | AMB-LOGIN-06 · AMB-LOGIN-07 · AMB-LOGIN-14 ⏭️ · AMB-LOGIN-15 ⏭️ · AMB-LOGIN-16 · RISK-LOGIN-02 · **RISK-LOGIN-08** | ⏭️ **Thu hẹp phạm vi** — `REQ-LOGIN-40` ra ngoài phạm vi (Remember Me không hoạt động) · `REQ-LOGIN-30` giữ nguyên nhưng việc kiểm chứng đầu-cuối chuyển sang module `TASK` |
 
-**Tổng: 6 Story / 43 REQ** — mọi REQ thuộc đúng một Story, không mồ côi, không trùng (7+5+9+7+6+9 = 43 ✔).
+**Tổng: 6 Story / 44 REQ** — mọi REQ thuộc đúng một Story, không mồ côi, không trùng (7+5+9+8+6+9 = 44 ✔).
 
-**Phạm vi thực tế sẽ viết TC:** 43 REQ − 4 REQ ngoài phạm vi (`REQ-LOGIN-27`, `34`, `35`, `40`) = **39 REQ**.
+**Phạm vi thực tế sẽ viết TC:** 44 REQ − 4 REQ ngoài phạm vi (`REQ-LOGIN-27`, `34`, `35`, `40`) = **40 REQ**.
 
 **Đối chiếu AMB/RISK — mọi mã đều có chỗ đứng, không mã nào mồ côi:**
 
 | Nhóm | Mã | Nằm ở đâu |
 |---|---|---|
-| AMB thuộc Story | AMB-LOGIN-02…19 (trừ 01, 18) | 17 mã, phân bổ ở bảng trên |
+| AMB thuộc Story | AMB-LOGIN-02…20 (trừ 01, 18) | 18 mã, phân bổ ở bảng trên |
 | AMB cấp Epic | AMB-LOGIN-01 · AMB-LOGIN-18 | Ma trận Phân quyền — cả hai đã ✅, xem bảng Epic bên dưới |
 | RISK thuộc Story | RISK-LOGIN-01, 02, 03, 04, 05, 07, 08 | 7 mã, phân bổ ở bảng trên |
 | RISK cấp Epic | RISK-LOGIN-06 | Cắt ngang toàn module — xem bảng Epic bên dưới |
@@ -205,6 +205,7 @@ Module không có entity nghiệp vụ nào mang vòng đời trạng thái. Tuy
 | AMB-LOGIN-17 | `GET /admin/clients` khi chưa đăng nhập ghi nhận mã **307** trên tab Network — chuyển hướng xác thực thường là 302/303. Mã thật là gì? | Automation và giám sát bắt theo mã trạng thái sẽ phân loại nhầm — cùng loại vấn đề với `AMB-LOGIN-08` | 🟡 | **Không** assert mã chuyển hướng; chỉ assert điểm dừng là `/admin/authentication` (`REQ-LOGIN-17`) | ✅ Đã trả lời 18-08-2026 | **Tạm chấp nhận `307`.** Assert **bắt buộc**: điểm dừng là `/admin/authentication`. Assert mã `307`: **tuỳ chọn**, đã được chấp nhận — nhưng vẫn khuyến nghị không dùng làm assert chính vì giá trị này do công cụ ghi nhận, chưa đối chiếu với header thật của máy chủ |
 | AMB-LOGIN-18 | Xin cấp tài khoản vai trò **Project Manager** và **Customer** để kiểm chứng ma trận phân quyền. Kèm câu hỏi: vai trò `Customer` có đăng nhập vào khu `/admin` không, hay chỉ dùng cổng khách hàng? | Tên vai trò đã biết (`AMB-LOGIN-01`) nhưng **vẫn không dựng được ma trận thật** — 14 ô đang `❔`. Áp cho **mọi** module, không riêng `LOGIN` | 🔴 | Ma trận ghi đủ 3 cột theo tên vai trò thật, ô nào chưa kiểm chứng để `❔`. **Không** suy quyền của vai trò này từ vai trò khác | ✅ Đã trả lời 18-08-2026 | **Đã được cấp đủ 3 tài khoản** (lưu ở `.env`, không ghi vào tài liệu). Ma trận phân quyền của `LOGIN` nay **kiểm chứng 100%**, không còn ô `❔`. Trả lời câu hỏi kèm theo: **`Customer` KHÔNG đăng nhập được vào `/admin`** — chốt thành `REQ-LOGIN-43`. 🔑 Tài khoản này dùng được cho **mọi module còn lại** — đây là nút thắt cấp hệ thống đã được gỡ |
 | AMB-LOGIN-19 | Phiên sống **1 giờ** (`AMB-LOGIN-13`) tính theo **thời gian không hoạt động** (mỗi thao tác gia hạn lại) hay theo **tổng thời gian từ lúc đăng nhập** (hết giờ là out dù đang dùng)? | Hai cách cho **hai TC khác hẳn nhau**: một cái phải để yên 1 giờ, cái kia phải thao tác liên tục suốt 1 giờ rồi kiểm. Chọn sai là TC đo nhầm thứ | 🟡 | Giả định là **thời gian không hoạt động** (phổ biến hơn ở PHP session); TC để yên 1 giờ rồi kiểm. Gắn nhãn `assumption-based` | ✅ Đã trả lời 19-09-2026 | **Tính theo thời gian không hoạt động — mỗi thao tác gia hạn lại.** Trùng Giả định tạm → TC để yên 1 giờ rồi kiểm vẫn đúng, **gỡ nhãn `assumption-based`**. `REQ-LOGIN-42` bổ sung AC2: đang thao tác thì **không** bị đăng xuất dù tổng thời gian đã quá 1 giờ → **cần thêm 1 TC** cho vế gia hạn |
+| AMB-LOGIN-20 | Truy cập trang đăng nhập bằng `http://` có **bắt buộc** tự chuyển sang `https://` (kèm HSTS) không? Tài liệu chỉ ghi "toàn bộ qua HTTPS" ở mục môi trường, không có REQ nào ràng buộc | `CRM_LOGIN_TC_039` và bug Critical/P1 `BUG_login_1785678750_TC039` dựa trên kỳ vọng chưa được chốt — dev có thể phản bác bug. TC đang truy vết nhầm về `REQ-LOGIN-01` (REQ đó không nói gì về HTTPS) | 🟡 | Viết TC theo chuẩn bảo mật (phải chuyển + HSTS) | ✅ Đã trả lời 19-09-2026 | **Bắt buộc — hệ thống phải tự chuyển sang HTTPS.** Trùng Giả định tạm. Chốt thành `REQ-LOGIN-44`; `CRM_LOGIN_TC_039` chuyển truy vết sang REQ này, bug giữ nguyên. Đo lại cùng ngày bằng `curl -I`: máy chủ **vẫn** trả `200` qua HTTP, không chuyển hướng, không HSTS → bug chưa sửa. ⚠️ Chrome tự nâng `http://` lên `https://` nên kiểm bằng mắt dễ PASS giả |
 
 ### 11.2. Risks
 
@@ -225,6 +226,7 @@ Module không có entity nghiệp vụ nào mang vòng đời trạng thái. Tuy
 
 | Ngày | Nguồn | REQ ảnh hưởng | Loại | Tóm tắt thay đổi | TC cần xử lý |
 |---|---|---|---|---|---|
+| 19-09-2026 | Quyết định PO (trả lời qua chat) | REQ-LOGIN-44 | 🟢 Thêm | Mở và đóng ngay `AMB-LOGIN-20`: PO chốt truy cập qua `http://` **bắt buộc** tự chuyển sang `https://` → thêm `REQ-LOGIN-44` (STORY-LOGIN-04, kèm HSTS). Trước đó kỳ vọng này chỉ nằm trong `CRM_LOGIN_TC_039`, không có REQ nào ràng buộc. Đo `curl -I` cùng ngày: hệ thống **chưa đạt** → bug `TC039` giữ trạng thái đang mở. Module **44 REQ · 40 trong phạm vi**, ambiguity treo vẫn **0** | `CRM_LOGIN_TC_039` — đổi cột REQ `REQ-LOGIN-01` → `REQ-LOGIN-44`, gỡ ghi chú "chưa được xác nhận là yêu cầu" |
 | 19-09-2026 | Recon bổ sung (đo trên trang đăng nhập, không đăng nhập) | REQ-LOGIN-21 | ✏️ Biên tập | Bổ sung vào AC hành vi đã đo: mã CSRF **cố định trong một phiên** (cookie `csrf_cookie_name`), nạp lại trang không đổi, phiên mới mới đổi. Khớp mô tả "đổi theo phiên" sẵn có — **không đổi nghĩa REQ**, giữ 🟢 | `CRM_LOGIN_TC_024` mục 🔧`2` — sửa kỳ vọng |
 | 19-09-2026 | Chuyển tầng nền tảng | REQ-LOGIN-01 → 43 | ✏️ Biên tập | **Chuyển sang cấu trúc tầng nền tảng** (skill `skills-requirements-analyzer` mục 5.3): toàn bộ 43 REQ chỉ áp web → `web/requirements_login_web.md` cùng mục 2, 3, 4, 5, 8, 9, 12; ảnh `evidence/` → `web/evidence/`. Index giữ metadata, phạm vi, ma trận, Story, AMB/RISK, Nhật ký và thêm `## Bản đồ tài liệu`. **Mã REQ, số mục và nội dung không đổi** | — |
 | 19-09-2026 | Quyết định PO (trả lời qua chat) | REQ-LOGIN-42 | 🟡 Sửa | `AMB-LOGIN-19` ✅ — phiên 1 giờ tính theo **thời gian không hoạt động**, **mỗi thao tác gia hạn lại**. Trùng Giả định tạm. `REQ-LOGIN-42` viết lại thành 2 AC: AC1 để yên quá 1 giờ thì hết phiên · AC2 thao tác liên tục thì không bị đăng xuất dù tổng thời gian đã quá 1 giờ. Module hết ambiguity treo (**19/19**) | `CRM_LOGIN_TC_026` — gỡ `@AssumptionBased`, gỡ cảnh báo `AMB-LOGIN-19` còn treo, xoá `ASM-01` · **Thêm 1 TC mới** cho AC2 (vế gia hạn) — chạy `/update-testcases-from-impact` |

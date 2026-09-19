@@ -16,7 +16,7 @@
 
 | Module | Prefix TC ID | Dải đã dùng | Mã kế tiếp | Số TC | Nền tảng | Độ hạt | REQ bao phủ | Tài liệu | Cập nhật |
 |---|---|---|---|---|---|---|---|---|---|
-| Đăng nhập / Xác thực | `CRM_LOGIN_TC_` | `001` → `051` | `052` | 51 | Web 51 | GỘP | 39/39 REQ trong phạm vi | [test_cases_login.md](login/test_cases_login.md) | 19-09-2026 |
+| Đăng nhập / Xác thực | `CRM_LOGIN_TC_` | `001` → `051` | `052` | 51 | Web 51 | GỘP | 40/40 REQ trong phạm vi | [test_cases_login.md](login/test_cases_login.md) | 19-09-2026 |
 | Khách hàng | `CRM_CUST_TC_` | `001` → `129` | `130` | 129 | Web 129 | GỘP | 84/84 REQ | [test_cases_customers.md](customers/test_cases_customers.md) | 19-09-2026 |
 
 ### Namespace hệ thống khác
@@ -41,7 +41,7 @@
 
 | Module | REQ có tài liệu | REQ trong phạm vi TC | REQ đã có ≥1 TC | Độ phủ | Ghi chú |
 |---|---|---|---|---|---|
-| `LOGIN` | 43 | 39 | 39 | **100%** | 4 REQ ngoài phạm vi theo quyết định PO 18-08-2026: `27`, `34`, `35`, `40` |
+| `LOGIN` | 44 | 40 | 40 | **100%** | 4 REQ ngoài phạm vi theo quyết định PO 18-08-2026: `27`, `34`, `35`, `40` |
 | `CUST` | 84 | 84 | 84 | **100%** | 2 REQ ⚪ (`81`, `82`) có TC `@AssumptionBased` · 2 REQ 🟡 (`42`, `43`) có TC thiết kế để FAIL |
 | `PRJ` | 104 | — | 0 | 0% | Chưa sinh TC |
 
@@ -112,6 +112,7 @@ Xem nhanh bằng web viewer: `scripts/execution-viewer/bundle.html` (mở offlin
 
 | Ngày | Thay đổi |
 |---|---|
+| 19-09-2026 | **Quyết định PO.** `LOGIN`: `CRM_LOGIN_TC_039` trỏ sang `REQ-LOGIN-44` mới (ép HTTPS), thêm tiền đề tắt HTTPS-Upgrades của Chrome để tránh PASS giả — độ phủ **40/40**. `CUST`: `TC_119`, `TC_120` gỡ `@AssumptionBased` theo `AMB-CUST-14` ✅. Không thêm TC, TC ID giữ nguyên |
 | 19-09-2026 | **`CUST` đồng bộ với DOM thật:** sửa tại chỗ 9 TC (TC ID giữ nguyên) và thêm `CRM_CUST_TC_129` cho `REQ-CUST-84` (khoá đổi tiền tệ khi đã có giao dịch) — 129 TC · 155 biến thể, phủ 84/84 REQ. **`LOGIN`:** `CRM_LOGIN_TC_024` mục 🔧`2` sửa theo kết quả đo — mã CSRF cố định trong phiên, gỡ `@NeedsVerify`; module hết vùng chưa có evidence |
 | 19-09-2026 | **Sinh bộ TC module `CUST`** bằng `/generate-testcases-from-requirements` Mode QUICK, độ hạt GỘP, rủi ro Cao → độ sâu Đầy đủ — **128 TC · 153 biến thể**, 5 part ở `customers/web/parts/`, chiếm dải `CRM_CUST_TC_001` → `128`. Phủ 83/83 REQ. 2 TC thiết kế để FAIL (`TC_040` ← `REQ-CUST-43`, `TC_041` ← `REQ-CUST-42`) chờ mở bug · 49 TC `@NeedsVerify` · 5 xung đột tài liệu ↔ ảnh evidence ghi thành ASM, đề nghị cập nhật requirements |
 | 19-09-2026 | **`LOGIN` chuyển sang tầng nền tảng + DELTA `adhoc_2026-09-19`.** 51 TC chuyển sang `login/web/test_cases_login_web.md` (1 file dù vượt ngưỡng 50 — quyết định user), index thành Bản đồ tài liệu. Thêm `CRM_LOGIN_TC_051` (gia hạn phiên, `AMB-LOGIN-19` ✅). `TC_026` + `TC_051` là `@PersonalOnly` — QA tự chạy, không qua `/execute-test-cases`. **Bỏ thư mục `archive/`** — bản cũ tra bằng git. Thêm cột `Nền tảng` vào bảng danh mục |
