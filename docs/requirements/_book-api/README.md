@@ -16,7 +16,7 @@
 | Tiền tố TC ID | `BK_<MODULE>_TC_<3 số>` |
 | Base URL | `https://book.anhtester.com` — **Production, 1 server duy nhất** |
 | Môi trường dùng chung | **KHÔNG** — user chốt 14-08-2026: được thao tác phá huỷ thoải mái (vẫn chỉ ghi/xoá bản ghi do chính phiên tạo — skill 3.4.4) |
-| Năng lực kiểm thử của QA | **Gọi API: ✅** (user xác nhận 19-09-2026) · Truy vấn CSDL · kiểm tích hợp · xem nhật ký hoạt động: chưa hỏi |
+| Năng lực kiểm thử của QA | Dùng cho nhánh Vòng 3 của **mọi** bộ TC hệ thống `BK`:<br>• **Gọi API: ✅** (user xác nhận 19-09-2026)<br>• **Truy vấn CSDL: ❌** (user chốt 20-09-2026 — *"Không cho QA đụng Database"*). Dữ liệu lưu kiểm gián tiếp qua API đọc (`GET /api/me` …); phần chỉ CSDL mới thấy (xoá mềm/cứng, rác sau huỷ) → đội Dev xác minh<br>• Kiểm tầng tích hợp · Xem nhật ký hoạt động: chưa hỏi |
 | URL · tài khoản | `.env` (không commit) — **KHÔNG** ghi credentials vào `docs/` |
 | Khởi tạo | 14-08-2026 — parse spec + kiểm chứng 20 request thật |
 
@@ -26,7 +26,7 @@
 
 | Module | Mã | Nền tảng | Số endpoint | Trạng thái | Tài liệu | REQ đã dùng | Mã kế tiếp | AMB treo | Story | Cập nhật |
 |---|---|---|---|---|---|---|---|---|---|---|
-| Xác thực & Phiên đăng nhập | `AUTH` | API ✅ · Android 🟨 (Sign in · Sign up · Logout ✅ — Profile · Settings ⬜) | 6 | 🟨 Đang khảo sát — Android còn Profile · Settings | [auth/requirements_auth.md](auth/requirements_auth.md) | `REQ-BK-AUTH-01` → `86` (86) | `REQ-BK-AUTH-87` · `AMB-BK-AUTH-20` · `RISK-BK-AUTH-09` | AMB-BK-AUTH-01 → 19 (🔴 01 · 02 · 04) · AMB-BK-01 · AMB-BK-11 | 5 | 19-09-2026 |
+| Xác thực & Phiên đăng nhập | `AUTH` | API ✅ · Android 🟨 (Sign in · Sign up · Logout ✅ — Profile · Settings ⬜) | 6 | 🟨 Đang khảo sát — Android còn Profile · Settings | [auth/requirements_auth.md](auth/requirements_auth.md) | `REQ-BK-AUTH-01` → `86` (86) | `REQ-BK-AUTH-87` · `AMB-BK-AUTH-21` · `RISK-BK-AUTH-09` | AMB-BK-AUTH-01 → 20 (🔴 01 · 02 · 04 **đã chốt 20-09-2026** — lỗi) · AMB-BK-01 · AMB-BK-11 | 5 | 19-09-2026 |
 | Người dùng | `USER` | API 🟨 · Android ⬜ | 5 | 🟨 Đã lập bản đồ | — | — | `REQ-BK-USER-01` | AMB-BK-01, 02, 12 | — | 19-09-2026 |
 | Sách | `BOOK` | API 🟨 · Android ⬜ | 5 | 🟨 Đã lập bản đồ | — | — | `REQ-BK-BOOK-01` | AMB-BK-03 | — | 19-09-2026 |
 | Danh mục sách | `CAT` | API 🟨 · Android ⬜ | 4 | 🟨 Đã lập bản đồ | — | — | `REQ-BK-CAT-01` | AMB-BK-05 | — | 19-09-2026 |
@@ -69,6 +69,8 @@ Prefix của hệ thống CRM (`LOGIN`, `CUST`, `PRJ`…) **không liên quan** 
 ---
 
 ## 3. Ambiguity 🔴 High còn treo
+
+> 20-09-2026: `AMB-BK-AUTH-01` · `02` · `04` **đã chốt** — cả ba là **lỗi / yêu cầu áp dụng** (user chốt ở `/generate-testcases-api auth`). Giữ dòng dưới làm vết, TC tương ứng gắn `@KnownBug`.
 
 | Mã | Module | Câu hỏi | Chặn cái gì |
 |---|---|---|---|
@@ -154,6 +156,7 @@ docs/
 
 | Ngày | Thay đổi |
 |---|---|
+| 20-09-2026 | `/generate-testcases-api auth` + `/generate-testcases-from-requirements` (Mobile): module `AUTH` có **105 TC** (Mobile 58 · API 47) ở [`docs/testcases/_book-api/auth/`](../../testcases/_book-api/auth/test_cases_auth.md) — phủ 86/86 REQ. User chốt `AMB-BK-AUTH-01` · `02` · `04` là **lỗi**; QA **không** truy vấn CSDL. Mở `AMB-BK-AUTH-20` 🟡 |
 | 19-09-2026 | `/generate-requirements-from-mobile auth` (Android — Đăng ký · Đăng nhập · Đăng xuất): tạo [auth/mobile/requirements_auth_mobile.md](auth/mobile/requirements_auth_mobile.md) — `REQ-BK-AUTH-49 → 86` (38) + 28 ảnh. 8 REQ server-side kiểm khớp trên app chuyển từ `api/` lên index (dùng chung `Android · API`). Mở `AMB-BK-AUTH-14 → 19` (không 🔴 mới) · `RISK-BK-AUTH-07 · 08` |
 | 19-09-2026 | `/discover-system` mode ADD — thêm **mặt Android** (app `book.anhtester.com` 1.0, Hybrid Capacitor). Tạo [`_discovery/system_map.md`](_discovery/system_map.md) + 6 file `modules/` + 9 ảnh `_discovery/evidence/android_*`. Ghép 8 module vào module sẵn có; **cấp prefix mới `DASH`** (Dashboard, chỉ có trên app — user chốt). Cột `Nền tảng` thêm `Android ⬜`; `AUTH` về 🟨 vì còn thiếu mặt Android. Mở `AMB-BK-11` · `AMB-BK-12`. Tạo 1 tài khoản test trên app (lưu `.env`) |
 | 19-09-2026 | Module `AUTH` có tài liệu REQ: `REQ-BK-AUTH-01 → 48` · 5 Story · 13 AMB (3 🔴) · 6 RISK. Thêm cột `Nền tảng` + `Story` vào bảng mục 1, dòng `Năng lực kiểm thử của QA` vào metadata. Spec đổi `sha256` (35 op giữ nguyên, 11 op đổi schema) → snapshot `openapi_2026-09-19.json`. Phát hiện mới F-16 → F-25 |

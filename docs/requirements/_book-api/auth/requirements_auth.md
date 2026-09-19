@@ -14,9 +14,9 @@
 | **Tài khoản dùng khảo sát** | API: 5 tài khoản **tự đăng ký** `auto_auth_<timestamp>_*`, đã dọn hết · Android: 1 tài khoản **tự đăng ký trên app** `auto_discover_<timestamp>@auto.test`, đã xoá sau khảo sát — không dùng tài khoản có sẵn nào |
 | **Môi trường dùng chung** | **KHÔNG** (user chốt 14-08-2026) — vẫn áp luật chỉ ghi/xoá bản ghi do phiên tạo (skill 3.4.4) |
 | **Tổng số REQ** | **86** — dùng chung `Android · API` 8 · `api/` 40 · `mobile/` 38 |
-| **Dải mã đã dùng** | `REQ-BK-AUTH-01` → `REQ-BK-AUTH-86` (đợt 1 API `01 → 48` · đợt 2 Android `49 → 86`) · `AMB-BK-AUTH-01` → `AMB-BK-AUTH-19` · `RISK-BK-AUTH-01` → `RISK-BK-AUTH-08` · `STORY-BK-AUTH-01` → `05` |
-| **Mã kế tiếp** | Đợt phân tích sau bắt đầu từ `REQ-BK-AUTH-87` · `AMB-BK-AUTH-20` · `RISK-BK-AUTH-09` — **KHÔNG đánh lại từ 01** |
-| **Ambiguity còn treo** | **19** — 🔴 3 (`01` · `02` · `04`) · 🟠 6 (`03` · `05` · `06` · `07` · `15` · `16`) · 🟡 10 (`08` → `14` · `17` · `18` · `19`) · cộng AMB cấp hệ thống tham chiếu (`AMB-BK-01` · `AMB-BK-10` · `AMB-BK-11`) |
+| **Dải mã đã dùng** | `REQ-BK-AUTH-01` → `REQ-BK-AUTH-86` (đợt 1 API `01 → 48` · đợt 2 Android `49 → 86`) · `AMB-BK-AUTH-01` → `AMB-BK-AUTH-20` · `RISK-BK-AUTH-01` → `RISK-BK-AUTH-08` · `STORY-BK-AUTH-01` → `05` |
+| **Mã kế tiếp** | Đợt phân tích sau bắt đầu từ `REQ-BK-AUTH-87` · `AMB-BK-AUTH-21` · `RISK-BK-AUTH-09` — **KHÔNG đánh lại từ 01** |
+| **Ambiguity còn treo** | **17** — 🔴 0 (`01` · `02` · `04` đã chốt 20-09-2026: đều là **lỗi**) · 🟠 6 (`03` · `05` · `06` · `07` · `15` · `16`) · 🟡 11 (`08` → `14` · `17` → `20`) · cộng AMB cấp hệ thống tham chiếu (`AMB-BK-01` · `AMB-BK-10` · `AMB-BK-11`) |
 
 ---
 
@@ -149,7 +149,7 @@ Dashboard không còn thẻ sign in); [Đăng xuất × Chưa đăng nhập] —
 | Nhóm | Mã | Nằm ở đâu |
 |---|---|---|
 | AMB thuộc Story | AMB-BK-AUTH-01 → 10 · 12 → 18 | phân bổ ở bảng Story |
-| AMB cấp Epic | AMB-BK-AUTH-11 · 19 | `11`: status khai trong spec chưa quan sát — cắt ngang 6 operation · `19`: phiên bản app tối thiểu — cấp app, không thuộc Story nào |
+| AMB cấp Epic | AMB-BK-AUTH-11 · 19 · 20 | `11`: status khai trong spec chưa quan sát — cắt ngang 6 operation · `19`: phiên bản app tối thiểu — cấp app, không thuộc Story nào |
 | RISK thuộc Story | RISK-BK-AUTH-01 → 06 | phân bổ ở bảng Story |
 | RISK cấp Epic | RISK-BK-AUTH-07 · 08 | Locator và thao tác bấm trên app — ảnh hưởng mọi TC Android của module |
 
@@ -180,10 +180,10 @@ Dashboard không còn thẻ sign in); [Đăng xuất × Chưa đăng nhập] —
 
 | Mã | Câu hỏi | Nguy cơ | Mức độ | Assumption tạm | Trạng thái | Kết luận |
 |---|---|---|---|---|---|---|
-| AMB-BK-AUTH-01 | `PATCH /api/profile` trả **422** `{"msg":"Invalid data.","fields":{"fields":["Property 'fields' is missing","Expected object"]}}` với **mọi** body hợp lệ đã thử (JSON · form · multipart · có/không bọc `fields`) — lỗi server hay endpoint cần body dạng khác chưa công bố? (F-16) | Không cập nhật được hồ sơ, không đổi được mật khẩu. 5 REQ không kiểm được hành vi đúng | 🔴 | Là **lỗi** — TC viết theo spec (body phẳng), kỳ vọng 200, sẽ FAIL | ❓ Chờ trả lời | — |
-| AMB-BK-AUTH-02 | Sau `DELETE /api/logout` trả 200, `refetchToken` của **chính phiên đó** vẫn làm mới được access token (200) — cố ý hay lỗi? (F-17) | Đăng xuất không kết thúc phiên: cookie bị lộ vẫn sinh token mới được sau khi người dùng đã đăng xuất | 🔴 | Là **lỗi** — REQ-33 kỳ vọng 404 `Invalid token.` | ❓ Chờ trả lời | — |
+| AMB-BK-AUTH-01 | `PATCH /api/profile` trả **422** `{"msg":"Invalid data.","fields":{"fields":["Property 'fields' is missing","Expected object"]}}` với **mọi** body hợp lệ đã thử (JSON · form · multipart · có/không bọc `fields`) — lỗi server hay endpoint cần body dạng khác chưa công bố? (F-16) | Không cập nhật được hồ sơ, không đổi được mật khẩu. 5 REQ không kiểm được hành vi đúng | 🔴 | Là **lỗi** — TC viết theo spec (body phẳng), kỳ vọng 200, sẽ FAIL | ✅ Đã chốt 20-09-2026 | **Lỗi cần báo** (user chốt ở checkpoint `/generate-testcases-api`). TC kỳ vọng 200, gắn `@KnownBug` |
+| AMB-BK-AUTH-02 | Sau `DELETE /api/logout` trả 200, `refetchToken` của **chính phiên đó** vẫn làm mới được access token (200) — cố ý hay lỗi? (F-17) | Đăng xuất không kết thúc phiên: cookie bị lộ vẫn sinh token mới được sau khi người dùng đã đăng xuất | 🔴 | Là **lỗi** — REQ-33 kỳ vọng 404 `Invalid token.` | ✅ Đã chốt 20-09-2026 | **Lỗi cần báo** (user chốt). REQ-33 giữ kỳ vọng 404, TC gắn `@KnownBug` |
 | AMB-BK-AUTH-03 | Spec 19-09-2026 thêm `default: "user@example.com"` cho `email` và server **dùng default khi thiếu field** — thay vì báo thiếu field bắt buộc. Cố ý? (F-19) | `required` bị vô hiệu: thiếu email thì hệ thống xử lý như email của một tài khoản có thật (`user@example.com`, không do QA tạo). Kết quả TC đổi theo việc tài khoản đó còn hay mất | 🟠 | Là **lỗi** — `required` thắng `default`; REQ-05 · 17 kỳ vọng 422 báo thiếu `email` | ❓ Chờ trả lời | — |
-| AMB-BK-AUTH-04 | Cookie `accessToken` **thiếu** `HttpOnly` · `Secure` · `SameSite` (cookie `refetchToken` cùng response thì đủ). Yêu cầu bảo mật này có áp dụng không? (F-03 — chuyển từ phát hiện cấp hệ thống) | Script chạy trên trang (XSS) đọc được access token | 🔴 | **Áp dụng** — REQ-22 kỳ vọng đủ 3 cờ | ❓ Chờ trả lời | — |
+| AMB-BK-AUTH-04 | Cookie `accessToken` **thiếu** `HttpOnly` · `Secure` · `SameSite` (cookie `refetchToken` cùng response thì đủ). Yêu cầu bảo mật này có áp dụng không? (F-03 — chuyển từ phát hiện cấp hệ thống) | Script chạy trên trang (XSS) đọc được access token | 🔴 | **Áp dụng** — REQ-22 kỳ vọng đủ 3 cờ | ✅ Đã chốt 20-09-2026 | **Áp dụng** (user chốt). REQ-22 giữ kỳ vọng đủ 3 cờ, TC gắn `@KnownBug` |
 | AMB-BK-AUTH-05 | Đổi mật khẩu qua `PATCH /api/profile` có **bắt buộc** `password_old` không, và `password_old` sai thì trả gì? Spec khai cả hai optional. *(Chuyển từ `AMB-BK-06` cấp hệ thống.)* Chưa kiểm được vì F-16 | Nếu không bắt buộc: token bị lộ là đổi được mật khẩu, chiếm hẳn tài khoản | 🟠 | Bắt buộc và phải đúng; sai → 400/422 | ❓ Chờ trả lời | — |
 | AMB-BK-AUTH-06 | Access token vẫn gọi `GET /api/me` được (200) sau khi đăng xuất (F-23). Chấp nhận do JWT không trạng thái, sống tới hết `exp` = 6 ngày? Đổi mật khẩu có thu hồi token cũ không (chưa kiểm được — F-16)? | Token bị lộ dùng được tới 6 ngày dù chủ tài khoản đã đăng xuất | 🟠 | Chấp nhận là thiết kế — **không** cấp REQ; ghi RISK-01 | ❓ Chờ trả lời | — |
 | AMB-BK-AUTH-07 | Cùng một `refetchToken` dùng lại nhiều lần đều 200, và refetch không cấp cookie mới — hệ thống **không** xoay vòng refresh token. Cố ý? (F-18) | Refresh token bị lộ dùng được mãi, không phát hiện được việc dùng lại | 🟠 | Là thiết kế hiện tại — **không** cấp REQ cho xoay vòng | ❓ Chờ trả lời | — |
@@ -199,6 +199,7 @@ Dashboard không còn thẻ sign in); [Đăng xuất × Chưa đăng nhập] —
 | AMB-BK-AUTH-17 | Sign up (Android) **giữ nguyên** dữ liệu đã nhập, kể cả 2 ô mật khẩu, khi rời màn hình bằng Back rồi quay lại (REQ-83). Cố ý? | Người dùng khác cầm máy mở lại Sign up thấy được mật khẩu đã gõ (bấm nút con mắt) | 🟡 | Giữ là thiết kế hiện tại — REQ-83 theo quan sát | ❓ Chờ trả lời | — |
 | AMB-BK-AUTH-18 | Thông báo nổi ở cuối Sign up **che nút Register** trong lúc hiển thị (`android_signup_email_exists.png`). Chấp nhận? | Người dùng sửa email xong không bấm được Register cho tới khi thông báo tự đóng | 🟡 | Chấp nhận — TC chờ thông báo đóng (REQ-58) rồi mới bấm lại | ❓ Chờ trả lời | — |
 | AMB-BK-AUTH-19 | App có chặn phiên bản cũ / bắt buộc cập nhật không? Manifest `minSdk 23`, bản khảo sát `1.0 (versionCode 1)` — chưa có căn cứ nào | Không viết được TC cập nhật bắt buộc | 🟡 | Không có cơ chế cập nhật bắt buộc — không cấp REQ | ❓ Chờ trả lời | — |
+| AMB-BK-AUTH-20 | Gửi `Content-Type` không hỗ trợ (VD `text/plain`), `Accept` không hỗ trợ (VD `application/xml`), hoặc body rất lớn (> 1 MB) tới `register` · `login` · `profile` thì hệ thống phải trả gì? Spec **không** khai `406` · `413` · `415` | Không viết được TC kỳ vọng cứng cho 3 status chuẩn này; nếu server trả `500` là lỗi độ bền | 🟡 | Chưa có kỳ vọng — TC xếp vào **TC treo**; chỉ kiểm độ bền (không `500`) ở TC_068 · 081 | ❓ Chờ trả lời | — |
 
 **AMB cấp hệ thống tham chiếu** (sở hữu ở [`api_map.md` mục 4](../_discovery/api_map.md#4-khoảng-trống-của-spec-amb--cần-chốt-trước-khi-sinh-tc) · [`system_map.md` mục 8](../_discovery/system_map.md#8-ambiguity-cấp-hệ-thống-phát-sinh-ở-mặt-mobile)): `AMB-BK-01` 🔴 mô hình vai trò (cột "Vai trò khác" ở mục 6) · `AMB-BK-08` 🟡 rate limit · `AMB-BK-10` 🟡 nội dung `config` · `AMB-BK-11` 🟡 link "Need help?" không phản hồi.
 
@@ -221,6 +222,8 @@ Dashboard không còn thẻ sign in); [Đăng xuất × Chưa đăng nhập] —
 
 | Ngày | Nguồn | REQ ảnh hưởng | Loại | Tóm tắt thay đổi | TC cần xử lý |
 |---|---|---|---|---|---|
+| 20-09-2026 | `/generate-testcases-api auth` | — | 🟡 Thêm AMB | Mở `AMB-BK-AUTH-20` — kỳ vọng cho `406` · `413` · `415` (spec không khai). Không đổi REQ | TC treo ở index TC |
+| 20-09-2026 | User chốt ở checkpoint `/generate-testcases-api auth` | REQ-BK-AUTH-22 · 33 · 41 · 42 · 45 → 47 | ✏️ Chốt AMB | `AMB-BK-AUTH-01` · `02` · `04` → ✅ đều là **lỗi / áp dụng**. REQ **không đổi** — kỳ vọng giữ theo spec / yêu cầu bảo mật; hành vi hiện tại là bug | TC API của các REQ này gắn `@KnownBug`, mở bug bằng `/create-bug-report` |
 | 19-09-2026 | UI recon Android · `/generate-requirements-from-mobile` | REQ-BK-AUTH-49 → 86 | 🟢 Thêm | Mặt Android — Đăng ký · Đăng nhập · Đăng xuất: 38 REQ ở `mobile/requirements_auth_mobile.md` · 28 ảnh evidence · mở `AMB-BK-AUTH-14 → 19` · `RISK-BK-AUTH-07 · 08` | — (viết mới cho Android, tag `@Android`) |
 | 19-09-2026 | UI recon Android | REQ-BK-AUTH-01 · 03 · 08 · 09 · 11 · 14 · 15 · 16 | 🟢 Thêm | Mở rộng nền tảng: + Android — kiểm khớp trên app, **chuyển dòng từ `api/` lên index** mục 3, AC thêm vế Android, mã giữ nguyên | viết mới cho Android · TC API giữ nguyên |
 | 19-09-2026 | UI recon Android | REQ-BK-AUTH-01 · 11 | ✏️ Biên tập | Tên viết lại trung lập nền tảng: `01` *"…với `name` + `email` + `password` hợp lệ"* → *"…với tên + email + mật khẩu hợp lệ"* · `11` *"Đăng nhập thành công trả access token"* → *"Đăng nhập thành công"* (vế access token chỉ đúng với API, vẫn nằm nguyên trong AC phần API). Hành vi không đổi | — |

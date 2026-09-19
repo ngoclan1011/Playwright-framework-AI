@@ -925,6 +925,33 @@ Trước khi xuất kết quả cuối cùng cho user, Agent **BẮT BUỘC** t�
 ```
 > Nếu có REQ nào 0 TC → agent PHẢI quay lại sinh bổ sung, KHÔNG được xuất kết quả có dòng 🔴.
 
+  **6b. Phép thử chiều ngược — TC gánh nhiều REQ (BẮT BUỘC chạy, áp cả QUICK · FULL RBT · DELTA · `/generate-testcases-api`):**
+  Bảng trên chỉ trả lời *"REQ nào chưa có TC"* — nó **không** bắt được TC gánh quá nhiều REQ. Với **mỗi TC có ≥ 2 REQ ID**, đếm số TC **của cùng nền tảng** trỏ về từng REQ đó:
+
+  | Kết quả đếm trong một TC | Xử lý |
+  |---|---|
+  | Mọi REQ đều có TC khác chống lưng | ✅ Được giữ |
+  | Đúng **1** REQ chỉ có mỗi TC này, các REQ còn lại có TC khác | ✅ Được giữ — FAIL của TC vẫn quy được về REQ đó. Ghi chú ở cột Ghi chú của Bảng Đối Soát Coverage |
+  | **≥ 2** REQ chỉ có mỗi TC này | 🔴 **Vi phạm** bảng CẤM gộp (dòng *"Khác REQ ID mà mỗi REQ chỉ có đúng TC đó"*) → **tách**: TC gốc giữ 1 REQ, mỗi REQ còn lại một TC mới **cấp số nối tiếp dải** (không chèn giữa, không đánh lại) |
+
+  > ⚠️ **Hay vi phạm nhất ở TC API**: một request chứng minh được nhiều REQ cùng lúc (VD `POST /api/login` không gửi token → `200` vừa là *"đăng nhập thành công"* vừa là *"đăng nhập không cần token"*). Gộp nghe hợp lý, nhưng khi FAIL không biết REQ nào hỏng, và RTM báo mỗi REQ "đã phủ" dù không TC nào **chỉ** kiểm nó. Mỗi REQ phải có một TC mà **Expected cốt lõi** của nó là đúng REQ đó.
+  >
+  > **Số TC ít hơn số REQ không phải là lỗi** (1 TC gộp nhiều biến thể, 1 REQ có nhiều TC) — nhưng khi thấy tỉ lệ này, **bắt buộc** chạy phép thử 6b trước khi trả lời user.
+
+  Mẫu kiểm tự động (chạy trên file nền tảng / `parts/` của **từng** nền tảng):
+
+  ```python
+  import glob, re, collections
+  R = []
+  for f in glob.glob('docs/testcases/<module>/<nền-tảng>/**/*.md', recursive=True):
+      for line in open(f, encoding='utf-8'):
+          if line.startswith('| <HỆ_THỐNG>_<MODULE>_TC_'):
+              c = line.split(' | ')
+              R.append((c[0][2:], re.findall(r'REQ-[\w-]+?-(\d+)', c[1])))
+  cnt = collections.Counter(q for _, reqs in R for q in reqs)
+  print([tc for tc, reqs in R if sum(cnt[q] == 1 for q in reqs) >= 2] or 'không vi phạm')
+  ```
+
 - [ ] **7. Evidence-verified:** đã mở **100%** ảnh trong `docs/requirements/<module>/<nền-tảng>/evidence/`; mọi TC thuộc 4 nhóm bắt buộc (bố cục/thứ tự · nhãn nguyên văn · giá trị mặc định · định dạng hiển thị) đều truy được về một tấm ảnh cụ thể **hoặc một lần đọc DOM cụ thể**. TC không truy được → gắn `@NeedsVerify` và liệt kê ở mục "Vùng chưa có evidence". Xuất kèm **Bảng Đối Soát Evidence**:
 
 ```markdown

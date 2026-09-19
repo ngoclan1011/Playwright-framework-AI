@@ -23,7 +23,7 @@
 
 | Namespace | Hệ thống | Trạng thái |
 |---|---|---|
-| `_book-api/` | Book API (hệ thống thứ hai) | Thư mục đã tạo, **chưa có TC nào** — danh mục riêng sẽ nằm ở `_book-api/README.md` |
+| `_book-api/` | AnhTester Book Management (hệ thống thứ hai — API + Android) | `AUTH`: **108 TC** — Mobile 58 · API 50 (`BK_AUTH_TC_001` → `108`) — danh mục riêng: [`_book-api/README.md`](_book-api/README.md) |
 
 
 ### Độ hạt test case của từng module
@@ -112,6 +112,8 @@ Xem nhanh bằng web viewer: `scripts/execution-viewer/bundle.html` (mở offlin
 
 | Ngày | Thay đổi |
 |---|---|
+| 20-09-2026 | `_book-api/` · `AUTH` thêm **47 TC API** (`BK_AUTH_TC_059` → `105`) — module phủ 86/86 REQ |
+| 20-09-2026 | Namespace **`_book-api/`** có bộ TC đầu tiên: module `AUTH` · Mobile (Android) · 58 TC · 95 biến thể (`BK_AUTH_TC_001` → `058`). Chi tiết ở danh mục riêng [`_book-api/README.md`](_book-api/README.md) |
 | 19-09-2026 | **Quyết định PO.** `LOGIN`: `CRM_LOGIN_TC_039` trỏ sang `REQ-LOGIN-44` mới (ép HTTPS), thêm tiền đề tắt HTTPS-Upgrades của Chrome để tránh PASS giả — độ phủ **40/40**. `CUST`: `TC_119`, `TC_120` gỡ `@AssumptionBased` theo `AMB-CUST-14` ✅. Không thêm TC, TC ID giữ nguyên |
 | 19-09-2026 | **`CUST` đồng bộ với DOM thật:** sửa tại chỗ 9 TC (TC ID giữ nguyên) và thêm `CRM_CUST_TC_129` cho `REQ-CUST-84` (khoá đổi tiền tệ khi đã có giao dịch) — 129 TC · 155 biến thể, phủ 84/84 REQ. **`LOGIN`:** `CRM_LOGIN_TC_024` mục 🔧`2` sửa theo kết quả đo — mã CSRF cố định trong phiên, gỡ `@NeedsVerify`; module hết vùng chưa có evidence |
 | 19-09-2026 | **Sinh bộ TC module `CUST`** bằng `/generate-testcases-from-requirements` Mode QUICK, độ hạt GỘP, rủi ro Cao → độ sâu Đầy đủ — **128 TC · 153 biến thể**, 5 part ở `customers/web/parts/`, chiếm dải `CRM_CUST_TC_001` → `128`. Phủ 83/83 REQ. 2 TC thiết kế để FAIL (`TC_040` ← `REQ-CUST-43`, `TC_041` ← `REQ-CUST-42`) chờ mở bug · 49 TC `@NeedsVerify` · 5 xung đột tài liệu ↔ ảnh evidence ghi thành ASM, đề nghị cập nhật requirements |

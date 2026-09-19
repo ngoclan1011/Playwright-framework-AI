@@ -192,6 +192,8 @@ Cập nhật `README.md` danh mục hệ thống (tạo mới nếu chưa có): 
    - **Dependencies & Execution Order** — thứ tự chạy test
    - **TC treo** — TC chưa viết được, kèm mã AMB đang chặn
 
+   > 🚨 **Một request chứng minh được nhiều REQ vẫn phải tách TC.** VD `POST /api/login` không gửi token → `200` vừa là *"đăng nhập thành công"* vừa là *"đăng nhập không cần token"* — nếu hai REQ đó **không** có TC nào khác thì phải là **hai TC**, mỗi TC một Expected cốt lõi. Gộp lại thì khi FAIL không biết REQ nào hỏng, và RTM báo cả hai "đã phủ" dù không TC nào **chỉ** kiểm riêng từng cái. Chạy phép thử **6b** của skill `skills-rbt-manual-testing` (có mẫu script) trước khi ghi file. **Số TC ít hơn số REQ không phải lỗi**, nhưng là tín hiệu bắt buộc chạy phép thử này.
+
 3. **Cập nhật `README.md` danh mục**: dải TC ID đã dùng · mã kế tiếp · cột `Nền tảng` (số TC API) · ngày cập nhật · dòng nhật ký.
 
 4. **Dọn bản ghi** đã tạo khi kiểm chứng ở Bước 1b. Xong → đề xuất bước kế tiếp:
@@ -226,6 +228,7 @@ Cập nhật `README.md` danh mục hệ thống (tạo mới nếu chưa có): 
 - [ ] File TC nằm đúng `docs/testcases/[_<hệ-thống>/]<module>/api/`, **không** lạc ra root; TC ID nối tiếp dải chung của module; index có dòng API trong `## Bản đồ tài liệu`
 - [ ] Bảng TC dùng đúng tên cột của Bảng Output Standard — viewer và `/generate-automation-api` đọc được
 - [ ] Mọi TC có `REQ ID` trỏ vào REQ có thật, hoặc ghi `⚠️ Chưa có REQ` và đã báo số TC chưa neo
+- [ ] **Phép thử 6b** đã chạy: không TC nào gánh ≥ 2 REQ mà các REQ đó không có TC khác chống lưng — vi phạm thì đã tách, TC mới cấp số **nối tiếp** dải
 - [ ] `README.md` danh mục đã cập nhật prefix · dải TC ID · nhật ký
 - [ ] Mọi bản ghi tạo khi kiểm chứng đã dọn; số tạo / số dọn ghi rõ trong báo cáo
 - [ ] **Không** bản ghi có sẵn nào của hệ thống bị sửa hoặc xoá
