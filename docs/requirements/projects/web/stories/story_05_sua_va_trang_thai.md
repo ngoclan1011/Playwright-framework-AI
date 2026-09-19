@@ -1,8 +1,8 @@
 # STORY-PRJ-05 — Sửa dự án & vòng đời trạng thái
 
-> Về index: [../requirements_projects.md](../requirements_projects.md) · Prefix `PRJ` · REQ bao phủ: `REQ-PRJ-60` → `REQ-PRJ-68` (9 REQ)
+> Về index: [../../requirements_projects.md](../../requirements_projects.md) · File nền tảng: [../requirements_projects_web.md](../requirements_projects_web.md) · Prefix `PRJ` · REQ bao phủ: `REQ-PRJ-60` → `REQ-PRJ-68` (9 REQ)
 >
-> Ma trận trạng thái đầy đủ nằm ở [index mục 5](../requirements_projects.md#5-ma-trận-trạng-thái)
+> Ma trận trạng thái đầy đủ nằm ở [index mục 5](../../requirements_projects.md#5-ma-trận-trạng-thái)
 
 **Mô tả Story:** Là nhân sự vận hành, tôi muốn sửa thông tin dự án và đổi trạng thái của nó, để phản ánh đúng tình hình thực tế và thông báo cho những người liên quan.
 

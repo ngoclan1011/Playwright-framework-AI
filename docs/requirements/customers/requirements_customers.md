@@ -13,9 +13,9 @@
 | **Ngày phân tích** | 14-08-2026 |
 | **Tài khoản dùng khảo sát** | 14-08-2026: "Admin Example" (`user-id-2`) · 19-09-2026: thêm "Project Manager" (`user-id-3`, không phải quản trị viên) để dựng ma trận phân quyền |
 | **Môi trường dùng chung** | **CÓ** — đợt 14-08-2026 tạo 3 khách hàng thử nghiệm (`13364`, `13365`, `13366`) và **đã xoá sạch**. Đợt 19-09-2026 nhập CSV tạo **2 khách hàng** `14625`, `14626` (`auto_import_cust_20260919034844_1/2`) — ⚠️ **chưa dọn**, xem Nhật ký thay đổi |
-| **Tổng số REQ** | **83** |
-| **Dải mã đã dùng** | `REQ-CUST-01` → `REQ-CUST-83` · `AMB-CUST-01` → `AMB-CUST-14` · `RISK-CUST-01` → `RISK-CUST-08` |
-| **Mã kế tiếp** | Đợt phân tích sau bắt đầu từ `REQ-CUST-84` · `AMB-CUST-15` · `RISK-CUST-09` — **KHÔNG đánh lại từ 01** |
+| **Tổng số REQ** | **84** |
+| **Dải mã đã dùng** | `REQ-CUST-01` → `REQ-CUST-84` · `AMB-CUST-01` → `AMB-CUST-14` · `RISK-CUST-01` → `RISK-CUST-08` |
+| **Mã kế tiếp** | Đợt phân tích sau bắt đầu từ `REQ-CUST-85` · `AMB-CUST-15` · `RISK-CUST-09` — **KHÔNG đánh lại từ 01** |
 
 ---
 
@@ -62,7 +62,7 @@ Module gồm **4 màn hình chính**:
 | Nền tảng | File | Story | REQ bao phủ |
 |---|---|---|---|
 | Chung ≥ 2 nền tảng | chính file này | — | — (module mới có một nền tảng) |
-| Web | [web/requirements_customers_web.md](web/requirements_customers_web.md) | STORY-CUST-01 → 10 | `REQ-CUST-01` → `REQ-CUST-83` (83) |
+| Web | [web/requirements_customers_web.md](web/requirements_customers_web.md) | STORY-CUST-01 → 10 | `REQ-CUST-01` → `REQ-CUST-84` (84) |
 
 | Nội dung | Ở đâu |
 |---|---|
@@ -134,12 +134,12 @@ Khách hàng có đúng **2 trạng thái**, điều khiển bằng công tắc 
 | STORY-CUST-04 | Tạo khách hàng mới | REQ-CUST-23 → 34 | 12 | AMB-CUST-05, AMB-CUST-06, AMB-CUST-07, RISK-CUST-04 | Luồng nghiệp vụ cốt lõi |
 | STORY-CUST-05 | Địa chỉ thanh toán & giao hàng | REQ-CUST-35 → 39 | 5 | — | Độc lập, test được song song |
 | STORY-CUST-06 | Kiểm tra dữ liệu & cảnh báo trùng tên | REQ-CUST-40 → 46 | 7 | AMB-CUST-02, AMB-CUST-03, AMB-CUST-04, RISK-CUST-03 | `REQ-CUST-42`, `43` ghi kỳ vọng đúng mà hệ thống **chưa đạt** → TC FAIL, mở bug |
-| STORY-CUST-07 | Hồ sơ khách hàng & chỉnh sửa | REQ-CUST-47 → 55, 83 | 10 | AMB-CUST-13, AMB-CUST-08 | 19 tab (Admin) / 15 tab (PM) — 11 tab thuộc module khác |
+| STORY-CUST-07 | Hồ sơ khách hàng & chỉnh sửa | REQ-CUST-47 → 55, 83, 84 | 11 | AMB-CUST-13, AMB-CUST-08 | 19 tab (Admin) / 15 tab (PM) — 11 tab thuộc module khác |
 | STORY-CUST-08 | Trạng thái hoạt động & xoá | REQ-CUST-56 → 62, 81, 82 | 9 | AMB-CUST-10, AMB-CUST-11, AMB-CUST-14, RISK-CUST-06, RISK-CUST-07, RISK-CUST-08 | Thao tác phá huỷ — cần dữ liệu riêng · `REQ-CUST-81`, `82` đang ⚪ |
 | STORY-CUST-09 | Các tab phụ trợ của hồ sơ | REQ-CUST-63 → 71 | 9 | AMB-CUST-09 | Notes · Statement · Vault · Map · Reminders |
 | STORY-CUST-10 | Nhập khách hàng từ CSV | REQ-CUST-72 → 80 | 9 | AMB-CUST-12 | Đã kiểm chứng nhập thật 19-09-2026 |
 
-**Tổng: 10 Story / 83 REQ — mọi REQ thuộc đúng một Story, không mồ côi, không trùng.**
+**Tổng: 10 Story / 84 REQ — mọi REQ thuộc đúng một Story, không mồ côi, không trùng.**
 
 ### 10.1. Hạng mục cấp Epic (cố ý không gán vào Story nào)
 
@@ -209,6 +209,7 @@ Khách hàng có đúng **2 trạng thái**, điều khiển bằng công tắc 
 
 | Ngày | Nguồn | REQ ảnh hưởng | Loại | Tóm tắt thay đổi | TC cần xử lý |
 |---|---|---|---|---|---|
+| 19-09-2026 | Recon đối chiếu evidence (sau `/generate-testcases-from-requirements`) | REQ-CUST-11, 15, 16, 17, 22, 70, 84 | 🟡 Sửa · 🟢 Thêm | Bộ TC phát hiện 5 chỗ tài liệu ≠ ảnh evidence (ASM-01/02/03/04/07 của `test_cases_customers.md`); đo lại trên DOM thật bằng tài khoản `Project Manager`. **Tài liệu thiếu** → sửa: `15` cặp kiểu khớp nhãn `and`/`or`, mặc định `or`, chỉ hiện khi có điều kiện · `17` `Clear Filter`/`Edit` ẩn khi chưa áp bộ lọc, bộ lọc đã lưu khác nhau giữa tài khoản, trạng thái rỗng `No saved filters…` · `22` dòng cảnh báo đỏ gỡ hết nhóm · `70` nút `G` *Fetch from google*. **Tài liệu đúng, ảnh gây hiểu nhầm** → chỉ ghi chú (`✏️`, giữ 🟢): `11` chữ gợi ý `Search...` bị cắt còn `Search..` do ô hẹp · `16` `Save Filter` là ô tích hiển thị dạng công tắc. **Phát hiện mới** → `REQ-CUST-84` 🟢: khoá đổi tiền tệ khi khách hàng đã có giao dịch (kiểm chứng trên khách hàng `13339`). 3 ảnh evidence mới. Không tạo/sửa/xoá dữ liệu nào (hộp thoại bộ lọc đóng không Apply) | ✏️ `TC_003`, `TC_006`, `TC_025`, `TC_027`, `TC_028`, `TC_061`, `TC_072`, `TC_093` · ➕ `TC_129` cho `REQ-CUST-84` |
 | 19-09-2026 | Chuyển tầng nền tảng | REQ-CUST-01 → 83 | ✏️ Biên tập | **Chuyển sang cấu trúc tầng nền tảng** (skill `skills-requirements-analyzer` mục 5.3): toàn bộ 83 REQ chỉ áp web → `web/requirements_customers_web.md` cùng mục 2, 3, 4, 5, 8, 9, 12; ảnh `evidence/` → `web/evidence/`. Index giữ metadata, phạm vi, ma trận, Story, AMB/RISK, Nhật ký và thêm `## Bản đồ tài liệu`. **Mã REQ, số mục và nội dung không đổi** | — |
 | 19-09-2026 | `PO-2026-09-19` | REQ-CUST-42, 43 | 🟡 Sửa | PO chốt `AMB-CUST-02` là lỗi, `AMB-CUST-03` theo giả định — hai REQ đổi từ mô tả hành vi thực tế sang **kỳ vọng đúng**. Hệ thống hiện chưa đạt → cần mở bug | ➕ Viết mới — **dự kiến FAIL** |
 | 19-09-2026 | `PO-2026-09-19` | REQ-CUST-53, 73, 79 | 🟡 Sửa | `53`: chốt điều kiện hiển thị checkbox (`AMB-CUST-13`), kiểm chứng vế có liên hệ chính. `73`: ngày ví dụ trong hướng dẫn là ngày hiện tại, không cố định. `79`: ⚪ → kiểm chứng nhập thật, `Total Imported: {n}` (`AMB-CUST-12`) | ➕ Viết mới |

@@ -160,7 +160,7 @@
 | **Actual** | Thanh địa chỉ giữ nguyên `http://crm.anhtester.com/admin/authentication` — không chuyển hướng |
 | Evidence | ![](evidence/TC_039_http_not_upgraded.png) |
 | Tái hiện được? | Có |
-| Ghi chú | Xác nhận lại **bug cũ vẫn còn tồn tại** trên build hiện tại — khớp với [BUG_login_1785678750_TC039.md](../../../bugs/login/BUG_login_1785678750_TC039.md) (02-08-2026). Đã cập nhật lại đúng tham chiếu TC ID/REQ ID + evidence mới qua `/create-bug-report` |
+| Ghi chú | Xác nhận lại **bug cũ vẫn còn tồn tại** trên build hiện tại — khớp với [BUG_login_1785678750_TC039.md](../../../../bugs/login/web/BUG_login_1785678750_TC039.md) (02-08-2026). Đã cập nhật lại đúng tham chiếu TC ID/REQ ID + evidence mới qua `/create-bug-report` |
 
 ## 4. TC BLOCKED
 

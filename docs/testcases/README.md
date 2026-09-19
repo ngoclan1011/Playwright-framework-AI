@@ -17,6 +17,7 @@
 | Module | Prefix TC ID | Dải đã dùng | Mã kế tiếp | Số TC | Nền tảng | Độ hạt | REQ bao phủ | Tài liệu | Cập nhật |
 |---|---|---|---|---|---|---|---|---|---|
 | Đăng nhập / Xác thực | `CRM_LOGIN_TC_` | `001` → `051` | `052` | 51 | Web 51 | GỘP | 39/39 REQ trong phạm vi | [test_cases_login.md](login/test_cases_login.md) | 19-09-2026 |
+| Khách hàng | `CRM_CUST_TC_` | `001` → `129` | `130` | 129 | Web 129 | GỘP | 84/84 REQ | [test_cases_customers.md](customers/test_cases_customers.md) | 19-09-2026 |
 
 ### Namespace hệ thống khác
 
@@ -30,6 +31,7 @@
 | Module | Độ hạt | Vì sao | Bản đối chiếu |
 |---|---|---|---|
 | `LOGIN` | **GỘP** | Biến thể cùng một trường nằm chung 1 TC dưới dạng Bảng biến thể — 51 TC (41 gốc + 9 bổ sung theo 4 vòng + 1 bổ sung theo `AMB-LOGIN-19`) · **71 biến thể** | Bản TÁCH 82 TC và bản 41 TC trước khi bổ sung: tra bằng git (thư mục `archive/` đã bỏ 19-09-2026 — tra bằng `git log -- docs/testcases/login/`) |
+| `CUST` | **GỘP** | Sinh lần đầu ở độ hạt mặc định — 129 TC · **155 biến thể** · 74 mục bảng kiểm, 5 part (vượt ngưỡng 50) | — (chưa có bản TÁCH) |
 
 > Chọn độ hạt ở **lượt sinh đầu tiên**: `/generate-testcases-from-requirements <đường dẫn> [GỘP|TÁCH]`. Mặc định `GỘP`. Đổi độ hạt sau khi đã có automation / execution report / RTM trỏ vào là **cấm** — xem mục **Độ Hạt Test Case** trong skill.
 
@@ -40,7 +42,7 @@
 | Module | REQ có tài liệu | REQ trong phạm vi TC | REQ đã có ≥1 TC | Độ phủ | Ghi chú |
 |---|---|---|---|---|---|
 | `LOGIN` | 43 | 39 | 39 | **100%** | 4 REQ ngoài phạm vi theo quyết định PO 18-08-2026: `27`, `34`, `35`, `40` |
-| `CUST` | 79 | — | 0 | 0% | Chưa sinh TC |
+| `CUST` | 84 | 84 | 84 | **100%** | 2 REQ ⚪ (`81`, `82`) có TC `@AssumptionBased` · 2 REQ 🟡 (`42`, `43`) có TC thiết kế để FAIL |
 | `PRJ` | 104 | — | 0 | 0% | Chưa sinh TC |
 
 > Các module còn lại đã cấp prefix REQ nhưng **chưa recon requirements** — xem `docs/requirements/README.md`.
@@ -81,7 +83,7 @@ Kết quả chạy TC **không** nằm trong thư mục này — xem `docs/execu
 ```
 docs/executions/
 ├── test_summary_<mốc>_<timestamp>.md      ← báo cáo tổng hợp, cắt ngang mọi module
-└── <module>/
+└── <module>/<nền-tảng>/                    ← web · mobile · api
     ├── run_<timestamp>/execution_report.md
     ├── retest_<timestamp>/retest_report.md
     └── analysis_<timestamp>.md
@@ -110,6 +112,8 @@ Xem nhanh bằng web viewer: `scripts/execution-viewer/bundle.html` (mở offlin
 
 | Ngày | Thay đổi |
 |---|---|
+| 19-09-2026 | **`CUST` đồng bộ với DOM thật:** sửa tại chỗ 9 TC (TC ID giữ nguyên) và thêm `CRM_CUST_TC_129` cho `REQ-CUST-84` (khoá đổi tiền tệ khi đã có giao dịch) — 129 TC · 155 biến thể, phủ 84/84 REQ. **`LOGIN`:** `CRM_LOGIN_TC_024` mục 🔧`2` sửa theo kết quả đo — mã CSRF cố định trong phiên, gỡ `@NeedsVerify`; module hết vùng chưa có evidence |
+| 19-09-2026 | **Sinh bộ TC module `CUST`** bằng `/generate-testcases-from-requirements` Mode QUICK, độ hạt GỘP, rủi ro Cao → độ sâu Đầy đủ — **128 TC · 153 biến thể**, 5 part ở `customers/web/parts/`, chiếm dải `CRM_CUST_TC_001` → `128`. Phủ 83/83 REQ. 2 TC thiết kế để FAIL (`TC_040` ← `REQ-CUST-43`, `TC_041` ← `REQ-CUST-42`) chờ mở bug · 49 TC `@NeedsVerify` · 5 xung đột tài liệu ↔ ảnh evidence ghi thành ASM, đề nghị cập nhật requirements |
 | 19-09-2026 | **`LOGIN` chuyển sang tầng nền tảng + DELTA `adhoc_2026-09-19`.** 51 TC chuyển sang `login/web/test_cases_login_web.md` (1 file dù vượt ngưỡng 50 — quyết định user), index thành Bản đồ tài liệu. Thêm `CRM_LOGIN_TC_051` (gia hạn phiên, `AMB-LOGIN-19` ✅). `TC_026` + `TC_051` là `@PersonalOnly` — QA tự chạy, không qua `/execute-test-cases`. **Bỏ thư mục `archive/`** — bản cũ tra bằng git. Thêm cột `Nền tảng` vào bảng danh mục |
 | 17-09-2026 | **Chuỗi delta nối xuống automation.** Delta TC List của Mode DELTA trước đây chỉ hiện trong chat và không có cột nền tảng, nên `/update-automation-from-impact` không nhận được đầu vào ở phiên sau và không biết TC thuộc web, app hay API. Từ nay mode APPLY ghi `impact/delta_tc_<TICKET-ID>.md` (cột Nền tảng · Vòng · Nhánh · dòng `⏸️` cho TC chưa sửa); `/update-automation-from-impact` đọc file này, tách theo nền tảng và ghi kế hoạch vào `impact/automation_plan_<TICKET-ID>.md`. Luật đã vào skill `skills-rbt-manual-testing` (Quality Gate DELTA #7 + anti-pattern) và 2 command. Module `LOGIN` chưa chạy DELTA nào nên không có file cần bổ sung |
 | 11-09-2026 | **Bổ sung 9 TC cho bộ `LOGIN` (`TC_042`→`TC_050`) theo Bản Đồ Loại Kiểm Thử 4 Vòng** — `TC_001`→`TC_041` **giữ nguyên hoàn toàn**, execution report `run_1787215085` và 6 bug đang mở vẫn truy vết đúng. Chấm bảng 4 vòng lên bộ TC đang có phát hiện **6 nhánh trống hoặc nông** trong khi Bảng Đối Soát Coverage vẫn xanh 39/39 REQ: `V2 · UI Behavior` (trống) · `V2 · BVA` (trống) · `V2 · Validation` chưa đối soát đủ mục bảng Email/Password · `V3 · Logging` (chưa chấm) · `V4 · Compatibility` (trống) · `V4 · Responsive` (chỉ có TC_033). Recon thật chốt mốc **64 ký tự** cho phần trước `@` (RFC 5321) và xác nhận ô mật khẩu không chặn dán, không có nút hiện/ẩn. Bổ sung **Bảng Đối soát loại kiểm thử (4 vòng)** + **Bảng ISO/IEC 25010:2023** vào cuối tài liệu TC. ⚠️ Phát hiện của `TC_046` cho thấy ca của bug `BUG_login_1787226515_TC018` là **ranh giới chuẩn RFC, không phải lỗi** — đề nghị xem lại bug đó. Khung 4 vòng đã vào skill `skills-rbt-manual-testing` (tiêu chí 10 Self-Quality Gate) và 5 command |

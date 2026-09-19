@@ -1,6 +1,6 @@
 # STORY-PRJ-04 — Kiểm tra dữ liệu đầu vào & thông báo lỗi
 
-> Về index: [../requirements_projects.md](../requirements_projects.md) · Prefix `PRJ` · REQ bao phủ: `REQ-PRJ-53` → `REQ-PRJ-59` (7 REQ)
+> Về index: [../../requirements_projects.md](../../requirements_projects.md) · File nền tảng: [../requirements_projects_web.md](../requirements_projects_web.md) · Prefix `PRJ` · REQ bao phủ: `REQ-PRJ-53` → `REQ-PRJ-59` (7 REQ)
 >
 > AMB liên quan: `AMB-PRJ-04`, `AMB-PRJ-05`, `AMB-PRJ-08`, `AMB-PRJ-09`, `AMB-PRJ-10`
 

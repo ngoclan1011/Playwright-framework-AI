@@ -139,7 +139,7 @@ Danh mục là **điểm vào tầng bug** và cũng là file `scripts/bugs-view
 
 | Mã bug | Module | Nền tảng | Tiêu đề ngắn | Severity | Priority | Trạng thái | TC liên quan | Ngày phát hiện |
 |---|---|---|---|---|---|---|---|---|
-| [BUG_login_1787226514_TC016](login/BUG_login_1787226514_TC016.md) | `LOGIN` | Ô Email không giữ giá trị sau khi đăng nhập thất bại | 🟡 Minor | P2 | 🔴 **Đang mở** | `CRM_LOGIN_TC_016` | 20-08-2026 |
+| [BUG_login_1787226514_TC016](login/web/BUG_login_1787226514_TC016.md) | `LOGIN` | Ô Email không giữ giá trị sau khi đăng nhập thất bại | 🟡 Minor | P2 | 🔴 **Đang mở** | `CRM_LOGIN_TC_016` | 20-08-2026 |
 ```
 
 > ⚠️ **Tên cột là hợp đồng đọc, không phải nhãn trình bày.** `scripts/bugs-viewer` chỉ nhận bảng danh mục khi có **đồng thời** cột `Mã bug` **và** cột `Trạng thái` — thiếu một trong hai (hoặc dịch sang `Bug ID` / `Status`) thì viewer **bỏ toàn bộ bảng**, không báo lỗi gì. Các cột còn lại khớp theo chuỗi con (`Module`, `Tiêu đề`, `Severity`, `Priority`, `TC liên quan`, `Ngày phát hiện`) — thiếu thì chỉ mất cột đó.

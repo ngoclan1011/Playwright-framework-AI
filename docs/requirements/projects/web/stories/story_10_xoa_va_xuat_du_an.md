@@ -1,6 +1,6 @@
 # STORY-PRJ-10 — Xoá dự án & xuất dữ liệu dự án
 
-> Về index: [../requirements_projects.md](../requirements_projects.md) · Prefix `PRJ` · REQ bao phủ: `REQ-PRJ-102` → `REQ-PRJ-104` (3 REQ)
+> Về index: [../../requirements_projects.md](../../requirements_projects.md) · File nền tảng: [../requirements_projects_web.md](../requirements_projects_web.md) · Prefix `PRJ` · REQ bao phủ: `REQ-PRJ-102` → `REQ-PRJ-104` (3 REQ)
 >
 > AMB liên quan: `AMB-PRJ-03`, `AMB-PRJ-12` · RISK liên quan: `RISK-PRJ-03`
 

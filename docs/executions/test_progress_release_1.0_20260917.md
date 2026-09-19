@@ -64,7 +64,7 @@ Mọi số **luỹ kế** trong báo cáo lấy từ lần chạy ngày 20-08-20
 | Module × nền tảng | Chạy trong kỳ | Chưa chạy (luỹ kế) | ✅ PASS | ❌ FAIL | ⚠️ BLOCKED | ⏭️ SKIP | Pass rate | Nguồn |
 |---|---|---|---|---|---|---|---|---|
 | `LOGIN` × Web — **trong kỳ** | 0 | — | 0 | 0 | 0 | 0 | — | Không có `run_*` nào có epoch trong kỳ |
-| `LOGIN` × Web — *luỹ kế, bản demo* | — | 9 | 32 | 6 | 2 | 1 | 80,0% (32/40) | [`run_1787215085`](login/run_1787215085/execution_report.md) — 20-08-2026 |
+| `LOGIN` × Web — *luỹ kế, bản demo* | — | 9 | 32 | 6 | 2 | 1 | 80,0% (32/40) | [`run_1787215085`](login/web/run_1787215085/execution_report.md) — 20-08-2026 |
 | `CUST` × Web | 0 | toàn bộ (chưa có TC) | — | — | — | — | — | — |
 | `PRJ` × Web | 0 | toàn bộ (chưa có TC) | — | — | — | — | — | — |
 

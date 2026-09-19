@@ -170,7 +170,7 @@ Giao diện hiển thị tiếng Anh; bảng này để bạn dò nhanh.
 | Đăng xuất trên điện thoại / màn hình nhỏ | `REQ-LOGIN-29` — nhánh mobile chưa recon, chưa có số liệu nào | Tài liệu chỉ đúng cho máy tính màn hình rộng |
 | Thời hạn phiên 1 giờ tính theo cách nào (mục 4) | `AMB-LOGIN-19` 🟡 còn treo — chưa rõ là 1 giờ không hoạt động hay 1 giờ kể từ lúc đăng nhập | Câu trả lời trong FAQ nói chung chung "kéo dài 1 giờ", chưa nói được chính xác cách tính |
 
-**Nguồn ảnh:** 4 ảnh trong `images/` sao chép từ `docs/requirements/login/evidence/` (đợt khảo sát 18-08-2026), đổi tên theo việc.
+**Nguồn ảnh:** 4 ảnh trong `images/` sao chép từ `docs/requirements/login/web/evidence/` (đợt khảo sát 18-08-2026), đổi tên theo việc.
 
 > ⚠️ Ảnh `dang-xuat-menu-anh-dai-dien.png` chụp màn hình Dashboard nên có kèm số liệu nghiệp vụ của môi trường demo (số tiền, danh sách việc cần làm). Chấp nhận được với bản nội bộ. **Muốn phát hành ra ngoài thì chụp lại ảnh này** trên môi trường dữ liệu mẫu, hoặc cắt chỉ lấy vùng menu ảnh đại diện.
 
