@@ -132,12 +132,17 @@ docs/requirements/
 │   ├── modules/module_NN_<slug>.md        ← 21 file khám phá
 │   └── evidence/*.png                     ← 30 ảnh full-page
 └── <module>/                              ← TẦNG MODULE (sinh dần khi recon)
-    ├── requirements_<module>.md           ← INDEX — TÊN FILE BẤT BIẾN
-    ├── evidence/*.png
-    ├── stories/story_NN_<slug>.md         ← khi tách (> 80 REQ)
-    ├── analysis/analysis_<TICKET-ID>.md
+    ├── requirements_<module>.md           ← INDEX — TÊN FILE BẤT BIẾN · phần chung + ## Bản đồ tài liệu
+    ├── web/                               ← TẦNG NỀN TẢNG — chỉ 3 tên: web · mobile · api
+    │   ├── requirements_<module>_web.md   ← REQ chỉ áp web · Field Spec · Validation · Evidence
+    │   ├── evidence/*.png
+    │   └── stories/story_NN_<slug>.md     ← khi file nền tảng vượt ngưỡng
+    ├── mobile/ · api/                     ← khi module có thêm nền tảng
+    ├── analysis/analysis_<TICKET-ID>.md   ← cấp module
     └── impact/impact_<TICKET-ID>.md       ← Impact Report — input cho tầng test case
 ```
+
+> **Trạng thái chuyển đổi tầng nền tảng:** `CUST` ✅ đã chuyển (19-09-2026) · `LOGIN`, `PRJ` còn cấu trúc cũ (`evidence/`, `stories/` nằm thẳng dưới thư mục module) — sẽ chuyển **một lần** ở lần đầu một workflow sinh/cập nhật chạm lại module đó.
 
 ---
 
@@ -160,6 +165,7 @@ docs/requirements/
 
 | Ngày | Thay đổi |
 |---|---|
+| 19-09-2026 | **Chuyển `CUST` sang cấu trúc tầng nền tảng** — 83 REQ (toàn bộ chỉ áp web) cùng đặc tả trường, validation, luồng, NFR quan sát và danh mục evidence sang `customers/web/requirements_customers_web.md`; 26 ảnh sang `customers/web/evidence/`. Index `requirements_customers.md` giữ nguyên tên và vị trí, thêm `## Bản đồ tài liệu`. Mã REQ, số mục và nội dung không đổi. Mục 4 của danh mục cập nhật sơ đồ có tầng nền tảng |
 | 19-09-2026 | **Chốt 13 quyết định PO cho module `CUST`** (`/update-requirements-from-ticket`, nguồn `PO-2026-09-19`) — `AMB-CUST-01` dựng lại ma trận phân quyền bằng tài khoản `Project Manager` (38/39 ô) và phát hiện **PM có giao diện xoá / `Mass Delete` như Admin** → `AMB-CUST-14` + `RISK-CUST-08`. `AMB-CUST-12` nhập thật 2 khách hàng (`14625`, `14626` — ⚠️ **chưa dọn**). `AMB-CUST-02`, `03` chốt là lỗi → `REQ-CUST-42`, `43` ghi kỳ vọng đúng mà hệ thống chưa đạt → **cần mở bug**. Module lên **83 REQ**, ambiguity 🔴 của `CUST` về **0**, **không Story nào còn BLOCKED**. Impact Report: [customers/impact/impact_PO-2026-09-19.md](customers/impact/impact_PO-2026-09-19.md) |
 | 19-09-2026 | **`LOGIN` hết ambiguity treo (19/19).** `AMB-LOGIN-19` ✅ — phiên 1 giờ tính theo thời gian không hoạt động, mỗi thao tác gia hạn lại → `REQ-LOGIN-42` chuyển 🟡 Changed (Active 204 → 203, Changed 15 → 16). Kèm sửa sót `RISK-LOGIN-05` trong `requirements_login.md` (vẫn ghi `AMB-LOGIN-03` treo dù đã ⏭️ từ 18-08-2026). ⚠️ `CRM_LOGIN_TC_026` stale + cần thêm 1 TC cho vế gia hạn — xem Nhật ký của module |
 | 11-09-2026 | **Bổ sung dòng `Năng lực kiểm thử của QA`** vào bảng thuộc tính đầu file — quyền gọi API · truy vấn CSDL · kiểm tầng tích hợp · xem nhật ký hoạt động · DevTools. Đây là đầu vào cho **nhánh Vòng 3** của mọi bộ TC; trước đây không có chỗ lưu nên agent phải hỏi user lại ở **từng module**, dù quyền của QA giống nhau trên toàn hệ thống. Mục nhật ký hoạt động là **kết quả đo thật** chứ không phải câu trả lời từ trí nhớ: `Utilities → Activity Log` trả **Từ chối truy cập** với tài khoản `Admin` demo. Luật *đọc trước · hỏi một lần · ghi lại ngay* đã đưa ngược vào `skills-rbt-manual-testing` (mục Vòng 3 + anti-pattern), `/discover-system` Bước 0 và `CLAUDE.md` — dự án sau không lặp lại |
