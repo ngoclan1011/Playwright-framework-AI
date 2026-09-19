@@ -1,5 +1,5 @@
 ---
-description: Review chất lượng manual test cases — chấm điểm theo rubric 6 tiêu chí, phát hiện TC mơ hồ/trùng lặp, chỉ ra coverage gaps. Hỗ trợ 2 mode — REVIEW (chỉ báo cáo) và FIX (báo cáo + sửa TC).
+description: Review chất lượng manual test cases — chấm điểm theo rubric 6 tiêu chí, phát hiện TC mơ hồ/trùng lặp, chỉ ra coverage gaps. Hỗ trợ 3 mode — REVIEW (chỉ báo cáo), FIX (báo cáo + sửa TC) và AUTOMATION (chấm độc lập TC nào làm automation được theo bảng tiêu chí).
 skills:
   - skills-testcase-reviewer
   - skills-rbt-manual-testing
@@ -19,18 +19,22 @@ skills:
 
 - **Tất cả output bằng Tiếng Việt**
 - **Mode REVIEW không sửa file TC nào** — chỉ xuất báo cáo
+- **Mode AUTOMATION không sửa file TC nào** cho tới khi user duyệt ở checkpoint — duyệt rồi cũng **chỉ** ghi ô `Automation` + mục đối soát ở index, không đụng Steps/Expected
 - **Mode FIX sửa TẠI CHỖ** trong file TC đang dùng, **chỉ** các TC user đã duyệt ở checkpoint Bước 4. 🚨 **CẤM sinh bản sao** `_improved` / `_v2` / `_new` hay thư mục `archive/` — tên file TC là **bất biến**, mọi workflow phía sau (`/execute-test-cases`, `/generate-automation-*`, `/generate-traceability-matrix`) đọc theo mẫu tên; bản sao làm chúng tiếp tục đọc bản cũ và để lại hai bộ TC không ai biết bộ nào có hiệu lực. Bản trước khi sửa tra bằng **mốc git** ghi trong Nhật ký
 - Mọi nhận xét phải kèm **ví dụ sửa cụ thể** — không chê chung chung
 - Nếu thiếu requirements → vẫn review 5/6 tiêu chí, ghi chú rõ không đánh giá được traceability
 
-## 2 Chế độ (Mode)
+## 3 Chế độ (Mode)
 
 | Mode | Khi nào sử dụng | Output |
 |---|---|---|
 | **REVIEW** (mặc định) | User cần đánh giá chất lượng bộ TC | Báo cáo review + đề xuất sửa |
 | **FIX** | User muốn agent sửa luôn các TC 🔴/🟡 | Như REVIEW + sửa tại chỗ các TC đã duyệt + dòng Nhật ký có mốc git |
+| **AUTOMATION** | User cần biết TC nào làm automation được — bộ TC bất kỳ, kể cả file không có cột `Automation` | Báo cáo `automation_review_*` — Yes/Partial/No từng TC kèm căn cứ, điều kiện cần xin dev, dòng lệch với cột có sẵn. Duyệt rồi mới ghi ngược cột |
 
 > Nếu user nói "sửa luôn", "cải thiện giùm", "viết lại giúp" → tự động chuyển sang **Mode FIX**.
+>
+> Nếu user nói "case nào automate được", "đánh giá khả năng automation", "chuẩn bị convert sang automation" → tự động chuyển sang **Mode AUTOMATION**.
 
 ## Input cần thu thập
 
@@ -44,6 +48,8 @@ skills:
 ### Bước 1: Đọc Input
 1. Đọc file TC, xác định format và số lượng. File **index** `test_cases_<module>.md` → theo `## Bản đồ tài liệu` đọc các file nền tảng (index không chứa dòng TC); chấm riêng từng nền tảng khi chúng khác người viết/khác độ phủ
 2. Đọc requirements (nếu có)
+
+> **Mode AUTOMATION** → bỏ Bước 2–5, làm **Bước A1–A3** (ngay sau Bước 5).
 
 ### Bước 2: Review Từng TC
 1. Chấm điểm 6 tiêu chí (0-2 mỗi tiêu chí, tối đa 12) theo rubric trong skill
@@ -73,6 +79,25 @@ skills:
 5. **Đồng bộ file index** `test_cases_<module>.md`: Assumptions · Bảng Đối Soát Coverage · Vùng chưa có evidence · Đối soát 4 vòng · tổng số TC / biến thể · Bộ chạy đề xuất
 6. Ghi **1 dòng Nhật ký thay đổi** vào index: nguồn `/review-testcases` mode FIX + link báo cáo · TC nào sửa gì · **mốc git trước khi sửa**
 
+### Bước A1: Chấm khả năng automation (Mode AUTOMATION)
+1. Đọc **[Tiêu chí chấm cột Automation](../skills/skills-rbt-manual-testing/references/automation_criteria.md)** — đủ 8 mục, trước TC đầu tiên
+2. Chấm **độc lập**: bỏ qua cột `Automation` có sẵn trong lúc chấm. Mỗi TC: Expected cốt lõi → Trục 1 (bảng 3A theo dấu hiệu, không khớp thì 3B) → Trục 2 → Trục 3 → lấy mức thấp nhất
+3. Kết luận khác `Yes` → trích nguyên văn chữ trong TC làm căn cứ. TC mơ hồ → `❓ Chưa chấm được`, không đoán
+4. Vướng tạm thời → `⏸️ Hoãn`, không hạ giá trị. TC phơi bug không hoãn
+5. Gom điều kiện của `Partial`, đếm số TC mở khoá. Điều kiện chưa rõ có sẵn hay chưa → ghi `❓ Chưa rõ`; user đã nói môi trường có sẵn → TC phụ thuộc chấm `Yes`
+6. File có cột `Automation` → đối chiếu, lập bảng dòng lệch
+
+### Bước A2: Báo Cáo (CHECKPOINT)
+1. Xuất báo cáo theo **Report Template — Mode AUTOMATION** của skill vào `docs/testcases/<module>/review/automation_review_<nền-tảng>_<YYYYMMDD>.md`. File TC nằm ngoài `docs/` → lưu cạnh file đó
+2. Chat chỉ hiện: số Yes/Partial/No/Hoãn/❓ · top điều kiện cần xin · số dòng lệch · đường dẫn báo cáo
+3. **⏸️ DỪNG LẠI** — hỏi user có ghi ngược vào cột `Automation` không. Không → KẾT THÚC
+
+### Bước A3: Ghi ngược cột Automation (chỉ khi user duyệt)
+1. Ghi **mốc git** của file TC trước khi sửa. File chưa được git theo dõi → **hỏi user** trước khi ghi đè
+2. Sửa **tại chỗ** ô `Automation` của các TC đã duyệt — đúng một từ `Yes`/`Partial`/`No`. File chưa có cột → thêm cột tên đúng `Automation`. **Không** đụng Steps/Expected
+3. Ghi / cập nhật mục `## Đối soát cột Automation` ở index (mẫu mục 7.1 của tiêu chí)
+4. Ghi **1 dòng Nhật ký thay đổi**: nguồn `/review-testcases` Mode AUTOMATION + link báo cáo · số TC đổi giá trị · mốc git
+
 ## Output
 
 ### Mode REVIEW
@@ -83,3 +108,7 @@ skills:
   - File TC **đã sửa tại chỗ** (cùng tên, cùng vị trí) + index đã đồng bộ
   - Dòng Nhật ký thay đổi có mốc git — xem bản cũ bằng `git show <mốc>:<đường dẫn file TC>`
   - Danh sách TC mới bổ sung cho gaps (nếu có)
+
+### Mode AUTOMATION
+- File `review/automation_review_<nền-tảng>_<YYYYMMDD>.md`: kết luận Yes/Partial/No/⏸️ Hoãn/❓ từng TC kèm căn cứ trích nguyên văn, **danh sách điều kiện cần chuẩn bị** xếp theo số TC mở khoá, dòng lệch với cột `Automation` có sẵn, thứ tự automate đề xuất
+- Nếu user duyệt ghi ngược: cột `Automation` đã sửa tại chỗ + mục `## Đối soát cột Automation` ở index + dòng Nhật ký có mốc git

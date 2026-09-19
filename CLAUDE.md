@@ -199,7 +199,7 @@ Agent sử dụng skills trong `.claude/skills/` tùy theo nhiệm vụ:
 | `skills-test-report-analyzer`   | Phân tích test report **một lần chạy** — automation lẫn manual, gom nhóm failure theo root cause, đề xuất thứ tự xử lý |
 | `skills-test-progress-reporter` | Báo cáo tiến độ **một kỳ trong đợt** (ngày/tuần) — so thực tế với lịch plan, chỉ số trong kỳ, trở ngại, rủi ro mới, đề xuất điều chỉnh — ISTQB CTFL v4.0 mục 5.3.2 |
 | `skills-test-summary-reporter`  | Tổng hợp **toàn dự án tại một mốc** — gộp nhiều execution report + bug + RTM, đối chiếu tiêu chí exit, khuyến nghị go/no-go |
-| `skills-testcase-reviewer`      | Review chất lượng manual test cases — rubric 6 tiêu chí, coverage gaps               |
+| `skills-testcase-reviewer`      | Review chất lượng manual test cases — rubric 6 tiêu chí, coverage gaps · Mode AUTOMATION chấm TC nào làm automation được theo bảng tiêu chí |
 | `skills-coverage-traceability`  | Sinh ma trận truy vết RTM — Requirements ↔ Test Cases ↔ Automation                    |
 | `skills-api-mocking`            | Sinh mock/stub API (Playwright route, WireMock) — test UI độc lập backend             |
 | `skills-user-guide-writer`      | Sinh Hướng dẫn sử dụng cho người dùng cuối — viết theo việc cần làm, bám cấu trúc ISO/IEC/IEEE 26514 · 82079-1 |
@@ -264,7 +264,8 @@ docs/
 │       ├── impact/impact_plan_<TICKET-ID>.md  ← /update-testcases-from-impact — kế hoạch, trước khi duyệt
 │       ├── impact/delta_tc_<TICKET-ID>.md     ← /update-testcases-from-impact APPLY — TC đã sửa theo nền tảng, input của automation
 │       ├── impact/automation_plan_<TICKET-ID>.md ← /update-automation-from-impact — script đã sửa theo ticket
-│       └── review/testcase_review_report_<nền-tảng>_<YYYYMMDD>.md ← /review-testcases — mode FIX sửa TC TẠI CHỖ, không sinh bản `_improved`
+│       ├── review/testcase_review_report_<nền-tảng>_<YYYYMMDD>.md ← /review-testcases — mode FIX sửa TC TẠI CHỖ, không sinh bản `_improved`
+│       └── review/automation_review_<nền-tảng>_<YYYYMMDD>.md ← /review-testcases mode AUTOMATION — TC nào làm automation được
 │
 ├── test-plans/                                  ← kế hoạch kiểm thử — lập TRƯỚC đợt
 │   ├── test_plan_<mốc>.md                      ← Master Test Plan — công bố phạm vi + tiêu chí exit TRƯỚC đợt
@@ -526,7 +527,7 @@ Agent sử dụng workflows trong `.claude/commands/` qua slash commands:
 | `/generate-master-test-plan`            | Master Test Plan cấp quản lý — đầu vào phiếu YAML `plans/master-test-plan/test_plan.config.yaml`. Phạm vi **module × nền tảng**, cấp độ · loại · độc lập kiểm thử, chiến lược tự động hoá · phi chức năng, tiêu chí vào/ra, môi trường · dữ liệu kiểm thử, quản lý lỗi, lịch · ước lượng · ngân sách, rủi ro dự án + sản phẩm. Xuất `docs/test-plans/test_plan_<mốc>.md`, bám 29119-3, phủ đủ ISTQB CTFL v4.0 mục 5.1.1 |
 | `/generate-test-progress-report`        | Báo cáo tiến độ **một kỳ** trong đợt — so thực tế với lịch plan, chỉ số trong kỳ, trở ngại, rủi ro mới, kế hoạch kỳ tới, đề xuất điều chỉnh. **Không** khuyến nghị go/no-go |
 | `/generate-test-summary-report`         | Báo cáo tổng hợp tại một mốc release/sprint — gộp mọi kết quả, đối chiếu tiêu chí exit, **khuyến nghị go/no-go** |
-| `/review-testcases`                     | Review chất lượng manual TCs (2 modes: REVIEW/FIX)         |
+| `/review-testcases`                     | Review chất lượng manual TCs (3 modes: REVIEW/FIX/AUTOMATION — AUTOMATION chấm độc lập TC nào làm automation được theo `skills-rbt-manual-testing/references/automation_criteria.md`) |
 | `/generate-traceability-matrix`         | Sinh ma trận truy vết RTM 3 tầng                          |
 | `/generate-api-mocks`                   | Sinh API mocks + tests cho edge cases                        |
 | `/generate-user-guide`                  | Sinh **Hướng dẫn sử dụng** cho người dùng cuối từ requirements + evidence đã khảo sát (2 modes: DOC/LIVE). KHÔNG phải tài liệu requirements viết lại giọng khác |

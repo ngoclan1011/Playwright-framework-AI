@@ -197,12 +197,13 @@ docs/checklists/checklist_<loại>_<module>.md     ← nếu chạy mode CHECKLI
 |---|---|
 | **REVIEW** (mặc định) | Chấm rubric 6 tiêu chí, chỉ ra TC mơ hồ / trùng lặp / thiếu negative-boundary / coverage gap |
 | **FIX** | Như trên + **sửa tại chỗ** các TC bạn duyệt, giữ TC ID, ghi Nhật ký có mốc git — **không** sinh bản sao `_improved` |
+| **AUTOMATION** | Chấm độc lập từng TC `Yes` / `Partial` / `No` theo bảng tiêu chí automation, kèm căn cứ trích từ TC · gom **điều kiện cần xin dev** (OTP cố định, hộp thư test, sandbox…) · chỉ ra TC đang gắn sai cột `Automation`. Nhận cả file Excel khách gửi không có cột này |
 
-Nói *"sửa luôn"* / *"cải thiện giùm"* → AI tự chuyển sang **FIX**.
+Nói *"sửa luôn"* / *"cải thiện giùm"* → AI tự chuyển sang **FIX**. Nói *"case nào automate được"* → **AUTOMATION**.
 
 > Chặng này hay bị bỏ qua. Nhưng review 30 phút rẻ hơn nhiều so với chạy tay 50 TC rồi mới phát hiện một nửa viết sai.
 
-> 🤖 **Muốn automate bộ TC này?** Đây là điểm rẽ — bộ TC đã review xong là **đầu vào của** [`AI_FULL_FLOW_AUTOMATION.md`](AI_FULL_FLOW_AUTOMATION.md). Hai flow chạy song song được: automation lo phần regression lặp lại, manual lo phần còn lại.
+> 🤖 **Muốn automate bộ TC này?** Chạy `/review-testcases` Mode **AUTOMATION** trước để biết TC nào làm được và cần xin dev điều kiện gì. Đây là điểm rẽ — bộ TC đã review xong là **đầu vào của** [`AI_FULL_FLOW_AUTOMATION.md`](AI_FULL_FLOW_AUTOMATION.md). Hai flow chạy song song được: automation lo phần regression lặp lại, manual lo phần còn lại.
 
 ---
 

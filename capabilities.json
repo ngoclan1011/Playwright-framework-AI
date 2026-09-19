@@ -11,7 +11,7 @@
     },
     "ios": {
         "appium:app": "/path/to/your/ios/app.ipa",
-        "appium:deviceName": "iPhone 17 Promax",
+        "appium:deviceName": "iPhone 17 Pro Max",
         "appium:platformVersion": "17.0",
         "appium:automationName": "XCUITest",
         "appium:udid": "your-device-udid"

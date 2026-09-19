@@ -402,7 +402,7 @@ Tách ngay kể cả khi ≤ 8 module, nếu gặp **bất kỳ** dấu hiệu:
 | Module | Prefix | Nền tảng | Trạng thái recon | Mức phủ tài liệu | Tài liệu | REQ đã dùng | Mã kế tiếp | AMB treo | Cập nhật |
 |---|---|---|---|---|---|---|---|---|---|
 | Khách hàng | `CUST` | Web ⬜ · Android ⬜ · API ⬜ | ⬜ Chưa khảo sát | 🟨 Một phần | — | — | `REQ-CUST-01` | — | 10-08-2026 |
-| Đăng nhập | `LOGIN` | Web ✅ · Android ⬜ | 🟨 Đang khảo sát | 🟩 Đầy đủ | [requirements_login.md](login/requirements_login.md) | 01 → 14 | `REQ-LOGIN-15` | AMB-LOGIN-02 | 11-08-2026 |
+| Đăng nhập | `LOGIN` | Web ✅ · Android ⬜ | 🟨 Đang khảo sát | 🟩 Đầy đủ | `login/requirements_login.md` | 01 → 14 | `REQ-LOGIN-15` | AMB-LOGIN-02 | 11-08-2026 |
 
 Cột `Nền tảng` mang dấu trạng thái **riêng từng mặt** — `Trạng thái recon` tổng chỉ ✅ khi **mọi** mặt đã ✅ (hoặc ⏸️ hoãn có lý do). Hệ thống chỉ một mặt → có thể bỏ cột (skill 5.7.2).
 

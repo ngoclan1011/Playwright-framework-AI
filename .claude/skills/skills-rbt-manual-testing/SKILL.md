@@ -504,7 +504,7 @@ Sinh test cases **nhanh, đủ chất lượng** từ requirements/user stories 
    - Localization & UTF-8 / Emoji
    - Keyboard Accessibility (A11y)
    - HTTP Status Codes (cho API TCs)
-9. **Xuất ra bảng Markdown** chuẩn có đầy đủ metadata cho Automation, sẵn sàng sync vào Google Sheets hoặc Jira/TestRail.
+9. **Xuất ra bảng Markdown** chuẩn có đầy đủ metadata cho Automation, sẵn sàng sync vào Google Sheets hoặc Jira/TestRail. Cột `Automation` chấm theo [Tiêu chí chấm cột Automation](references/automation_criteria.md), ghi mục `## Đối soát cột Automation` vào index.
 10. **Chạy Self-Quality Gate (11 Tiêu chí, 0–10):** Rà soát lại 100% test cases + đối soát coverage (6) + đối soát evidence (7) + **rà ngôn ngữ kiểm chứng** (8) + **rà đặc tính chất lượng ISO/IEC 25010** (9) + **đối soát loại kiểm thử 4 vòng** (10) trước khi xuất kết quả.
 
 ## Bảng Output Standard (chuẩn hóa đầy đủ Metadata)
@@ -516,7 +516,7 @@ Sinh test cases **nhanh, đủ chất lượng** từ requirements/user stories 
 > **Giải thích Metadata:**
 > - **REQ ID:** Mã requirement mà TC này cover (`REQ-LOGIN-01`) — BẮT BUỘC, 1 TC có thể cover nhiều REQ (phân cách `,`). Đây là mắt xích truy vết để đối soát "đủ case" và chạy `/generate-traceability-matrix`
 > - **Risk Level:** `High` / `Medium` / `Low` — mức rủi ro của vùng chức năng TC này chạm tới. **KHÔNG được bỏ cột này**: `scripts/testcases-viewer` có cột Risk và cho sort theo nó, thiếu cột thì toàn bộ cột Risk hiện `—` và sort mất tác dụng
-> - **Automation:** `Yes` / `No` / `Partial` (Độ khả thi để viết script tự động)
+> - **Automation:** `Yes` / `No` / `Partial` — chấm theo [Tiêu chí chấm cột Automation](references/automation_criteria.md) (**BẮT BUỘC đọc trước batch đầu tiên**): 3 trục kỹ thuật · sẵn sàng · đáng làm, lấy mức thấp nhất. **KHÔNG** gắn `Yes` mặc định — TC chạm OTP, email, CAPTCHA, biểu đồ, SSO… phải tra bảng. Ô chỉ ghi **đúng một từ**; điều kiện của `Partial`, lý do của `No` ghi vào mục `## Đối soát cột Automation` của index — viewer lọc cột này theo giá trị chính xác
 > - **Auto Type:** `UI` / `API` / `Unit` / `N/A` (Loại automation phù hợp)
 > - **Tags:** `@Smoke`, `@Regression`, `@CriticalPath`, `@Security`, `@Boundary`
 > - **`@PersonalOnly`** — QA **tự chạy và tự theo dõi** ngoài workflow (TC chạy quá lâu, cần thao tác tay đặc biệt…) → `/execute-test-cases` **bỏ qua**. Đây là tag **duy nhất** làm `/execute-test-cases` bỏ qua TC. Cột `Automation` (`Yes`/`Partial`/`No`) chỉ nói TC có làm automation hay không — TC `Automation = No` **vẫn** được `/execute-test-cases` chạy
@@ -913,7 +913,8 @@ Trước khi xuất kết quả cuối cùng cho user, Agent **BẮT BUỘC** t�
 - [ ] **4. Field Validation Coverage (đối soát theo BẢNG, không đếm theo số):** với **TỪNG** input field, mở đúng dòng loại field trong **Bảng Field-Level Validation Checklist (15 loại)** và đối soát **đủ từng mục** của dòng đó. Mục nào không áp dụng phải **ghi lý do một dòng**, không được im lặng bỏ qua.
   > 🚨 `≥1 Positive + 2 Negative` là **sàn tối thiểu, KHÔNG phải mức đạt**. Trường Password có 9 mục trong bảng — sinh 3 TC rồi dừng là **trượt tiêu chí này**, dù về số lượng vẫn qua sàn. Đây chính là chỗ bộ TC bị nông mà vẫn xanh hết bảng.
   > Xuất kèm cột đối soát trong **Bảng Đối soát loại kiểm thử** dòng `V2 · Validation`: `đủ N/N mục bảng <loại field>`.
-- [ ] **5. Automation Metadata Ready:** 100% test cases được gắn đầy đủ `Automation`, `Auto Type`, và `@Tag`.
+- [ ] **5. Automation Metadata Ready:** 100% test cases được gắn đầy đủ `Automation`, `Auto Type`, và `@Tag`. Cột `Automation` chấm theo [Tiêu chí chấm cột Automation](references/automation_criteria.md), **không** gắn `Yes` hàng loạt: TC chạm một tính năng ở bảng 3A mà vẫn `Yes` thì cách làm phải nằm trong bảng đó. Index có mục `## Đối soát cột Automation` — mọi TC `Partial` có điều kiện, mọi TC `No` có lý do, điều kiện đã gom thành danh sách cần chuẩn bị, TC vướng tạm thời ghi `⏸️ Hoãn` chứ không hạ cột.
+  > Với **DELTA**: chỉ chấm lại TC đã sửa / thêm, cập nhật đúng các dòng đó trong mục đối soát.
 - [ ] **6. Requirement Coverage (đối soát "đủ case"):** 100% REQ ID có **≥1 TC** trỏ về; REQ mức High Risk có đủ Positive + Negative + Boundary. Xuất **Bảng Đối Soát Coverage** kèm output:
 
 ```markdown
@@ -1095,7 +1096,7 @@ Quy trình bài bản, tuần tự cho module phức tạp. Bao gồm phân tíc
    - TC ID theo format thống nhất (ví dụ: `CRM_CUST_TC_001`)
    - **REQ ID bắt buộc mỗi dòng** — TC không trỏ về REQ nào là TC mồ côi, phải xem lại
    - Test Steps đánh số `1. 2. 3.` (mỗi bước 1 hành động), Expected Result đánh số khớp 1-1, dùng `<br>` xuống dòng trong cell
-   - Gắn đầy đủ metadata `Automation` (`Yes`/`No`/`Partial`), `Auto Type` (`UI`/`API`/`Unit`/`N/A`), và `@Tags` (`@Smoke`, `@Regression`, `@CriticalPath`...)
+   - Gắn đầy đủ metadata `Automation` (`Yes`/`No`/`Partial` — chấm theo [Tiêu chí chấm cột Automation](references/automation_criteria.md)), `Auto Type` (`UI`/`API`/`Unit`/`N/A`), và `@Tags` (`@Smoke`, `@Regression`, `@CriticalPath`...)
    - **TUYỆT ĐỐI không được bỏ sót** bất kỳ test case nào đã sinh ở Bước 5
 3. **Chạy Self-Quality Gate (11 Tiêu chí, 0–10):** Kiểm định lại — bao gồm **Bảng Đối Soát Coverage** (tiêu chí 6: mọi REQ có ≥1 TC), **Bảng Đối Soát Evidence** (tiêu chí 7), **rà ngôn ngữ kiểm chứng** (tiêu chí 8), **Bảng rà soát đặc tính chất lượng ISO/IEC 25010:2023** (tiêu chí 9: đủ 9/9 đặc tính, ô `➖` ghi rõ ai chịu) và **Bảng Đối soát loại kiểm thử 4 vòng** (tiêu chí 10: mọi nhánh được chấm, 3 nhánh cấm `➖`, độ hạt GỘP ghi kèm số biến thể) — trước khi xuất Artifact (`test_cases_<module>.md`).
 
@@ -1378,6 +1379,7 @@ Vì vậy Mode DELTA đặt việc **bảo toàn TC ID** lên trên mọi mục 
 | **Vùng chưa có evidence** | Danh sách màn hình/trạng thái không có ảnh chống lưng + TC bị gắn `@NeedsVerify` |
 | **Bảng Đối soát loại kiểm thử (4 vòng)** | Mọi nhánh của V1–V4 × ✅/➖/🔴 × TC ID (kèm số biến thể nếu GỘP) hoặc lý do + ai chịu (tiêu chí 10) |
 | **Bảng rà soát đặc tính chất lượng** | 9 đặc tính ISO/IEC 25010:2023 × ✅/➖/🔴 × TC ID hoặc lý do (tiêu chí 9) |
+| **Đối soát cột Automation** | Đếm Yes/Partial/No/⏸️ Hoãn theo nền tảng + điều kiện cần chuẩn bị + TC Partial/No/Hoãn kèm lý do (tiêu chí 5) |
 
 ### Mode FULL RBT
 
@@ -1388,7 +1390,7 @@ Vì vậy Mode DELTA đặt việc **bảo toàn TC ID** lên trên mọi mục 
 | 3 | Module Decomposition + Dependencies |
 | 4 | Traceability Matrix + High-Level Scenarios **xếp theo 4 vòng** (mỗi nhánh chấm sơ bộ ✅/➖) |
 | 5 | Test Cases chi tiết (REQ ID + Risk Level + Test Data), sinh **tuần tự V1 → V4** |
-| 6 | Bảng Markdown chuẩn (Jira/Excel ready) + Bảng Đối Soát Coverage + **Bảng Đối Soát Evidence** + **Bảng Đối soát loại kiểm thử (4 vòng)** + **Bảng rà soát đặc tính chất lượng (ISO/IEC 25010:2023)** |
+| 6 | Bảng Markdown chuẩn (Jira/Excel ready) + Bảng Đối Soát Coverage + **Bảng Đối Soát Evidence** + **Bảng Đối soát loại kiểm thử (4 vòng)** + **Bảng rà soát đặc tính chất lượng (ISO/IEC 25010:2023)** + **Đối soát cột Automation** |
 
 ### Mode CHECKLIST
 
@@ -1411,6 +1413,7 @@ Vì vậy Mode DELTA đặt việc **bảo toàn TC ID** lên trên mọi mục 
 | File nền tảng đã sửa (+ index cập nhật) | Sửa **tại chỗ**, tên file không đổi, TC ID giữ nguyên |
 | Mốc git trước khi sửa | Hash commit của từng file nền tảng — ghi ở Nhật ký và `delta_tc_` để đối chiếu |
 | **Bảng Đối soát loại kiểm thử (4 vòng)** | Cập nhật **chỉ nhánh ticket chạm tới** ở cuối index — phần còn lại giữ nguyên |
+| **Đối soát cột Automation** | Chấm lại cột `Automation` của TC đã sửa / thêm, cập nhật đúng các dòng đó trong mục đối soát của index |
 | Nhật ký thay đổi | Bảng ở cuối file TC: ngày · ticket · TC bị ảnh hưởng · **vòng · nhánh** · thay đổi · mốc git |
 | **`impact/delta_tc_<TICKET-ID>.md`** | Delta TC List — **chỉ ghi ở APPLY**, cột **Nền tảng** + **Vòng · Nhánh** + hành động `✏️` / `➕` / `🗑️` / `⏸️`, ghi mốc git từng nền tảng. Input **bắt buộc** của `/update-automation-from-impact`; chat chỉ hiện tóm tắt + đường dẫn. Mẫu đầy đủ ở command `/update-testcases-from-impact` Bước 7 |
 | Danh sách ngoài phạm vi | REQ 🟢 chưa có TC + command tiếp theo |
