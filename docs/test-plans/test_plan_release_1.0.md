@@ -75,9 +75,9 @@
 
 | Tài liệu | Phiên bản / ngày cập nhật | Module | Ghi chú |
 |---|---|---|---|
-| [`requirements_login.md`](../requirements/login/requirements_login.md) | Rà soát và kiểm chứng lại 18-08-2026 | `LOGIN` | 43 REQ · 39 trong phạm vi · 0 AMB 🔴 |
-| [`requirements_customers.md`](../requirements/customers/requirements_customers.md) | 14-08-2026 | `CUST` | 79 REQ · 4 AMB 🔴 treo |
-| [`requirements_projects.md`](../requirements/projects/requirements_projects.md) | 14-08-2026 | `PRJ` | 104 REQ · 6 AMB 🔴 treo |
+| [`REQUIREMENTS_LOGIN_SUMMARY.md`](../requirements/login/REQUIREMENTS_LOGIN_SUMMARY.md) | Rà soát và kiểm chứng lại 18-08-2026 | `LOGIN` | 43 REQ · 39 trong phạm vi · 0 AMB 🔴 |
+| [`REQUIREMENTS_CUSTOMERS_SUMMARY.md`](../requirements/customers/REQUIREMENTS_CUSTOMERS_SUMMARY.md) | 14-08-2026 | `CUST` | 79 REQ · 4 AMB 🔴 treo |
+| [`REQUIREMENTS_PROJECTS_SUMMARY.md`](../requirements/projects/REQUIREMENTS_PROJECTS_SUMMARY.md) | 14-08-2026 | `PRJ` | 104 REQ · 6 AMB 🔴 treo |
 | [`system_map.md`](../requirements/_discovery/system_map.md) | 14-08-2026 | Cả 3 | Phụ thuộc giữa module · vùng loại khỏi phạm vi |
 
 > ⚠️ Cả ba tài liệu được khảo sát trên **bản demo dùng chung**, không phải môi trường test của đợt này — xem rủi ro R2. Cơ sở kiểm thử đổi giữa đợt → cập nhật bằng `/update-requirements-from-ticket` rồi tăng phiên bản plan.
@@ -116,14 +116,14 @@
 | `REQ-LOGIN-27` — gửi mail đặt lại mật khẩu với email có thật | Không kiểm chứng luồng gửi mail thật (`AMB-LOGIN-04`) | — | Quyết định PO 18-08-2026 |
 | `REQ-LOGIN-34` · `35` — cookie ghi nhớ không bị xoá / đọc được bằng JavaScript | Ghi nhận hiện trạng, không viết TC (`AMB-LOGIN-06` · `AMB-LOGIN-07`) · rủi ro đã chấp nhận `RISK-LOGIN-02` | — | Quyết định PO 18-08-2026 |
 | `REQ-LOGIN-40` — tự đăng nhập bằng cookie ghi nhớ | PO xác nhận tính năng Ghi nhớ đăng nhập **không hoạt động** (`AMB-LOGIN-15`) | — | Quyết định PO 18-08-2026 |
-| Kiểm thử tải · đo ngưỡng thời gian phản hồi | Chưa có công cụ tải. Chỉ kiểm mức thô (đường truyền chậm — `TC_041`) | Đội Hạ tầng, đợt sau | `test_cases_login.md` — bảng ISO/IEC 25010 |
-| Pentest · quét lỗ hổng | Ngoài năng lực manual TC | Đội bảo mật / đối tác đánh giá độc lập | `test_cases_login.md` — bảng ISO/IEC 25010 |
-| Rà soát WCAG đầy đủ | Cần công cụ chuyên dụng. Chỉ kiểm điều hướng bàn phím (`TC_038`) | Đội Dev / chuyên gia a11y | `test_cases_login.md` — bảng 4 vòng |
-| Khả năng bảo trì (Maintainability) | Đặc tính của mã nguồn | Đội Dev — code review, phân tích tĩnh | `test_cases_login.md` — bảng ISO/IEC 25010 |
-| An toàn (Safety) | Ứng dụng nghiệp vụ, lỗi không gây tổn hại vật lý | — (không áp dụng) | `test_cases_login.md` — bảng ISO/IEC 25010 |
+| Kiểm thử tải · đo ngưỡng thời gian phản hồi | Chưa có công cụ tải. Chỉ kiểm mức thô (đường truyền chậm — `TC_041`) | Đội Hạ tầng, đợt sau | `TEST_CASES_LOGIN_SUMMARY.md` — bảng ISO/IEC 25010 |
+| Pentest · quét lỗ hổng | Ngoài năng lực manual TC | Đội bảo mật / đối tác đánh giá độc lập | `TEST_CASES_LOGIN_SUMMARY.md` — bảng ISO/IEC 25010 |
+| Rà soát WCAG đầy đủ | Cần công cụ chuyên dụng. Chỉ kiểm điều hướng bàn phím (`TC_038`) | Đội Dev / chuyên gia a11y | `TEST_CASES_LOGIN_SUMMARY.md` — bảng 4 vòng |
+| Khả năng bảo trì (Maintainability) | Đặc tính của mã nguồn | Đội Dev — code review, phân tích tĩnh | `TEST_CASES_LOGIN_SUMMARY.md` — bảng ISO/IEC 25010 |
+| An toàn (Safety) | Ứng dụng nghiệp vụ, lỗi không gây tổn hại vật lý | — (không áp dụng) | `TEST_CASES_LOGIN_SUMMARY.md` — bảng ISO/IEC 25010 |
 | Kiểm chứng tầng API · CSDL · tích hợp | QA không có quyền | **Đội Dev** xác minh | `docs/requirements/README.md` — Năng lực kiểm thử của QA (11-09-2026) |
 | Ghi vết nhật ký hoạt động (Activity Log) | Tài khoản demo bị Từ chối truy cập. Được cấp Super Admin trước 06-10-2026 → đưa vào | Đề nghị PO / đội Dev cấp tài khoản | `docs/requirements/README.md` — Năng lực kiểm thử của QA |
-| Đổi ngôn ngữ giao diện | Thuộc module Hồ sơ cá nhân (`PROF`), ngoài đợt | Đợt sau | `test_cases_login.md` — bảng ISO/IEC 25010 |
+| Đổi ngôn ngữ giao diện | Thuộc module Hồ sơ cá nhân (`PROF`), ngoài đợt | Đợt sau | `TEST_CASES_LOGIN_SUMMARY.md` — bảng ISO/IEC 25010 |
 
 > Bảng ISO/IEC 25010 của `CUST` và `PRJ` chưa có vì chưa sinh TC. Sinh xong → ô `➖` mới của hai module phải bổ sung vào mục này, **tăng phiên bản plan**.
 >
@@ -198,7 +198,7 @@
 
 #### 3.2.1 Kiểm thử phi chức năng
 
-> Hiệu năng và bảo mật chuyên sâu: phiếu ghi `không`. Bốn loại còn lại phiếu **để trống** → `❓` (ô treo 9). Cột *TC đã có* đọc từ bảng ISO/IEC 25010 của `test_cases_login.md` — `CUST` và `PRJ` chưa có TC. TC lẻ đã có **không** tự biến một loại thành `có`: chúng chạy như TC chức năng trong bộ Regression, nhưng chưa có ai chốt **ngưỡng đạt** cho cả loại.
+> Hiệu năng và bảo mật chuyên sâu: phiếu ghi `không`. Bốn loại còn lại phiếu **để trống** → `❓` (ô treo 9). Cột *TC đã có* đọc từ bảng ISO/IEC 25010 của `TEST_CASES_LOGIN_SUMMARY.md` — `CUST` và `PRJ` chưa có TC. TC lẻ đã có **không** tự biến một loại thành `có`: chúng chạy như TC chức năng trong bộ Regression, nhưng chưa có ai chốt **ngưỡng đạt** cho cả loại.
 
 | Loại | Có làm? | Mục tiêu đo | Ngưỡng chấp nhận | Cách làm · công cụ | Môi trường | Ai thực hiện | TC đã có (`LOGIN`) |
 |---|---|---|---|---|---|---|---|
@@ -440,10 +440,10 @@ Công thức: E = (a + 4m + b) / 6 · SD = (b − a) / 6. E tổng = cộng E c�
 
 | Dữ liệu | Giá trị | Nguồn |
 |---|---|---|
-| Bộ Smoke `LOGIN` | 9 TC · ~12 phút | `test_cases_login.md` — Bộ chạy đề xuất |
-| Bộ Regression đầy đủ `LOGIN` (trừ `@Slow`) | 49 TC · ~3 giờ 40 phút | `test_cases_login.md` — Bộ chạy đề xuất |
-| Phần 🔧 của TC `@TechCheck` | 25 TC · ~55 phút | `test_cases_login.md` — Bộ chạy đề xuất |
-| TC `@Slow` chạy riêng | `TC_026` · 65 phút | `test_cases_login.md` — Bộ chạy đề xuất |
+| Bộ Smoke `LOGIN` | 9 TC · ~12 phút | `TEST_CASES_LOGIN_SUMMARY.md` — Bộ chạy đề xuất |
+| Bộ Regression đầy đủ `LOGIN` (trừ `@Slow`) | 49 TC · ~3 giờ 40 phút | `TEST_CASES_LOGIN_SUMMARY.md` — Bộ chạy đề xuất |
+| Phần 🔧 của TC `@TechCheck` | 25 TC · ~55 phút | `TEST_CASES_LOGIN_SUMMARY.md` — Bộ chạy đề xuất |
+| TC `@Slow` chạy riêng | `TC_026` · 65 phút | `TEST_CASES_LOGIN_SUMMARY.md` — Bộ chạy đề xuất |
 | REQ cần viết TC | `CUST` 79 · `PRJ` 104 (đã gồm 5 REQ được đưa lại) | `docs/requirements/README.md` |
 
 ### 7.3 Ngân sách
@@ -465,8 +465,8 @@ Công thức: E = (a + 4m + b) / 6 · SD = (b − a) / 6. E tổng = cộng E c�
 | R5 | Con người | Repo **chưa có** project automation — phải dựng framework từ đầu, và người phụ trách là **QA Lead kiêm nhiệm** (Anh Tester) | Cao | Việc quản lý đợt (duyệt TC, báo cáo tuần, trả lời tester) chiếm thời gian dựng automation; automation không kịp phủ regression 20-11-2026 | Automation **không** chặn manual; ưu tiên automate bộ Smoke `LOGIN` trước; tới báo cáo tiến độ thứ Sáu đầu tiên sau 06-10-2026 mà chưa chạy được Smoke tự động → cân nhắc thu hẹp phạm vi automation | Phiếu `Nhân lực` · kiểm tra repo 17-09-2026 |
 | R6 | Tổ chức | Dùng song song Jira và file markdown — hai nguồn lệch nhau | Thấp | Báo cáo tổng hợp lấy số sai, bug trùng hoặc sót | Đã chốt nguồn chính: **Jira cho trạng thái bug · repo cho execution report**; đồng bộ qua `/create-bug-report` (đẩy Jira) | Phiếu `Công cụ` |
 | R7 | Tổ chức | Môi trường sẵn sàng 05-10-2026, **ngay trước** ngày bắt đầu thực thi 06-10-2026 — không còn ngày đệm cho smoke xác nhận môi trường | Cao | Môi trường trễ hoặc smoke fail là trễ ngày bắt đầu; bắt đầu khi chưa đạt tiêu chí vào #10 dễ tràn BLOCKED | DEV bàn giao sớm hơn nếu được; chuẩn bị sẵn tài khoản 3 vai trò và mô tả dữ liệu nền trước 05-10-2026; smoke fail → dời ngày bắt đầu, **không** bắt đầu rồi chữa sau | Phiếu `Lịch` |
-| R8 | Tổ chức | 6 bug `LOGIN` xác nhận trên bản demo; trong đó `BUG_login_1787226515_TC018` nhiều khả năng **không phải lỗi** (ranh giới chuẩn RFC — phát hiện 11-09-2026) | Trung bình | Số bug mở bị thổi phồng trong báo cáo release | Retest cả 6 bug trên môi trường mới; xem xét đóng `TC018` với trạng thái *không phải lỗi* | `test_cases_login.md` — Nhật ký thay đổi |
-| R9 | Con người | Tester `LOGIN` chưa chắc có kỹ năng DevTools cho 25 TC `@TechCheck` | Trung bình | Phần 🔧 bị bỏ qua, `TC_025` và `TC_041` không chạy được | Xác nhận kỹ năng (ô treo 7); không có thì giao phần 🔧 cho automation | `test_cases_login.md` — Bộ chạy đề xuất |
+| R8 | Tổ chức | 6 bug `LOGIN` xác nhận trên bản demo; trong đó `BUG_login_1787226515_TC018` nhiều khả năng **không phải lỗi** (ranh giới chuẩn RFC — phát hiện 11-09-2026) | Trung bình | Số bug mở bị thổi phồng trong báo cáo release | Retest cả 6 bug trên môi trường mới; xem xét đóng `TC018` với trạng thái *không phải lỗi* | `TEST_CASES_LOGIN_SUMMARY.md` — Nhật ký thay đổi |
+| R9 | Con người | Tester `LOGIN` chưa chắc có kỹ năng DevTools cho 25 TC `@TechCheck` | Trung bình | Phần 🔧 bị bỏ qua, `TC_025` và `TC_041` không chạy được | Xác nhận kỹ năng (ô treo 7); không có thì giao phần 🔧 cho automation | `TEST_CASES_LOGIN_SUMMARY.md` — Bộ chạy đề xuất |
 | ~~R10~~ | Tổ chức | ✅ **Đóng ở v1.2** — đã có ngày code freeze, release và ước lượng công sức | — | — | — | Phiếu `Lịch` · `Ước lượng` |
 | R11 | Kỹ thuật | 5 REQ được đưa lại (`REQ-CUST-79` · `REQ-PRJ-89` · `91` · `94` · `104`) vẫn ở trạng thái ⚪, chưa có hành vi đã kiểm chứng; danh mục và tài liệu `PRJ` còn lệch số `94` / `93` | Trung bình | TC cho 5 REQ viết theo suy đoán; môi trường chỉ sẵn sàng 05-10-2026 — sau hạn xong TC 02-10-2026 | Khảo sát bổ sung bằng `/update-requirements-from-ticket` ngay khi có môi trường; TC của 5 REQ được phép hoàn tất sau 02-10-2026 và ghi rõ trong báo cáo tiến độ | Phiếu `Phạm vi` · `docs/requirements/README.md` |
 | R12 | Tổ chức | Ước lượng 19,0 người-ngày **chưa gồm automation** và thấp so với khối lượng (183 REQ chưa có TC · nhiều vòng retest trong 33 ngày thực thi) | Trung bình | Báo cáo tiến độ so công sức thực tế với con số quá thấp → báo *trễ* sai, hoặc che mất việc thật sự thiếu | Bổ sung hạng mục automation (ô treo 5); rà lại con số viết TC và thực thi sau báo cáo tiến độ đầu tiên | Mục 7.2 |
@@ -478,14 +478,14 @@ Công thức: E = (a + 4m + b) / 6 · SD = (b − a) / 6. E tổng = cộng E c�
 
 | Module | Rủi ro | Mức | Kiểm soát bằng | Nguồn |
 |---|---|---|---|---|
-| `LOGIN` | Không có lớp chống thử vét cạn: không CAPTCHA, không giới hạn tần suất, không khoá tài khoản | — | Ghi nhận hiện trạng, báo đội phát triển · pentest ngoài phạm vi (2.2) | [`RISK-LOGIN-01`](../requirements/login/requirements_login.md) |
-| `LOGIN` | Cookie ghi nhớ đọc được bằng JavaScript (không có cờ `HttpOnly`) | — | Báo đội phát triển (`AMB-LOGIN-07`) · ghép vào kiểm thử bảo mật | [`RISK-LOGIN-02`](../requirements/login/requirements_login.md) |
-| `LOGIN` | Module là cổng vào của toàn hệ thống — hỏng là chặn kiểm thử mọi module khác | — | Nhóm B chạy đầu tiên trong mọi bộ smoke | [`RISK-LOGIN-06`](../requirements/login/requirements_login.md) |
-| `CUST` | Entity trung tâm — hơn 10 module tham chiếu tới khách hàng | — | Sau mỗi lần sửa `CUST`, chạy kèm smoke của module phụ thuộc · kiểm thử cross-module với `PRJ` | [`RISK-CUST-01`](../requirements/customers/requirements_customers.md) |
-| `CUST` | Thao tác xoá dùng GET — mở thẳng URL là xoá, không cần xác nhận | — | Cấm đưa URL xoá vào bước điều hướng; chỉ xoá qua nút `Delete` với bản ghi do test tạo | [`RISK-CUST-06`](../requirements/customers/requirements_customers.md) |
-| `PRJ` | Module là điểm gom của 9 module khác qua 17 tab trang chi tiết | — | Kiểm thử cross-module · chạy smoke module liên quan khi `PRJ` đổi | [`RISK-PRJ-01`](../requirements/projects/requirements_projects.md) |
-| `PRJ` | Thao tác xoá dùng GET | — | Như `RISK-CUST-06` | [`RISK-PRJ-03`](../requirements/projects/requirements_projects.md) |
-| `PRJ` | Số liệu tổng quan không khớp bảng — đếm `In Progress` lệch 7 dòng (`AMB-PRJ-02`) | — | Không viết khẳng định dựa trên số đếm tổng quan cho tới khi `AMB-PRJ-02` được trả lời | [`RISK-PRJ-05`](../requirements/projects/requirements_projects.md) |
+| `LOGIN` | Không có lớp chống thử vét cạn: không CAPTCHA, không giới hạn tần suất, không khoá tài khoản | — | Ghi nhận hiện trạng, báo đội phát triển · pentest ngoài phạm vi (2.2) | [`RISK-LOGIN-01`](../requirements/login/REQUIREMENTS_LOGIN_SUMMARY.md) |
+| `LOGIN` | Cookie ghi nhớ đọc được bằng JavaScript (không có cờ `HttpOnly`) | — | Báo đội phát triển (`AMB-LOGIN-07`) · ghép vào kiểm thử bảo mật | [`RISK-LOGIN-02`](../requirements/login/REQUIREMENTS_LOGIN_SUMMARY.md) |
+| `LOGIN` | Module là cổng vào của toàn hệ thống — hỏng là chặn kiểm thử mọi module khác | — | Nhóm B chạy đầu tiên trong mọi bộ smoke | [`RISK-LOGIN-06`](../requirements/login/REQUIREMENTS_LOGIN_SUMMARY.md) |
+| `CUST` | Entity trung tâm — hơn 10 module tham chiếu tới khách hàng | — | Sau mỗi lần sửa `CUST`, chạy kèm smoke của module phụ thuộc · kiểm thử cross-module với `PRJ` | [`RISK-CUST-01`](../requirements/customers/REQUIREMENTS_CUSTOMERS_SUMMARY.md) |
+| `CUST` | Thao tác xoá dùng GET — mở thẳng URL là xoá, không cần xác nhận | — | Cấm đưa URL xoá vào bước điều hướng; chỉ xoá qua nút `Delete` với bản ghi do test tạo | [`RISK-CUST-06`](../requirements/customers/REQUIREMENTS_CUSTOMERS_SUMMARY.md) |
+| `PRJ` | Module là điểm gom của 9 module khác qua 17 tab trang chi tiết | — | Kiểm thử cross-module · chạy smoke module liên quan khi `PRJ` đổi | [`RISK-PRJ-01`](../requirements/projects/REQUIREMENTS_PROJECTS_SUMMARY.md) |
+| `PRJ` | Thao tác xoá dùng GET | — | Như `RISK-CUST-06` | [`RISK-PRJ-03`](../requirements/projects/REQUIREMENTS_PROJECTS_SUMMARY.md) |
+| `PRJ` | Số liệu tổng quan không khớp bảng — đếm `In Progress` lệch 7 dòng (`AMB-PRJ-02`) | — | Không viết khẳng định dựa trên số đếm tổng quan cho tới khi `AMB-PRJ-02` được trả lời | [`RISK-PRJ-05`](../requirements/projects/REQUIREMENTS_PROJECTS_SUMMARY.md) |
 
 ## 9. Quản lý lỗi
 

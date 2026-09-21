@@ -1,7 +1,7 @@
 # Bản đồ hệ thống — AnhTester Book Management (mặt Mobile)
 
 > **TẦNG KHÁM PHÁ — cấp hệ thống.** Tài liệu này **KHÔNG chứa mã REQ**, chỉ ghi màn hình nào tồn tại, nằm ở đâu, ghép vào module nào.
-> Mã REQ sinh ở tầng module: `docs/requirements/_book-api/<module>/requirements_<module>.md`.
+> Mã REQ sinh ở tầng module: `docs/requirements/_book-api/<module>/REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md`.
 >
 > Danh mục hệ thống: [`../README.md`](../README.md) — **nơi duy nhất** giữ `Trạng thái recon`.
 > Mặt API: [`api_map.md`](api_map.md) — danh mục operation, ma trận auth, phát hiện `F-nn`. File này **không** nhân bản nội dung đó, chỉ tham chiếu.

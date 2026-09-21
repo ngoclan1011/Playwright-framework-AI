@@ -4,7 +4,7 @@
 |---|---|
 | **Hệ thống** | AnhTester Book Management — mã hệ thống `BK` (namespace `_book-api/`) · danh mục TC: [../README.md](../README.md) |
 | **Module** | Xác thực & Phiên đăng nhập · prefix `AUTH` |
-| **Nguồn requirement** | Index [requirements_auth.md](../../../requirements/_book-api/auth/requirements_auth.md) (8 REQ dùng chung `Android · API`) · [mobile/requirements_auth_mobile.md](../../../requirements/_book-api/auth/mobile/requirements_auth_mobile.md) (38 REQ) · [api/requirements_auth_api.md](../../../requirements/_book-api/auth/api/requirements_auth_api.md) (40 REQ) · bản đồ API [api_map.md](../../../requirements/_book-api/_discovery/api_map.md) |
+| **Nguồn requirement** | Index [REQUIREMENTS_AUTH_SUMMARY.md](../../../requirements/_book-api/auth/REQUIREMENTS_AUTH_SUMMARY.md) (8 REQ dùng chung `Android · API`) · [mobile/requirements_auth_mobile.md](../../../requirements/_book-api/auth/mobile/requirements_auth_mobile.md) (38 REQ) · [api/requirements_auth_api.md](../../../requirements/_book-api/auth/api/requirements_auth_api.md) (40 REQ) · bản đồ API [api_map.md](../../../requirements/_book-api/_discovery/api_map.md) |
 | **Mode sinh** | Mobile: QUICK (`/generate-testcases-from-requirements`) · API: `/generate-testcases-api` — cả hai **độ hạt GỘP** |
 | **Ngày sinh** | Mobile 20-09-2026 · API 20-09-2026 |
 | **Dải TC ID** | `BK_AUTH_TC_001` → `BK_AUTH_TC_108` — **dải chung toàn module**: Mobile `001`→`058` · API `059`→`108` |
@@ -487,6 +487,7 @@ Tổng API: **50 TC · 94 biến thể** · 6/6 endpoint · vượt ngưỡng 40
 
 | Ngày | Thay đổi | Mốc git |
 |---|---|---|
+| 21-09-2026 | Đổi tên file index `test_cases_auth.md` → `TEST_CASES_AUTH_SUMMARY.md` — quy ước mới: index IN HOA để khác hẳn file nền tảng. Nội dung, mã REQ/TC không đổi; mọi link trỏ tới đã sửa | `e985e9d` |
 | 20-09-2026 | **Tách TC gánh nhiều REQ không có TC chống lưng** (user phát hiện: 47 TC / 48 REQ). `TC_069` (REQ-03 · 11 · 12) → giữ REQ-11, thêm **`TC_106`** (REQ-03) · **`TC_107`** (REQ-12). `TC_082` (REQ-24 · 26) → giữ REQ-24, thêm **`TC_108`** (REQ-26). TC ID cũ giữ nguyên, mã mới nối tiếp dải. API 47 → **50 TC · 94 biến thể**; module **108 TC**. Luật đã đưa vào Self-Quality Gate của skill `skills-rbt-manual-testing` và checklist `/generate-testcases-api` | `e73e3e6` |
 | 20-09-2026 | Sinh bộ TC **API** bằng `/generate-testcases-api auth`: **47 TC · 89 biến thể** (`BK_AUTH_TC_059` → `105`), 2 part ở `api/parts/`. Phủ **48/48** REQ API (40 riêng + vế API của 8 REQ dùng chung) → module đủ **86/86 REQ**. Spec online khớp snapshot 19-09-2026 (`sha256`) — không khám phá lại. User chốt: phạm vi cả 6 endpoint · `AMB-BK-AUTH-01` · `02` · `04` là **lỗi** → 7 TC `@KnownBug` · QA **không** truy vấn CSDL → nhánh Database ➖. 2 TC ⚪ chờ `AMB-BK-AUTH-03`. Mở `AMB-BK-AUTH-20` (406/413/415). Lượt này **không** gọi thật API — tạo 0 / dọn 0 bản ghi | `e73e3e6` |
 | 20-09-2026 | Sinh bộ TC **Mobile (Android)** cho `AUTH` bằng `/generate-testcases-from-requirements` Mode QUICK, độ hạt GỘP, rủi ro Cao → Đầy đủ. **58 TC · 95 biến thể · 17 mục Bảng kiểm**, 2 part. Chiếm dải `BK_AUTH_TC_001` → `058`. Phủ **46/46** REQ Mobile (38 riêng + 8 dùng chung). 25 TC `@NeedsVerify`, 11 TC `@TechCheck`. Đã mở 31/31 ảnh evidence, không có xung đột tài liệu ↔ ảnh. 5 Assumption (`ASM-BK-AUTH-01` → `05`). **Chưa sinh:** TC API (48 REQ) | `e73e3e6` (trước khi tạo) |

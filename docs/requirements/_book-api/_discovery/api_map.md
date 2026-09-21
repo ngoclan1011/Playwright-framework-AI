@@ -1,7 +1,7 @@
 # Bản đồ API — AnhTester Book Management API
 
 > **TẦNG KHÁM PHÁ — cấp hệ thống.** Tài liệu này **KHÔNG chứa mã REQ**, chỉ cấp **mã module** và ghi lại những gì quan sát được từ spec + gọi thật.
-> Mã REQ chi tiết sinh ở tầng module: `docs/requirements/_book-api/<module>/requirements_<module>.md`.
+> Mã REQ chi tiết sinh ở tầng module: `docs/requirements/_book-api/<module>/REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md`.
 >
 > Danh mục hệ thống: [`../README.md`](../README.md) · Spec gốc đã snapshot: [`sources/openapi_2026-09-19.json`](sources/openapi_2026-09-19.json) (mới nhất) · [`sources/openapi_2026-08-14.json`](sources/openapi_2026-08-14.json)
 
@@ -25,7 +25,7 @@ Hệ thống dùng mã hệ thống **`BK`** để không đụng dải prefix c
 
 | Mã module | Nhóm tag trong spec | Số op | 🌐 Công khai | 🔒 Cần token | Dải REQ | Dải TC ID |
 |---|---|---|---|---|---|---|
-| `AUTH` | Authentication Management | 6 | 3 | 3 | `REQ-BK-AUTH-01 → 48` ✅ [tài liệu](../auth/requirements_auth.md) | `BK_AUTH_TC_nnn` |
+| `AUTH` | Authentication Management | 6 | 3 | 3 | `REQ-BK-AUTH-01 → 48` ✅ [tài liệu](../auth/REQUIREMENTS_AUTH_SUMMARY.md) | `BK_AUTH_TC_nnn` |
 | `USER` | User Management | 5 | 2 | 3 | `REQ-BK-USER-nn` | `BK_USER_TC_nnn` |
 | `BOOK` | Book Management | 5 | 2 | 3 | `REQ-BK-BOOK-nn` | `BK_BOOK_TC_nnn` |
 | `CAT` | Category Management | 4 | 1 | 3 | `REQ-BK-CAT-nn` | `BK_CAT_TC_nnn` |

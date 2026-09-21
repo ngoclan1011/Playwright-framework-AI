@@ -16,8 +16,8 @@
 
 | Module | Prefix TC ID | Dải đã dùng | Mã kế tiếp | Số TC | Nền tảng | Độ hạt | REQ bao phủ | Tài liệu | Cập nhật |
 |---|---|---|---|---|---|---|---|---|---|
-| Đăng nhập / Xác thực | `CRM_LOGIN_TC_` | `001` → `051` | `052` | 51 | Web 51 | GỘP | 40/40 REQ trong phạm vi | [test_cases_login.md](login/test_cases_login.md) | 19-09-2026 |
-| Khách hàng | `CRM_CUST_TC_` | `001` → `129` | `130` | 129 | Web 129 | GỘP | 84/84 REQ | [test_cases_customers.md](customers/test_cases_customers.md) | 19-09-2026 |
+| Đăng nhập / Xác thực | `CRM_LOGIN_TC_` | `001` → `051` | `052` | 51 | Web 51 | GỘP | 40/40 REQ trong phạm vi | [TEST_CASES_LOGIN_SUMMARY.md](login/TEST_CASES_LOGIN_SUMMARY.md) | 19-09-2026 |
+| Khách hàng | `CRM_CUST_TC_` | `001` → `129` | `130` | 129 | Web 129 | GỘP | 84/84 REQ | [TEST_CASES_CUSTOMERS_SUMMARY.md](customers/TEST_CASES_CUSTOMERS_SUMMARY.md) | 19-09-2026 |
 
 ### Namespace hệ thống khác
 
@@ -55,7 +55,7 @@
 docs/testcases/
 ├── README.md                                   ← FILE NÀY — danh mục toàn hệ thống
 └── <module>/
-    ├── test_cases_<module>.md                  ← INDEX — TÊN FILE BẤT BIẾN · Bản đồ tài liệu, KHÔNG chứa dòng TC
+    ├── TEST_CASES_<TÊN_MODULE>_SUMMARY.md                  ← INDEX — TÊN FILE BẤT BIẾN · Bản đồ tài liệu, KHÔNG chứa dòng TC
     ├── web/test_cases_<module>_web.md          ← TC chạy trên web (tương tự mobile/ · api/)
     ├── <nền-tảng>/parts/part_NN_<nền-tảng>_<slug>.md ← khi tách (>40 TC TÁCH · >50 TC GỘP)
     ├── impact/impact_plan_<TICKET-ID>.md       ← Mode DELTA — kế hoạch, trước khi duyệt
@@ -67,7 +67,7 @@ docs/testcases/
 
 | Quy tắc | Lý do |
 |---|---|
-| Tên index **luôn** `test_cases_<module>.md` | `/execute-test-cases`, `/review-testcases`, `/generate-automation-from-testcases`, `/generate-traceability-matrix` đều đọc theo mẫu đường dẫn cố định |
+| Tên index **luôn** `TEST_CASES_<TÊN_MODULE>_SUMMARY.md` | `/execute-test-cases`, `/review-testcases`, `/generate-automation-from-testcases`, `/generate-traceability-matrix` đều đọc theo mẫu đường dẫn cố định |
 | **KHÔNG** nhét số phiên bản vào tên index (`_v2`, `_new`, `_improved`) | Bản mới **thay thế** tại chỗ; bản cũ tra bằng **lịch sử git** — không có thư mục `archive/` |
 | **KHÔNG đổi / đánh lại TC ID** khi cập nhật | TC ID là khoá nối sang `allure.label('testId', ...)`, cột TC ID của RTM, và execution report cũ |
 | **KHÔNG xoá dòng TC** — chức năng gỡ thì đổi trạng thái 🗑️ Deprecated kèm mã ticket | Xoá dòng làm script tương ứng thành orphan, không phát hiện được tự động |

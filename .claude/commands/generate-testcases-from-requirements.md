@@ -22,7 +22,7 @@ Command này sử dụng **Mode QUICK** của skill `skills-rbt-manual-testing` 
 Truyền kèm đường dẫn requirements, ví dụ:
 
 ```
-/generate-testcases-from-requirements docs/requirements/login/requirements_login.md TÁCH
+/generate-testcases-from-requirements docs/requirements/login/REQUIREMENTS_LOGIN_SUMMARY.md TÁCH
 ```
 
 | Giá trị | Ý nghĩa | Số TC điển hình (module cỡ login) |
@@ -101,10 +101,10 @@ Quy tắc đầy đủ (2 kiểu gộp được phép · bảng CẤM gộp · t
 ## Xuất File & Tiến Độ (theo Quy Tắc trong skill)
 
 - ⚠️ **Trước batch đầu tiên:** kiểm tra `docs/testcases/README.md` — chưa tồn tại (dự án mới) thì **tạo file danh mục** với bảng rỗng. Ghi xong TC thì bổ sung/cập nhật dòng của module vào đó
-- **Write-first:** ghi TC thẳng vào **file nền tảng** `docs/testcases/<module>/<nền-tảng>/test_cases_<module>_<nền-tảng>.md` sau mỗi batch; index `test_cases_<module>.md` chỉ giữ tổng hợp + `## Bản đồ tài liệu` + Bảng Đối Soát Coverage (skill rbt — Quy Tắc Xuất File mục 2 & 4). **KHÔNG** in toàn bộ bảng TC ra chat
+- **Write-first:** ghi TC thẳng vào **file nền tảng** `docs/testcases/<module>/<nền-tảng>/test_cases_<module>_<nền-tảng>.md` sau mỗi batch; index `TEST_CASES_<TÊN_MODULE>_SUMMARY.md` chỉ giữ tổng hợp + `## Bản đồ tài liệu` + Bảng Đối Soát Coverage (skill rbt — Quy Tắc Xuất File mục 2 & 4). **KHÔNG** in toàn bộ bảng TC ra chat
 - **Nền tảng nào:** REQ ở file `web/` → TC web · REQ ở `mobile/` → TC mobile · REQ dùng chung ở index → **mỗi nền tảng nó khai một TC**, cùng `REQ ID`. User chỉ định một nền tảng thì chỉ sinh cho nền tảng đó và ghi rõ nền tảng còn thiếu ở coverage
 - Chat chỉ hiện: kế hoạch batch (đầu) → dòng tiến độ mỗi batch → Bảng Đối Soát Coverage + tóm tắt đường dẫn file (cuối)
-- **Tách file khi vượt ngưỡng** — đếm theo **từng nền tảng** (>40 TC ở độ hạt TÁCH · >50 TC ở độ hạt GỘP) → `<module>/<nền-tảng>/parts/part_01_<nền-tảng>_<slug>.md`, `part_02_...` cắt tại ranh giới nhóm chức năng; `test_cases_<module>.md` **luôn là index** (giữ nguyên tên, KHÔNG đổi thành `*_index.md`)
+- **Tách file khi vượt ngưỡng** — đếm theo **từng nền tảng** (>40 TC ở độ hạt TÁCH · >50 TC ở độ hạt GỘP) → `<module>/<nền-tảng>/parts/part_01_<nền-tảng>_<slug>.md`, `part_02_...` cắt tại ranh giới nhóm chức năng; `TEST_CASES_<TÊN_MODULE>_SUMMARY.md` **luôn là index** (giữ nguyên tên, KHÔNG đổi thành `*_index.md`)
 - **Chạy thẳng hết mọi batch trong 1 lượt** — không dừng hỏi "có tiếp tục không"
 - Dự kiến **>30 TC** → tạo `task.md` (hoặc dùng task list của Claude Code) và cập nhật sau mỗi batch
 

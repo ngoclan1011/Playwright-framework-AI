@@ -12,7 +12,7 @@ Module đang phát triển thì ticket liên tục sửa/bổ sung yêu cầu. W
 
 ## Khi nào sử dụng
 
-- Module **đã có** `docs/requirements/<module>/requirements_<module>.md`, và có ticket mới sửa/bổ sung yêu cầu
+- Module **đã có** `docs/requirements/<module>/REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md`, và có ticket mới sửa/bổ sung yêu cầu
 - PO/BA vừa trả lời một `AMB-<MODULE>-XX` đang treo → cần chốt lại thành yêu cầu chính thức
 - Sprint mới thay đổi phạm vi: gỡ bớt hoặc thêm tính năng vào module đã đặc tả
 - User nói: "ticket này update requirement", "yêu cầu vừa đổi", "bổ sung AC mới"
@@ -30,7 +30,7 @@ Module đang phát triển thì ticket liên tục sửa/bổ sung yêu cầu. W
 | # | Input | Bắt buộc | Mô tả |
 |---|---|---|---|
 | 1 | **Ticket mới** | ✅ | File hoặc nội dung ticket — xem bảng định dạng ở `/analyze-requirement-document` |
-| 2 | **Module đích** | ✅ | Tên module để xác định `docs/requirements/<module>/requirements_<module>.md` |
+| 2 | **Module đích** | ✅ | Tên module để xác định `docs/requirements/<module>/REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` |
 | 3 | **Thư mục test cases** | ⭕ Khuyến khích | Để sinh Impact Report chính xác. Không có thì Impact Report ghi `⚠️ chưa rà soát` |
 | 4 | **Mockup/file đính kèm** | ⭕ Tùy chọn | Xử lý theo mục 3.2 Bước 2 của skill |
 
@@ -38,7 +38,7 @@ Module đang phát triển thì ticket liên tục sửa/bổ sung yêu cầu. W
 
 ### Bước 1: Nạp trạng thái hiện tại (BẮT BUỘC — không được bỏ qua)
 
-1. **Đọc `docs/requirements/<module>/requirements_<module>.md`** — nếu không tồn tại thì **DỪNG** và hướng dẫn user chạy workflow tạo mới
+1. **Đọc `docs/requirements/<module>/REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md`** — nếu không tồn tại thì **DỪNG** và hướng dẫn user chạy workflow tạo mới
 2. Trích ra và ghi nhớ:
    - Toàn bộ REQ hiện có: mã · tên · nội dung · trạng thái
    - Dòng metadata `Dải mã đã dùng` và `Mã kế tiếp`
@@ -84,7 +84,7 @@ Ambiguity **mới** phát hiện từ ticket này → đánh số tiếp theo d�
 
 ### Bước 5: Áp thay đổi vào tài liệu
 
-Sửa **tại chỗ** `requirements_<module>.md`, theo đúng thứ tự:
+Sửa **tại chỗ** `REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md`, theo đúng thứ tự:
 
 1. **Bảng REQ (mục 6.2):** thêm dòng mới / sửa nội dung + trạng thái / đổi trạng thái 🔴
 2. **Field Spec, Validation Messages, ma trận** (6.3–6.6): cập nhật phần bị tác động

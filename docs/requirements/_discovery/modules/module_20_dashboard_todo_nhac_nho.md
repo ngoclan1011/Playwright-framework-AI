@@ -2,7 +2,7 @@
 
 > Tầng khám phá — **KHÔNG chứa mã REQ**. Về index: [system_map.md](../system_map.md)
 >
-> ⚠️ File này chứa **3 module** vì đều là màn hình cá nhân/tổng quan cỡ nhỏ. **Gộp file KHÔNG gộp prefix** — về sau vẫn sinh ra 3 thư mục và 3 file `requirements_<module>.md` riêng.
+> ⚠️ File này chứa **3 module** vì đều là màn hình cá nhân/tổng quan cỡ nhỏ. **Gộp file KHÔNG gộp prefix** — về sau vẫn sinh ra 3 thư mục và 3 file `REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` riêng.
 
 ---
 

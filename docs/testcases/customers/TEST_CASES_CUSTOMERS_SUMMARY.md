@@ -4,7 +4,7 @@
 |---|---|
 | **Hệ thống** | Perfex CRM — Anh Tester Demo (`https://crm.anhtester.com`) |
 | **Module** | Khách hàng (Customers) · prefix `CUST` |
-| **Nguồn requirement** | [requirements_customers.md](../../requirements/customers/requirements_customers.md) (index) · [web/requirements_customers_web.md](../../requirements/customers/web/requirements_customers_web.md) — **84 REQ**, toàn bộ trong phạm vi |
+| **Nguồn requirement** | [REQUIREMENTS_CUSTOMERS_SUMMARY.md](../../requirements/customers/REQUIREMENTS_CUSTOMERS_SUMMARY.md) (index) · [web/requirements_customers_web.md](../../requirements/customers/web/requirements_customers_web.md) — **84 REQ**, toàn bộ trong phạm vi |
 | **Mode sinh** | QUICK (`/generate-testcases-from-requirements`) · **độ hạt GỘP** · khung 4 vòng |
 | **Ngày sinh** | 19-09-2026 · đồng bộ requirements với DOM thật + thêm `TC_129` 19-09-2026 |
 | **Dải TC ID** | `CRM_CUST_TC_001` → `CRM_CUST_TC_129` — chung mọi nền tảng |
@@ -307,6 +307,7 @@ Phần chính của mọi TC **quan sát được bằng mắt**. Nội dung c�
 
 | Ngày | Nguồn | TC | Thay đổi | Mốc git |
 |---|---|---|---|---|
+| 21-09-2026 | Quy ước đặt tên | — | Đổi tên file index `test_cases_customers.md` → `TEST_CASES_CUSTOMERS_SUMMARY.md` — quy ước mới: index IN HOA để khác hẳn file nền tảng. Nội dung, mã REQ/TC không đổi; mọi link trỏ tới đã sửa | `e985e9d` |
 | 19-09-2026 | Rà soát nhất quán index | — | Sửa số liệu dòng **Quy mô**: `@NeedsVerify` 49 → **51 TC** theo số đếm thật trong 5 part. Không đổi TC nào | `5d10845` |
 | 19-09-2026 | Quyết định PO `AMB-CUST-14` (trả lời qua chat) | ✏️ `TC_119`, `TC_120` | PO trả lời **trùng giả định tạm cả hai vế**: PM được xoá khách hàng, PM không xem được mục Vault mức "chỉ quản trị viên". Gỡ `@AssumptionBased` ở 2 TC, thay ghi chú giả định bằng quyết định PO, ô ma trận phân quyền ❔ → ✅/❌. **Kỳ vọng không đổi**, TC ID giữ nguyên. `ASM-10` ✅ | `5d10845` |
 | 19-09-2026 | Đồng bộ requirements với DOM thật (recon bằng tài khoản `Project Manager`, không ghi dữ liệu) | ✏️ `TC_003`, `TC_006`, `TC_025`, `TC_026`, `TC_027`, `TC_028`, `TC_061`, `TC_072`, `TC_093` · ➕ `TC_129` | Giải quyết `ASM-01`, `02`, `03`, `04`, `05`, `07`. Sửa tại chỗ, **TC ID giữ nguyên**: chữ gợi ý `Search...` (bị cắt trên màn hình) · chú giải `Currency` nguyên văn · dropdown bộ lọc theo tài khoản, `Clear Filter`/`Edit` ẩn khi chưa áp · cặp `and`/`or` mặc định `or` · chú giải nút `G`. Thêm `TC_129` cho `REQ-CUST-84` (khoá đổi tiền tệ khi đã có giao dịch). Chưa có automation/execution nào trỏ vào bộ TC nên không cần Delta TC List | (chưa commit) |

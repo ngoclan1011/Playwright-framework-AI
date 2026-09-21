@@ -4,9 +4,9 @@
 |---|---|
 | Mã delta | `adhoc_2026-09-19` — không có ticket, quyết định PO trả lời qua chat (`AMB-LOGIN-19`) |
 | Ngày áp | 19-09-2026 |
-| Nguồn thay đổi | [requirements_login.md](../../../requirements/login/requirements_login.md) — mục 13 *Nhật ký Thay đổi*, dòng 19-09-2026 |
+| Nguồn thay đổi | [REQUIREMENTS_LOGIN_SUMMARY.md](../../../requirements/login/REQUIREMENTS_LOGIN_SUMMARY.md) — mục 13 *Nhật ký Thay đổi*, dòng 19-09-2026 |
 | Kế hoạch đã duyệt | [impact_plan_adhoc_2026-09-19.md](impact_plan_adhoc_2026-09-19.md) |
-| Mốc git trước khi sửa | web → `test_cases_login.md` @ `05efd17` — lúc đó TC còn nằm trong index, chưa có tầng nền tảng |
+| Mốc git trước khi sửa | web → `TEST_CASES_LOGIN_SUMMARY.md` @ `05efd17` — lúc đó TC còn nằm trong index, chưa có tầng nền tảng |
 | Trạng thái | ✅ ĐÃ ĐỒNG BỘ |
 
 ## TC đã xử lý
@@ -22,9 +22,9 @@
 
 | Việc | Kết quả |
 |---|---|
-| Tầng nền tảng | 51 TC chuyển nguyên văn sang [web/test_cases_login_web.md](../web/test_cases_login_web.md), 1 file (vượt ngưỡng 50 — quyết định user). Index [test_cases_login.md](../test_cases_login.md) giữ tên, thêm `## Bản đồ tài liệu` |
+| Tầng nền tảng | 51 TC chuyển nguyên văn sang [web/test_cases_login_web.md](../web/test_cases_login_web.md), 1 file (vượt ngưỡng 50 — quyết định user). Index [TEST_CASES_LOGIN_SUMMARY.md](../TEST_CASES_LOGIN_SUMMARY.md) giữ tên, thêm `## Bản đồ tài liệu` |
 | TC ID | `001` → `050` giữ nguyên · thêm `051` · mã kế tiếp `052` |
-| `archive/` | Đã xoá — bản cũ tra bằng `git show 05efd17:docs/testcases/login/test_cases_login.md` |
+| `archive/` | Đã xoá — bản cũ tra bằng `git show 05efd17:docs/testcases/login/TEST_CASES_LOGIN_SUMMARY.md` |
 
 ## Ngoài phạm vi
 

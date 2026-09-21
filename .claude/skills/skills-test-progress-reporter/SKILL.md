@@ -76,7 +76,7 @@ Giáo trình ghi ISO/IEC/IEEE 29119-3 gọi loại tài liệu này là **test s
 | `run_<epoch>` · `retest_<epoch>` | Epoch giây → ngày giờ chạy |
 | `BUG_<module>_<epoch>_<TC_ID>.md` | Epoch giây → ngày **phát hiện** |
 | Bug đã fix / đã đóng | Dòng mới nhất trong mục **Lịch sử retest** của file bug, hoặc cột ngày trong danh mục bug |
-| TC mới viết / đã review | **Nhật ký thay đổi** của `test_cases_<module>.md` |
+| TC mới viết / đã review | **Nhật ký thay đổi** của `TEST_CASES_<TÊN_MODULE>_SUMMARY.md` |
 
 ---
 
@@ -155,7 +155,7 @@ File: `docs/executions/test_progress_<slug>_<YYYYMMDD>.md` — `YYYYMMDD` là **
 
 | Mốc | Hạn theo plan | Thực tế | Trạng thái | Bằng chứng |
 |---|---|---|---|---|
-| Hoàn tất viết & review TC | 29-09-2026 | 01-10-2026 | ⚠️ Trễ 2 ngày | Nhật ký thay đổi `test_cases_customers.md` |
+| Hoàn tất viết & review TC | 29-09-2026 | 01-10-2026 | ⚠️ Trễ 2 ngày | Nhật ký thay đổi `TEST_CASES_CUSTOMERS_SUMMARY.md` |
 | Bắt đầu thực thi | 30-09-2026 | 01-10-2026 | ⚠️ Trễ 1 ngày | `run_1790812345` |
 | Code freeze | 24-10-2026 | — | 🟡 Có nguy cơ | Còn 142 TC chưa chạy · tốc độ kỳ này 18 TC/ngày · còn 7 ngày làm việc → cần 20,3 TC/ngày |
 

@@ -180,4 +180,4 @@ Giao diện hiển thị tiếng Anh; bảng này để bạn dò nhanh.
 
 | Ngày | Phiên bản | Thay đổi |
 |---|---|---|
-| 09-09-2026 | v1.0 | Bản đầu tiên — 3 thủ tục, 6 câu hỏi thường gặp, 4 ảnh. Sinh bằng `/generate-user-guide` Mode DOC từ `requirements_login.md` (43 REQ) và 9 ảnh evidence |
+| 09-09-2026 | v1.0 | Bản đầu tiên — 3 thủ tục, 6 câu hỏi thường gặp, 4 ảnh. Sinh bằng `/generate-user-guide` Mode DOC từ `REQUIREMENTS_LOGIN_SUMMARY.md` (43 REQ) và 9 ảnh evidence |

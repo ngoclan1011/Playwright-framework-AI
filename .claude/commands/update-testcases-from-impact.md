@@ -47,7 +47,7 @@ Hai workflow trả lời **hai câu hỏi khác nhau**. Chạy sai cái là bỏ
 - 🚨 **CẤM sinh lại cả file/module TC.** Chỉ sửa đúng dòng của TC nằm trong delta. Sinh lại là xoá sạch công biên tập tay và các TC bổ sung đã tích luỹ
 - 🚨 **CẤM đổi TC ID, CẤM đánh lại số từ `001`** — TC ID là khoá nối sang automation (`allure.label('testId', ...)`) và RTM. Đứt TC ID là vỡ truy vết cả hai chiều
 - 🚨 **CẤM xoá dòng TC** — chức năng bị gỡ thì đổi trạng thái `🗑️ Deprecated` kèm mã ticket, giữ nguyên dòng (đối xứng quy tắc "KHÔNG xoá dòng REQ" của tầng requirements)
-- 🚨 **CẤM sinh file `_improved` / `_v2` / `_new`** — tên index **bất biến** là `test_cases_<module>.md`. Bản trước khi sửa **không** chép ra đâu cả — ghi **mốc git** (hash commit) và tra bằng `git show`. **KHÔNG** tạo thư mục `archive/`
+- 🚨 **CẤM sinh file `_improved` / `_v2` / `_new`** — tên index **bất biến** là `TEST_CASES_<TÊN_MODULE>_SUMMARY.md`. Bản trước khi sửa **không** chép ra đâu cả — ghi **mốc git** (hash commit) và tra bằng `git show`. **KHÔNG** tạo thư mục `archive/`
 - **KHÔNG tự viết TC cho REQ mới (nhóm ➕)** — ngoài phạm vi, route sang `/generate-testcases-manual-rbt` hoặc `/generate-testcases-from-requirements`
 - **KHÔNG sửa TC theo suy đoán từ tên TC** — phải đọc **nội dung REQ sau khi đổi** trong tài liệu requirements. Tên TC không chứa đủ thông tin để biết kỳ vọng mới là gì
 - **KHÔNG bịa mapping REQ ↔ TC.** Không map được thì ghi vào mục "cần xác nhận", KHÔNG đoán rồi sửa nhầm TC
@@ -72,8 +72,8 @@ Hai workflow trả lời **hai câu hỏi khác nhau**. Chạy sai cái là bỏ
 |---|---|---|
 | **Impact Report** | ⭐ Bắt buộc (hoặc thay bằng danh sách REQ dưới) | `docs/requirements/<module>/impact/impact_<TICKET-ID>.md` — do `/update-requirements-from-ticket` ghi ra, hoặc `impact_spec_<YYYY-MM-DD>.md` do `/generate-requirements-from-api` ghi ra khi spec API đổi phiên bản. Hoặc dán trực tiếp nội dung |
 | **Danh sách REQ đã đổi** | Thay thế cho Impact Report | Khi user tự biết REQ nào đổi: REQ ID + đổi cái gì |
-| **Tài liệu requirements hiện hành** | ⭐ Bắt buộc | `docs/requirements/<module>/requirements_<module>.md` — nguồn sự thật của kỳ vọng **mới** |
-| **File test cases hiện hành** | ⭐ Bắt buộc | Index `docs/testcases/<module>/test_cases_<module>.md` → theo `## Bản đồ tài liệu` mở file nền tảng `<nền-tảng>/test_cases_<module>_<nền-tảng>.md` (+ `parts/` nếu có). REQ đổi khai áp nền tảng nào thì mở **đủ** file của các nền tảng đó |
+| **Tài liệu requirements hiện hành** | ⭐ Bắt buộc | `docs/requirements/<module>/REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` — nguồn sự thật của kỳ vọng **mới** |
+| **File test cases hiện hành** | ⭐ Bắt buộc | Index `docs/testcases/<module>/TEST_CASES_<TÊN_MODULE>_SUMMARY.md` → theo `## Bản đồ tài liệu` mở file nền tảng `<nền-tảng>/test_cases_<module>_<nền-tảng>.md` (+ `parts/` nếu có). REQ đổi khai áp nền tảng nào thì mở **đủ** file của các nền tảng đó |
 | **Evidence của module** | ⭕ Khuyến nghị · ⭐ **Bắt buộc khi ticket chạm V1** | `docs/requirements/<module>/<nền-tảng>/evidence/*.png` — **bắt buộc mở** nếu thay đổi đụng nhãn nguyên văn, bố cục, thứ tự field, giá trị mặc định hoặc định dạng hiển thị (4 nhóm không được suy diễn). Chưa có ảnh mới sau khi đổi → gắn `@NeedsVerify`, KHÔNG sửa theo suy đoán |
 | **RTM** | ⭕ Khuyến nghị | Có sẵn thì map REQ → TC nhanh và chắc hơn nhiều |
 
@@ -84,7 +84,7 @@ Hai workflow trả lời **hai câu hỏi khác nhau**. Chạy sai cái là bỏ
 ### Bước 1: Đọc Delta
 
 1. Đọc Impact Report, trích bảng **Test case cần xử lý** — 3 nhóm: `⚠️ Review & sửa` / `🗑️ Deprecated` / `➕ Viết mới`
-2. Với mỗi REQ trong nhóm 🟡 (SỬA): đọc **nội dung REQ sau khi đổi** trong `requirements_<module>.md` để biết kỳ vọng mới là gì
+2. Với mỗi REQ trong nhóm 🟡 (SỬA): đọc **nội dung REQ sau khi đổi** trong `REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` để biết kỳ vọng mới là gì
 3. Đọc **Nhật ký thay đổi** ở cuối tài liệu requirements — nó ghi rõ đổi từ gì sang gì, đây là nguồn chính xác nhất
 4. Ghi rõ **đổi cái gì**: precondition / steps / expected result / test data / message nguyên văn / phân quyền
 
@@ -159,7 +159,7 @@ Mỗi mục ghi: `file:dòng`, TC ID, **vòng · nhánh**, sửa ô nào, có c�
    - Có dòng (thay đổi chưa commit) → **dừng**, đề nghị user commit trước. Agent **không** tự commit, và sửa đè lên thay đổi chưa commit là mất bản đối chiếu
    - Sạch → ghi `git log -1 --format=%h -- <file>` làm mốc. Đây là bước không được bỏ — bản cũ xem bằng `git show <hash>:<file>`
    - File **chưa từng** được commit → ghi `chưa có trong git`, báo user
-2. Sửa **tại chỗ** trong file nền tảng `<nền-tảng>/test_cases_<module>_<nền-tảng>.md` (hoặc `<nền-tảng>/parts/part_NN_*.md` nếu đã tách) — **chỉ chạm đúng ô đã liệt kê** ở Bước 3. Bộ TC cũ chưa có tầng nền tảng → sửa trong `test_cases_<module>.md` rồi chuyển một lần theo skill rbt (Quy Tắc Xuất File mục 2)
+2. Sửa **tại chỗ** trong file nền tảng `<nền-tảng>/test_cases_<module>_<nền-tảng>.md` (hoặc `<nền-tảng>/parts/part_NN_*.md` nếu đã tách) — **chỉ chạm đúng ô đã liệt kê** ở Bước 3. Bộ TC cũ chưa có tầng nền tảng → sửa trong `TEST_CASES_<TÊN_MODULE>_SUMMARY.md` rồi chuyển một lần theo skill rbt (Quy Tắc Xuất File mục 2)
 3. TC bị gỡ → đổi trạng thái, giữ nguyên dòng và TC ID:
    ```
    | CRM_PRJ_TC_031 | Copy Project | ... | 🗑️ Deprecated — gỡ theo TICKET-123 (17-08-2026) |
@@ -185,7 +185,7 @@ Kiểm đủ 7 mục, thiếu mục nào là chưa xong:
 
 ### Bước 7: Nhật Ký & Delta TC List
 
-1. Ghi **Nhật ký thay đổi** vào cuối `test_cases_<module>.md`:
+1. Ghi **Nhật ký thay đổi** vào cuối `TEST_CASES_<TÊN_MODULE>_SUMMARY.md`:
 
 ```markdown
 ## Nhật ký thay đổi
@@ -266,7 +266,7 @@ Kiểm đủ 7 mục, thiếu mục nào là chưa xong:
 
 ### Mode APPLY
 - Tất cả output Mode PLAN, cộng thêm:
-  - File nền tảng đã sửa **tại chỗ** (tên file không đổi) · index `test_cases_<module>.md` cập nhật Bản đồ tài liệu + Nhật ký
+  - File nền tảng đã sửa **tại chỗ** (tên file không đổi) · index `TEST_CASES_<TÊN_MODULE>_SUMMARY.md` cập nhật Bản đồ tài liệu + Nhật ký
   - Mốc git trước khi sửa của từng file — ghi ở Nhật ký và `delta_tc_`
   - **Bảng Đối soát loại kiểm thử (4 vòng)** đã cập nhật đúng nhánh bị chạm
   - Nhật ký thay đổi ở cuối file TC

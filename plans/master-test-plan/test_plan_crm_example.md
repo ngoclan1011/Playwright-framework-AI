@@ -58,12 +58,12 @@
 
 | Tài liệu | Phiên bản / ngày cập nhật | Module | Ghi chú |
 |---|---|---|---|
-| `docs/requirements/login/requirements_login.md` | Nhật ký thay đổi 19-09-2026 | `LOGIN` | 44 REQ · 40 trong phạm vi TC · **0** AMB 🔴 treo |
-| `docs/requirements/customers/requirements_customers.md` | Nhật ký thay đổi 19-09-2026 | `CUST` | 84 REQ · **0** AMB 🔴 treo · 2 REQ 🟡 ghi kỳ vọng đúng mà hệ thống chưa đạt |
-| `docs/requirements/projects/requirements_projects.md` | Nhật ký thay đổi 14-08-2026 | `PRJ` | 104 REQ · **6 AMB 🔴 treo** (`AMB-PRJ-01` · `02` · `03` · `04` · `06` · `14`) |
+| `docs/requirements/login/REQUIREMENTS_LOGIN_SUMMARY.md` | Nhật ký thay đổi 19-09-2026 | `LOGIN` | 44 REQ · 40 trong phạm vi TC · **0** AMB 🔴 treo |
+| `docs/requirements/customers/REQUIREMENTS_CUSTOMERS_SUMMARY.md` | Nhật ký thay đổi 19-09-2026 | `CUST` | 84 REQ · **0** AMB 🔴 treo · 2 REQ 🟡 ghi kỳ vọng đúng mà hệ thống chưa đạt |
+| `docs/requirements/projects/REQUIREMENTS_PROJECTS_SUMMARY.md` | Nhật ký thay đổi 14-08-2026 | `PRJ` | 104 REQ · **6 AMB 🔴 treo** (`AMB-PRJ-01` · `02` · `03` · `04` · `06` · `14`) |
 | `docs/requirements/_discovery/system_map.md` | 14-08-2026 | Cả 3 | Phụ thuộc giữa module · Vùng loại khỏi phạm vi |
-| `docs/testcases/login/test_cases_login.md` | 19-09-2026 | `LOGIN` | 51 TC · 71 biến thể · bảng ISO/IEC 25010 · bộ chạy đề xuất |
-| `docs/testcases/customers/test_cases_customers.md` | 19-09-2026 | `CUST` | 129 TC · 155 biến thể · 5 part · bảng ISO/IEC 25010 |
+| `docs/testcases/login/TEST_CASES_LOGIN_SUMMARY.md` | 19-09-2026 | `LOGIN` | 51 TC · 71 biến thể · bảng ISO/IEC 25010 · bộ chạy đề xuất |
+| `docs/testcases/customers/TEST_CASES_CUSTOMERS_SUMMARY.md` | 19-09-2026 | `CUST` | 129 TC · 155 biến thể · 5 part · bảng ISO/IEC 25010 |
 
 > ⚠️ Tài liệu của cả 3 module được khảo sát trên **bản demo dùng chung** `crm.anhtester.com`, không phải môi trường test riêng của đợt này — xem rủi ro R2. Cơ sở kiểm thử đổi giữa đợt (ticket sửa yêu cầu) → cập nhật bằng `/update-requirements-from-ticket` rồi tăng phiên bản plan; TC viết theo cơ sở cũ là TC sai.
 
@@ -123,7 +123,7 @@
 | Giả định | Ước lượng 7.2 **không** tính công sức PO/BA làm UAT và thời gian Dev sửa bug | Hai phần này trễ không làm sai ước lượng QA nhưng vẫn đẩy lùi lịch 7.1 | Phiếu `Ước lượng` |
 | Ràng buộc | Requirements và TC của cả 3 module được khảo sát trên **bản demo dùng chung** | Cấu hình, dữ liệu nền, phiên bản có thể khác → một số REQ có thể lệch khi chạy trên môi trường mới. Xem R2 | `docs/requirements/README.md` |
 | Ràng buộc | QA **không** có quyền gọi API · truy vấn CSDL · kiểm tầng tích hợp · xem nhật ký hoạt động | Nhánh Vòng 3 tương ứng do đội Dev xác minh — **không phải vùng trắng**, xem 2.2 · automation chỉ đặt được ở tầng UI (3.7) | `docs/requirements/README.md` — Năng lực kiểm thử của QA |
-| Ràng buộc | Tester có DevTools trình duyệt | Chạy được phần 🔧 của TC gắn `@TechCheck` — `LOGIN` 25 TC, trong đó `TC_025` và `TC_041` **bắt buộc** biết DevTools mới chạy được từ đầu | `test_cases_login.md` — Bộ chạy đề xuất |
+| Ràng buộc | Tester có DevTools trình duyệt | Chạy được phần 🔧 của TC gắn `@TechCheck` — `LOGIN` 25 TC, trong đó `TC_025` và `TC_041` **bắt buộc** biết DevTools mới chạy được từ đầu | `TEST_CASES_LOGIN_SUMMARY.md` — Bộ chạy đề xuất |
 | Ràng buộc | Còn **6 AMB 🔴** treo, toàn bộ thuộc `PRJ`: `AMB-PRJ-01` (28 ô ma trận phân quyền chưa kiểm chứng) · `02` (số đếm tổng quan lệch 7 dòng) · `03` (xoá dự án thành công nhưng chuyển tới trang lỗi) · `04` (Deadline sớm hơn Start Date vẫn lưu) · `06` (dự án 0 công việc hiển thị tiến độ 100%) · `14` (`Visible Tabs` tác động tới đâu) | TC của `PRJ` viết trong vùng này có thể phải sửa giữa đợt. `AMB-PRJ-03` khiến tester dễ **chấm FAIL nhầm** nếu chưa đọc tài liệu | `docs/requirements/README.md` — mục 3.1 |
 | Ràng buộc | Ma trận phân quyền của `PRJ` còn **28 ô `❔`** — module được khảo sát trước khi có tài khoản `Project Manager` | Phải chạy lại phần phân quyền bằng tài khoản PM **trước** khi sinh TC Vòng 3 của `PRJ` | `docs/requirements/README.md` — mục 3.2 |
 | Ràng buộc | Repo **chưa có** project automation — không có `package.json`, không có file CI, 0 script | Automation phải dựng framework Playwright + TypeScript từ đầu trong chính đợt này — xem R5 | Kiểm tra repo 20-09-2026 |
@@ -186,7 +186,7 @@
 
 #### 3.2.1 Kiểm thử phi chức năng
 
-> Đủ 6 dòng, kể cả loại không làm. Cột *TC đã có* đọc từ bảng ISO/IEC 25010 của `test_cases_login.md` và `test_cases_customers.md`; `PRJ` chưa có TC. TC lẻ đã có **không** tự biến một loại thành `có` — chúng chạy như TC chức năng trong bộ Regression.
+> Đủ 6 dòng, kể cả loại không làm. Cột *TC đã có* đọc từ bảng ISO/IEC 25010 của `TEST_CASES_LOGIN_SUMMARY.md` và `TEST_CASES_CUSTOMERS_SUMMARY.md`; `PRJ` chưa có TC. TC lẻ đã có **không** tự biến một loại thành `có` — chúng chạy như TC chức năng trong bộ Regression.
 
 | Loại | Có làm? | Mục tiêu đo | Ngưỡng chấp nhận | Cách làm · công cụ | Môi trường | Ai thực hiện | TC đã có |
 |---|---|---|---|---|---|---|---|
@@ -203,7 +203,7 @@
 
 ### 3.3 Kỹ thuật thiết kế test
 
-> Liệt kê theo bộ TC **đã thực sự có** (`LOGIN`, `CUST`). Dòng của `LOGIN` đọc thẳng từ **bảng 4 vòng** trong `test_cases_login.md`; dòng của `CUST` **suy từ nội dung từng nhóm TC** vì tài liệu đó chưa có mục kỹ thuật riêng — ghi rõ như vậy để người duyệt biết mức chắc chắn của từng dòng. Kỹ thuật của `PRJ` bổ sung sau khi sinh TC.
+> Liệt kê theo bộ TC **đã thực sự có** (`LOGIN`, `CUST`). Dòng của `LOGIN` đọc thẳng từ **bảng 4 vòng** trong `TEST_CASES_LOGIN_SUMMARY.md`; dòng của `CUST` **suy từ nội dung từng nhóm TC** vì tài liệu đó chưa có mục kỹ thuật riêng — ghi rõ như vậy để người duyệt biết mức chắc chắn của từng dòng. Kỹ thuật của `PRJ` bổ sung sau khi sinh TC.
 
 | Kỹ thuật | Áp dụng ở đâu |
 |---|---|
@@ -438,11 +438,11 @@ Công thức: **E = (a + 4m + b) / 6** · **SD = (b − a) / 6**. E tổng = c�
 
 | Dữ liệu | Giá trị | Nguồn |
 |---|---|---|
-| Bộ Smoke `LOGIN` | 9 TC · ~12 phút | `test_cases_login.md` — Bộ chạy đề xuất |
-| Bộ Regression đầy đủ `LOGIN` (trừ `@Slow`) | 49 TC · ~3 giờ 40 phút | `test_cases_login.md` — Bộ chạy đề xuất |
-| Phần 🔧 của TC `@TechCheck` | 25 TC · ~55 phút | `test_cases_login.md` — Bộ chạy đề xuất |
-| TC chạy riêng (`@Slow` · `@PersonalOnly`) | `TC_026` ~65 phút · `TC_051` ~70 phút | `test_cases_login.md` — Bộ chạy đề xuất |
-| Quy mô `CUST` | 129 TC · 155 biến thể · 5 part · Smoke 16 TC | `test_cases_customers.md` |
+| Bộ Smoke `LOGIN` | 9 TC · ~12 phút | `TEST_CASES_LOGIN_SUMMARY.md` — Bộ chạy đề xuất |
+| Bộ Regression đầy đủ `LOGIN` (trừ `@Slow`) | 49 TC · ~3 giờ 40 phút | `TEST_CASES_LOGIN_SUMMARY.md` — Bộ chạy đề xuất |
+| Phần 🔧 của TC `@TechCheck` | 25 TC · ~55 phút | `TEST_CASES_LOGIN_SUMMARY.md` — Bộ chạy đề xuất |
+| TC chạy riêng (`@Slow` · `@PersonalOnly`) | `TC_026` ~65 phút · `TC_051` ~70 phút | `TEST_CASES_LOGIN_SUMMARY.md` — Bộ chạy đề xuất |
+| Quy mô `CUST` | 129 TC · 155 biến thể · 5 part · Smoke 16 TC | `TEST_CASES_CUSTOMERS_SUMMARY.md` |
 | REQ cần viết TC | `PRJ` 104 (gồm 4 REQ được đưa lại) | `docs/requirements/README.md` |
 | Lần chạy `LOGIN` gần nhất | 13 TC trong ~7 phút (không gồm phần 🔧) | `run_1789759574/execution_report.md` |
 

@@ -31,7 +31,7 @@
 - Có bổ sung TC negative/boundary mới trong phạm vi REQ đã đổi không: [Có (khuyến nghị) / Không]
 
 # NHẮC AGENT
-- Sửa TẠI CHỖ trong test_cases_<module>.md — KHÔNG sinh file _improved / _v2
+- Sửa TẠI CHỖ trong TEST_CASES_<TÊN_MODULE>_SUMMARY.md — KHÔNG sinh file _improved / _v2
 - Ghi mốc git (hash commit) của file TRƯỚC khi sửa — KHÔNG tạo thư mục archive/; file có thay đổi chưa commit thì dừng, nhắc commit trước
 - GIỮ NGUYÊN mọi TC ID. TC mới cấp số tiếp dải hiện có
 - TC của chức năng bị gỡ: đổi trạng thái 🗑️ Deprecated, KHÔNG xoá dòng

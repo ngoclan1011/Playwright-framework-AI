@@ -45,4 +45,4 @@ Chỉ viết được hướng dẫn cho module **đã recon** (xem `docs/requir
 
 | Ngày | Thay đổi |
 |---|---|
-| 09-09-2026 | Khởi tạo danh mục. Viết hướng dẫn module `login` bằng `/generate-user-guide` Mode DOC — nguồn `requirements_login.md` (43 REQ) + 9 ảnh evidence đã mở đủ, 4 ảnh được dùng lại |
+| 09-09-2026 | Khởi tạo danh mục. Viết hướng dẫn module `login` bằng `/generate-user-guide` Mode DOC — nguồn `REQUIREMENTS_LOGIN_SUMMARY.md` (43 REQ) + 9 ảnh evidence đã mở đủ, 4 ảnh được dùng lại |

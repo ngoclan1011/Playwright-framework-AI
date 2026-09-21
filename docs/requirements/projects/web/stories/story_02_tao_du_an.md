@@ -1,6 +1,6 @@
 # STORY-PRJ-02 — Tạo dự án: thông tin chính (tab `Project`)
 
-> Về index: [../../requirements_projects.md](../../requirements_projects.md) · File nền tảng: [../requirements_projects_web.md](../requirements_projects_web.md) · Prefix `PRJ` · REQ bao phủ: `REQ-PRJ-24` → `REQ-PRJ-41` (18 REQ)
+> Về index: [../../REQUIREMENTS_PROJECTS_SUMMARY.md](../../REQUIREMENTS_PROJECTS_SUMMARY.md) · File nền tảng: [../requirements_projects_web.md](../requirements_projects_web.md) · Prefix `PRJ` · REQ bao phủ: `REQ-PRJ-24` → `REQ-PRJ-41` (18 REQ)
 >
 > AMB liên quan: `AMB-PRJ-06`, `AMB-PRJ-09`, `AMB-PRJ-10` · RISK liên quan: `RISK-PRJ-06`
 

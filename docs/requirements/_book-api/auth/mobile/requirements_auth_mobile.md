@@ -1,6 +1,6 @@
 # Đặc tả Yêu cầu — Module Xác thực & Phiên đăng nhập (`AUTH`) · Nền tảng Mobile
 
-> Index module (metadata dải mã · REQ dùng chung · phân quyền · Story · AMB/RISK · Nhật ký): [../requirements_auth.md](../requirements_auth.md) · Danh mục hệ thống: [../../README.md](../../README.md) · Bản đồ app: [../../_discovery/system_map.md](../../_discovery/system_map.md) · [module_01](../../_discovery/modules/module_01_xac_thuc_dia_chi.md)
+> Index module (metadata dải mã · REQ dùng chung · phân quyền · Story · AMB/RISK · Nhật ký): [../REQUIREMENTS_AUTH_SUMMARY.md](../REQUIREMENTS_AUTH_SUMMARY.md) · Danh mục hệ thống: [../../README.md](../../README.md) · Bản đồ app: [../../_discovery/system_map.md](../../_discovery/system_map.md) · [module_01](../../_discovery/modules/module_01_xac_thuc_dia_chi.md)
 
 | Mục | Giá trị |
 |---|---|

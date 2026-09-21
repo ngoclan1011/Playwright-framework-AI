@@ -3,7 +3,7 @@
 | Thông tin | Nội dung |
 |---|---|
 | Run ID | run_1787215085 |
-| Nguồn TC | docs/testcases/login/test_cases_login.md |
+| Nguồn TC | docs/testcases/login/TEST_CASES_LOGIN_SUMMARY.md |
 | Phạm vi | Toàn bộ 41 TC — bỏ qua phần 🔧 (@TechCheck, cần DevTools); TC_026 (@Slow, chờ 65 phút) chạy CUỐI cùng |
 | Môi trường | https://crm.anhtester.com — **Dùng chung** |
 | Tài khoản | Admin (`admin@example.com`), PM (`projectmanager@example.com`), Customer (`anvo@example.com`) |

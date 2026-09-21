@@ -1,6 +1,6 @@
 # Đặc tả Yêu cầu — Module Xác thực & Phiên đăng nhập (`AUTH`) · Nền tảng API
 
-> Index module (metadata dải mã · ma trận phân quyền · Story · AMB/RISK · Nhật ký): [../requirements_auth.md](../requirements_auth.md) · Danh mục hệ thống: [../../README.md](../../README.md) · Bản đồ API: [../../_discovery/api_map.md](../../_discovery/api_map.md)
+> Index module (metadata dải mã · ma trận phân quyền · Story · AMB/RISK · Nhật ký): [../REQUIREMENTS_AUTH_SUMMARY.md](../REQUIREMENTS_AUTH_SUMMARY.md) · Danh mục hệ thống: [../../README.md](../../README.md) · Bản đồ API: [../../_discovery/api_map.md](../../_discovery/api_map.md)
 
 | Mục | Giá trị |
 |---|---|
@@ -60,7 +60,7 @@ Không có tài liệu nghiệp vụ — toàn bộ REQ sinh từ **spec OpenAPI
 | REQ-BK-AUTH-07 | `email` sai định dạng bị từ chối | `format: email` | `email` = `khong-phai-email` (các field khác hợp lệ) → **422** · `fields.email` **chứa** `should be email` | 🟢 | — | Spec + kiểm chứng thực tế · → 422 (K-07) |
 | REQ-BK-AUTH-10 | Đăng ký nhận đủ 3 content-type khai trong spec | Spec khai `application/json` · `application/x-www-form-urlencoded` · `multipart/form-data` | Cùng body hợp lệ gửi theo từng content-type → **201**. Biến thể: `json` ✅ K-01 · `x-www-form-urlencoded` ✅ K-02 · `multipart/form-data` ❔ chưa gọi | 🟢 | — | Spec + kiểm chứng thực tế (2/3 biến thể) · → 201 (K-01 · K-02) |
 
-> ↑ `REQ-BK-AUTH-01` · `03` · `08` · `09` **đã chuyển lên index** [`../requirements_auth.md` mục 3](../requirements_auth.md#3-yêu-cầu-dùng-chung-android--api) ngày 19-09-2026 — kiểm chứng khớp trên Android, `Nền tảng` = `Android · API`. Mã giữ nguyên.
+> ↑ `REQ-BK-AUTH-01` · `03` · `08` · `09` **đã chuyển lên index** [`../REQUIREMENTS_AUTH_SUMMARY.md` mục 3](../REQUIREMENTS_AUTH_SUMMARY.md#3-yêu-cầu-dùng-chung-android--api) ngày 19-09-2026 — kiểm chứng khớp trên Android, `Nền tảng` = `Android · API`. Mã giữ nguyên.
 
 ### 3.2. Đăng nhập (STORY-BK-AUTH-02)
 
@@ -76,7 +76,7 @@ Không có tài liệu nghiệp vụ — toàn bộ REQ sinh từ **spec OpenAPI
 | REQ-BK-AUTH-22 | Cookie `accessToken` có cờ `HttpOnly` · `Secure` · `SameSite` | **Yêu cầu bảo mật đề xuất — chờ PO xác nhận (`AMB-BK-AUTH-04`)**. Cookie chứa token đăng nhập phải không đọc được bằng JavaScript | Response REQ-11 · `Set-Cookie: accessToken=…` có **đủ** `HttpOnly` · `Secure` · `SameSite` | 🟢 | — | Thực tế — spec không nói · → ❌ cookie chỉ có `Path=/` (K-09 · F-03) |
 | REQ-BK-AUTH-23 | Đăng nhập nhận đủ 3 content-type khai trong spec | | Cùng body hợp lệ theo từng content-type → **200**. Biến thể: `json` ✅ K-09 · `multipart/form-data` ✅ K-10 · `x-www-form-urlencoded` ❔ chưa gọi | 🟢 | — | Spec + kiểm chứng thực tế (2/3 biến thể) · → 200 (K-09 · K-10) |
 
-> ↑ `REQ-BK-AUTH-11` · `14` · `15` · `16` **đã chuyển lên index** [`../requirements_auth.md` mục 3](../requirements_auth.md#3-yêu-cầu-dùng-chung-android--api) ngày 19-09-2026 — kiểm chứng khớp trên Android, `Nền tảng` = `Android · API`. Mã giữ nguyên.
+> ↑ `REQ-BK-AUTH-11` · `14` · `15` · `16` **đã chuyển lên index** [`../REQUIREMENTS_AUTH_SUMMARY.md` mục 3](../REQUIREMENTS_AUTH_SUMMARY.md#3-yêu-cầu-dùng-chung-android--api) ngày 19-09-2026 — kiểm chứng khớp trên Android, `Nền tảng` = `Android · API`. Mã giữ nguyên.
 
 ### 3.3. Làm mới token & Đăng xuất (STORY-BK-AUTH-03)
 

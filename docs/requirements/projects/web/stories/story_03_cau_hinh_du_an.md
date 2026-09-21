@@ -1,6 +1,6 @@
 # STORY-PRJ-03 — Cấu hình dự án & quyền khách hàng (tab `Project Settings`)
 
-> Về index: [../../requirements_projects.md](../../requirements_projects.md) · File nền tảng: [../requirements_projects_web.md](../requirements_projects_web.md) · Prefix `PRJ` · REQ bao phủ: `REQ-PRJ-42` → `REQ-PRJ-52` (11 REQ)
+> Về index: [../../REQUIREMENTS_PROJECTS_SUMMARY.md](../../REQUIREMENTS_PROJECTS_SUMMARY.md) · File nền tảng: [../requirements_projects_web.md](../requirements_projects_web.md) · Prefix `PRJ` · REQ bao phủ: `REQ-PRJ-42` → `REQ-PRJ-52` (11 REQ)
 >
 > AMB liên quan: `AMB-PRJ-14`, `AMB-PRJ-15`
 

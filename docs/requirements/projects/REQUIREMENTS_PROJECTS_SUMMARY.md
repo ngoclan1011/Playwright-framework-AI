@@ -239,5 +239,6 @@ Dự án có đúng **5 trạng thái**. Mã giá trị **không** liên tiếp 
 
 | Ngày | Nguồn | REQ ảnh hưởng | Loại | Tóm tắt thay đổi | TC cần xử lý |
 |---|---|---|---|---|---|
+| 21-09-2026 | Quy ước đặt tên | — | ✏️ Biên tập | Đổi tên file index `requirements_projects.md` → `REQUIREMENTS_PROJECTS_SUMMARY.md` — quy ước mới: index IN HOA để khác hẳn file nền tảng. Nội dung, mã REQ/TC không đổi; mọi link trỏ tới đã sửa | — |
 | 19-09-2026 | Chuyển tầng nền tảng | REQ-PRJ-01 → 104 | ✏️ Biên tập | **Chuyển sang cấu trúc tầng nền tảng** (skill `skills-requirements-analyzer` mục 5.3): `stories/` → `web/stories/`, `evidence/` → `web/evidence/`; mục 2, 6, 8 → `web/requirements_projects_web.md`. Index giữ metadata, phạm vi, Story, ma trận, AMB/RISK, Nhật ký; `## Bản đồ tài liệu` trỏ sang tầng web. **Mã REQ, số mục và nội dung không đổi** | — |
 | 14-08-2026 | UI recon | REQ-PRJ-01 → 104 | 🟢 Thêm | Khởi tạo tài liệu từ khảo sát UI thực tế + đọc DOM + tầng network. 104 REQ, 10 Story, 16 AMB (6 🔴), 7 RISK, 31 ảnh evidence. Đã tạo và xoá 1 dự án thử nghiệm trên môi trường dùng chung | — (viết TC mới) |

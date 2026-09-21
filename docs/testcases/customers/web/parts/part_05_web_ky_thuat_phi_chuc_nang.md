@@ -2,8 +2,8 @@
 
 | Thông tin | Nội dung |
 |---|---|
-| **Index module** | [../../test_cases_customers.md](../../test_cases_customers.md) — cách đọc · quy ước `P-*`, `KH-TEST`, `D1`, `CSV-*` · Assumptions · Bảng đối soát |
-| **Nguồn requirement** | [requirements_customers_web.md](../../../../requirements/customers/web/requirements_customers_web.md) · Ma trận phân quyền ở [index requirements](../../../../requirements/customers/requirements_customers.md) mục 6 |
+| **Index module** | [../../TEST_CASES_CUSTOMERS_SUMMARY.md](../../TEST_CASES_CUSTOMERS_SUMMARY.md) — cách đọc · quy ước `P-*`, `KH-TEST`, `D1`, `CSV-*` · Assumptions · Bảng đối soát |
+| **Nguồn requirement** | [requirements_customers_web.md](../../../../requirements/customers/web/requirements_customers_web.md) · Ma trận phân quyền ở [index requirements](../../../../requirements/customers/REQUIREMENTS_CUSTOMERS_SUMMARY.md) mục 6 |
 | **Nền tảng** | Web — Google Chrome, viewport desktop `1600×750` (trừ `TC_125`, `TC_127`) |
 | **Dải TC ID trong part** | `CRM_CUST_TC_113` → `CRM_CUST_TC_128` |
 | **Part liền kề** | ← [part_04_web_trang_thai_tab_nhap.md](part_04_web_trang_thai_tab_nhap.md) |

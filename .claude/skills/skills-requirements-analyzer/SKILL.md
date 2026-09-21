@@ -52,7 +52,7 @@ Cùng một module có thể được phân tích **nhiều lần bằng nhiều
    > ⚠️ **File không tồn tại (dự án mới)** → **tạo ngay** theo mục 5.7.1 trước khi đi tiếp. KHÔNG bỏ qua bước này rồi ghi thẳng tài liệu module.
 2. **Kiểm tra tài liệu module:**
    ```
-   docs/requirements/<module>/requirements_<module>.md
+   docs/requirements/<module>/REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md
    ```
 3. **Nếu CHƯA có** → đánh số từ `01`.
 4. **Nếu ĐÃ có** → tìm số REQ lớn nhất đang dùng và **đánh tiếp từ số kế tiếp**. Ví dụ module đã dùng tới `REQ-PRJ-65` → yêu cầu mới bắt đầu từ `REQ-PRJ-66`.
@@ -103,7 +103,7 @@ Skill có **4 nhánh trích xuất** tuỳ theo nguồn đầu vào. Xác địn
 | Đặc tả API — OpenAPI/Swagger UI/Scalar/Redoc, Postman collection, **tài liệu API dạng .docx/.pdf** | **3.4 — API Spec Analysis** | Spec là **lời khai**, response thật mới là **sự thật**. Xác minh bằng gọi thật có kiểm soát |
 | App mobile đang chạy — Native Android/iOS, Flutter, Hybrid | **3.5 — Mobile Recon** | Sự thật nằm ở app trên thiết bị; xác minh qua UI hierarchy bằng Appium MCP |
 
-> 📌 **Hệ thống nhiều mặt** (web + app + API): mỗi nhánh ghi REQ của nền tảng mình vào tầng `web/` · `mobile/` · `api/` của **cùng** thư mục module, REQ dùng chung ≥ 2 nền tảng lên index `requirements_<module>.md` — áp mục **2.2** và **5.3**. Nhánh chạy sau **đọc REQ đã có trước** để nối mã và nhận ra rule trùng, không sinh REQ song song.
+> 📌 **Hệ thống nhiều mặt** (web + app + API): mỗi nhánh ghi REQ của nền tảng mình vào tầng `web/` · `mobile/` · `api/` của **cùng** thư mục module, REQ dùng chung ≥ 2 nền tảng lên index `REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` — áp mục **2.2** và **5.3**. Nhánh chạy sau **đọc REQ đã có trước** để nối mã và nhận ra rule trùng, không sinh REQ song song.
 
 > ⚠️ **Chưa biết hệ thống có những module nào** → đây chưa phải việc của skill này. Chạy `/discover-system` trước để có bản đồ hệ thống + prefix, rồi mới recon từng module (xem mục **5.8**).
 
@@ -249,7 +249,7 @@ Lập bảng đối chiếu trước khi viết requirements:
 |---|---|
 | Ticket **không có AC nào**, chỉ 1–2 dòng mô tả | ❌ KHÔNG tự viết AC thay PO. Ghi nhận đúng những gì có, rồi liệt kê **danh sách câu hỏi cần clarify** dạng `AMB-<MODULE>-XX` mức 🔴 High. Nêu rõ trong Overview: *"Ticket chưa có AC — tài liệu này chưa đủ để sinh test case"* |
 | AC viết dạng mơ hồ ("hoạt động đúng", "như module cũ") | Gán REQ ID bình thường **nhưng** kèm ngay 1 `AMB-<MODULE>-XX` hỏi tiêu chí cụ thể |
-| Tham chiếu "giống module X" | Nếu module X đã có `requirements_<X>.md` → trích REQ tương ứng và **link chéo**. Nếu chưa có → `AMB-<MODULE>-XX`, không tự suy diễn |
+| Tham chiếu "giống module X" | Nếu module X đã có `<X>/REQUIREMENTS_<X>_SUMMARY.md` → trích REQ tương ứng và **link chéo**. Nếu chưa có → `AMB-<MODULE>-XX`, không tự suy diễn |
 | Thiếu hoàn toàn thông tin phân quyền/trạng thái | Ghi "Không đề cập trong tài liệu" (khác với "Không áp dụng") + `AMB-<MODULE>-XX` |
 
 ### 3.3. Khi có cả tài liệu và UI thực tế
@@ -429,7 +429,7 @@ Hay gặp ở dự án outsource hoặc tích hợp đối tác: không có Open
 
 #### 3.4.7. Mục 6 áp cho API — thay đổi so với nhánh UI
 
-Tài liệu đầu ra theo mục 6, ghi vào **`api/requirements_<module>_api.md`** (REQ chỉ áp API) và **index** `requirements_<module>.md` (REQ dùng chung với web/mobile — mục 5.3). Khác nhánh UI ở các mục sau:
+Tài liệu đầu ra theo mục 6, ghi vào **`api/requirements_<module>_api.md`** (REQ chỉ áp API) và **index** `REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` (REQ dùng chung với web/mobile — mục 5.3). Khác nhánh UI ở các mục sau:
 
 | Mục | Nhánh UI | Nhánh API |
 |---|---|---|
@@ -683,7 +683,7 @@ Tách ngay nếu gặp **bất kỳ** dấu hiệu nào sau:
 docs/requirements/
 ├── README.md                              ← DANH MỤC toàn hệ thống (mục 5.7)
 ├── <module>/
-│   ├── requirements_<module>.md           ← INDEX — TÊN FILE BẤT BIẾN · phần dùng chung + Bản đồ tài liệu
+│   ├── REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md           ← INDEX — TÊN FILE BẤT BIẾN · phần dùng chung + Bản đồ tài liệu
 │   ├── web/                               ← TẦNG NỀN TẢNG — chỉ nhận 3 tên: web · mobile · api
 │   │   ├── requirements_<module>_web.md   ← REQ chỉ áp web · Field Spec · Validation · Trình duyệt khảo sát
 │   │   ├── evidence/*.png                 ← bằng chứng khảo sát web
@@ -703,11 +703,12 @@ docs/requirements/
 
 | Quy tắc | Lý do |
 |---|---|
-| Tên file index **luôn** `requirements_<module>.md` | Mọi workflow phía sau đọc theo `docs/requirements/<module>/requirements_<module>.md`. Đổi tên là vỡ chuỗi (mục 5.5) |
-| Tên thư mục = tên module, chữ thường, không dấu | Tra cứu bằng glob `docs/requirements/*/requirements_*.md` |
+| Tên file index **luôn** `REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` — chữ IN HOA, `<TÊN_MODULE>` = tên thư mục module viết HOA, `-` đổi thành `_` (VD `login` → `LOGIN`, `customers` → `CUSTOMERS`) — **không phải** prefix REQ (`CUST`) | Mọi workflow phía sau đọc theo `docs/requirements/<module>/REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md`. IN HOA để index **khác hẳn** file nền tảng `requirements_<module>_<nền-tảng>.md` — nhìn là biết file tổng, không nhầm với file web/mobile/api. Đổi tên là vỡ chuỗi (mục 5.5) |
+| Tên thư mục = tên module, chữ thường, không dấu | Tra cứu bằng glob `docs/requirements/*/REQUIREMENTS_*_SUMMARY.md` |
 | Evidence nằm **trong** thư mục nền tảng của module (`<module>/<nền-tảng>/evidence/`) | Tài liệu và bằng chứng đi cùng nhau; ảnh web và ảnh app không lẫn vào nhau |
 | **Tầng nền tảng luôn có**, kể cả module mới chỉ có một nền tảng; chỉ nhận `web` · `mobile` · `api` | Thêm nền tảng thứ hai về sau không phải di chuyển file — di chuyển là gãy link evidence. Android và iOS chung `mobile/` — tách đôi là nhân đôi tài liệu của cùng một màn hình |
-| Tên file nền tảng mang hậu tố nền tảng: `requirements_<module>_<nền-tảng>.md` | Glob `docs/requirements/*/requirements_*.md` vẫn chỉ bắt index; tên riêng giúp mở nhầm file cũng biết ngay đang ở nền tảng nào |
+| Tên file nền tảng mang hậu tố nền tảng: `requirements_<module>_<nền-tảng>.md` | Glob `docs/requirements/*/REQUIREMENTS_*_SUMMARY.md` chỉ bắt index, `docs/requirements/*/*/requirements_*.md` chỉ bắt file nền tảng; tên riêng giúp mở nhầm file cũng biết ngay đang ở nền tảng nào |
+| Tài liệu cũ còn index tên `requirements_<module>.md` / `test_cases_<module>.md` (quy ước trước 21-09-2026) | Workflow đọc **nhận cả hai tên**. Lần đầu một workflow sinh/cập nhật chạm lại module → đổi tên **một lần** sang `REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` / `TEST_CASES_<TÊN_MODULE>_SUMMARY.md`, sửa mọi link trỏ tới nó, ghi Nhật ký loại `✏️ Biên tập` |
 | Tài liệu cũ chưa có tầng nền tảng | Không bắt buộc sửa ngay. Lần đầu một workflow sinh/cập nhật chạm lại module → chuyển **một lần**: REQ chỉ áp một nền tảng sang file nền tảng, evidence sang `<nền-tảng>/evidence/` và sửa link, mã REQ giữ nguyên, ghi Nhật ký loại `✏️ Biên tập` |
 | Phân tích ticket nằm ở `<module>/analysis/` | Giữ liên kết ticket ↔ module. **KHÔNG** đặt ở thư mục toàn cục |
 | Thêm module = thêm thư mục + 1 dòng ở danh mục | Không đụng gì khác trong repo |
@@ -761,9 +762,9 @@ Tách file **không được** làm vỡ chuỗi `/generate-testcases-manual-rbt
 
 - **Đường dẫn index LUÔN là:**
   ```
-  docs/requirements/<module>/requirements_<module>.md
+  docs/requirements/<module>/REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md
   ```
-  Bất kể tài liệu có tách hay không. Mọi workflow phía sau chỉ cần biết đúng một mẫu đường dẫn này — tra được bằng glob `docs/requirements/*/requirements_*.md`.
+  Bất kể tài liệu có tách hay không. Mọi workflow phía sau chỉ cần biết đúng một mẫu đường dẫn này — tra được bằng glob `docs/requirements/*/REQUIREMENTS_*_SUMMARY.md`.
 - **Điểm vào cấp hệ thống là `docs/requirements/README.md`** — khi không biết module nào tồn tại hoặc prefix nào đã dùng, đọc file này trước (mục 5.7).
 - Index **BẮT BUỘC** có mục `## Bản đồ tài liệu` liệt kê đầy đủ file nền tảng (và file story nếu có) kèm dải REQ mà file đó chứa:
   ```markdown
@@ -846,7 +847,7 @@ docs/requirements/
 | Cấp mã | **Prefix** (`CUST`) | **Số REQ** (`REQ-CUST-01`) |
 | Độ sâu | Module tồn tại · loại màn hình · có CRUD không | Từng field · từng rule · từng message |
 | Evidence | 1 ảnh/module, chứng minh module có thật | Chuẩn đầy đủ mục 7.2.1 |
-| Đầu ra | `_discovery/` + `README.md` | `<module>/requirements_<module>.md` |
+| Đầu ra | `_discovery/` + `README.md` | `<module>/REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` |
 
 > ❌ Tầng khám phá **không được** sinh mã `REQ-XXX-NN`. Mã REQ là bất biến (mục 2); cấp mã khi chưa mở form, chưa trigger validation thì chắc chắn phải đánh lại số — đúng thứ mục 2.1 cấm.
 
@@ -868,11 +869,11 @@ Hệ thống > 8 module thì `/discover-system` tách bản đồ thành nhiều
 - Index có mục `## Bản đồ tài liệu` → đọc tiếp file trong `modules/` để lấy chi tiết module cần recon. Không có mục đó → hiểu là bản đồ 1 file
 - **Một file `modules/module_NN_<slug>.md` có thể chứa nhiều module** khi chúng quan hệ chặt (VD `module_01_dang_nhap_phan_quyen.md` chứa cả `LOGIN` · `USER` · `ROLE`)
 
-⚠️ **Gộp file KHÔNG gộp prefix, cũng KHÔNG gộp tài liệu requirements.** Ba module nằm chung một file khám phá vẫn sinh ra **ba** thư mục và **ba** file `requirements_<module>.md` riêng ở tầng module. Bản đồ khám phá gộp là để **đọc cho gọn**; ranh giới truy vết vẫn là **prefix**, không phải file.
+⚠️ **Gộp file KHÔNG gộp prefix, cũng KHÔNG gộp tài liệu requirements.** Ba module nằm chung một file khám phá vẫn sinh ra **ba** thư mục và **ba** file `REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` riêng ở tầng module. Bản đồ khám phá gộp là để **đọc cho gọn**; ranh giới truy vết vẫn là **prefix**, không phải file.
 
 | | Tầng khám phá | Tầng module |
 |---|---|---|
-| `LOGIN` · `USER` · `ROLE` | 1 file `module_01_dang_nhap_phan_quyen.md` | 3 file `login/requirements_login.md` · `user/…` · `role/…` |
+| `LOGIN` · `USER` · `ROLE` | 1 file `module_01_dang_nhap_phan_quyen.md` | 3 file `login/REQUIREMENTS_LOGIN_SUMMARY.md` · `user/…` · `role/…` |
 
 Bản đồ khám phá **không mang mã REQ** (mục 5.8), nên tách/gộp lại về sau là thao tác an toàn — khác hẳn tài liệu requirements, nơi REQ ID bất biến ràng buộc mọi thứ.
 
@@ -902,9 +903,9 @@ Bản đồ khám phá **không mang mã REQ** (mục 5.8), nên tách/gộp l�
 >
 > | Workflow | Template dùng | Ghi chú |
 > |---|---|---|
-> | `/generate-requirements-from-website` | **Mục 6 này** — tài liệu đặc tả module | Đầu ra là `requirements_<module>.md` |
-> | `/generate-requirements-from-mobile` | **Mục 6 này** + khác biệt ở **3.5** (metadata `Thiết bị khảo sát`, mục Yêu cầu riêng của mobile) | Đầu ra là `mobile/requirements_<module>_mobile.md` + index `requirements_<module>.md` — cùng thư mục module với web/API (2.2, 5.3) |
-> | `/generate-requirements-from-api` | **Mục 6 này** + bảng thay đổi ở **3.4.7** | Đầu ra là `api/requirements_<module>_api.md` + index `requirements_<module>.md` — cùng thư mục module với web/mobile (2.2, 5.3) |
+> | `/generate-requirements-from-website` | **Mục 6 này** — tài liệu đặc tả module | Đầu ra là `REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` |
+> | `/generate-requirements-from-mobile` | **Mục 6 này** + khác biệt ở **3.5** (metadata `Thiết bị khảo sát`, mục Yêu cầu riêng của mobile) | Đầu ra là `mobile/requirements_<module>_mobile.md` + index `REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` — cùng thư mục module với web/API (2.2, 5.3) |
+> | `/generate-requirements-from-api` | **Mục 6 này** + bảng thay đổi ở **3.4.7** | Đầu ra là `api/requirements_<module>_api.md` + index `REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` — cùng thư mục module với web/mobile (2.2, 5.3) |
 > | `/analyze-requirement-document` | **Template 10 mục của chính command đó** | Đầu ra là `analysis_<TICKET-ID>.md` — tài liệu phân tích ticket, KHÁC tài liệu đặc tả module |
 > | `/discover-system` | **Template của chính command đó** (Bước 6) + `api_map.md` theo **5.8.2** | Đầu ra là `_discovery/system_map.md` / `api_map.md` + `README.md` — cấp hệ thống, **KHÔNG có mã REQ**. Xem mục **5.8** |
 >
@@ -916,7 +917,7 @@ Bản đồ khám phá **không mang mã REQ** (mục 5.8), nên tách/gộp l�
 >
 > Riêng 2 dòng metadata `Dải mã đã dùng` / `Mã kế tiếp` ở mục 6.1 là **bắt buộc với cả hai template**, vì quy tắc nối tiếp mã (2.1) cần chúng để hoạt động.
 
-Tài liệu format Markdown, lưu artifact (`requirements_<module>.md`). **Nội dung bắt buộc:**
+Tài liệu format Markdown, lưu artifact (`REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md`). **Nội dung bắt buộc:**
 
 ### 6.1. Bảng metadata + Tổng quan (Overview)
 
@@ -1097,14 +1098,14 @@ Nhật ký (6.9)  ←→  Trạng thái REQ (6.2)  ←→  Dải mã metadata (6
 - **Mọi yêu cầu chức năng, business rule, validation rule đều phải có mã REQ ID** — tài liệu không có mã bị coi là chưa đạt.
 - **Không tự suy diễn nghiệp vụ** nếu không có căn cứ từ UI/tài liệu → đưa vào Ambiguities kèm Assumption tạm.
 - **Mọi khẳng định phải truy được về nguồn.** Cột `Nguồn` của mỗi REQ là bắt buộc, không được để trống hay ghi chung chung.
-- **Luôn kiểm tra `docs/requirements/<module>/requirements_<module>.md` trước khi gán mã REQ đầu tiên** và đánh tiếp từ số cuối cùng (mục 2.1) — áp cho MỌI workflow sinh REQ, không riêng nhánh nào.
+- **Luôn kiểm tra `docs/requirements/<module>/REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` trước khi gán mã REQ đầu tiên** và đánh tiếp từ số cuối cùng (mục 2.1) — áp cho MỌI workflow sinh REQ, không riêng nhánh nào.
 - **Dự án mới, chưa có `docs/requirements/README.md` → PHẢI tạo file danh mục trước** khi ghi tài liệu module đầu tiên (mục 5.7.1). Thiếu file này, cơ chế chống trùng prefix và nối tiếp mã REQ im lặng không hoạt động.
 - **Không bao giờ đánh lại số REQ ID** khi tách file, gom Story hay tái cấu trúc tài liệu.
 - **Một nghiệp vụ = một prefix, dù chạy trên web, app hay API** (mục 2.2). Không mở prefix hay tài liệu riêng theo nền tảng; khác biệt giữa nền tảng thể hiện bằng cột `Nền tảng`, khác biệt không rõ chủ đích thành `AMB-<MODULE>-XX`.
 - **Không khai REQ cho nền tảng chưa khảo sát** — `Tất cả` chỉ được ghi khi đã kiểm trên từng nền tảng module có.
 - **Tầng nền tảng `web/` · `mobile/` · `api/` luôn có** (mục 5.3): REQ chỉ áp một nền tảng ở file nền tảng đó, REQ dùng chung ở index, evidence ở `<nền-tảng>/evidence/`. Không tạo thư mục nền tảng nào khác ngoài 3 tên này.
 - **Đếm số REQ trước khi ghi file** và áp đúng bảng ngưỡng tại mục 5.1 — không tự ý gộp hay tách ngoài quy tắc.
-- Dù tách bao nhiêu file, **điểm vào luôn là `requirements_<module>.md`** kèm mục `## Bản đồ tài liệu` (mục 5.5) — để các workflow phía sau không vỡ.
+- Dù tách bao nhiêu file, **điểm vào luôn là `REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md`** kèm mục `## Bản đồ tài liệu` (mục 5.5) — để các workflow phía sau không vỡ.
 - **KHÔNG BAO GIỜ xoá dòng REQ** khỏi tài liệu — tính năng bị gỡ thì đổi trạng thái sang 🔴 Deprecated (mục 6.2). Xoá dòng là mất dấu vết và làm vỡ RTM.
 - **Mọi thay đổi tài liệu đều phải ghi Nhật ký thay đổi** (mục 6.9), kèm cột `TC cần xử lý` — đây là mắt xích duy nhất báo cho tester biết test case nào đã stale.
 - **Ba nơi phải luôn khớp nhau:** Nhật ký (6.9) ↔ Trạng thái REQ (6.2) ↔ Dải mã metadata (6.1).

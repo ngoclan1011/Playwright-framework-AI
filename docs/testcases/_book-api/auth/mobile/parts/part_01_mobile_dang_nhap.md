@@ -2,13 +2,13 @@
 
 | Thông tin | Nội dung |
 |---|---|
-| **Index module** | [../../test_cases_auth.md](../../test_cases_auth.md) — cách đọc bộ TC · Dữ liệu dùng chung · Assumptions · Coverage · Evidence · 4 vòng · bộ chạy · Nhật ký |
-| **Nguồn requirement** | [requirements_auth_mobile.md](../../../../../requirements/_book-api/auth/mobile/requirements_auth_mobile.md) · REQ dùng chung ở index [requirements_auth.md](../../../../../requirements/_book-api/auth/requirements_auth.md) mục 3 |
+| **Index module** | [../../TEST_CASES_AUTH_SUMMARY.md](../../TEST_CASES_AUTH_SUMMARY.md) — cách đọc bộ TC · Dữ liệu dùng chung · Assumptions · Coverage · Evidence · 4 vòng · bộ chạy · Nhật ký |
+| **Nguồn requirement** | [requirements_auth_mobile.md](../../../../../requirements/_book-api/auth/mobile/requirements_auth_mobile.md) · REQ dùng chung ở index [REQUIREMENTS_AUTH_SUMMARY.md](../../../../../requirements/_book-api/auth/REQUIREMENTS_AUTH_SUMMARY.md) mục 3 |
 | **Nền tảng** | Android — emulator `Pixel_10_Pro_XL_API_37` · Android 17 · màn hình `1344×2992` · **hướng dọc** · locale `en-US` · app `book.anhtester.com` `1.0 (versionCode 1)`. iOS **chưa khảo sát** — không chạy bộ này trên iOS |
 | **Dải TC ID** | `BK_AUTH_TC_001` → `BK_AUTH_TC_025` — dải chung toàn module `AUTH` |
 | **Part liền kề** | Tiếp theo: [part_02_mobile_dang_ky.md](part_02_mobile_dang_ky.md) (`TC_026` → `TC_057`) |
 
-> Đọc mục **Cách đọc bộ TC này** và **Dữ liệu dùng chung** ở [index](../../test_cases_auth.md) trước khi chạy — quy ước biến thể `a`/`b`/`c`, tài khoản `TK-A`, trạng thái xuất phát `S0`/`S1`, dòng `🔧 Ghi chú kỹ thuật`.
+> Đọc mục **Cách đọc bộ TC này** và **Dữ liệu dùng chung** ở [index](../../TEST_CASES_AUTH_SUMMARY.md) trước khi chạy — quy ước biến thể `a`/`b`/`c`, tài khoản `TK-A`, trạng thái xuất phát `S0`/`S1`, dòng `🔧 Ghi chú kỹ thuật`.
 
 ---
 

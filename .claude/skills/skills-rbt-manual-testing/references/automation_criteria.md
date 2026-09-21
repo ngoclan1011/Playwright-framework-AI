@@ -145,7 +145,7 @@ Cột `Automation` giữ nguyên giá trị thật (`Yes`/`Partial`/`No`); trạ
 
 ### 7.1 Khi sinh TC — mục `## Đối soát cột Automation` ở file index
 
-Đặt trong `test_cases_<module>.md`, **sau** mục `## Rà soát đặc tính chất lượng (ISO/IEC 25010:2023)`:
+Đặt trong `TEST_CASES_<TÊN_MODULE>_SUMMARY.md`, **sau** mục `## Rà soát đặc tính chất lượng (ISO/IEC 25010:2023)`:
 
 ```markdown
 ## Đối soát cột Automation

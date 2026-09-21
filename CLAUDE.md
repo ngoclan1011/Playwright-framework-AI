@@ -240,7 +240,7 @@ docs/
 │   │   ├── sources/                           ← bản gốc tài liệu QA cung cấp · snapshot spec API
 │   │   └── evidence/*.png                     ← 1 ảnh tổng quan mỗi module (mỗi nền tảng)
 │   └── <module>/
-│       ├── requirements_<module>.md           ← INDEX — TÊN FILE BẤT BIẾN: phần CHUNG mọi nền tảng + Bản đồ tài liệu
+│       ├── REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md ← INDEX — TÊN FILE BẤT BIẾN: phần CHUNG mọi nền tảng + Bản đồ tài liệu
 │       ├── web/                               ← TẦNG NỀN TẢNG — chỉ 3 tên: web · mobile · api
 │       │   ├── requirements_<module>_web.md   ← REQ chỉ áp web · Field Spec · Validation · Trình duyệt khảo sát
 │       │   ├── evidence/*.png                 ← bằng chứng khảo sát web
@@ -256,7 +256,7 @@ docs/
 ├── testcases/
 │   ├── README.md                              ← DANH MỤC test cases
 │   └── <module>/
-│       ├── test_cases_<module>.md             ← INDEX — TÊN FILE BẤT BIẾN: tổng hợp + Bản đồ tài liệu, KHÔNG chứa dòng TC
+│       ├── TEST_CASES_<TÊN_MODULE>_SUMMARY.md ← INDEX — TÊN FILE BẤT BIẾN: tổng hợp + Bản đồ tài liệu, KHÔNG chứa dòng TC
 │       ├── web/test_cases_<module>_web.md     ← TC chạy trên web
 │       ├── mobile/test_cases_<module>_mobile.md ← TC chạy trên app (tag @Android / @iOS)
 │       ├── api/test_cases_<module>_api.md     ← TC gọi API
@@ -297,7 +297,7 @@ docs/
 
 > `test_plan_<mốc>.md` nằm ở **`docs/test-plans/`** — plan là tài liệu **lập và duyệt trước đợt**, không phải kết quả thực thi. `test_progress_<mốc>_*.md` · `test_summary_<mốc>_*.md` nằm ở **gốc `executions/`**. Cả ba không thuộc module nào — chúng cắt ngang mọi module tại một mốc release. **Cùng slug `<mốc>`** (chữ thường, không dấu, VD `release_2.0`) là mối nối: báo cáo tiến độ theo dõi lịch của plan, báo cáo tổng hợp chấm lại đúng bộ tiêu chí exit đã công bố.
 >
-> **Tầng nền tảng `<nền-tảng>/`** — chỉ nhận đúng 3 tên `web` · `mobile` · `api` (Android và iOS chung `mobile/`, phân biệt bằng tiền tố ảnh `android_`/`ios_` và cột/tag nền tảng). Áp cho 4 nhánh `requirements/` · `testcases/` · `executions/` · `bugs/`, **luôn có** kể cả module mới chỉ có một nền tảng — thêm nền tảng thứ hai về sau không phải di chuyển file nào. File index `requirements_<module>.md` / `test_cases_<module>.md` **giữ nguyên tên và vị trí**; workflow phía sau đọc index trước, rồi theo `## Bản đồ tài liệu` sang file nền tảng. Tài liệu cũ chưa có tầng này: **không** di chuyển lịch sử (`run_*`, `BUG_*` giữ nguyên chỗ) — workflow đọc quét cả `<module>/<nền-tảng>/` lẫn `<module>/`; requirements/testcases cũ chuyển sang tầng nền tảng **một lần**, ở lần đầu một workflow sinh/cập nhật chạm lại module đó (ID giữ nguyên, ghi Nhật ký).
+> **Tầng nền tảng `<nền-tảng>/`** — chỉ nhận đúng 3 tên `web` · `mobile` · `api` (Android và iOS chung `mobile/`, phân biệt bằng tiền tố ảnh `android_`/`ios_` và cột/tag nền tảng). Áp cho 4 nhánh `requirements/` · `testcases/` · `executions/` · `bugs/`, **luôn có** kể cả module mới chỉ có một nền tảng — thêm nền tảng thứ hai về sau không phải di chuyển file nào. File index `REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` / `TEST_CASES_<TÊN_MODULE>_SUMMARY.md` **giữ nguyên tên và vị trí**; workflow phía sau đọc index trước, rồi theo `## Bản đồ tài liệu` sang file nền tảng. Tài liệu cũ chưa có tầng này: **không** di chuyển lịch sử (`run_*`, `BUG_*` giữ nguyên chỗ) — workflow đọc quét cả `<module>/<nền-tảng>/` lẫn `<module>/`; requirements/testcases cũ chuyển sang tầng nền tảng **một lần**, ở lần đầu một workflow sinh/cập nhật chạm lại module đó (ID giữ nguyên, ghi Nhật ký).
 >
 > `docs/user-guides/` là nhánh **duy nhất** viết cho người ngoài đọc — khách hàng, người dùng cuối. Nó **dùng lại** kết quả recon của `requirements/` nhưng **không** chép nội dung sang: requirements nói *hệ thống phải làm gì*, hướng dẫn nói *người dùng làm thế nào*. 🔒 Ảnh trong nhánh này phải dùng **dữ liệu mẫu** — tài liệu được phát ra ngoài.
 >
@@ -317,7 +317,8 @@ Ba trang tĩnh trong `scripts/`, mở bằng cách double-click, chạy offline,
 
 | Quy tắc | Lý do |
 |---|---|
-| Tên file index **luôn** `requirements_<module>.md` / `test_cases_<module>.md` / `user_guide_<module>.md` | Mọi workflow phía sau đọc theo mẫu `docs/<nhánh>/<module>/<file>`. Đổi tên là vỡ chuỗi RTM |
+| Tên file index **luôn** `REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` / `TEST_CASES_<TÊN_MODULE>_SUMMARY.md` (IN HOA — `<TÊN_MODULE>` = tên thư mục module viết HOA, `-` đổi thành `_` (VD `login` → `LOGIN`, `customers` → `CUSTOMERS`) — **không phải** prefix REQ (`CUST`)) / `user_guide_<module>.md` | Mọi workflow phía sau đọc theo mẫu `docs/<nhánh>/<module>/<file>`. Đổi tên là vỡ chuỗi RTM. IN HOA để file tổng **khác hẳn** file nền tảng `requirements_<module>_<nền-tảng>.md` / `test_cases_<module>_<nền-tảng>.md` — trước đây `test_cases_login.md` và `web/test_cases_login_web.md` trông gần như nhau, dễ mở nhầm. Giữ tên module trong tên file để tab editor / kết quả tìm kiếm vẫn biết đang ở module nào |
+| Tài liệu cũ còn index tên `requirements_<module>.md` / `test_cases_<module>.md` (quy ước trước 21-09-2026) | Workflow đọc **nhận cả hai tên**. Lần đầu một workflow sinh/cập nhật chạm lại module → đổi tên **một lần** sang tên mới, sửa mọi link trỏ tới, ghi Nhật ký. Không tự đổi hàng loạt khi chỉ đọc |
 | **KHÔNG** nhét số phiên bản vào tên index (`_v2`, `_new`, `_index`…) | Bản mới **thay thế** index tại chỗ; bản cũ tra bằng **lịch sử git** — `docs/` **không** có thư mục `archive/` |
 | Mỗi module một prefix **duy nhất** (`LOGIN`, `CUST`, `PRJ`…) | Chống trùng mã giữa các module — tra ở danh mục trước khi đặt |
 | **Một nghiệp vụ = một prefix trên mọi nền tảng** — web, app Android/iOS, API của cùng nghiệp vụ chung prefix, chung **thư mục module**, chung **dải REQ ID / TC ID**; nội dung riêng từng nền tảng nằm ở tầng `web/` · `mobile/` · `api/`, REQ áp ≥ 2 nền tảng nằm ở index. ❌ `LOGIN_APP`, `MCUST`, `docs/requirements/login_mobile/` | Tách prefix theo nền tảng là nhân đôi REQ cho cùng một rule — sửa ở web quên sửa ở app, RTM vẫn báo phủ đủ. Namespace `_<hệ-thống>/` **chỉ** dành cho hệ thống khác nghiệp vụ, không cho app/API của cùng hệ thống |
@@ -335,8 +336,8 @@ Ba trang tĩnh trong `scripts/`, mở bằng cách double-click, chạy offline,
 | Thêm module = thêm thư mục + 1 dòng ở `README.md` danh mục | Không đụng gì khác trong repo |
 | 📅 **Ngày trong nội dung tài liệu viết `DD-MM-YYYY`** (VD `17-09-2026`) hoặc `DD/MM/YYYY`; có giờ thì `17-09-2026 14:10`. Áp cho mọi file trong `docs/`, mẫu trong `.claude/`, `plans/`, `prompts/` và phiếu nhập. **Tên file giữ dạng cũ**: `run_<timestamp>`, `test_progress_<mốc>_<YYYYMMDD>.md`, `openapi_<YYYY-MM-DD>.json` · mã có ngày như `PO-2026-08-18` giữ nguyên · dữ liệu nhập vào hệ thống (payload API, giá trị field) viết đúng **định dạng hệ thống yêu cầu**, không đổi theo quy tắc này | Người đọc tài liệu là QA/PM/khách Việt Nam. Tên file cần năm đứng đầu để xếp đúng thứ tự thời gian. Đọc tài liệu cũ (trước 17-09-2026) vẫn gặp `YYYY-MM-DD` → **nhận cả hai**, năm đứng đầu không thể nhầm; **không** bao giờ hiểu `05-10-2026` theo kiểu Mỹ |
 | `_discovery/` **không được** chứa mã `REQ-XXX-NN` — chỉ cấp **prefix** | Tầng khám phá chưa mở form, chưa trigger validation; cấp số REQ ở đó là chắc chắn phải đánh lại |
-| Bản đồ khám phá tách file thì index **vẫn** là `_discovery/system_map.md` + có mục `## Bản đồ tài liệu` | Cùng hợp đồng đọc với `requirements_<module>.md` — workflow sau chỉ nhớ một đường dẫn |
-| Gộp module vào chung 1 file khám phá **KHÔNG** gộp prefix, **KHÔNG** gộp `requirements_<module>.md` | Gộp là để đọc cho gọn; ranh giới truy vết vẫn là prefix. 3 module chung file khám phá vẫn ra 3 tài liệu requirements riêng |
+| Bản đồ khám phá tách file thì index **vẫn** là `_discovery/system_map.md` + có mục `## Bản đồ tài liệu` | Cùng hợp đồng đọc với `REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` — workflow sau chỉ nhớ một đường dẫn |
+| Gộp module vào chung 1 file khám phá **KHÔNG** gộp prefix, **KHÔNG** gộp `REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` | Gộp là để đọc cho gọn; ranh giới truy vết vẫn là prefix. 3 module chung file khám phá vẫn ra 3 tài liệu requirements riêng |
 
 Chi tiết: skill `skills-requirements-analyzer` mục 2.1 (nối tiếp mã), 5.3 (thư mục), 5.7 (danh mục), 6.9 (nhật ký) · skill `skills-rbt-manual-testing` mục "Quy Tắc Xuất File" phần 2 và 4.
 
@@ -350,8 +351,8 @@ docs/requirements/login/ ...         ← module của hệ thống mặc định
 docs/requirements/_book-api/         ← HỆ THỐNG THỨ HAI
 ├── README.md                        ← danh mục riêng — prefix, TC ID, AMB riêng
 ├── _discovery/api_map.md            ← hoặc system_map.md nếu là hệ thống có UI
-└── <module>/requirements_<module>.md
-docs/testcases/_book-api/<module>/test_cases_<module>.md
+└── <module>/REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md
+docs/testcases/_book-api/<module>/TEST_CASES_<TÊN_MODULE>_SUMMARY.md
 ```
 
 | Quy tắc | Lý do |
@@ -378,7 +379,7 @@ Mặt API khác mặt UI 3 chỗ:
 
 ```
 /discover-system (nhánh API) ──→ /generate-requirements-from-api ──→ /generate-testcases-api ──→ /generate-automation-api
-      api_map.md                     requirements_<module>.md        test_cases_<module>_api.md    code + reports/
+      api_map.md                     REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md        test_cases_<module>_api.md    code + reports/
 ```
 
 - Nguồn nhận được: Swagger UI (kể cả nhiều spec) · Scalar (URL hoặc spec nhúng inline) · Redoc · Stoplight · RapiDoc · OpenAPI JSON/YAML · Postman collection · **tài liệu API dạng `.docx`/`.pdf`**. Cách lấy từng loại: skill `skills-requirements-analyzer` mục 3.4.1

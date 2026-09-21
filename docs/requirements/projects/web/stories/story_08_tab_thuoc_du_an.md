@@ -1,6 +1,6 @@
 # STORY-PRJ-08 — Các tab nghiệp vụ thuộc dự án
 
-> Về index: [../../requirements_projects.md](../../requirements_projects.md) · File nền tảng: [../requirements_projects_web.md](../requirements_projects_web.md) · Prefix `PRJ` · REQ bao phủ: `REQ-PRJ-87` → `REQ-PRJ-97` (11 REQ)
+> Về index: [../../REQUIREMENTS_PROJECTS_SUMMARY.md](../../REQUIREMENTS_PROJECTS_SUMMARY.md) · File nền tảng: [../requirements_projects_web.md](../requirements_projects_web.md) · Prefix `PRJ` · REQ bao phủ: `REQ-PRJ-87` → `REQ-PRJ-97` (11 REQ)
 >
 > AMB liên quan: `AMB-PRJ-13`, `AMB-PRJ-16`
 

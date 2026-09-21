@@ -2,7 +2,7 @@
 
 | Thông tin | Nội dung |
 |---|---|
-| **Index module** | [../../test_cases_customers.md](../../test_cases_customers.md) — cách đọc · quy ước `P-*`, `KH-TEST`, `D1` · Assumptions · Bảng đối soát |
+| **Index module** | [../../TEST_CASES_CUSTOMERS_SUMMARY.md](../../TEST_CASES_CUSTOMERS_SUMMARY.md) — cách đọc · quy ước `P-*`, `KH-TEST`, `D1` · Assumptions · Bảng đối soát |
 | **Nguồn requirement** | [requirements_customers_web.md](../../../../requirements/customers/web/requirements_customers_web.md) — mục 3.4 · 3.5 · 3.6 · 3.7 · 4.1 · 4.2 · 5 |
 | **Nền tảng** | Web — Google Chrome, viewport desktop `1600×750` |
 | **Dải TC ID trong part** | `CRM_CUST_TC_039` → `CRM_CUST_TC_073` · `CRM_CUST_TC_129` (bổ sung 19-09-2026, đặt cạnh nhóm ô chọn) |

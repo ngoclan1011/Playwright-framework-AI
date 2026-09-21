@@ -9,7 +9,7 @@
 [Chọn 1 trong 2 — ưu tiên Cách 1 nếu đã có bộ TC]
 
 ## Cách 1: TC-based (rút gọn từ bộ TC sẵn có)
-- File TC: [VD: docs/testcases/test_cases_customers.md]
+- File TC: [VD: docs/testcases/customers/TEST_CASES_CUSTOMERS_SUMMARY.md]
 
 ## Cách 2: REQ-based (chưa có TC)
 - Requirements: [File path, hoặc dán nội dung requirements/user stories vào đây, hoặc URL module để agent inspect]

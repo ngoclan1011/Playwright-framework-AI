@@ -179,7 +179,7 @@ Những mục dưới đây là lỗi cách viết hoặc tài liệu cũ, khôn
 
 | # | Chỗ | Vấn đề |
 |---|---|---|
-| 1 | Index `test_cases_login.md` · `## Bộ chạy đề xuất`, dòng *Chờ recon bổ sung* | Vẫn ghi `TC_024 (chỉ mục 🔧2)` là `@NeedsVerify`, trong khi mục *Vùng chưa có evidence* và Nhật ký 19-09-2026 đã ghi là đã đo xong. Hai mục mâu thuẫn nhau |
+| 1 | Index `TEST_CASES_LOGIN_SUMMARY.md` · `## Bộ chạy đề xuất`, dòng *Chờ recon bổ sung* | Vẫn ghi `TC_024 (chỉ mục 🔧2)` là `@NeedsVerify`, trong khi mục *Vùng chưa có evidence* và Nhật ký 19-09-2026 đã ghi là đã đo xong. Hai mục mâu thuẫn nhau |
 | 2 | File web · bảng *🐞 Ba TC nhiều khả năng FAIL* | Thiếu `TC_004` và `TC_029`, cả hai đang FAIL và có bug mở |
 | 3 | `TC_004`, `TC_029` · cột Tags | Không có `@KnownBug` / 🐞 như `TC_016`, `TC_028`, `TC_039`, dù đều có bug đang mở |
 

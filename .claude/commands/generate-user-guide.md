@@ -58,7 +58,7 @@ Tài liệu để **người dùng cuối làm được việc**, không phải 
 ## Bước 1: Đọc nguồn — mở HẾT evidence trước khi viết
 
 1. `docs/requirements/README.md` — xác nhận module đã recon (⬜ Chưa recon → **dừng**, đề nghị chạy `/generate-requirements-from-website` trước)
-2. `docs/requirements/<module>/requirements_<module>.md` — luồng, trường bắt buộc, thông báo, ma trận phân quyền
+2. `docs/requirements/<module>/REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` — luồng, trường bắt buộc, thông báo, ma trận phân quyền
 3. **Mở 100% ảnh** trong `docs/requirements/<module>/<nền-tảng>/evidence/` — nhìn thật, không đọc tên file rồi đoán
 4. Ghi lại: nhãn nút/menu **nguyên văn**, thông báo **nguyên văn**, trường bắt buộc, thao tác không hồi lại được (→ cảnh báo ⚠️)
 
@@ -111,7 +111,7 @@ Theo thứ tự bắt buộc của `CLAUDE.md` mục Browser Rules: `navigate �
 
 Theo **Cấu Trúc Tài Liệu** trong skill. Ghi thẳng vào file, mỗi batch 2–3 việc, chat chỉ báo tiến độ.
 
-File: `docs/user-guides/<module>/user_guide_<module>.md` — **tên index bất biến**, cùng quy ước với `requirements_<module>.md`.
+File: `docs/user-guides/<module>/user_guide_<module>.md` — **tên index bất biến**, cùng quy ước với `REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md`.
 
 ```
 docs/user-guides/

@@ -66,7 +66,7 @@ Khám phá **một lần** cho cả hệ thống, sau đó mỗi module chạy c
 | 5 · Bug · retest | `/create-bug-report` · `/retest-fixed-bugs` | `/create-bug-report` (retest ⚠️ chưa có) | `/create-bug-report` (retest ⚠️ chưa có) |
 | 6–7 · RTM · báo cáo | `/generate-traceability-matrix` · `/generate-test-summary-report` — gộp mọi nền tảng, độ phủ tính riêng từng nền tảng | ← | ← |
 
-> **Thứ tự nên chạy ở chặng 1:** web → mobile → API. Mặt có giao diện cho tên nghiệp vụ; lượt sau đối chiếu với REQ đã có — rule chạy giống nhau thì REQ được chuyển lên index `requirements_<module>.md` (giữ nguyên mã), rule chạy khác thì tách REQ riêng kèm `AMB` hỏi PO.
+> **Thứ tự nên chạy ở chặng 1:** web → mobile → API. Mặt có giao diện cho tên nghiệp vụ; lượt sau đối chiếu với REQ đã có — rule chạy giống nhau thì REQ được chuyển lên index `REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` (giữ nguyên mã), rule chạy khác thì tách REQ riêng kèm `AMB` hỏi PO.
 
 ---
 
@@ -130,7 +130,7 @@ docs/requirements/_discovery/doc_inventory.md  ← chỉ khi có tài liệu
 
 **Đầu ra:**
 ```
-docs/requirements/<module>/requirements_<module>.md          ← INDEX, tên file BẤT BIẾN — REQ dùng chung · Bản đồ tài liệu
+docs/requirements/<module>/REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md          ← INDEX, tên file BẤT BIẾN — REQ dùng chung · Bản đồ tài liệu
 docs/requirements/<module>/web/requirements_<module>_web.md   ← REQ chỉ áp web
 docs/requirements/<module>/web/evidence/*.png
   (app mobile → mobile/ · API → api/ — cùng thư mục module, chung dải REQ)
@@ -177,7 +177,7 @@ Cộng thêm: `README.md` cập nhật `Trạng thái recon` ⬜ → ✅.
 
 **Đầu ra:**
 ```
-docs/testcases/<module>/test_cases_<module>.md               ← INDEX, tên file BẤT BIẾN — tổng hợp · Bản đồ tài liệu · coverage
+docs/testcases/<module>/TEST_CASES_<TÊN_MODULE>_SUMMARY.md               ← INDEX, tên file BẤT BIẾN — tổng hợp · Bản đồ tài liệu · coverage
 docs/testcases/<module>/<nền-tảng>/test_cases_<module>_<nền-tảng>.md   ← TC của từng nền tảng: web · mobile · api
 docs/testcases/<module>/<nền-tảng>/parts/part_NN_<nền-tảng>_<slug>.md  ← khi file nền tảng > 40 TC
 docs/checklists/checklist_<loại>_<module>.md     ← nếu chạy mode CHECKLIST

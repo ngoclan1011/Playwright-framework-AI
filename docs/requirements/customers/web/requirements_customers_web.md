@@ -1,6 +1,6 @@
 # Đặc tả Yêu cầu — Module Khách hàng (`CUST`) · Nền tảng **Web**
 
-> File nền tảng của module `CUST`. **Điểm vào là index** [../requirements_customers.md](../requirements_customers.md) — metadata, phạm vi, ma trận phân quyền/trạng thái, Story, AMB/RISK và Nhật ký thay đổi nằm ở đó.
+> File nền tảng của module `CUST`. **Điểm vào là index** [../REQUIREMENTS_CUSTOMERS_SUMMARY.md](../REQUIREMENTS_CUSTOMERS_SUMMARY.md) — metadata, phạm vi, ma trận phân quyền/trạng thái, Story, AMB/RISK và Nhật ký thay đổi nằm ở đó.
 >
 > Đánh số mục **giữ nguyên** như tài liệu một file trước 19-09-2026 (mục 2 · 3 · 4 · 5 · 8 · 9 · 12) để các tham chiếu cũ kiểu "mục 4.1" không gãy. Mục 1, 6, 7, 10, 11, 13 ở index.
 

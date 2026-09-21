@@ -123,7 +123,7 @@ Xuất `docs/executions/<module>/<nền-tảng>/analysis_<timestamp>.md`:
 |---|---|
 | Phạm vi phân tích | 3 lần chạy: run_1785700456 · run_1785612000 · retest_1785350000 |
 | Build | v2.4.3 |
-| Nguồn TC | docs/testcases/customers/test_cases_customers.md |
+| Nguồn TC | docs/testcases/customers/TEST_CASES_CUSTOMERS_SUMMARY.md |
 
 ## 0. Mức tin cậy của lần chạy
 

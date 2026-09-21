@@ -2,13 +2,13 @@
 
 | Thông tin | Nội dung |
 |---|---|
-| **Index module** | [../../test_cases_auth.md](../../test_cases_auth.md) — cách đọc bộ TC · Dữ liệu dùng chung · Assumptions · Coverage · Evidence · 4 vòng · bộ chạy · Nhật ký |
-| **Nguồn requirement** | [requirements_auth_mobile.md](../../../../../requirements/_book-api/auth/mobile/requirements_auth_mobile.md) · REQ dùng chung ở index [requirements_auth.md](../../../../../requirements/_book-api/auth/requirements_auth.md) mục 3 |
+| **Index module** | [../../TEST_CASES_AUTH_SUMMARY.md](../../TEST_CASES_AUTH_SUMMARY.md) — cách đọc bộ TC · Dữ liệu dùng chung · Assumptions · Coverage · Evidence · 4 vòng · bộ chạy · Nhật ký |
+| **Nguồn requirement** | [requirements_auth_mobile.md](../../../../../requirements/_book-api/auth/mobile/requirements_auth_mobile.md) · REQ dùng chung ở index [REQUIREMENTS_AUTH_SUMMARY.md](../../../../../requirements/_book-api/auth/REQUIREMENTS_AUTH_SUMMARY.md) mục 3 |
 | **Nền tảng** | Android — emulator `Pixel_10_Pro_XL_API_37` · Android 17 · màn hình `1344×2992` · **hướng dọc** (trừ `TC_057`) · locale `en-US` · app `book.anhtester.com` `1.0 (versionCode 1)`. iOS **chưa khảo sát** |
 | **Dải TC ID** | `BK_AUTH_TC_026` → `BK_AUTH_TC_058` — dải chung toàn module `AUTH` |
 | **Part liền kề** | Trước: [part_01_mobile_dang_nhap.md](part_01_mobile_dang_nhap.md) (`TC_001` → `TC_025`) |
 
-> ⚠️ **TC đăng ký tạo tài khoản thật trên production** (server duy nhất `book.anhtester.com`). Mọi email dùng tiền tố `auto_auth_` và **phải dọn** sau khi chạy — xem mục **Dữ liệu dùng chung · Dọn dữ liệu** ở [index](../../test_cases_auth.md).
+> ⚠️ **TC đăng ký tạo tài khoản thật trên production** (server duy nhất `book.anhtester.com`). Mọi email dùng tiền tố `auto_auth_` và **phải dọn** sau khi chạy — xem mục **Dữ liệu dùng chung · Dọn dữ liệu** ở [index](../../TEST_CASES_AUTH_SUMMARY.md).
 >
 > 💡 **Mẹo kiểm lỗi mà không tạo tài khoản:** ở các TC validation, cố ý **để trống ô Email** (hoặc một ô bắt buộc khác không phải ô đang kiểm) — form bị app chặn, không gửi lên máy chủ, nên không sinh tài khoản rác.
 

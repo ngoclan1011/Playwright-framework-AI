@@ -31,7 +31,7 @@
 
 ## Vùng chưa xác minh
 
-> ✅ **Đã recon chi tiết ngày 14-08-2026, rà soát và kiểm chứng lại 18-08-2026** → [../../login/requirements_login.md](../../login/requirements_login.md) (**40 REQ**). Phần dưới đây giữ nguyên trạng lúc khám phá; những gì đã được giải quyết ghi ở cột ghi chú.
+> ✅ **Đã recon chi tiết ngày 14-08-2026, rà soát và kiểm chứng lại 18-08-2026** → [../../login/REQUIREMENTS_LOGIN_SUMMARY.md](../../login/REQUIREMENTS_LOGIN_SUMMARY.md) (**40 REQ**). Phần dưới đây giữ nguyên trạng lúc khám phá; những gì đã được giải quyết ghi ở cột ghi chú.
 
 | Vùng | Trạng thái sau recon |
 |---|---|

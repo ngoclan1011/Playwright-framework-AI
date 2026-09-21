@@ -23,7 +23,7 @@
 - Role: [VD: Administrator]
 
 # TÙY CHỌN
-- Nguồn TC để chọn regression: [VD: docs/testcases/customers/test_cases_customers.md — để trống thì agent tự tìm theo module]
+- Nguồn TC để chọn regression: [VD: docs/testcases/customers/TEST_CASES_CUSTOMERS_SUMMARY.md — để trống thì agent tự tìm theo module]
 - Trần số TC regression: [VD: 15 — để trống dùng mặc định 15]
 - Sinh bug report ngay cho regression mới phát hiện? [Có / Không — mặc định Không]
 

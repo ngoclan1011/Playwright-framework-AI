@@ -79,7 +79,7 @@ Mắt xích **cuối** của chuỗi delta 3 tầng: requirements đổi → TC 
 |---|---|---|
 | **Delta TC List** | ⭐ Bắt buộc | `docs/testcases/<module>/impact/delta_tc_<TICKET-ID>.md` — do `/update-testcases-from-impact` mode APPLY ghi ra. User chỉ đưa mã ticket → tìm `docs/testcases/**/impact/delta_tc_<TICKET-ID>.md` (kể cả trong namespace `_<hệ-thống>/`). Ticket chạm nhiều module → **mỗi module một lượt**, mỗi module một file kế hoạch |
 | **Danh sách TC đã đổi** | Thay thế — chỉ khi TC được **sửa tay**, không qua workflow | TC ID + đổi cái gì. **Bắt buộc kiểm** Nhật ký thay đổi của file TC có dòng ghi nhận thay đổi đó — không có thì coi như TC chưa sửa, hỏi user. Không có ticket → hậu tố file kế hoạch là `adhoc_<YYYY-MM-DD>` |
-| **File test cases hiện hành** | ⭐ Agent tự mở | Index `test_cases_<module>.md` → `## Bản đồ tài liệu` → file nền tảng chứa từng TC trong delta. **Nguồn sự thật của kỳ vọng mới** |
+| **File test cases hiện hành** | ⭐ Agent tự mở | Index `TEST_CASES_<TÊN_MODULE>_SUMMARY.md` → `## Bản đồ tài liệu` → file nền tảng chứa từng TC trong delta. **Nguồn sự thật của kỳ vọng mới** |
 | **Mốc git trước khi sửa** | ⭕ Khuyến nghị | Hash commit của từng file nền tảng — ghi ở đầu Delta TC List. `git diff <hash> -- <file>` ra đúng ô đã đổi, khỏi đoán |
 | **Mã nguồn automation** | ⭐ Agent tự tìm | Grep TC ID trên project. Web · mobile · API có thể nằm ở **project khác nhau** — không thấy thì hỏi user đường dẫn, không kết luận "chưa automate" |
 | **RTM** | ⭕ Khuyến nghị | `traceability_matrix.md` — có sẵn thì map nhanh và chắc hơn |

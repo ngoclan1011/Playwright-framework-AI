@@ -1,6 +1,6 @@
 # Đặc tả Yêu cầu — Module Dự án (`PRJ`) · Nền tảng **Web**
 
-> File nền tảng của module `PRJ`. **Điểm vào là index** [../requirements_projects.md](../requirements_projects.md) — metadata, phạm vi, Story, ma trận phân quyền/trạng thái, AMB/RISK và Nhật ký thay đổi nằm ở đó. Bảng REQ chi tiết nằm ở [stories/](stories/).
+> File nền tảng của module `PRJ`. **Điểm vào là index** [../REQUIREMENTS_PROJECTS_SUMMARY.md](../REQUIREMENTS_PROJECTS_SUMMARY.md) — metadata, phạm vi, Story, ma trận phân quyền/trạng thái, AMB/RISK và Nhật ký thay đổi nằm ở đó. Bảng REQ chi tiết nằm ở [stories/](stories/).
 >
 > Đánh số mục **giữ nguyên** như index trước 19-09-2026 (mục 2 · 6 · 8) để các tham chiếu cũ không gãy.
 

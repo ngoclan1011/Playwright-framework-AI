@@ -2,8 +2,8 @@
 
 | Thông tin | Nội dung |
 |---|---|
-| **Index module** | [../../test_cases_customers.md](../../test_cases_customers.md) — cách đọc · quy ước `P-*`, `KH-TEST`, `D1`, `CSV-*` · Assumptions · Bảng đối soát |
-| **Nguồn requirement** | [requirements_customers_web.md](../../../../requirements/customers/web/requirements_customers_web.md) — mục 3.8 · 3.9 · 3.10 · 4.3 · 4.4 · 8 · Ma trận trạng thái ở [index requirements](../../../../requirements/customers/requirements_customers.md) mục 7 |
+| **Index module** | [../../TEST_CASES_CUSTOMERS_SUMMARY.md](../../TEST_CASES_CUSTOMERS_SUMMARY.md) — cách đọc · quy ước `P-*`, `KH-TEST`, `D1`, `CSV-*` · Assumptions · Bảng đối soát |
+| **Nguồn requirement** | [requirements_customers_web.md](../../../../requirements/customers/web/requirements_customers_web.md) — mục 3.8 · 3.9 · 3.10 · 4.3 · 4.4 · 8 · Ma trận trạng thái ở [index requirements](../../../../requirements/customers/REQUIREMENTS_CUSTOMERS_SUMMARY.md) mục 7 |
 | **Nền tảng** | Web — Google Chrome, viewport desktop `1600×750` |
 | **Dải TC ID trong part** | `CRM_CUST_TC_074` → `CRM_CUST_TC_112` |
 | **Part liền kề** | ← [part_03_web_bieu_mau.md](part_03_web_bieu_mau.md) · → [part_05_web_ky_thuat_phi_chuc_nang.md](part_05_web_ky_thuat_phi_chuc_nang.md) |

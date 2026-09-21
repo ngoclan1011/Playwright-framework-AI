@@ -26,7 +26,7 @@
 
 | Module | Mã | Nền tảng | Số endpoint | Trạng thái | Tài liệu | REQ đã dùng | Mã kế tiếp | AMB treo | Story | Cập nhật |
 |---|---|---|---|---|---|---|---|---|---|---|
-| Xác thực & Phiên đăng nhập | `AUTH` | API ✅ · Android 🟨 (Sign in · Sign up · Logout ✅ — Profile · Settings ⬜) | 6 | 🟨 Đang khảo sát — Android còn Profile · Settings | [auth/requirements_auth.md](auth/requirements_auth.md) | `REQ-BK-AUTH-01` → `86` (86) | `REQ-BK-AUTH-87` · `AMB-BK-AUTH-21` · `RISK-BK-AUTH-09` | AMB-BK-AUTH-01 → 20 (🔴 01 · 02 · 04 **đã chốt 20-09-2026** — lỗi) · AMB-BK-01 · AMB-BK-11 | 5 | 19-09-2026 |
+| Xác thực & Phiên đăng nhập | `AUTH` | API ✅ · Android 🟨 (Sign in · Sign up · Logout ✅ — Profile · Settings ⬜) | 6 | 🟨 Đang khảo sát — Android còn Profile · Settings | [auth/REQUIREMENTS_AUTH_SUMMARY.md](auth/REQUIREMENTS_AUTH_SUMMARY.md) | `REQ-BK-AUTH-01` → `86` (86) | `REQ-BK-AUTH-87` · `AMB-BK-AUTH-21` · `RISK-BK-AUTH-09` | AMB-BK-AUTH-01 → 20 (🔴 01 · 02 · 04 **đã chốt 20-09-2026** — lỗi) · AMB-BK-01 · AMB-BK-11 | 5 | 19-09-2026 |
 | Người dùng | `USER` | API 🟨 · Android ⬜ | 5 | 🟨 Đã lập bản đồ | — | — | `REQ-BK-USER-01` | AMB-BK-01, 02, 12 | — | 19-09-2026 |
 | Sách | `BOOK` | API 🟨 · Android ⬜ | 5 | 🟨 Đã lập bản đồ | — | — | `REQ-BK-BOOK-01` | AMB-BK-03 | — | 19-09-2026 |
 | Danh mục sách | `CAT` | API 🟨 · Android ⬜ | 4 | 🟨 Đã lập bản đồ | — | — | `REQ-BK-CAT-01` | AMB-BK-05 | — | 19-09-2026 |
@@ -76,11 +76,11 @@ Prefix của hệ thống CRM (`LOGIN`, `CUST`, `PRJ`…) **không liên quan** 
 |---|---|---|---|
 | [AMB-BK-01](_discovery/api_map.md#4-khoảng-trống-của-spec-amb--cần-chốt-trước-khi-sinh-tc) | `AUTH` · `USER` · tất cả | Hệ thống có mô hình vai trò không? Ai được gọi endpoint nào? Spec khai `403` ở 6 endpoint nhưng thực tế user thường làm được mọi thứ | TC phân quyền của **mọi** module. Không chốt thì không biết F-02 là lỗi hay thiết kế |
 | [AMB-BK-02](_discovery/api_map.md#4-khoảng-trống-của-spec-amb--cần-chốt-trước-khi-sinh-tc) | `USER` | `GET /api/user` công khai trả email/phone/address toàn bộ user — cố ý hay lỗi cấu hình? | F-01 viết thành TC bug hay TC xác nhận hành vi |
-| [AMB-BK-AUTH-01](auth/requirements_auth.md#111-ambiguities) | `AUTH` | `PATCH /api/profile` luôn 422 `fields.fields` với mọi body — lỗi hay cần body dạng khác chưa công bố? (F-16) | 5 REQ hồ sơ/đổi mật khẩu (`41 · 42 · 45 → 47`) — TC viết sẵn, kỳ vọng FAIL |
-| [AMB-BK-AUTH-02](auth/requirements_auth.md#111-ambiguities) | `AUTH` | Đăng xuất không thu hồi `refetchToken` phía server — cố ý? (F-17) | REQ-BK-AUTH-33 |
-| [AMB-BK-AUTH-04](auth/requirements_auth.md#111-ambiguities) | `AUTH` | Cookie `accessToken` thiếu `HttpOnly`/`Secure`/`SameSite` — yêu cầu bảo mật có áp dụng? (F-03) | REQ-BK-AUTH-22 |
+| [AMB-BK-AUTH-01](auth/REQUIREMENTS_AUTH_SUMMARY.md#111-ambiguities) | `AUTH` | `PATCH /api/profile` luôn 422 `fields.fields` với mọi body — lỗi hay cần body dạng khác chưa công bố? (F-16) | 5 REQ hồ sơ/đổi mật khẩu (`41 · 42 · 45 → 47`) — TC viết sẵn, kỳ vọng FAIL |
+| [AMB-BK-AUTH-02](auth/REQUIREMENTS_AUTH_SUMMARY.md#111-ambiguities) | `AUTH` | Đăng xuất không thu hồi `refetchToken` phía server — cố ý? (F-17) | REQ-BK-AUTH-33 |
+| [AMB-BK-AUTH-04](auth/REQUIREMENTS_AUTH_SUMMARY.md#111-ambiguities) | `AUTH` | Cookie `accessToken` thiếu `HttpOnly`/`Secure`/`SameSite` — yêu cầu bảo mật có áp dụng? (F-03) | REQ-BK-AUTH-22 |
 
-Ambiguity mức 🟠/🟡: cấp hệ thống xem [`_discovery/api_map.md` mục 4](_discovery/api_map.md#4-khoảng-trống-của-spec-amb--cần-chốt-trước-khi-sinh-tc) (`AMB-BK-06` đã chuyển thành `AMB-BK-AUTH-05`) · module `AUTH` xem [`auth/requirements_auth.md` mục 11.1](auth/requirements_auth.md#111-ambiguities).
+Ambiguity mức 🟠/🟡: cấp hệ thống xem [`_discovery/api_map.md` mục 4](_discovery/api_map.md#4-khoảng-trống-của-spec-amb--cần-chốt-trước-khi-sinh-tc) (`AMB-BK-06` đã chuyển thành `AMB-BK-AUTH-05`) · module `AUTH` xem [`auth/REQUIREMENTS_AUTH_SUMMARY.md` mục 11.1](auth/REQUIREMENTS_AUTH_SUMMARY.md#111-ambiguities).
 
 ---
 
@@ -122,11 +122,11 @@ docs/
 │       │   ├── evidence/android_*.png ← 1 ảnh tổng quan mỗi module
 │       │   └── sources/openapi_*.json ← snapshot spec gốc
 │       └── <module>/                  ← sinh dần khi sinh REQ (VD `auth/`)
-│           ├── requirements_<module>.md       ← INDEX — metadata · phân quyền · Story · AMB/RISK · Nhật ký
+│           ├── REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md       ← INDEX — metadata · phân quyền · Story · AMB/RISK · Nhật ký
 │           └── api/requirements_<module>_api.md ← Endpoint Catalog · REQ · Field Spec · Validation · Nhật ký kiểm chứng
 └── testcases/
     └── _book-api/<module>/
-        ├── test_cases_<module>.md             ← INDEX
+        ├── TEST_CASES_<TÊN_MODULE>_SUMMARY.md             ← INDEX
         └── api/test_cases_<module>_api.md
 ```
 
@@ -138,7 +138,7 @@ docs/
 
 | Tình huống | Workflow | Ghi vào đâu |
 |---|---|---|
-| Sinh REQ chi tiết cho 1 module API | `/generate-requirements-from-api <module>` — đọc `api_map.md` + spec đã snapshot, không cần Ticket ID | `_book-api/<module>/api/requirements_<module>_api.md` + index `_book-api/<module>/requirements_<module>.md` + cập nhật bảng mục 1 |
+| Sinh REQ chi tiết cho 1 module API | `/generate-requirements-from-api <module>` — đọc `api_map.md` + spec đã snapshot, không cần Ticket ID | `_book-api/<module>/api/requirements_<module>_api.md` + index `_book-api/<module>/REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` + cập nhật bảng mục 1 |
 | Sinh API test cases | `/generate-testcases-api` — **sau** khi module đã có REQ | `docs/testcases/_book-api/<module>/api/` |
 | Sinh automation script | `/generate-automation-api` — từ file TC API | Source code + `reports/` |
 | Spec đổi phiên bản | `/generate-requirements-from-api <module>` — tự phát hiện `sha256` khác snapshot, chạy delta | Snapshot mới ở `_discovery/sources/` · Nhật ký khám phá ở `api_map.md` · Impact Report `impact_spec_<ngày>.md` |
@@ -156,7 +156,7 @@ docs/
 
 | Ngày | Thay đổi |
 |---|---|
-| 20-09-2026 | `/generate-testcases-api auth` + `/generate-testcases-from-requirements` (Mobile): module `AUTH` có **105 TC** (Mobile 58 · API 47) ở [`docs/testcases/_book-api/auth/`](../../testcases/_book-api/auth/test_cases_auth.md) — phủ 86/86 REQ. User chốt `AMB-BK-AUTH-01` · `02` · `04` là **lỗi**; QA **không** truy vấn CSDL. Mở `AMB-BK-AUTH-20` 🟡 |
+| 20-09-2026 | `/generate-testcases-api auth` + `/generate-testcases-from-requirements` (Mobile): module `AUTH` có **105 TC** (Mobile 58 · API 47) ở [`docs/testcases/_book-api/auth/`](../../testcases/_book-api/auth/TEST_CASES_AUTH_SUMMARY.md) — phủ 86/86 REQ. User chốt `AMB-BK-AUTH-01` · `02` · `04` là **lỗi**; QA **không** truy vấn CSDL. Mở `AMB-BK-AUTH-20` 🟡 |
 | 19-09-2026 | `/generate-requirements-from-mobile auth` (Android — Đăng ký · Đăng nhập · Đăng xuất): tạo [auth/mobile/requirements_auth_mobile.md](auth/mobile/requirements_auth_mobile.md) — `REQ-BK-AUTH-49 → 86` (38) + 28 ảnh. 8 REQ server-side kiểm khớp trên app chuyển từ `api/` lên index (dùng chung `Android · API`). Mở `AMB-BK-AUTH-14 → 19` (không 🔴 mới) · `RISK-BK-AUTH-07 · 08` |
 | 19-09-2026 | `/discover-system` mode ADD — thêm **mặt Android** (app `book.anhtester.com` 1.0, Hybrid Capacitor). Tạo [`_discovery/system_map.md`](_discovery/system_map.md) + 6 file `modules/` + 9 ảnh `_discovery/evidence/android_*`. Ghép 8 module vào module sẵn có; **cấp prefix mới `DASH`** (Dashboard, chỉ có trên app — user chốt). Cột `Nền tảng` thêm `Android ⬜`; `AUTH` về 🟨 vì còn thiếu mặt Android. Mở `AMB-BK-11` · `AMB-BK-12`. Tạo 1 tài khoản test trên app (lưu `.env`) |
 | 19-09-2026 | Module `AUTH` có tài liệu REQ: `REQ-BK-AUTH-01 → 48` · 5 Story · 13 AMB (3 🔴) · 6 RISK. Thêm cột `Nền tảng` + `Story` vào bảng mục 1, dòng `Năng lực kiểm thử của QA` vào metadata. Spec đổi `sha256` (35 op giữ nguyên, 11 op đổi schema) → snapshot `openapi_2026-09-19.json`. Phát hiện mới F-16 → F-25 |

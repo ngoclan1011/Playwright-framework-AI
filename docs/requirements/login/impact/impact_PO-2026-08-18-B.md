@@ -2,7 +2,7 @@
 
 > **Nguồn thay đổi:** PO trả lời **13 ambiguity còn lại** và cấp **tài khoản đủ 3 vai trò**, trong phiên làm việc 18-08-2026. Không có file ticket — mã `PO-2026-08-18-B` là đợt quyết định thứ **hai** trong ngày (đợt A: [impact_PO-2026-08-18.md](impact_PO-2026-08-18.md)).
 >
-> Tài liệu module: [../requirements_login.md](../requirements_login.md) · Danh mục: [../../README.md](../../README.md)
+> Tài liệu module: [../REQUIREMENTS_LOGIN_SUMMARY.md](../REQUIREMENTS_LOGIN_SUMMARY.md) · Danh mục: [../../README.md](../../README.md)
 
 ## Quyết định gốc (nguyên văn)
 
@@ -133,7 +133,7 @@
 Module `LOGIN` **chưa có test case nào** → **không** chạy `/update-testcases-from-impact`. Chạy thẳng:
 
 ```
-/generate-testcases-manual-rbt docs/requirements/login/requirements_login.md
+/generate-testcases-manual-rbt docs/requirements/login/REQUIREMENTS_LOGIN_SUMMARY.md
 ```
 
 Bỏ qua `REQ-LOGIN-27`, `34`, `35`, `40` (ngoài phạm vi). Gắn `assumption-based` cho TC của `REQ-LOGIN-30` và `REQ-LOGIN-42`.

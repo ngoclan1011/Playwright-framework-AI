@@ -222,6 +222,7 @@ Dashboard không còn thẻ sign in); [Đăng xuất × Chưa đăng nhập] —
 
 | Ngày | Nguồn | REQ ảnh hưởng | Loại | Tóm tắt thay đổi | TC cần xử lý |
 |---|---|---|---|---|---|
+| 21-09-2026 | Quy ước đặt tên | — | ✏️ Biên tập | Đổi tên file index `requirements_auth.md` → `REQUIREMENTS_AUTH_SUMMARY.md` — quy ước mới: index IN HOA để khác hẳn file nền tảng. Nội dung, mã REQ/TC không đổi; mọi link trỏ tới đã sửa | — |
 | 20-09-2026 | `/generate-testcases-api auth` | — | 🟡 Thêm AMB | Mở `AMB-BK-AUTH-20` — kỳ vọng cho `406` · `413` · `415` (spec không khai). Không đổi REQ | TC treo ở index TC |
 | 20-09-2026 | User chốt ở checkpoint `/generate-testcases-api auth` | REQ-BK-AUTH-22 · 33 · 41 · 42 · 45 → 47 | ✏️ Chốt AMB | `AMB-BK-AUTH-01` · `02` · `04` → ✅ đều là **lỗi / áp dụng**. REQ **không đổi** — kỳ vọng giữ theo spec / yêu cầu bảo mật; hành vi hiện tại là bug | TC API của các REQ này gắn `@KnownBug`, mở bug bằng `/create-bug-report` |
 | 19-09-2026 | UI recon Android · `/generate-requirements-from-mobile` | REQ-BK-AUTH-49 → 86 | 🟢 Thêm | Mặt Android — Đăng ký · Đăng nhập · Đăng xuất: 38 REQ ở `mobile/requirements_auth_mobile.md` · 28 ảnh evidence · mở `AMB-BK-AUTH-14 → 19` · `RISK-BK-AUTH-07 · 08` | — (viết mới cho Android, tag `@Android`) |

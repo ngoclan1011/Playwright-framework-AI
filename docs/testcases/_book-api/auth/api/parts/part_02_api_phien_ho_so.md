@@ -2,7 +2,7 @@
 
 | Thông tin | Nội dung |
 |---|---|
-| **Index module** | [../../test_cases_auth.md](../../test_cases_auth.md) — Coverage · 4 vòng · ISO 25010 · Automation · Nhật ký |
+| **Index module** | [../../TEST_CASES_AUTH_SUMMARY.md](../../TEST_CASES_AUTH_SUMMARY.md) — Coverage · 4 vòng · ISO 25010 · Automation · Nhật ký |
 | **Nguồn requirement** | [requirements_auth_api.md](../../../../../requirements/_book-api/auth/api/requirements_auth_api.md) · bản đồ API [api_map.md](../../../../../requirements/_book-api/_discovery/api_map.md) |
 | **Base URL** | `https://book.anhtester.com` · spec snapshot [`openapi_2026-09-19.json`](../../../../../requirements/_book-api/_discovery/sources/openapi_2026-09-19.json) |
 | **Auth** | `DELETE /api/logout` · `GET /api/me` · `PATCH /api/profile`: 🔒 `BearerAuth` (kế thừa cấp gốc) · `POST /api/refetch-token`: 🌐 công khai, **chỉ** đọc cookie `refetchToken` |

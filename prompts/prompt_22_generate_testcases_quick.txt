@@ -6,7 +6,7 @@
 
 # REQUIREMENT
 [Chọn 1 trong 2]
-- File requirements: [VD: docs/requirements/customers/requirements_customers.md]
+- File requirements: [VD: docs/requirements/customers/REQUIREMENTS_CUSTOMERS_SUMMARY.md]
 - Hoặc dán nội dung requirement / user stories vào đây:
 ```
 [DÁN NỘI DUNG REQUIREMENT]

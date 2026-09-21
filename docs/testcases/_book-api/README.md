@@ -19,7 +19,7 @@
 
 | Module | Prefix TC ID | Dải đã dùng | Mã kế tiếp | Số TC | Nền tảng | Độ hạt | REQ bao phủ | Tài liệu | Cập nhật |
 |---|---|---|---|---|---|---|---|---|---|
-| Xác thực & Phiên (`AUTH`) | `BK_AUTH_TC_` | `001` → `108` | `109` | 108 | Mobile 58 · API 50 | GỘP | Mobile 46/46 · API 48/48 | [test_cases_auth.md](auth/test_cases_auth.md) | 20-09-2026 |
+| Xác thực & Phiên (`AUTH`) | `BK_AUTH_TC_` | `001` → `108` | `109` | 108 | Mobile 58 · API 50 | GỘP | Mobile 46/46 · API 48/48 | [TEST_CASES_AUTH_SUMMARY.md](auth/TEST_CASES_AUTH_SUMMARY.md) | 20-09-2026 |
 
 ## 2. Độ phủ so với requirements
 

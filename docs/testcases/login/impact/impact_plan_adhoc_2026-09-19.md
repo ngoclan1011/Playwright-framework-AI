@@ -5,8 +5,8 @@
 | Mã delta | `adhoc_2026-09-19` — không có ticket, nguồn là quyết định PO trả lời qua chat |
 | Ngày lập | 19-09-2026 |
 | Mode | PLAN → **đã duyệt 19-09-2026, đã APPLY** — kết quả: [delta_tc_adhoc_2026-09-19.md](delta_tc_adhoc_2026-09-19.md) |
-| Nguồn thay đổi | [requirements_login.md](../../../requirements/login/requirements_login.md) — mục 13 *Nhật ký Thay đổi*, 2 dòng ngày 19-09-2026 |
-| Bộ TC hiện hành | [test_cases_login.md](../test_cases_login.md) — 50 TC · 70 biến thể · độ hạt **GỘP** · chưa có tầng nền tảng |
+| Nguồn thay đổi | [REQUIREMENTS_LOGIN_SUMMARY.md](../../../requirements/login/REQUIREMENTS_LOGIN_SUMMARY.md) — mục 13 *Nhật ký Thay đổi*, 2 dòng ngày 19-09-2026 |
+| Bộ TC hiện hành | [TEST_CASES_LOGIN_SUMMARY.md](../TEST_CASES_LOGIN_SUMMARY.md) — 50 TC · 70 biến thể · độ hạt **GỘP** · chưa có tầng nền tảng |
 | Automation | Chưa có script nào trỏ vào bộ TC → **không** có việc cho `/update-automation-from-impact` |
 
 ---
@@ -24,8 +24,8 @@
 
 | REQ | TC | Vị trí | Cách map |
 |---|---|---|---|
-| `REQ-LOGIN-42` | `CRM_LOGIN_TC_026` | `test_cases_login.md:107` (Nhóm D) | Cột `REQ ID` · dòng Coverage `:254` |
-| `REQ-LOGIN-28` (liên quan `RISK-LOGIN-05`) | `CRM_LOGIN_TC_031` | `test_cases_login.md:119` (Nhóm E) | Cột `REQ ID` — **đã** kỳ vọng HTTP 500, khớp quyết định `AMB-LOGIN-03` ⏭️ → **không sửa** |
+| `REQ-LOGIN-42` | `CRM_LOGIN_TC_026` | `TEST_CASES_LOGIN_SUMMARY.md:107` (Nhóm D) | Cột `REQ ID` · dòng Coverage `:254` |
+| `REQ-LOGIN-28` (liên quan `RISK-LOGIN-05`) | `CRM_LOGIN_TC_031` | `TEST_CASES_LOGIN_SUMMARY.md:119` (Nhóm E) | Cột `REQ ID` — **đã** kỳ vọng HTTP 500, khớp quyết định `AMB-LOGIN-03` ⏭️ → **không sửa** |
 
 ### ⚠️ Mapping suy luận
 
@@ -98,12 +98,12 @@ Các bảng kèm theo cần cập nhật cho khớp số (không chấm lại):
 |---|---|
 | Sao lưu | ~~Chép vào `archive/`~~ → **bỏ** theo quyết định user 19-09-2026: ghi **mốc git** `05efd17`, thư mục `archive/` đã xoá |
 | Chuyển TC ra file nền tảng | ~~Tách 2 part~~ → **1 file** `web/test_cases_login_web.md` (51 TC) theo quyết định user 19-09-2026 |
-| Index `test_cases_login.md` | **Giữ tên và vị trí.** Bỏ dòng TC, thêm `## Bản đồ tài liệu`. Giữ ở index: *Cách đọc* · *Assumptions* · *Bảng Đối Soát Coverage* · *Bảng Đối Soát Evidence* · *Đối soát 4 vòng* · *ISO 25010* · *Bộ chạy đề xuất* · *Nhật ký* |
+| Index `TEST_CASES_LOGIN_SUMMARY.md` | **Giữ tên và vị trí.** Bỏ dòng TC, thêm `## Bản đồ tài liệu`. Giữ ở index: *Cách đọc* · *Assumptions* · *Bảng Đối Soát Coverage* · *Bảng Đối Soát Evidence* · *Đối soát 4 vòng* · *ISO 25010* · *Bộ chạy đề xuất* · *Nhật ký* |
 | TC ID | **Giữ nguyên toàn bộ** `001` → `050`. Chỉ thêm `051` |
 | Link từ nơi khác | 6 bug, execution report, test plan và báo cáo tiến độ đều trỏ vào **tên index** (không trỏ anchor) → **không gãy**, không phải sửa |
 | Danh mục `docs/testcases/README.md` | Số TC 50 → 51 · dải `001 → 051` · mã kế tiếp `052` · thêm cột Nền tảng `Web 51` · ngày 19-09-2026 · 1 dòng nhật ký |
 
-> ⚠️ Nếu **không** muốn chuyển cấu trúc trong lượt này, lựa chọn thay thế là chỉ sửa tại chỗ trong `test_cases_login.md`. Nhưng file sẽ **vượt ngưỡng 50 TC** mà không tách, trái quy tắc. Khuyến nghị: **chuyển luôn**.
+> ⚠️ Nếu **không** muốn chuyển cấu trúc trong lượt này, lựa chọn thay thế là chỉ sửa tại chỗ trong `TEST_CASES_LOGIN_SUMMARY.md`. Nhưng file sẽ **vượt ngưỡng 50 TC** mà không tách, trái quy tắc. Khuyến nghị: **chuyển luôn**.
 
 ## 7. Ngoài phạm vi
 

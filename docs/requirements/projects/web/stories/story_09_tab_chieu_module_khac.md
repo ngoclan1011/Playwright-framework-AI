@@ -1,6 +1,6 @@
 # STORY-PRJ-09 — Tab chiếu dữ liệu từ module khác
 
-> Về index: [../../requirements_projects.md](../../requirements_projects.md) · File nền tảng: [../requirements_projects_web.md](../requirements_projects_web.md) · Prefix `PRJ` · REQ bao phủ: `REQ-PRJ-98` → `REQ-PRJ-101` (4 REQ)
+> Về index: [../../REQUIREMENTS_PROJECTS_SUMMARY.md](../../REQUIREMENTS_PROJECTS_SUMMARY.md) · File nền tảng: [../requirements_projects_web.md](../requirements_projects_web.md) · Prefix `PRJ` · REQ bao phủ: `REQ-PRJ-98` → `REQ-PRJ-101` (4 REQ)
 >
 > RISK liên quan: `RISK-PRJ-01`
 
@@ -52,7 +52,7 @@
 | Awaiting Feedback | `2` | 4 |
 | Complete | `5` | 5 |
 
-> ⚠️ Bộ mã này **khác hoàn toàn** bộ mã trạng thái dự án (xem [index mục 5](../../requirements_projects.md#5-ma-trận-trạng-thái)). Cùng bộ mã công việc này xuất hiện ở hộp thoại `Copy Project` (`REQ-PRJ-71`) và bộ lọc `gantt_task_status` (`REQ-PRJ-95`) — ba nơi khớp nhau, đã đối chiếu.
+> ⚠️ Bộ mã này **khác hoàn toàn** bộ mã trạng thái dự án (xem [index mục 5](../../REQUIREMENTS_PROJECTS_SUMMARY.md#5-ma-trận-trạng-thái)). Cùng bộ mã công việc này xuất hiện ở hộp thoại `Copy Project` (`REQ-PRJ-71`) và bộ lọc `gantt_task_status` (`REQ-PRJ-95`) — ba nơi khớp nhau, đã đối chiếu.
 
 ---
 

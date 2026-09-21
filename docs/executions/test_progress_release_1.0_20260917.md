@@ -50,7 +50,7 @@ Mọi số **luỹ kế** trong báo cáo lấy từ lần chạy ngày 20-08-20
 
 | Module × nền tảng | TC trong kỳ (mới / sửa) | TC luỹ kế | Đã review | Nguồn |
 |---|---|---|---|---|
-| `LOGIN` × Web | 0 / 0 | 50 (70 biến thể) | — *không tìm thấy bằng chứng review qua `/review-testcases` trong Nhật ký thay đổi* | [`test_cases_login.md`](../testcases/login/test_cases_login.md) — Nhật ký thay đổi, dòng mới nhất 11-09-2026 |
+| `LOGIN` × Web | 0 / 0 | 50 (70 biến thể) | — *không tìm thấy bằng chứng review qua `/review-testcases` trong Nhật ký thay đổi* | [`TEST_CASES_LOGIN_SUMMARY.md`](../testcases/login/TEST_CASES_LOGIN_SUMMARY.md) — Nhật ký thay đổi, dòng mới nhất 11-09-2026 |
 | `CUST` × Web | 0 / 0 | **0** | — | [`docs/testcases/README.md`](../testcases/README.md) mục 2 |
 | `PRJ` × Web | 0 / 0 | **0** | — | [`docs/testcases/README.md`](../testcases/README.md) mục 2 |
 
@@ -116,7 +116,7 @@ Nguồn: [`docs/bugs/README.md`](../bugs/README.md) mục 1 và tên file `BUG_l
 | 6 | REQ Critical có ≥ 1 TC PASS | 100% | — Không có RTM | — | — |
 | 7 | Cặp module × nền tảng đã có TC **và** đã chạy | 100% | 1/3 (33,3%): chỉ có `LOGIN` × Web | Còn 2 cặp | — |
 
-> Pass rate theo priority lấy cột `Priority` trong [`test_cases_login.md`](../testcases/login/test_cases_login.md), ghép với cột trạng thái của `run_1787215085`. 4 TC Priority `High` bị FAIL là `TC_016` · `TC_028` · `TC_029` · `TC_039`, ứng với 4 bug đang mở. Plan chưa nói rõ tiêu chí #3 có tính cả TC Priority `Critical` hay không, nên bảng ghi cả hai cách. Nên làm rõ khi duyệt plan (mục 7).
+> Pass rate theo priority lấy cột `Priority` trong [`TEST_CASES_LOGIN_SUMMARY.md`](../testcases/login/TEST_CASES_LOGIN_SUMMARY.md), ghép với cột trạng thái của `run_1787215085`. 4 TC Priority `High` bị FAIL là `TC_016` · `TC_028` · `TC_029` · `TC_039`, ứng với 4 bug đang mở. Plan chưa nói rõ tiêu chí #3 có tính cả TC Priority `Critical` hay không, nên bảng ghi cả hai cách. Nên làm rõ khi duyệt plan (mục 7).
 
 ---
 

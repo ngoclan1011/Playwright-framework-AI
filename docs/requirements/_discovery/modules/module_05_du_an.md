@@ -35,7 +35,7 @@ Tab Overview còn có bộ lọc biểu đồ: `this_week` · `last_week` · `th
 
 ## Vùng chưa xác minh
 
-> ✅ **Đã recon cấp module ngày 14-08-2026** — tài liệu đầy đủ: [../../projects/requirements_projects.md](../../projects/requirements_projects.md) (104 REQ, tách 10 file story).
+> ✅ **Đã recon cấp module ngày 14-08-2026** — tài liệu đầy đủ: [../../projects/REQUIREMENTS_PROJECTS_SUMMARY.md](../../projects/REQUIREMENTS_PROJECTS_SUMMARY.md) (104 REQ, tách 10 file story).
 
 - ~~Field spec form tạo dự án~~ → đã gỡ, xem `STORY-PRJ-02`
 - ~~Danh sách trạng thái đầy đủ và quy tắc chuyển trạng thái~~ → đã gỡ, xem ma trận trạng thái ở index. Lưu ý mã giá trị **không** liên tục: `Cancelled`=`5`, `Finished`=`4`

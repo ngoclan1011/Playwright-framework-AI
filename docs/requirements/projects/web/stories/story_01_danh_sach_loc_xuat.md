@@ -1,6 +1,6 @@
 # STORY-PRJ-01 — Danh sách, tìm kiếm, lọc, xuất dữ liệu
 
-> Về index: [../../requirements_projects.md](../../requirements_projects.md) · File nền tảng: [../requirements_projects_web.md](../requirements_projects_web.md) · Prefix `PRJ` · REQ bao phủ: `REQ-PRJ-01` → `REQ-PRJ-23` (23 REQ)
+> Về index: [../../REQUIREMENTS_PROJECTS_SUMMARY.md](../../REQUIREMENTS_PROJECTS_SUMMARY.md) · File nền tảng: [../requirements_projects_web.md](../requirements_projects_web.md) · Prefix `PRJ` · REQ bao phủ: `REQ-PRJ-01` → `REQ-PRJ-23` (23 REQ)
 >
 > AMB liên quan: `AMB-PRJ-02` · RISK liên quan: `RISK-PRJ-02`, `RISK-PRJ-04`, `RISK-PRJ-05`
 

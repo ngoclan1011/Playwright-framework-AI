@@ -24,7 +24,7 @@
 
 **Chưa khảo sát ở tầng này (việc của `/generate-requirements-from-mobile auth`):** validation từng ô · message lỗi · sai mật khẩu · email trùng · mật khẩu xác nhận lệch · Logout · Exit app · lưu Profile · đổi Theme · app xuống nền / xoay màn hình / mất mạng · bàn phím che nút.
 
-**Liên hệ mặt API:** `POST /api/register` · `POST /api/login` · `GET /api/me` · `PATCH /api/profile` (**F-16: mọi body đều 422** — chưa thử lưu Profile trên app) · `DELETE /api/logout` (F-17, F-23). Module đã có tài liệu REQ mặt API: [`../../auth/requirements_auth.md`](../../auth/requirements_auth.md).
+**Liên hệ mặt API:** `POST /api/register` · `POST /api/login` · `GET /api/me` · `PATCH /api/profile` (**F-16: mọi body đều 422** — chưa thử lưu Profile trên app) · `DELETE /api/logout` (F-17, F-23). Module đã có tài liệu REQ mặt API: [`../../auth/REQUIREMENTS_AUTH_SUMMARY.md`](../../auth/REQUIREMENTS_AUTH_SUMMARY.md).
 
 Evidence: [android_auth_overview.png](../evidence/android_auth_overview.png) (Sign in) · [android_auth_account_menu.png](../evidence/android_auth_account_menu.png) (menu avatar khi đã đăng nhập — chứa tên/email của **tài khoản test tự tạo**)
 

@@ -17,7 +17,7 @@
 ```
 
 # TÙY CHỌN
-- Module đã có tài liệu requirements chưa: [Có → đường dẫn docs/requirements/<module>/requirements_<module>.md / Chưa]
+- Module đã có tài liệu requirements chưa: [Có → đường dẫn docs/requirements/<module>/REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md / Chưa]
 - Trọng tâm phân tích: [VD: "Tập trung phân quyền theo role" / "Soi kỹ ma trận trạng thái" / để trống = phân tích toàn diện]
 
 # GHI CHÚ

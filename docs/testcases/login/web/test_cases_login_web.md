@@ -2,13 +2,13 @@
 
 | Thông tin | Nội dung |
 |---|---|
-| **Index module** | [../test_cases_login.md](../test_cases_login.md) — cách đọc bộ TC · Assumptions · Bảng Đối Soát Coverage · Evidence · 4 vòng · bộ chạy · Nhật ký |
-| **Nguồn requirement** | [requirements_login_web.md](../../../requirements/login/web/requirements_login_web.md) · index [requirements_login.md](../../../requirements/login/requirements_login.md) |
+| **Index module** | [../TEST_CASES_LOGIN_SUMMARY.md](../TEST_CASES_LOGIN_SUMMARY.md) — cách đọc bộ TC · Assumptions · Bảng Đối Soát Coverage · Evidence · 4 vòng · bộ chạy · Nhật ký |
+| **Nguồn requirement** | [requirements_login_web.md](../../../requirements/login/web/requirements_login_web.md) · index [REQUIREMENTS_LOGIN_SUMMARY.md](../../../requirements/login/REQUIREMENTS_LOGIN_SUMMARY.md) |
 | **Nền tảng** | Web — Google Chrome, viewport desktop `1600×750` |
 | **Dải TC ID** | `CRM_LOGIN_TC_001` → `CRM_LOGIN_TC_051` — dải chung toàn module |
 | **Số TC** | **51** — vượt ngưỡng 50 của độ hạt GỘP, **giữ 1 file theo quyết định user 19-09-2026** (không tách `parts/`) |
 
-> Đọc mục **Cách đọc bộ TC này** ở [index](../test_cases_login.md) trước khi chạy — quy ước biến thể `a`/`b`/`c` và dòng `🔧 Ghi chú kỹ thuật`.
+> Đọc mục **Cách đọc bộ TC này** ở [index](../TEST_CASES_LOGIN_SUMMARY.md) trước khi chạy — quy ước biến thể `a`/`b`/`c` và dòng `🔧 Ghi chú kỹ thuật`.
 
 ---
 

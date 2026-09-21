@@ -52,7 +52,7 @@
 
 | Tài liệu | Phiên bản / ngày cập nhật | Module | Ghi chú |
 |---|---|---|---|
-| `docs/requirements/auth/requirements_auth.md` + tầng `web/` · `mobile/` · `api/` | Nhật ký thay đổi 30-09-2026 | `AUTH` | 32 REQ · 0 AMB 🔴 |
+| `docs/requirements/auth/REQUIREMENTS_AUTH_SUMMARY.md` + tầng `web/` · `mobile/` · `api/` | Nhật ký thay đổi 30-09-2026 | `AUTH` | 32 REQ · 0 AMB 🔴 |
 | `docs/requirements/products/requirements_products.md` + `web/` · `api/` | 28-09-2026 | `PROD` | 45 REQ · 0 AMB 🔴 |
 | `docs/requirements/orders/requirements_orders.md` + `web/` · `mobile/` · `api/` | 02-10-2026 | `ORD` | 68 REQ · 2 AMB 🟡 PO chấp nhận treo |
 | `docs/requirements/reports/requirements_reports.md` + `web/` | 06-10-2026 | `RPT` | 21 REQ |

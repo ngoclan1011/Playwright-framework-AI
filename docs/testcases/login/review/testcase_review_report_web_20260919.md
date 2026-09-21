@@ -4,8 +4,8 @@
 
 | Mục | Giá trị |
 |---|---|
-| **Nguồn** | [web/test_cases_login_web.md](../web/test_cases_login_web.md) — 51 TC · index [test_cases_login.md](../test_cases_login.md) |
-| **Requirements đối chiếu** | [requirements_login.md](../../../requirements/login/requirements_login.md) — 43 REQ, 0 AMB treo |
+| **Nguồn** | [web/test_cases_login_web.md](../web/test_cases_login_web.md) — 51 TC · index [TEST_CASES_LOGIN_SUMMARY.md](../TEST_CASES_LOGIN_SUMMARY.md) |
+| **Requirements đối chiếu** | [REQUIREMENTS_LOGIN_SUMMARY.md](../../../requirements/login/REQUIREMENTS_LOGIN_SUMMARY.md) — 43 REQ, 0 AMB treo |
 | **Kết quả chạy đối chiếu** | [run_1787215085](../../../executions/login/web/run_1787215085/execution_report.md) (20-08-2026) · [run_1789759574](../../../executions/login/web/run_1789759574/execution_report.md) (19-09-2026) |
 | **Ngày review** | 19-09-2026 · Mode **FIX** |
 | **Kết quả** | 🟢 46 tốt · 🟡 5 cần sửa · 🔴 0 viết lại |

@@ -161,7 +161,7 @@ Lưu tại `docs/testcases/<module>/review/testcase_review_report_<nền-tảng>
 | **Phạm vi** | Chỉ các TC user đã duyệt ở checkpoint — không tiện tay sửa TC khác |
 | **Sau khi sửa** | Đồng bộ file index (Assumptions · Coverage · Vùng chưa có evidence · 4 vòng · tổng TC/biến thể · Bộ chạy) + 1 dòng Nhật ký |
 
-> **Vì sao không sinh bản sao:** mọi workflow phía sau đọc file TC theo mẫu tên cố định (`test_cases_<module>.md` → `<nền-tảng>/test_cases_<module>_<nền-tảng>.md`). Bản `_improved` nằm cạnh bản gốc thì các workflow đó **vẫn đọc bản cũ**, và repo có hai bộ TC không ai biết bộ nào có hiệu lực. Việc duyệt trước khi sửa đã có checkpoint + báo cáo review; việc quay lại bản cũ đã có git.
+> **Vì sao không sinh bản sao:** mọi workflow phía sau đọc file TC theo mẫu tên cố định (`TEST_CASES_<TÊN_MODULE>_SUMMARY.md` → `<nền-tảng>/test_cases_<module>_<nền-tảng>.md`). Bản `_improved` nằm cạnh bản gốc thì các workflow đó **vẫn đọc bản cũ**, và repo có hai bộ TC không ai biết bộ nào có hiệu lực. Việc duyệt trước khi sửa đã có checkpoint + báo cáo review; việc quay lại bản cũ đã có git.
 
 ---
 

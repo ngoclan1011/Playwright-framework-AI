@@ -84,7 +84,7 @@ Kích hoạt khi:
 - User dùng command `/update-testcases-from-impact`
 - User đưa **Impact Report** (từ `/update-requirements-from-ticket`) hoặc danh sách REQ đã đổi
 - User nói: "cập nhật TC theo ticket", "requirement đổi rồi, sửa TC", "TC nào bị ảnh hưởng", "đồng bộ lại bộ TC"
-- Module **đã có** `docs/testcases/<module>/test_cases_<module>.md` và yêu cầu vừa thay đổi
+- Module **đã có** `docs/testcases/<module>/TEST_CASES_<TÊN_MODULE>_SUMMARY.md` và yêu cầu vừa thay đổi
 
 > 🚨 **Dấu hiệu bắt buộc kiểm trước khi chọn QUICK/FULL RBT:** module đã có file TC chưa? Đã có mà vẫn chạy QUICK/FULL RBT là sinh bộ TC thứ hai, TC ID đánh lại từ `001`, và mọi `testId` trong automation trỏ về hư không.
 
@@ -239,7 +239,7 @@ Steps viết bằng **thao tác người dùng làm được**, không phải l�
 
 Selector là tài sản của tầng automation, sống trong Page Object. Nhét `.dropdown-menu > li.header-logout` vào manual TC gây hai hại: tester không dùng được, và khi UI đổi thì selector sai nằm rải trong tài liệu TC không ai đi sửa.
 
-- Thông tin selector thu được lúc recon → ghi vào **`docs/requirements/<module>/requirements_<module>.md`** (mục kỹ thuật), workflow automation đọc từ đó
+- Thông tin selector thu được lúc recon → ghi vào **`docs/requirements/<module>/REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md`** (mục kỹ thuật), workflow automation đọc từ đó
 - Manual TC chỉ mô tả **vị trí nhìn thấy**: "mục `Logout` cuối cùng trong menu ảnh đại diện góc trên bên phải"
 
 ### 7. Self-Quality Gate — tiêu chí bổ sung
@@ -275,7 +275,7 @@ Bộ TC thường dài 70–100+ dòng bảng. In toàn bộ ra chat khiến use
 docs/testcases/
 ├── README.md                                        ← DANH MỤC toàn hệ thống
 └── <module>/
-    ├── test_cases_<module>.md                       ← INDEX — TÊN FILE BẤT BIẾN · KHÔNG chứa dòng TC
+    ├── TEST_CASES_<TÊN_MODULE>_SUMMARY.md                       ← INDEX — TÊN FILE BẤT BIẾN · KHÔNG chứa dòng TC
     ├── web/test_cases_<module>_web.md               ← TC chạy trên web
     ├── mobile/test_cases_<module>_mobile.md         ← TC chạy trên app — tag @Android / @iOS
     ├── api/test_cases_<module>_api.md               ← TC gọi API
@@ -302,7 +302,8 @@ docs/testcases/
 
 | Quy tắc | Lý do |
 |---|---|
-| Tên index **luôn** `test_cases_<module>.md` | Mọi workflow phía sau (`/execute-test-cases`, `/review-testcases`, `/generate-automation-from-testcases`, `/generate-traceability-matrix`) đọc theo mẫu `docs/testcases/<module>/test_cases_<module>.md`. Đổi tên là vỡ chuỗi |
+| Tên index **luôn** `TEST_CASES_<TÊN_MODULE>_SUMMARY.md` — chữ IN HOA, `<TÊN_MODULE>` = tên thư mục module viết HOA, `-` đổi thành `_` (VD `login` → `LOGIN`, `customers` → `CUSTOMERS`) — **không phải** prefix REQ (`CUST`) | Mọi workflow phía sau (`/execute-test-cases`, `/review-testcases`, `/generate-automation-from-testcases`, `/generate-traceability-matrix`) đọc theo mẫu `docs/testcases/<module>/TEST_CASES_<TÊN_MODULE>_SUMMARY.md`. IN HOA để file tổng **khác hẳn** file nền tảng `test_cases_<module>_<nền-tảng>.md`. Đổi tên là vỡ chuỗi |
+| Tài liệu cũ còn index `test_cases_<module>.md` (quy ước trước 21-09-2026) | Đọc **nhận cả hai tên**. Lần đầu sinh/cập nhật chạm lại module → đổi tên **một lần** sang `TEST_CASES_<TÊN_MODULE>_SUMMARY.md`, sửa link trỏ tới, ghi Nhật ký |
 | **KHÔNG** nhét số phiên bản vào tên index (`_v2`, `_new`…) | Phiên bản mới **thay thế** index tại chỗ; bản cũ tra bằng **lịch sử git** |
 | Part đặt trong `<nền-tảng>/parts/`, đặt tên `part_NN_<nền-tảng>_<slug>.md` | `NN` có số 0 đứng đầu để sắp xếp đúng; slug mô tả nhóm chức năng; hậu tố nền tảng chống trùng tên file |
 | Mode DELTA sửa **tại chỗ** file nền tảng/part, ghi **mốc git** của bản trước khi sửa. **KHÔNG** có thư mục `archive/`, **KHÔNG** chép bản cũ ra file nào | Giữ đúng một nguồn sự thật. Bản sao `_v2` / `archive/` là bộ TC thứ hai nằm cạnh bộ đang dùng — grep TC ID ra hai kết quả, viewer nạp nhầm, lệnh dọn dự án bỏ sót. Git đã giữ mọi phiên bản |
@@ -314,7 +315,7 @@ docs/testcases/
 | ≤ 40 TC ở độ hạt TÁCH · ≤ 50 TC ở độ hạt GỘP — **đếm theo từng nền tảng** | 1 file `<nền-tảng>/test_cases_<module>_<nền-tảng>.md`, không cần `parts/` |
 | File nền tảng vượt ngưỡng trên | Tách vào `<nền-tảng>/parts/part_01_<nền-tảng>_<slug>.md`, `part_02_...` — mỗi part dưới ngưỡng, **cắt tại ranh giới nhóm chức năng**, không cắt giữa nhóm |
 | Nhiều module | Mỗi module một thư mục riêng, KHÔNG gộp chung |
-| Mọi trường hợp | File `test_cases_<module>.md` **luôn là index** (xem mục 4) — TC chi tiết nằm hết trong file nền tảng / part |
+| Mọi trường hợp | File `TEST_CASES_<TÊN_MODULE>_SUMMARY.md` **luôn là index** (xem mục 4) — TC chi tiết nằm hết trong file nền tảng / part |
 
 > Ngưỡng đếm theo **số TC**, không theo dung lượng — người review đọc lần lượt từng TC, nên số TC mới là thứ quyết định một lượt review có kham nổi không.
 >
@@ -339,14 +340,14 @@ docs/testcases/
 
 ### 4. File index (luôn có)
 
-File `docs/testcases/<module>/test_cases_<module>.md` **là index** — giữ nguyên tên, không đổi thành `*_index.md`, **không** chứa dòng TC:
+File `docs/testcases/<module>/TEST_CASES_<TÊN_MODULE>_SUMMARY.md` **là index** — giữ nguyên tên, không đổi thành `*_index.md`, **không** chứa dòng TC:
 
 ```markdown
 # Test Cases — <Module> (tổng <N> TC · <K> nền tảng)
 
 | Thông tin | Nội dung |
 |---|---|
-| Nguồn requirement | [requirements_<module>.md](../../requirements/<module>/requirements_<module>.md) |
+| Nguồn requirement | [REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md](../../requirements/<module>/REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md) |
 | Dải TC ID đã dùng | `CRM_CUST_TC_001` → `CRM_CUST_TC_094` — chung mọi nền tảng |
 
 ## Bản đồ tài liệu
@@ -1125,7 +1126,7 @@ Quy trình bài bản, tuần tự cho module phức tạp. Bao gồm phân tíc
    - Test Steps đánh số `1. 2. 3.` (mỗi bước 1 hành động), Expected Result đánh số khớp 1-1, dùng `<br>` xuống dòng trong cell
    - Gắn đầy đủ metadata `Automation` (`Yes`/`No`/`Partial` — chấm theo [Tiêu chí chấm cột Automation](references/automation_criteria.md)), `Auto Type` (`UI`/`API`/`Unit`/`N/A`), và `@Tags` (`@Smoke`, `@Regression`, `@CriticalPath`...)
    - **TUYỆT ĐỐI không được bỏ sót** bất kỳ test case nào đã sinh ở Bước 5
-3. **Chạy Self-Quality Gate (11 Tiêu chí, 0–10):** Kiểm định lại — bao gồm **Bảng Đối Soát Coverage** (tiêu chí 6: mọi REQ có ≥1 TC), **Bảng Đối Soát Evidence** (tiêu chí 7), **rà ngôn ngữ kiểm chứng** (tiêu chí 8), **Bảng rà soát đặc tính chất lượng ISO/IEC 25010:2023** (tiêu chí 9: đủ 9/9 đặc tính, ô `➖` ghi rõ ai chịu) và **Bảng Đối soát loại kiểm thử 4 vòng** (tiêu chí 10: mọi nhánh được chấm, 3 nhánh cấm `➖`, độ hạt GỘP ghi kèm số biến thể) — trước khi xuất Artifact (`test_cases_<module>.md`).
+3. **Chạy Self-Quality Gate (11 Tiêu chí, 0–10):** Kiểm định lại — bao gồm **Bảng Đối Soát Coverage** (tiêu chí 6: mọi REQ có ≥1 TC), **Bảng Đối Soát Evidence** (tiêu chí 7), **rà ngôn ngữ kiểm chứng** (tiêu chí 8), **Bảng rà soát đặc tính chất lượng ISO/IEC 25010:2023** (tiêu chí 9: đủ 9/9 đặc tính, ô `➖` ghi rõ ai chịu) và **Bảng Đối soát loại kiểm thử 4 vòng** (tiêu chí 10: mọi nhánh được chấm, 3 nhánh cấm `➖`, độ hạt GỘP ghi kèm số biến thể) — trước khi xuất Artifact (`TEST_CASES_<TÊN_MODULE>_SUMMARY.md`).
 
 **Output:** Bảng Test Cases Markdown hoàn chỉnh kèm Metadata Automation.
 
@@ -1146,7 +1147,7 @@ Agent xác định nguồn trước khi sinh:
 | Nguồn | Khi nào | Cách làm |
 |---|---|---|
 | **REQ-based** | Chưa có bộ TC, chỉ có requirements / UI | Rút mục checklist trực tiếp từ requirements + 3 bảng checklist chuẩn của skill |
-| **TC-based** | Đã có file `test_cases_<module>.md` | **Rút gọn** từ bộ TC sẵn có — gom nhóm TC cùng chủ đề thành 1 mục, giữ cột `TC ID liên quan` để truy ngược |
+| **TC-based** | Đã có file `TEST_CASES_<TÊN_MODULE>_SUMMARY.md` | **Rút gọn** từ bộ TC sẵn có — gom nhóm TC cùng chủ đề thành 1 mục, giữ cột `TC ID liên quan` để truy ngược |
 
 > TC-based được ưu tiên khi bộ TC đã tồn tại — tránh sinh lại nội dung lệch với bộ TC gốc.
 

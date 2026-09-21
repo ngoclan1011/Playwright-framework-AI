@@ -229,7 +229,7 @@ docs/executions/test_summary_<slug>_<timestamp>.md   ← báo cáo tổng hợp 
 | `docs/requirements/_discovery/system_map.md` (+ `api_map.md`) | Nền tảng từng module · phụ thuộc · **Vùng chưa xác minh** · **Vùng loại khỏi phạm vi** · module bị chặn | 2.1 · 2.2 · 3.2 · 8.1 |
 | `docs/requirements/<module>/…` — metadata · mục `RISK-<MODULE>-xx` · Nhật ký thay đổi | `Trình duyệt khảo sát` / `Thiết bị khảo sát` / `Nguồn spec` · **rủi ro sản phẩm đã ghi** · tên + phiên bản tài liệu làm cơ sở | 1.2 · 5.1 · 8.2 |
 | `docs/testcases/README.md` | Module đã có TC · số TC theo nền tảng · REQ bao phủ | 2.1 |
-| `docs/testcases/<module>/test_cases_<module>.md` → file nền tảng (kiểu cũ: chính index) | ⭐ **Bảng ISO/IEC 25010** — ô `➖` kèm người chịu · **Bảng 4 vòng** · kỹ thuật đã dùng · bộ chạy đề xuất · TC phi chức năng đã có (tag, nhóm Non-functional) · rủi ro RBT | 2.2 · 3.2 · 3.2.1 · 3.3 · 3.5 · 3.7 · 8.2 |
+| `docs/testcases/<module>/TEST_CASES_<TÊN_MODULE>_SUMMARY.md` → file nền tảng (kiểu cũ: chính index) | ⭐ **Bảng ISO/IEC 25010** — ô `➖` kèm người chịu · **Bảng 4 vòng** · kỹ thuật đã dùng · bộ chạy đề xuất · TC phi chức năng đã có (tag, nhóm Non-functional) · rủi ro RBT | 2.2 · 3.2 · 3.2.1 · 3.3 · 3.5 · 3.7 · 8.2 |
 | `docs/executions/<module>/<nền-tảng>/run_*/` · kiểu cũ `docs/executions/<module>/run_*/` | Module × nền tảng **đã từng chạy** | 2.1 |
 | `docs/bugs/README.md` → `BUG_*.md` (cả hai kiểu thư mục) | Bug đang mở theo Severity · Priority · trạng thái đang dùng | 4.1 · 4.2 · 8.1 · 9 |
 | `.claude/skills/skills-bug-reporter/SKILL.md` — *Severity & Priority Guide* · *4 trạng thái retest* | Thang Severity/Priority mặc định **nguyên văn** · kết quả retest | 9 |
@@ -359,7 +359,7 @@ File: `docs/test-plans/test_plan_<slug>.md` — thư mục **`docs/test-plans/`*
 
 | Tài liệu | Phiên bản / ngày cập nhật | Module | Ghi chú |
 |---|---|---|---|
-| `docs/requirements/<module>/requirements_<module>.md` | Nhật ký thay đổi <ngày> | <module> | <N> REQ · <N> AMB 🔴 treo |
+| `docs/requirements/<module>/REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` | Nhật ký thay đổi <ngày> | <module> | <N> REQ · <N> AMB 🔴 treo |
 | Spec API `openapi_<ngày>.json` | `info.version` <x> | <module> | |
 
 > Cơ sở kiểm thử **đổi giữa đợt** (ticket sửa yêu cầu) → cập nhật bằng `/update-requirements-from-ticket` rồi tăng phiên bản plan — TC viết theo cơ sở cũ là TC sai.

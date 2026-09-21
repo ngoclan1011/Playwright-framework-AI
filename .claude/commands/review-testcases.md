@@ -46,7 +46,7 @@ skills:
 ## Các bước thực hiện
 
 ### Bước 1: Đọc Input
-1. Đọc file TC, xác định format và số lượng. File **index** `test_cases_<module>.md` → theo `## Bản đồ tài liệu` đọc các file nền tảng (index không chứa dòng TC); chấm riêng từng nền tảng khi chúng khác người viết/khác độ phủ
+1. Đọc file TC, xác định format và số lượng. File **index** `TEST_CASES_<TÊN_MODULE>_SUMMARY.md` → theo `## Bản đồ tài liệu` đọc các file nền tảng (index không chứa dòng TC); chấm riêng từng nền tảng khi chúng khác người viết/khác độ phủ
 2. Đọc requirements (nếu có)
 
 > **Mode AUTOMATION** → bỏ Bước 2–5, làm **Bước A1–A3** (ngay sau Bước 5).
@@ -76,7 +76,7 @@ skills:
 2. Sửa **tại chỗ**, chỉ các TC đã duyệt: TC 🟢 giữ nguyên; TC 🟡 sửa theo đề xuất; TC 🔴 viết lại (tuân thủ chuẩn `skills-rbt-manual-testing`)
 3. **Giữ nguyên TC ID** — không đánh lại số. TC bỏ hẳn → đổi trạng thái `🗑️ Deprecated`, **không** xoá dòng. Bỏ một biến thể → ghi lại lý do ngay trong Expected của TC đó
 4. Bổ sung TC mới cho coverage gaps ưu tiên High (nếu user đồng ý) — **nối tiếp** mã TC kế tiếp của module, tuân thủ **Bản Đồ Loại Kiểm Thử — 4 Vòng** và **Bảng Field-Level Validation Checklist**, đặt vào đúng nhánh đã báo thiếu
-5. **Đồng bộ file index** `test_cases_<module>.md`: Assumptions · Bảng Đối Soát Coverage · Vùng chưa có evidence · Đối soát 4 vòng · tổng số TC / biến thể · Bộ chạy đề xuất
+5. **Đồng bộ file index** `TEST_CASES_<TÊN_MODULE>_SUMMARY.md`: Assumptions · Bảng Đối Soát Coverage · Vùng chưa có evidence · Đối soát 4 vòng · tổng số TC / biến thể · Bộ chạy đề xuất
 6. Ghi **1 dòng Nhật ký thay đổi** vào index: nguồn `/review-testcases` mode FIX + link báo cáo · TC nào sửa gì · **mốc git trước khi sửa**
 
 ### Bước A1: Chấm khả năng automation (Mode AUTOMATION)

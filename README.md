@@ -69,7 +69,7 @@ claude-testing-skills/
 │   │   ├── README.md                          # DANH MỤC module: prefix đã chiếm, mã REQ kế tiếp
 │   │   ├── _discovery/                        # bản đồ hệ thống: system_map.md (web + mobile) · api_map.md
 │   │   └── <module>/                          # MỘT nghiệp vụ = MỘT thư mục, chung mọi nền tảng
-│   │       ├── requirements_<module>.md       # INDEX — tên file bất biến: phần chung + Bản đồ tài liệu
+│   │       ├── REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md       # INDEX — tên file bất biến: phần chung + Bản đồ tài liệu
 │   │       ├── web/                           # TẦNG NỀN TẢNG — chỉ 3 tên: web · mobile · api
 │   │       │   ├── requirements_<module>_web.md
 │   │       │   ├── evidence/*.png             # ảnh chụp khi khảo sát
@@ -81,7 +81,7 @@ claude-testing-skills/
 │   ├── testcases/
 │   │   ├── README.md                          # DANH MỤC bộ TC: prefix TC ID, độ phủ REQ↔TC
 │   │   └── <module>/
-│   │       ├── test_cases_<module>.md         # INDEX — tên file bất biến, không chứa dòng TC
+│   │       ├── TEST_CASES_<TÊN_MODULE>_SUMMARY.md         # INDEX — tên file bất biến, không chứa dòng TC
 │   │       └── web/ · mobile/ · api/          # test_cases_<module>_<nền-tảng>.md · parts/ khi > 40 TC
 │   ├── executions/
 │   │   └── <module>/<nền-tảng>/run_<timestamp>/

@@ -1,6 +1,6 @@
 # STORY-PRJ-06 — Sao chép dự án
 
-> Về index: [../../requirements_projects.md](../../requirements_projects.md) · File nền tảng: [../requirements_projects_web.md](../requirements_projects_web.md) · Prefix `PRJ` · REQ bao phủ: `REQ-PRJ-69` → `REQ-PRJ-74` (6 REQ)
+> Về index: [../../REQUIREMENTS_PROJECTS_SUMMARY.md](../../REQUIREMENTS_PROJECTS_SUMMARY.md) · File nền tảng: [../requirements_projects_web.md](../requirements_projects_web.md) · Prefix `PRJ` · REQ bao phủ: `REQ-PRJ-69` → `REQ-PRJ-74` (6 REQ)
 >
 > AMB liên quan: `AMB-PRJ-11`
 
