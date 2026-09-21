@@ -2,7 +2,6 @@
 
 # CÁCH 1 — ĐIỀN PHIẾU (khuyến nghị)
 1. Mở plans/master-test-plan/test_plan.config.yaml và điền phần sau dấu hai chấm
-   (xem bản đã điền đủ để tham khảo: plans/master-test-plan/test_plan.template.yaml)
    Chỉ nhóm Mốc và Phạm vi là bắt buộc — chú thích cạnh mỗi ô ghi giá trị hợp lệ
 2. Chưa có thông tin → để trống. Agent ghi ❓ vào plan, KHÔNG bịa
    Đã quyết định là không → ghi "không"

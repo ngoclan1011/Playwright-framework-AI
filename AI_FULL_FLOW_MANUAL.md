@@ -217,8 +217,6 @@ Nói *"sửa luôn"* / *"cải thiện giùm"* → AI tự chuyển sang **FIX**
 
 📝 Phiếu cần điền: [`plans/master-test-plan/test_plan.config.yaml`](plans/master-test-plan/test_plan.config.yaml) — tên ô tiếng Việt, chú thích ghi sẵn giá trị hợp lệ và ô nào bắt buộc
 
-📘 Bản mẫu đã điền đủ (hệ thống hư cấu): phiếu [`test_plan.template.yaml`](plans/master-test-plan/test_plan.template.yaml) → plan [`test_plan_release_example.md`](plans/master-test-plan/test_plan_release_example.md)
-
 Sinh **Master Test Plan** — tài liệu quản lý để PM/khách hàng **duyệt trước** khi bắt đầu chạy test: kiểm soát tài liệu · mục tiêu & cơ sở kiểm thử · phạm vi · cấp độ, loại, mức độc lập kiểm thử · **kiểm thử phi chức năng** · **chiến lược tự động hoá** · tiêu chí vào/ra · môi trường · **dữ liệu kiểm thử** · **quản lý lỗi** (quy trình, Severity/Priority, thời hạn xử lý) · nhân lực · lịch · **ước lượng công sức & ngân sách** · rủi ro dự án và sản phẩm. Bám cấu trúc ISO/IEC/IEEE 29119-3 và phủ đủ nội dung điển hình của test plan theo **ISTQB CTFL v4.0 mục 5.1.1**. **Không** sinh test scenario, **không** sinh TC.
 
 | Có cần chạy không? | |

@@ -125,7 +125,6 @@ Thông tin **chỉ người mới biết** được gom vào một phiếu YAML,
 
 ```
 plans/master-test-plan/test_plan.config.yaml     ← PHIẾU CẤU HÌNH CHÍNH — người dùng điền trực tiếp
-plans/master-test-plan/test_plan.template.yaml   ← MẪU ĐÃ ĐIỀN ĐỦ (hệ thống hư cấu ShopMini) — chỉ để tham khảo, không sửa
 docs/test-plans/test_plan_<slug>.input.yaml      ← BẢN LƯU của phiếu tại lần lập/cập nhật plan — agent tự ghi, commit cùng plan
 ```
 
@@ -200,7 +199,7 @@ Agent dùng bảng này để kiểm phiếu ở Bước 2. Khoá trong bảng k
 
 | Tình huống | Xử lý |
 |---|---|
-| User không truyền gì | Đọc `plans/master-test-plan/test_plan.config.yaml`. `Mốc` → `Mã mốc` có giá trị → dùng. Phiếu còn trống (`Mốc` và `Phạm vi` → `Trong phạm vi` đều trống) → hỏi user: điền phiếu (chỉ tới mẫu `test_plan.template.yaml`) hay trả lời theo Bước 2 nhánh B |
+| User không truyền gì | Đọc `plans/master-test-plan/test_plan.config.yaml`. `Mốc` → `Mã mốc` có giá trị → dùng. Phiếu còn trống (`Mốc` và `Phạm vi` → `Trong phạm vi` đều trống) → hỏi user: điền phiếu hay trả lời theo Bước 2 nhánh B |
 | User truyền đường dẫn một phiếu YAML khác | Đọc phiếu đó thay cho `test_plan.config.yaml` |
 | User chỉ nói tên mốc, phiếu chính đang là mốc khác | Tìm bản lưu `docs/test-plans/test_plan_<slug>.input.yaml`. Không có → hỏi user có muốn điền phiếu cho mốc này không; **không** tự dùng phiếu của mốc khác |
 | User nói tên mốc **khác** `Mã mốc` trong phiếu chính | Báo lệch, hỏi user dùng cái nào — không tự chọn |
@@ -310,8 +309,6 @@ Nhận câu trả lời → **ghi vào `plans/master-test-plan/test_plan.config.
 **Trước khi ghi plan:** chép nguyên file phiếu đã dùng (kể cả chú thích) thành `docs/test-plans/test_plan_<slug>.input.yaml` (ghi đè bản lưu cũ của cùng slug — lịch sử nằm ở git và Lịch sử thay đổi của plan).
 
 File: `docs/test-plans/test_plan_<slug>.md` — thư mục **`docs/test-plans/`** (tạo nếu chưa có), cắt ngang mọi module và nền tảng. Plan là tài liệu lập **trước** đợt nên **không** đặt trong `docs/executions/` — nơi chứa kết quả thực thi. **Một mốc một plan**, kể cả khi đợt gồm nhiều hệ thống — phân biệt bằng cột *Hệ thống* ở 2.1.
-
-> 📘 **Bản mẫu đã điền đủ:** plan [`test_plan_release_example.md`](../../plans/master-test-plan/test_plan_release_example.md) sinh từ phiếu [`test_plan.template.yaml`](../../plans/master-test-plan/test_plan.template.yaml) — hệ thống hư cấu có Web · Mobile · API, đã duyệt v1.1. Tham khảo **độ chi tiết**; **không** chép số liệu, tên người, ngày tháng sang plan thật.
 
 ```markdown
 # Master Test Plan — <Dự án> · <Mốc>

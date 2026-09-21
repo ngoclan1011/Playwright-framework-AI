@@ -15,7 +15,6 @@
 #   • Dòng bắt đầu bằng # là chú thích — giữ nguyên.
 #   • 🔒 KHÔNG ghi URL có token, mật khẩu, API key — những thứ đó ở .env.
 #
-#  Mẫu đã điền đủ (hệ thống hư cấu): plans/master-test-plan/test_plan.template.yaml
 #  Nhãn đầu mỗi nhóm: BẮT BUỘC / tuỳ chọn · người thường nắm thông tin.
 # ══════════════════════════════════════════════════════════════════════
 

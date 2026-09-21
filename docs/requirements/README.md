@@ -76,9 +76,9 @@ CTR · EXP · ITEM · TICK · ESTREQ · KB · REP · DASH · TODO · REM · PROF
 | ⚪ Chưa implement | 7 | `LOGIN` 2 — `REQ-LOGIN-27` và `REQ-LOGIN-40`, **cả hai ra ngoài phạm vi kiểm thử** theo quyết định PO 18-08-2026 · `CUST` 2 — `REQ-CUST-81` (Inactive bị loại khỏi mọi dropdown, chưa rà 11 module) và `REQ-CUST-82` (chặn xoá khách hàng có dữ liệu liên quan, cần môi trường riêng) · `PRJ` 4 — `REQ-PRJ-89`, `91`, `94` (CRUD mốc tiến độ / tệp / thảo luận, không chạy trên môi trường dùng chung) và `REQ-PRJ-104` (nội dung tệp `Export project data`, không tải tệp về) |
 | **Tổng** | **232** | |
 
-> ⚠️ **Toàn bộ REQ 🟡 của `LOGIN` chưa có test case nào** (module chưa tới bước sinh TC). Khi sinh TC, viết theo bản đã sửa — **không** dùng bản trước 18-08-2026.
+> ✅ **REQ 🟡 của `LOGIN` đã có test case** trong [`testcases/login/`](../testcases/login/test_cases_login.md), viết theo bản đã sửa. Khi REQ đổi tiếp, cập nhật TC bằng `/update-testcases-from-impact` — **không** dùng bản trước 18-08-2026.
 >
-> ✅ **`LOGIN` không còn Story nào BLOCKED** sau quyết định PO 18-08-2026 — sẵn sàng sinh TC cho **39/41 REQ** (2 REQ ⚪ ra ngoài phạm vi).
+> ✅ **`LOGIN` không còn Story nào BLOCKED** sau quyết định PO 18-08-2026 — phạm vi kiểm thử gồm **42/44 REQ** (2 REQ ⚪ ra ngoài phạm vi).
 
 ---
 
@@ -97,6 +97,8 @@ CTR · EXP · ITEM · TICK · ESTREQ · KB · REP · DASH · TODO · REM · PROF
 | [AMB-PRJ-14](projects/requirements_projects.md#71-ambiguities) | `PRJ` | `Visible Tabs` và 18 công tắc quyền khách hàng tác động tới khu quản trị hay chỉ cổng khách hàng? | STORY-PRJ-03 (11 REQ) — BLOCKED; cổng khách hàng ngoài phạm vi toàn dự án |
 
 **Đã xử lý — không còn chặn tiến độ:**
+
+> Bảng dưới chỉ liệt kê AMB có **hệ quả cần nhớ ở cấp hệ thống**. Đủ 20/20 AMB của `LOGIN` và 14/14 AMB của `CUST` xem ở bảng Ambiguities của [`requirements_login.md`](login/requirements_login.md) · [`requirements_customers.md`](customers/requirements_customers.md).
 
 | Mã | Module | Trạng thái | Kết luận |
 |---|---|---|---|
@@ -144,7 +146,7 @@ docs/requirements/
     └── impact/impact_<TICKET-ID>.md       ← Impact Report — input cho tầng test case
 ```
 
-> **Trạng thái chuyển đổi tầng nền tảng:** `CUST` ✅ đã chuyển (19-09-2026) · `LOGIN`, `PRJ` còn cấu trúc cũ (`evidence/`, `stories/` nằm thẳng dưới thư mục module) — sẽ chuyển **một lần** ở lần đầu một workflow sinh/cập nhật chạm lại module đó.
+> **Trạng thái chuyển đổi tầng nền tảng:** `LOGIN` ✅ đã chuyển (19-09-2026) · `CUST` ✅ đã chuyển (19-09-2026) · `PRJ` còn cấu trúc cũ (`evidence/`, `stories/` nằm thẳng dưới thư mục module) — sẽ chuyển **một lần** ở lần đầu một workflow sinh/cập nhật chạm lại module đó.
 
 ---
 
@@ -167,6 +169,7 @@ docs/requirements/
 
 | Ngày | Thay đổi |
 |---|---|
+| 21-09-2026 | **Đồng bộ danh mục với thực tế `LOGIN`/`CUST`** — không đổi REQ nào. Mục 4: `LOGIN` đã chuyển tầng nền tảng từ 19-09-2026 (danh mục còn ghi cấu trúc cũ). Mục 2: phạm vi `LOGIN` sửa `39/41` → `42/44` (sau khi thêm `REQ-LOGIN-42`→`44`); bỏ cảnh báo "REQ 🟡 chưa có TC" vì `test_cases_login.md` đã có. Mục 3.1: ghi chú bảng "Đã xử lý" chỉ là bản rút gọn, trỏ về tài liệu module |
 | 19-09-2026 | **Hai quyết định PO trả lời qua chat.** `AMB-LOGIN-20` (mở và đóng cùng ngày): ép HTTPS là **bắt buộc** → thêm `REQ-LOGIN-44` 🟢 — `LOGIN` 44 REQ, 40 trong phạm vi; `CRM_LOGIN_TC_039` chuyển truy vết từ `REQ-LOGIN-01` sang REQ mới. `AMB-CUST-14` ✅ trùng giả định, không đổi REQ. Active 198 → 199, Tổng 231 → 232. **Cả `LOGIN` lẫn `CUST` không còn ambiguity treo** |
 | 19-09-2026 | **`CUST` đồng bộ requirements với evidence** — đo lại DOM thật 5 điểm lệch mà bộ TC phát hiện: 4 REQ 🟡 (`15`, `17`, `22`, `70`), 2 REQ chỉ ghi chú hiển thị (`11`, `16`), thêm `REQ-CUST-84` 🟢 (khoá đổi tiền tệ khi đã có giao dịch). Active 201 → 198, Changed 21 → 25, Tổng 230 → 231 |
 | 19-09-2026 | **`LOGIN` và `PRJ` chuyển sang tầng nền tảng** (skill `skills-requirements-analyzer` mục 5.3), cùng chuẩn với `CUST`. `LOGIN`: 43 REQ + mục 2, 3, 4, 5, 8, 9, 12 → `login/web/requirements_login_web.md`, ảnh → `login/web/evidence/`. `PRJ`: `stories/` → `projects/web/stories/`, ảnh → `projects/web/evidence/`, mục 2, 6, 8 → `projects/web/requirements_projects_web.md`. Index giữ tên và vị trí, có `## Bản đồ tài liệu` mới. **Mã REQ, số mục, nội dung không đổi**. Thư mục cũ `login/evidence/`, `projects/evidence/`, `projects/stories/` đã bỏ |
