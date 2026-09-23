@@ -43,6 +43,21 @@ Mỗi test case chấm theo 6 tiêu chí, thang điểm 0-2 (0 = không đạt, 
 
 > TC mang tag `@Deprecated` (chức năng đã gỡ) **không** chấm rubric, **không** tính vào coverage — liệt kê riêng số lượng ở phần Tổng quan.
 
+### Đọc Expected cùng Pre-Condition — không chấm Expected như một ô đứng riêng
+
+Pre-Condition · Test Data · Expected là **một hợp đồng**: Pre-Condition dựng trạng thái đầu, Expected nói trạng thái sau thao tác. Trước khi ghi bất kỳ nhận xét nào về Expected (tiêu chí 1, 2, 3, 4), đọc lại Pre-Condition và Test Data của **chính TC đó**.
+
+| Tình huống | Chấm |
+|---|---|
+| Expected nhắc tới đối tượng do Pre-Condition dựng — *"không thấy lại danh sách khách hàng"* khi Pre-Condition ghi *"đã mở trang Customers"* | Đo được → **không** trừ tiêu chí 2, **không** đề xuất chép lại Pre-Condition vào Expected |
+| Thông tin reviewer định đòi bổ sung (tài khoản, trang xuất phát, dữ liệu có sẵn, trạng thái đầu) **đã có** ở Pre-Condition / Test Data | **Không** phải thiếu sót — bỏ nhận xét |
+| Expected không nhắc lại trạng thái mà Pre-Condition đã bảo đảm (VD không ghi *"chưa có cookie"* khi Pre-Condition là *"cửa sổ ẩn danh mới"*) | **Không** trừ. Expected chấm theo **kết quả của thao tác**, không theo việc lặp lại tiền đề |
+| Nhiều cách diễn đạt cho **cùng một** kết quả cuối, do các biến thể đi đường khác nhau (VD *"dừng ở / bị đưa về `/admin/authentication`"* cho biến thể gõ URL và biến thể bấm Back) | **Không** phải "ghép hai kết quả" — kết quả chấm vẫn là một. Không trừ |
+| Hai chỗ mô tả **cùng một trạng thái đầu** bằng hai cách (VD Pre-Condition *"cửa sổ ẩn danh mới"*, 🔧 *"xoá cookie rồi mới đăng nhập"*) | **Không** phải mâu thuẫn, không trừ. Chỉ gọi là mâu thuẫn khi hai chỗ dẫn tới **trạng thái khác nhau** — phải nêu được trạng thái khác đó là gì |
+| Expected phụ thuộc một điều kiện mà **cả** Pre-Condition lẫn Test Data đều không nêu (VD Expected *"hiện hộp thoại cảnh báo timer"* nhưng không đâu nói có timer đang chạy) | Trừ tiêu chí 2 hoặc 3 — đề xuất bổ sung vào **Pre-Condition**, không nhét vào Expected |
+
+> Nhận xét đòi bổ sung thông tin cho Expected phải ghi được câu *"Pre-Condition và Test Data không nêu …"*. Không ghi được câu đó (vì thông tin đã có) → nhận xét sai, bỏ.
+
 **Xếp loại theo tổng điểm (tối đa 12):**
 - 🟢 **10-12:** Tốt — dùng được ngay
 - 🟡 **6-9:** Cần sửa — có đề xuất cụ thể
@@ -50,9 +65,37 @@ Mỗi test case chấm theo 6 tiêu chí, thang điểm 0-2 (0 = không đạt, 
 
 ---
 
+## Phạm vi loại trừ — lập TRƯỚC khi đối soát coverage
+
+Requirements có thể đã **quyết định không viết TC** cho một phần của module. Bộ TC không có TC cho phần đó là **đúng**, không phải thiếu — báo cáo nhắc lại và góp ý phần đó là **dư thừa**, và đẩy QA đi viết TC mà PO đã bỏ.
+
+Trước khi chấm coverage, lập **Danh sách loại trừ** từ các nguồn sau:
+
+| Nguồn | Dấu hiệu |
+|---|---|
+| Requirements — mục `Ngoài phạm vi` (index hoặc file nền tảng) | Mọi dòng của mục |
+| Requirements — REQ ghi *ngoài phạm vi viết TC / kiểm thử* | VD *"Chưa kiểm chứng và sẽ KHÔNG kiểm chứng — `AMB-…` ⏭️"* |
+| Requirements — REQ 🔴 Deprecated | Chức năng đã gỡ |
+| Requirements — AMB `⏭️` có quyết định *"bỏ qua, không viết TC"* hoặc *"chuyển sang module X"* | VD kiểm chứng đầu-cuối một popup chuyển sang module khác |
+| Requirements — RISK *đã chấp nhận* kèm quyết định không kiểm | |
+| Index TC — dòng `⚪ Ngoài phạm vi` ở Bảng Đối Soát Coverage · Assumptions *"Không viết TC …"* | Chép lại quyết định của requirements, hoặc quyết định của người viết TC |
+
+**Luật:**
+
+- Mục trong Danh sách loại trừ **không** xuất hiện ở: Coverage Gaps · cột *Mục thiếu* của đối soát 15 loại field · đề xuất TC mới · đề xuất bổ sung REQ · Kết luận & Khuyến nghị · nhận xét từng TC
+- Nhánh 4 vòng mà phần còn thiếu **chỉ** nằm trong danh sách loại trừ → chấm `⏭️` và dẫn mã quyết định (VD `⏭️ AMB-LOGIN-14`), **không** 🟡 / 🔴. Nhánh còn thiếu cả phần khác → chấm theo phần khác, không nhắc phần đã loại
+- **Không** chất vấn lại quyết định loại trừ của requirements — đó là quyết định của PO / người có thẩm quyền, sửa bằng `/update-requirements-from-ticket`, không phải việc của review TC. Chỉ nêu lại khi **điều kiện rà lại ghi trong chính quyết định đó đã xảy ra** và chỉ ra được bằng chứng
+- Báo cáo ghi **một dòng** ở Tổng quan: `Loại trừ theo requirements: <mã REQ / AMB / khu vực>` — để người đọc biết phạm vi, **không** kèm nhận xét
+- User bảo bỏ qua file index TC → vẫn đọc phần loại trừ **của requirements**. Bỏ index không có nghĩa bỏ quyết định phạm vi
+- Mục có trong bộ TC nhưng thuộc danh sách loại trừ (TC viết cho REQ đã ra ngoài phạm vi) → **đây** mới là thứ đáng nêu: đề xuất `@Deprecated`
+
+> Luật `⏭️` ở mục *Đối soát 4 vòng* bên dưới (kể cả *"không bao giờ được rút"*) áp cho `⏭️` do **người viết TC** tự quyết ở Bảng 4 vòng của index. `⏭️` dẫn về một quyết định của requirements thuộc Danh sách loại trừ — theo luật của mục này.
+
+---
+
 ## Coverage Analysis (mức bộ TC)
 
-Ngoài review từng TC, đánh giá độ phủ của cả bộ:
+Ngoài review từng TC, đánh giá độ phủ của cả bộ — **trừ** các mục trong Danh sách loại trừ ở trên:
 
 | Khía cạnh | Kiểm tra |
 |---|---|
@@ -89,10 +132,11 @@ Dùng **Bản Đồ Loại Kiểm Thử — 4 Vòng** trong `skills-rbt-manual-t
 ## Review Workflow
 
 1. **Đọc input** — file TC + requirement liên quan (nếu có). Nếu thiếu requirement → vẫn review được 5/6 tiêu chí, ghi chú không đánh giá được traceability
-2. **Review từng TC** — chấm điểm 6 tiêu chí, ghi vấn đề cụ thể (trích nguyên văn chỗ chưa đạt)
-3. **Phân tích coverage** — đối chiếu bộ TC với requirement, liệt kê gap
-4. **Phát hiện trùng lặp** — nhóm TC giống nhau
-5. **Report** — xuất báo cáo theo template, kèm đề xuất sửa cụ thể cho từng TC 🔴/🟡
+2. **Lập Danh sách loại trừ** — theo mục *Phạm vi loại trừ*, trước mọi bước chấm
+3. **Review từng TC** — chấm điểm 6 tiêu chí, ghi vấn đề cụ thể (trích nguyên văn chỗ chưa đạt). Expected đọc **cùng** Pre-Condition và Test Data của chính TC đó
+4. **Phân tích coverage** — đối chiếu bộ TC với requirement, liệt kê gap — **bỏ** các mục trong Danh sách loại trừ
+5. **Phát hiện trùng lặp** — nhóm TC giống nhau
+6. **Report** — xuất báo cáo theo template, kèm đề xuất sửa cụ thể cho từng TC 🔴/🟡
 
 > **Nguyên tắc:** Mọi nhận xét phải kèm **ví dụ sửa cụ thể**, không chê chung chung. VD: thay vì "Expected mơ hồ" → viết "Expected hiện tại: 'hệ thống xử lý đúng' → Đề xuất: 'Toast hiển thị "Lưu thành công", record xuất hiện đầu danh sách với tên vừa nhập'".
 
@@ -110,6 +154,7 @@ Lưu tại `docs/testcases/<module>/review/testcase_review_report_<nền-tảng>
 - **Số TC review:** N
 - **Kết quả:** 🟢 x tốt | 🟡 y cần sửa | 🔴 z nên viết lại
 - **Điểm trung bình:** x.x/12
+- **Loại trừ theo requirements:** <mã REQ / AMB / khu vực — hoặc "Không có"> (không chấm, không đề xuất)
 
 ## Chi tiết từng TC
 | TC ID | Điểm | Xếp loại | Vấn đề chính | Đề xuất sửa |
@@ -145,6 +190,8 @@ Lưu tại `docs/testcases/<module>/review/testcase_review_report_<nền-tảng>
 ## Quality Checklist
 
 - [ ] Mỗi TC 🔴/🟡 đều có đề xuất sửa cụ thể (không chê chung chung)
+- [ ] Mọi nhận xét về Expected đã đối chiếu Pre-Condition + Test Data của chính TC đó — không đòi bổ sung thứ đã có, không gọi "mâu thuẫn" khi hai chỗ cùng dẫn tới một trạng thái
+- [ ] Đã lập Danh sách loại trừ từ requirements — không mục nào trong đó xuất hiện ở Coverage Gaps, đối soát 15 loại field, đề xuất TC/REQ mới, Kết luận; nhánh 4 vòng chỉ thiếu phần đã loại chấm `⏭️` kèm mã quyết định
 - [ ] Coverage gap liệt kê kịch bản cụ thể, không nói "thiếu negative case" suông
 - [ ] **Đã chạy đối soát 4 vòng** — mọi nhánh được chấm ✅/🟡/🔴/➖/⏭️, không ô nào bỏ trống; `⏭️` hợp lệ không bị tính là gap
 - [ ] Rubric tiêu chí 6 không trừ điểm TC gộp đúng Kiểu A/B; tiêu chí 2 đã soát ngôn ngữ DOM/HTTP ở phần TC chính

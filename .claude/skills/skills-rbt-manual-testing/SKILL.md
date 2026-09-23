@@ -943,8 +943,11 @@ Trước khi xuất kết quả cuối cùng cho user, Agent **BẮT BUỘC** t�
 |---|---|---|---|---|
 | REQ-LOGIN-01 | Đăng nhập email | 5 | TC_001..TC_005 | ✅ |
 | REQ-LOGIN-02 | Khóa sau 5 lần sai | 0 | — | 🔴 THIẾU — phải bổ sung trước khi xuất |
+| REQ-LOGIN-27 · 40 | Gửi mail đặt lại · tự đăng nhập bằng cookie | 0 | — | ⚪ Ngoài phạm vi — `AMB-LOGIN-04` · `AMB-LOGIN-15` ⏭️, quyết định PO 18-08-2026 |
 ```
 > Nếu có REQ nào 0 TC → agent PHẢI quay lại sinh bổ sung, KHÔNG được xuất kết quả có dòng 🔴.
+>
+> **Ngoại lệ — requirements đã loại khỏi phạm vi viết TC:** REQ ghi *ngoài phạm vi viết TC / kiểm thử*, REQ 🔴 Deprecated, phần thuộc mục `Ngoài phạm vi` của requirements, hoặc AMB `⏭️` quyết định *"bỏ qua, không viết TC"* / *"chuyển sang module X"* → **không** sinh TC (kể cả TC "cho đủ bảng" hay biến thể lén phủ phần đó), **không** tính 🔴. Ghi dòng `⚪ Ngoài phạm vi` kèm **mã quyết định** ở Bảng Đối Soát Coverage, và dòng *Phạm vi REQ* ở đầu index liệt kê các mã bị loại. Nhánh 4 vòng chỉ vắng vì phần đã loại → `⏭️` dẫn mã quyết định. Đây là nguồn mà `/review-testcases` đọc để **không** báo lại các phần đó thành gap.
 
   **6b. Phép thử chiều ngược — TC gánh nhiều REQ (BẮT BUỘC chạy, áp cả QUICK · FULL RBT · DELTA · `/generate-testcases-api`):**
   Bảng trên chỉ trả lời *"REQ nào chưa có TC"* — nó **không** bắt được TC gánh quá nhiều REQ. Với **mỗi TC có ≥ 2 REQ ID**, đếm số TC **của cùng nền tảng** trỏ về từng REQ đó:

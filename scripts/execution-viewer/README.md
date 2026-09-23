@@ -33,16 +33,17 @@ Nạp **nhiều file/thư mục** để gộp số liệu và so sánh giữa c�
 |---|---|
 | **Import** | Kéo thả, hoặc 2 nút cố định **+ Import thư mục** (nạp được luôn ảnh evidence trong `run_*`) / **+ Import file .md** — luôn hiện, bấm thêm được bất cứ lúc nào · import lại cùng Run ID sẽ ghi đè |
 | **Thống kê** | PASS / FAIL / BLOCKED / SKIPPED · tổng TC · **pass rate = PASS / (PASS + FAIL + BLOCKED)** — SKIPPED không nằm ở mẫu số |
-| **Cảnh báo tự động** | 4 loại — xem mục dưới |
+| **Gộp nhiều lần chạy** | Cùng module + nền tảng nạp ≥ 2 report → **mỗi TC một dòng, lấy kết quả của lần chạy mới nhất** có chạy TC đó (xếp theo số trong Run ID). Kết quả cũ hiện mờ dưới trạng thái (`trước: BLOCKED`), đủ chuỗi trong panel chi tiết và cột `Lịch sử các lần chạy` khi export. Ví dụ: `run_A` chạy TC 001–010 có TC 010 BLOCKED, `run_B` chỉ chạy lại TC 010 → PASS ⇒ hiện **10 TC**, TC 010 = PASS, không phải 11 dòng |
+| **Cảnh báo tự động** | 5 loại — xem mục dưới |
 | **Xoá tất cả** | Nút **Xoá tất cả** cạnh **+ Import file .md** (chỉ hiện khi đã nạp ít nhất 1 file) — xoá hết report + ảnh evidence đã nạp (kể cả trong `localStorage`), quay về màn hình kéo thả trống |
 | **Sidebar** | Danh sách report đã nạp kèm nhãn `RUN` / `RETEST`; click để xem riêng một lần chạy, `×` để gỡ |
 | **Lọc** | Theo trạng thái (chip) · theo module · tìm toàn văn trên TC ID, kịch bản, ghi chú, nguyên nhân chặn, Expected/Actual |
 | **Sort** | Click header — TC ID sort theo số tự nhiên (`TC_002` trước `TC_010`) |
 | **Chi tiết** | Click một dòng để mở panel: REQ ID · Priority · bước fail · Expected vs Actual · nguyên nhân chặn · evidence · file nguồn |
-| **So sánh các lần chạy** | Tab riêng — 🆕 Mới fail · 🔁 Fail liên tục · ✅ Vừa được fix · ⚠️ Chuyển sang BLOCKED |
+| **So sánh các lần chạy** | Tab riêng — 🆕 Mới fail · 🔁 Fail liên tục · ✅ Vừa được fix · ⚠️ Chuyển sang BLOCKED · 🔓 Hết BLOCKED |
 | **Verify bug** | Tab riêng cho kết quả retest: FIXED / NOT_FIXED / PARTIAL / CANNOT_VERIFY |
 | **Độ phủ automation** | Tab riêng, nạp `traceability_matrix.md` — xem mục dưới |
-| **Export** | **CSV** và **Excel (.xlsx)** — xuất **đúng tab đang mở** và **đúng phần đang hiển thị** sau lọc/tìm kiếm |
+| **Export** | **CSV** và **Excel (.xlsx)** — xuất **đúng tab đang mở** và **đúng phần đang hiển thị** sau lọc/tìm kiếm. Gộp nhiều lần chạy thì Excel có sheet `Tổng hợp` (kết quả mới nhất) + mỗi lần chạy một sheet giữ **nguyên bản** kết quả của lần đó |
 
 ---
 
@@ -101,8 +102,8 @@ Tên file dạng `execution_report_<yyyyMMdd-HHmmss>.xlsx` / `do_phu_automation_
 | 🔴 **BLOCKED > 20%** | Tỷ lệ BLOCKED vượt 20% | BLOCKED là **chưa test được**, không phải đạt. Trên 20% thì lần chạy không đủ dữ liệu để kết luận chất lượng |
 | 🟡 **BLOCKED 5–20%** | — | Nhắc nêu rõ nguyên nhân chặn khi báo cáo |
 | 🟡 **Có TC SKIPPED** | Bất kỳ TC nào bị skip | TC skip do thao tác phá huỷ trên môi trường dùng chung là **nợ kiểm thử**, dễ biến mất khỏi mọi báo cáo về sau |
-| 🟡 **Dữ liệu chưa dọn** | Cột `Đã xoá?` có ô khác ✅ | Môi trường còn data thừa → lần chạy sau có thể fail vì lý do không liên quan đến ứng dụng |
-| 🟡 **Gộp nhiều lần chạy cùng module** | Cùng module có ≥ 2 report | Mỗi TC bị đếm một lần cho **mỗi** lần chạy → tổng lớn hơn số TC thật. Chọn một lần chạy ở sidebar để xem số chính xác |
+| 🟡 **Dữ liệu chưa dọn** | Cột `Đã xoá?` có ô khác ✅ (ô `—` của dòng *"Không tạo bản ghi nào"* không tính) | Môi trường còn data thừa → lần chạy sau có thể fail vì lý do không liên quan đến ứng dụng |
+| 🔵 **Gộp nhiều lần chạy cùng module** | Cùng module + nền tảng có ≥ 2 report | Báo số liệu đang là **kết quả mới nhất của từng TC**, không phải của riêng một lần chạy nào, và bao nhiêu TC có kết quả thay đổi. Chọn một lần chạy ở sidebar để xem số của riêng lần đó |
 
 ---
 
@@ -136,14 +137,15 @@ File được nhận là RTM khi tiêu đề hoặc tên file chứa `Ma trận 
 
 ## So sánh các lần chạy hoạt động thế nào
 
-Gom report theo **module**, sắp theo Run ID (số trong `run_1785700456`) tăng dần, rồi so **cùng TC ID** giữa hai lần chạy gần nhất:
+Gom report theo **module + nền tảng**, sắp theo Run ID (số trong `run_1785700456`) tăng dần, rồi so **cùng TC ID** giữa hai lần chạy gần nhất:
 
 | Nhóm | Điều kiện |
 |---|---|
-| 🆕 Mới fail | lần trước PASS → lần này FAIL |
+| 🆕 Mới fail | lần trước PASS hoặc BLOCKED → lần này FAIL |
 | 🔁 Fail liên tục | FAIL ở cả hai lần |
 | ✅ Vừa được fix | lần trước FAIL → lần này PASS |
 | ⚠️ Chuyển sang BLOCKED | trước chạy được → giờ bị chặn |
+| 🔓 Hết BLOCKED | lần trước BLOCKED → lần này PASS (BLOCKED → FAIL xếp vào 🆕 Mới fail) |
 
 > ⚠️ So sánh chỉ có ý nghĩa khi các lần chạy dùng **cùng nguồn TC**. File TC đã sửa giữa hai lần chạy thì đừng kết luận "chất lượng giảm" từ số thô.
 

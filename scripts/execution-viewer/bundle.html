@@ -71,6 +71,7 @@ section.content{flex:1;min-width:0}
 .alert b{display:block;margin-bottom:2px}
 .alert.danger{background:#fef2f2;border-color:#fecaca;color:#991b1b}
 .alert.warn{background:#fffbeb;border-color:#fde68a;color:#92400e}
+.alert.info{background:#f0f9ff;border-color:#bae6fd;color:#075985}
 .alert ul{margin:5px 0 0;padding-left:19px}
 
 /* toolbar */
@@ -106,6 +107,8 @@ td.id{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;
 .st.NOTCOVERED{background:#fee2e2;color:#991b1b}
 .st.NEW{background:#fee2e2;color:#991b1b} .st.RECUR{background:#fef3c7;color:#92400e}
 .st.FIXEDTREND{background:#dcfce7;color:#166534} .st.TOBLOCKED{background:#fef3c7;color:#92400e}
+.st.UNBLOCKED{background:#e0f2fe;color:#075985}
+.hist{font-size:11px;color:var(--muted);margin-top:3px;white-space:nowrap}
 .empty{padding:34px;text-align:center;color:var(--muted)}
 
 /* detail */
@@ -210,7 +213,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:18px}
           <table id="tbl">
             <thead><tr>
               <th data-s="id">TC ID</th><th data-s="scenario">Kịch bản</th><th data-s="status">Kết quả</th>
-              <th data-s="module">Module</th><th data-s="run">Lần chạy</th><th data-s="note">Ghi chú</th>
+              <th data-s="module">Module</th><th data-s="runId">Lần chạy</th><th data-s="note">Ghi chú</th>
             </tr></thead>
             <tbody id="rows"></tbody>
           </table>
@@ -398,7 +401,7 @@ function parseReport(text, fileName){
   for(const t of tables){ if(isKV(t) && !t.heading){ meta={...kvOf(t),...meta}; } }
   if(!Object.keys(meta).length){ const t=tables.find(isKV); if(t) meta=kvOf(t); }
 
-  const module = (titleLine.split(/—|--/)[1]||'').split('·')[0].trim() || meta['Module'] || fileName.replace(/\.md$/,'');
+  const module = stripMd((titleLine.split(/—|--/)[1]||'').split('·')[0]) || meta['Module'] || fileName.replace(/\.md$/,'');
   const runId  = meta['Run ID']||meta['Retest ID']||meta['Run']||fileName.replace(/\.md$/,'');
   const build  = meta['Build / Version']||meta['Build']||meta['Build lúc log bug → Build retest']||'';
 
@@ -461,7 +464,8 @@ function parseReport(text, fileName){
   let dirty=0;
   for(const t of tables){
     const c=colIdx(t.header,/đã xoá|da xoa/i); if(c<0) continue;
-    for(const r of t.rows) if(r[c] && !/✅|yes|có|x$/i.test(r[c])) dirty++;
+    // Ô "—" (dòng "Không tạo bản ghi nào") là không có dữ liệu để dọn, không phải "chưa xoá".
+    for(const r of t.rows) if(stripMd(r[c]) && !/✅|yes|có|x$/i.test(r[c])) dirty++;
   }
 
   return {kind:isRetest?'retest':'run',fileName,title:titleLine,module,runId,build,isRetest,meta,tcs,bugs,dirty};
@@ -579,13 +583,36 @@ const runNum=r=>{ const m=String(r).match(/(\d{6,})/); return m?+m[1]:0; };
 function visibleDocs(){ return activeFile? DOCS.filter(d=>d.fileName+'|'+d.runId===activeFile) : DOCS; }
 // RTM không phải kết quả chạy — tách khỏi mọi thống kê PASS/FAIL để không làm loãng số liệu.
 const runDocs = list => list.filter(d=>d.kind!=='rtm');
-function allTcs(){ return runDocs(visibleDocs()).flatMap(d=>d.tcs); }
+// Cũ → mới theo số trong Run ID. Report không có số thì giữ thứ tự nạp (sort ổn định).
+const byRunOrder = list => [...list].sort((a,b)=>runNum(a.runId)-runNum(b.runId));
+const platformOf = d => String(d.meta?.['Nền tảng']||'').toLowerCase();
+
+/* Gộp nhiều lần chạy: MỖI TC MỘT DÒNG, lấy kết quả của lần chạy MỚI NHẤT có chạy TC đó.
+   Lần chạy lại thường chỉ chứa vài TC (VD chỉ chạy lại TC BLOCKED) — cộng dồn thô thì TC đó
+   hiện 2 dòng, 2 trạng thái, và tổng dư đúng bằng số TC chạy lại. Kết quả cũ không mất:
+   nằm trong `history` (hiện ở cột Kết quả, panel chi tiết và file export).
+   Khoá gộp = module + nền tảng + TC ID: cùng TC ID ở hai module/nền tảng khác nhau là hai TC. */
+function latestTcs(docs){
+  const byKey=new Map();
+  for(const d of byRunOrder(runDocs(docs))){
+    const plat=platformOf(d);
+    for(const t of d.tcs){
+      const k=t.module+'|'+plat+'|'+t.id;
+      const prev=byKey.get(k);
+      const history=[...(prev?prev.history:[]), {run:t.runId, st:t.status||''}];
+      byKey.set(k, {...t, history});
+    }
+  }
+  return [...byKey.values()];
+}
+const historyText = t => (t.history||[]).length>1 ? t.history.map(h=>`${h.st||'—'} (${h.run})`).join(' → ') : '';
+function allTcs(){ return latestTcs(visibleDocs()); }
 function rtmDocs(){ return visibleDocs().filter(d=>d.kind==='rtm'); }
 
-function filtered(){
+function filtered(list=allTcs()){
   const q=$('#q').value.trim().toLowerCase();
   const mod=$('#fModule').value;
-  return allTcs().filter(t=>{
+  return list.filter(t=>{
     if(t.status && offStatus.has(t.status)) return false;
     if(mod && t.module!==mod) return false;
     if(!q) return true;
@@ -624,29 +651,32 @@ function rowCmp(key, dir){
 }
 function trendRows(){
   const out=[]; const byMod={};
-  for(const d of runDocs(DOCS)){ (byMod[d.module]=byMod[d.module]||[]).push(d); }
-  for(const [mod,docs] of Object.entries(byMod)){
+  for(const d of runDocs(DOCS)){ const k=d.module+'|'+platformOf(d); (byMod[k]=byMod[k]||[]).push(d); }
+  for(const docs of Object.values(byMod)){
     if(docs.length<2) continue;
-    const ordered=[...docs].sort((a,b)=>runNum(a.runId)-runNum(b.runId));
+    const mod=docs[0].module;
+    const ordered=byRunOrder(docs);
     const ids=new Set(ordered.flatMap(d=>d.tcs.map(t=>t.id)));
     for(const id of ids){
       const seq=ordered.map(d=>({run:d.runId,st:(d.tcs.find(t=>t.id===id)||{}).status||''})).filter(x=>x.st);
       if(seq.length<2) continue;
       const prev=seq[seq.length-2].st, last=seq[seq.length-1].st;
       let grp='';
-      if(prev==='PASS'&&last==='FAIL') grp='NEW';
+      // BLOCKED → FAIL cũng là "mới fail": lần trước chưa kiểm được, lần này mới lộ lỗi.
+      if((prev==='PASS'||prev==='BLOCKED')&&last==='FAIL') grp='NEW';
       else if(prev==='FAIL'&&last==='FAIL') grp='RECUR';
       else if(prev==='FAIL'&&last==='PASS') grp='FIXEDTREND';
+      else if(prev==='BLOCKED'&&last==='PASS') grp='UNBLOCKED';
       else if(prev!=='BLOCKED'&&last==='BLOCKED') grp='TOBLOCKED';
       if(grp) out.push({grp,id,module:mod,seq});
     }
   }
-  const rank={NEW:0,RECUR:1,TOBLOCKED:2,FIXEDTREND:3};
+  const rank={NEW:0,RECUR:1,TOBLOCKED:2,FIXEDTREND:3,UNBLOCKED:4};
   return out.sort((a,b)=>rank[a.grp]-rank[b.grp]||a.id.localeCompare(b.id,'vi',{numeric:true}));
 }
 
 /* ============================ RENDER ============================ */
-const GRP_LABEL={NEW:'🆕 Mới fail',RECUR:'🔁 Fail liên tục',FIXEDTREND:'✅ Vừa được fix',TOBLOCKED:'⚠️ Chuyển sang BLOCKED'};
+const GRP_LABEL={NEW:'🆕 Mới fail',RECUR:'🔁 Fail liên tục',FIXEDTREND:'✅ Vừa được fix',TOBLOCKED:'⚠️ Chuyển sang BLOCKED',UNBLOCKED:'🔓 Hết BLOCKED'};
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 function render(){
@@ -690,12 +720,17 @@ function render(){
 
   // alerts
   const al=[];
-  // Cùng một module nạp nhiều lần chạy → mỗi TC được đếm nhiều lần. Phải nói rõ, không để người đọc
-  // tưởng đây là số TC thật. Cùng nguyên tắc với báo cáo: không đưa ra con số dễ gây hiểu nhầm.
-  const dup=Object.entries(runDocs(vis).reduce((a,d)=>{a[d.module]=(a[d.module]||0)+1;return a},{})).filter(([,n])=>n>1);
-  if(dup.length) al.push(['warn','Đang gộp nhiều lần chạy của cùng module — số liệu bị đếm trùng',
-    dup.map(([m,n])=>`<b>${esc(m)}</b>: ${n} lần chạy`).join(' · ')+
-    '. Mỗi TC được tính một lần cho mỗi lần chạy, nên tổng số TC lớn hơn số TC thật. Chọn <b>một</b> lần chạy ở thanh bên để xem số chính xác, hoặc sang tab <b>So sánh các lần chạy</b>.']);
+  // Cùng một module nạp nhiều lần chạy → số liệu đã được gộp theo kết quả MỚI NHẤT của từng TC.
+  // Vẫn phải nói ra: người đọc cần biết con số không phải của riêng một lần chạy nào.
+  const dup=Object.values(runDocs(vis).reduce((a,d)=>{const k=d.module+'|'+platformOf(d);
+    (a[k]=a[k]||{m:d.module,p:platformOf(d),n:0}).n++; return a},{})).filter(x=>x.n>1);
+  if(dup.length){
+    const changed=base.filter(t=>(t.history||[]).length>1);
+    al.push(['info','Đang gộp nhiều lần chạy của cùng module — mỗi TC lấy kết quả của lần chạy mới nhất',
+      dup.map(x=>`<b>${esc(x.m)}</b>${x.p?' ('+esc(x.p)+')':''}: ${x.n} lần chạy`).join(' · ')+
+      `. ${changed.length} TC được chạy nhiều lần — kết quả cũ hiện mờ ngay dưới trạng thái. `+
+      'Chọn <b>một</b> lần chạy ở thanh bên để xem số của riêng lần đó, hoặc sang tab <b>So sánh các lần chạy</b>.']);
+  }
   const blkRate=base.length? blk/base.length*100 : 0;
   if(blkRate>20) al.push(['danger','Tỷ lệ BLOCKED '+blkRate.toFixed(1)+'% — không kết luận chất lượng từ lần chạy này',
     'BLOCKED nghĩa là <b>chưa test được</b>, không phải đạt. Trên 20% thì lần chạy thiếu dữ liệu để kết luận: dựng lại môi trường rồi chạy lại.']);
@@ -713,7 +748,8 @@ function render(){
   const rows=filtered();
   $('#rows').innerHTML=rows.map((t,i)=>`<tr data-i="${i}">
     <td class="id">${esc(t.id)}</td><td>${esc(t.scenario||'—')}</td>
-    <td>${t.status?`<span class="st ${t.status}">${t.status}</span>`:'—'}</td>
+    <td>${t.status?`<span class="st ${t.status}">${t.status}</span>`:'—'}${(t.history||[]).length>1
+      ?`<div class="hist" title="${esc(historyText(t))}">trước: ${t.history.slice(0,-1).map(h=>esc(h.st||'—')).join(' → ')}</div>`:''}</td>
     <td>${esc(t.module)}</td><td class="id">${esc(t.runId)}</td>
     <td>${esc(t.note||t.blockReason||'—')}</td></tr>`).join('');
   $('#noRows').style.display=rows.length?'none':'block';
@@ -812,7 +848,7 @@ function openDetail(o,title,sub,fields){
   ).join('')||'<div style="color:var(--muted)">Report không ghi thêm chi tiết cho mục này.</div>';
   $('#detail').classList.add('open');
 }
-const TC_FIELDS=[['Kết quả','status'],['Module','module'],['Lần chạy','runId'],['Build','build'],['REQ ID','reqId'],
+const TC_FIELDS=[['Kết quả','status'],['Lịch sử các lần chạy','historyStr'],['Module','module'],['Lần chạy','runId'],['Build','build'],['REQ ID','reqId'],
   ['Priority','priority'],['Bước fail','failStep'],['Expected','expected'],['Actual','actual'],
   ['Nguyên nhân chặn','blockReason'],['Cần gì để chạy','needToRun'],['Tái hiện được?','reproducible'],
   ['Nghi ngờ nguyên nhân','suspect'],['Bug mới','newBug'],['Evidence','evidence'],['Ghi chú','note'],['File nguồn','file']];
@@ -862,14 +898,16 @@ function exportPlan(){
       head:['Bug','Kết quả retest','Module','Build','Lần retest','Severity gốc','TC / REQ liên quan',
             'Số lần lặp','Expected','Actual','File nguồn'], rows}]};
   }
-  const head=['TC ID','Kịch bản','Kết quả','Module','Lần chạy','Build','REQ ID','Priority','Bước fail','Expected','Actual','Nguyên nhân chặn','Ghi chú','File nguồn'];
-  const keys=['id','scenario','status','module','runId','build','reqId','priority','failStep','expected','actual','blockReason','note','file'];
-  const widths=[22,34,13,18,20,12,16,10,11,40,40,32,30,26];
-  const rows=filtered(), toRow=t=>keys.map(k=>String(t[k]??''));
-  const sheets=[{name:'Tổng hợp',statusCol:2,widths,head,rows:rows.map(toRow)}];
-  const runs=[...new Set(rows.map(r=>r.runId))];
-  if(runs.length>1) for(const r of runs)
-    sheets.push({name:r,statusCol:2,widths,head,rows:rows.filter(x=>x.runId===r).map(toRow)});
+  const head=['TC ID','Kịch bản','Kết quả','Lịch sử các lần chạy','Module','Lần chạy','Build','REQ ID','Priority','Bước fail','Expected','Actual','Nguyên nhân chặn','Ghi chú','File nguồn'];
+  const keys=['id','scenario','status','historyStr','module','runId','build','reqId','priority','failStep','expected','actual','blockReason','note','file'];
+  const widths=[22,34,13,36,18,20,12,16,10,11,40,40,32,30,26];
+  const toRow=t=>keys.map(k=>String((k==='historyStr'?historyText(t):t[k])??''));
+  // Sheet Tổng hợp = mỗi TC một dòng, kết quả mới nhất (đúng bảng đang xem).
+  // Sheet từng lần chạy = kết quả NGUYÊN BẢN của lần đó, không gộp — để đối chiếu với report gốc.
+  const sheets=[{name:'Tổng hợp',statusCol:2,widths,head,rows:filtered().map(toRow)}];
+  const docs=byRunOrder(runDocs(visibleDocs()));
+  if(docs.length>1) for(const d of docs)
+    sheets.push({name:d.runId,statusCol:2,widths,head,rows:filtered(d.tcs).map(toRow)});
   return {base:'execution_report', sheets};
 }
 
@@ -1012,7 +1050,7 @@ document.querySelector('#tbl thead').onclick=e=>{ const th=e.target.closest('[da
   const k=th.dataset.s; sortDir=(k===sortKey)?-sortDir:1; sortKey=k; render(); };
 $('#rows').onclick=e=>{ const tr=e.target.closest('[data-i]'); if(!tr) return;
   document.querySelectorAll('#rows tr').forEach(x=>x.classList.remove('sel')); tr.classList.add('sel');
-  const t=window.__rows[+tr.dataset.i]; openDetail(t,t.id,t.scenario||'',TC_FIELDS); };
+  const t=window.__rows[+tr.dataset.i]; openDetail({...t,historyStr:historyText(t)},t.id,t.scenario||'',TC_FIELDS); };
 $('#bugRows').onclick=e=>{ const tr=e.target.closest('[data-b]'); if(!tr) return;
   const b=window.__bugs[+tr.dataset.b]; openDetail(b,b.bug,'Kết quả retest',BUG_FIELDS); };
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{

@@ -48,15 +48,20 @@ skills:
 ### Bước 1: Đọc Input
 1. Đọc file TC, xác định format và số lượng. File **index** `TEST_CASES_<TÊN_MODULE>_SUMMARY.md` → theo `## Bản đồ tài liệu` đọc các file nền tảng (index không chứa dòng TC); chấm riêng từng nền tảng khi chúng khác người viết/khác độ phủ
 2. Đọc requirements (nếu có)
+3. **Lập Danh sách loại trừ** theo mục *Phạm vi loại trừ* của skill — mục `Ngoài phạm vi`, REQ ghi ngoài phạm vi viết TC / 🔴 Deprecated, AMB `⏭️` *"không viết TC"* / *"chuyển sang module khác"*, RISK đã chấp nhận kèm quyết định không kiểm, dòng `⚪ Ngoài phạm vi` của index TC. User bảo bỏ qua index TC → vẫn lấy phần loại trừ **từ requirements**
 
 > **Mode AUTOMATION** → bỏ Bước 2–5, làm **Bước A1–A3** (ngay sau Bước 5).
 
 ### Bước 2: Review Từng TC
 1. Chấm điểm 6 tiêu chí (0-2 mỗi tiêu chí, tối đa 12) theo rubric trong skill — TC `@Deprecated` không chấm. Tiêu chí 2 soát ngôn ngữ DOM/HTTP ở phần TC chính; tiêu chí 6 **không** trừ điểm TC gộp đúng Kiểu A/B
+   - **Expected đọc cùng Pre-Condition + Test Data** của chính TC đó (mục *Đọc Expected cùng Pre-Condition* của skill): không đòi Expected bổ sung thứ Pre-Condition đã nêu, không trừ vì Expected không lặp lại tiền đề, không gọi "mâu thuẫn" khi hai chỗ cùng dẫn tới một trạng thái
 2. Xếp loại: 🟢 (10-12) / 🟡 (6-9) / 🔴 (0-5)
 3. Với mỗi TC 🔴/🟡: trích nguyên văn chỗ chưa đạt + viết đề xuất sửa cụ thể
 
 ### Bước 3: Phân Tích Mức Bộ TC
+
+> Mọi mục dưới đây **bỏ** các phần thuộc Danh sách loại trừ (Bước 1.3): không ghi vào gap, không vào cột *Mục thiếu*, không đề xuất TC / REQ mới, không nhắc ở Kết luận. Nhánh 4 vòng chỉ thiếu phần đã loại → `⏭️` kèm mã quyết định. Báo cáo chỉ ghi **một dòng** `Loại trừ theo requirements:` ở Tổng quan.
+
 1. **Đối soát 4 vòng (BẮT BUỘC)** — duyệt mọi nhánh của **Bản Đồ Loại Kiểm Thử — 4 Vòng** trong `skills-rbt-manual-testing`, chấm `✅` / `🟡 nông` / `🔴 thiếu` / `➖ không áp dụng (lý do kỹ thuật)` / `⏭️ cố ý bỏ` (giữ nguyên nhánh bộ TC đã chấm `⏭️` hợp lệ — có lý do + ai quyết + điều kiện rà lại — **không** tính là gap; `⏭️` rơi vào thứ không bao giờ được rút thì chấm 🔴). Soi kỹ ba nhánh hay mất nhất: `UI cơ bản` (V1), `Validation` (V2), `Permission` (V3)
 2. **Đối soát bảng 15 loại field** — với TỪNG field, so từng mục của dòng loại field tương ứng với TC thực có; thiếu mục nào nêu đích danh mục đó
 3. Coverage gaps: liệt kê kịch bản cụ thể, **ghi kèm vòng/nhánh** tương ứng — không ghi "thiếu negative case" suông
