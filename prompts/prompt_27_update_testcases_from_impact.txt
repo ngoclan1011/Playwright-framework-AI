@@ -21,8 +21,8 @@
 | [REQ-PRJ-58] | [Chức năng Copy Project đã bị gỡ] |
 
 # NGUỒN ĐỐI CHIẾU
-- Tài liệu requirements hiện hành: [VD: docs/requirements/project/requirements_project.md]
-- File test cases hiện hành: [VD: docs/testcases/project/test_cases_project.md]
+- Tài liệu requirements hiện hành: [VD: docs/requirements/project/REQUIREMENTS_PROJECT_SUMMARY.md — agent tự theo Bản đồ tài liệu sang file nền tảng]
+- File test cases hiện hành: [VD: docs/testcases/project/TEST_CASES_PROJECT_SUMMARY.md — agent tự theo Bản đồ tài liệu sang file nền tảng]
 - Evidence của module (bắt buộc mở nếu thay đổi đụng bố cục/nhãn/thứ tự field): [VD: docs/requirements/project/web/evidence/ / "Không có"]
 - RTM (nếu có — map REQ→TC nhanh và chắc hơn): [VD: docs/traceability_matrix.md / "Không có"]
 
@@ -31,8 +31,8 @@
 - Có bổ sung TC negative/boundary mới trong phạm vi REQ đã đổi không: [Có (khuyến nghị) / Không]
 
 # NHẮC AGENT
-- Sửa TẠI CHỖ trong TEST_CASES_<TÊN_MODULE>_SUMMARY.md — KHÔNG sinh file _improved / _v2
+- Sửa TẠI CHỖ trong file nền tảng (<nền-tảng>/test_cases_<module>_<nền-tảng>.md hoặc parts/) — KHÔNG sinh file _improved / _v2
 - Ghi mốc git (hash commit) của file TRƯỚC khi sửa — KHÔNG tạo thư mục archive/; file có thay đổi chưa commit thì dừng, nhắc commit trước
 - GIỮ NGUYÊN mọi TC ID. TC mới cấp số tiếp dải hiện có
-- TC của chức năng bị gỡ: đổi trạng thái 🗑️ Deprecated, KHÔNG xoá dòng
+- TC của chức năng bị gỡ: gắn tag @Deprecated + tiền tố "🗑️ Deprecated (<TICKET-ID>, <ngày>) —" ở Test Scenario, KHÔNG xoá dòng
 - Mode APPLY: ghi Delta TC List ra docs/testcases/<module>/impact/delta_tc_<TICKET-ID>.md (có cột Nền tảng) — đầu vào của /update-automation-from-impact (prompt_19)

@@ -142,7 +142,7 @@ Báo cáo này tương ứng với **ISO/IEC/IEEE 29119-3 — Test Completion Re
 
 **Điều kiện kèm theo:**
 1. Module **Báo cáo** chưa được kiểm thử (0 TC) — chỉ release được nếu module này chưa mở cho người dùng cuối
-2. BUG_CUST_1785700456 (🟠 Major — search wildcard sai) chưa fix; workaround: người dùng tìm bằng từ khoá không chứa `%`
+2. BUG_customers_1785700456_TC012 (🟠 Major — search wildcard sai) chưa fix; workaround: người dùng tìm bằng từ khoá không chứa `%`
 
 **Rủi ro nếu vẫn release:** người dùng dùng ký tự `%` trong tìm kiếm sẽ nhận kết quả rỗng và tưởng mất dữ liệu → nguy cơ ticket hỗ trợ tăng.
 
@@ -206,9 +206,9 @@ Báo cáo này tương ứng với **ISO/IEC/IEEE 29119-3 — Test Completion Re
 
 | Bug ID | Severity | Module | Tóm tắt | Workaround | Retest gần nhất |
 |---|---|---|---|---|---|
-| BUG_CUST_1785700456 | 🟠 Major | Khách hàng | Search ký tự `%` trả 0 kết quả | Có | — (chưa fix) |
+| BUG_customers_1785700456_TC012 | 🟠 Major | Khách hàng | Search ký tự `%` trả 0 kết quả | Có | — (chưa fix) |
 
-**⚠️ Regression phát sinh trong kỳ:** 1 — BUG_CUST_1785700456 sinh ra từ chính bản fix của BUG_CUST_1785612000.
+**⚠️ Regression phát sinh trong kỳ:** 1 — BUG_customers_1785700456_TC012 sinh ra từ chính bản fix của BUG_customers_1785612000_TC011.
 Đây là tín hiệu cần chú ý: fix ở tầng search đang có tác dụng phụ, nên review kỹ vùng này trước khi release.
 
 ---
@@ -229,7 +229,7 @@ Báo cáo này tương ứng với **ISO/IEC/IEEE 29119-3 — Test Completion Re
 
 | Ưu tiên | Việc | Ai làm | Command |
 |---|---|---|---|
-| 🔴 Trước release | Fix BUG_CUST_1785700456 hoặc PM duyệt ngoại lệ | Dev / PM | — |
+| 🔴 Trước release | Fix BUG_customers_1785700456_TC012 hoặc PM duyệt ngoại lệ | Dev / PM | — |
 | 🟠 Trước release | Xin tài khoản Manager để khảo sát module Báo cáo | QA | `/generate-requirements-from-website` |
 | 🟡 Sprint sau | Bổ sung TC cho 4 REQ chưa phủ | QA | `/generate-testcases-from-requirements` |
 

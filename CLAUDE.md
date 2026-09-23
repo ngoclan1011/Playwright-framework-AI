@@ -28,12 +28,12 @@
 
 | Chế độ | Viewport | Lý do |
 |---|---|---|
-| **Headed (debug)** | **`1600×750`** — đúng bằng `--viewport-size` lúc khởi chạy | Cửa sổ **không nở được sau khi launch**. Đặt viewport lớn hơn cửa sổ → trang bị **cắt**, tester không nhìn thấy phần bên phải |
+| **Headed (debug)** | **`1600×770`** — đúng bằng `--viewport-size` lúc khởi chạy | Cửa sổ **không nở được sau khi launch**. Đặt viewport lớn hơn cửa sổ → trang bị **cắt**, tester không nhìn thấy phần bên phải |
 | **Headless (CI)** | `1920×1080` | Không có khung trình duyệt nên đặt bao nhiêu cũng đúng |
 
 > ⚠️ **KHÔNG gọi `browser_resize` để phóng viewport vượt cửa sổ.** `browser_resize` chỉ đổi **viewport**, **không** đổi cửa sổ OS. Ép lên 1920×1080 khi cửa sổ chỉ 1614 → mất **306px bên phải** khỏi tầm nhìn tester (ảnh chụp vẫn đủ, nhưng hỏng mục đích của headed mode). Mặc định **không cần resize** — viewport đã đúng từ lúc launch.
 >
-> 📊 **Số đo thực tế** (Windows, màn hình 1920×1080, Google Chrome): viewport `1600×750` → cửa sổ `1614×885`. Khung chiếm **+135 dọc** (ổn định) và **+14…17 ngang** (dao động theo scrollbar của trang). Muốn cửa sổ vừa màn hình `W×H` → viewport ≈ `(W−17) × (H−135)` — trừ 17 cho chắc.
+> 📊 **Số đo thực tế** (Windows, màn hình 1920×1080, Google Chrome): viewport `1600×770` → cửa sổ `1614×905`. Khung chiếm **+135 dọc** (ổn định) và **+14…17 ngang** (dao động theo scrollbar của trang). Muốn cửa sổ vừa màn hình `W×H` → viewport ≈ `(W−17) × (H−135)` — trừ 17 cho chắc.
 >
 > 📌 **Đổi viewport headed ở đâu:** `--viewport-size` của MCP server `playwright` trong **`.mcp.json` ở gốc project** (cấu hình riêng của project này, đè lên `%APPDATA%\Claude\claude_desktop_config.json`). **Phải khởi động lại Claude Code** mới có hiệu lực.
 >
@@ -267,6 +267,11 @@ docs/
 │       ├── review/testcase_review_report_<nền-tảng>_<YYYYMMDD>.md ← /review-testcases — mode FIX sửa TC TẠI CHỖ, không sinh bản `_improved`
 │       └── review/automation_review_<nền-tảng>_<YYYYMMDD>.md ← /review-testcases mode AUTOMATION — TC nào làm automation được
 │
+├── checklists/                                  ← /generate-checklist-test — ảnh chụp tại một thời điểm, KHÔNG sửa tại chỗ
+│   ├── <module>/<nền-tảng>/checklist_<loại>_<YYYYMMDD>.md ← smoke · regression
+│   ├── <module>/<nền-tảng>/checklist_post-hotfix_<TICKET-ID>.md
+│   └── _release/checklist_release_<mốc>.md      ← release-readiness, cắt ngang module — cùng slug <mốc> với test plan
+│
 ├── test-plans/                                  ← kế hoạch kiểm thử — lập TRƯỚC đợt
 │   ├── test_plan_<mốc>.md                      ← Master Test Plan — công bố phạm vi + tiêu chí exit TRƯỚC đợt
 │   └── test_plan_<mốc>.input.yaml              ← bản lưu phiếu plans/master-test-plan/test_plan.config.yaml đã dùng
@@ -297,7 +302,7 @@ docs/
 
 > `test_plan_<mốc>.md` nằm ở **`docs/test-plans/`** — plan là tài liệu **lập và duyệt trước đợt**, không phải kết quả thực thi. `test_progress_<mốc>_*.md` · `test_summary_<mốc>_*.md` nằm ở **gốc `executions/`**. Cả ba không thuộc module nào — chúng cắt ngang mọi module tại một mốc release. **Cùng slug `<mốc>`** (chữ thường, không dấu, VD `release_2.0`) là mối nối: báo cáo tiến độ theo dõi lịch của plan, báo cáo tổng hợp chấm lại đúng bộ tiêu chí exit đã công bố.
 >
-> **Tầng nền tảng `<nền-tảng>/`** — chỉ nhận đúng 3 tên `web` · `mobile` · `api` (Android và iOS chung `mobile/`, phân biệt bằng tiền tố ảnh `android_`/`ios_` và cột/tag nền tảng). Áp cho 4 nhánh `requirements/` · `testcases/` · `executions/` · `bugs/`, **luôn có** kể cả module mới chỉ có một nền tảng — thêm nền tảng thứ hai về sau không phải di chuyển file nào. File index `REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` / `TEST_CASES_<TÊN_MODULE>_SUMMARY.md` **giữ nguyên tên và vị trí**; workflow phía sau đọc index trước, rồi theo `## Bản đồ tài liệu` sang file nền tảng. Tài liệu cũ chưa có tầng này: **không** di chuyển lịch sử (`run_*`, `BUG_*` giữ nguyên chỗ) — workflow đọc quét cả `<module>/<nền-tảng>/` lẫn `<module>/`; requirements/testcases cũ chuyển sang tầng nền tảng **một lần**, ở lần đầu một workflow sinh/cập nhật chạm lại module đó (ID giữ nguyên, ghi Nhật ký).
+> **Tầng nền tảng `<nền-tảng>/`** — chỉ nhận đúng 3 tên `web` · `mobile` · `api` (Android và iOS chung `mobile/`, phân biệt bằng tiền tố ảnh `android_`/`ios_` và cột/tag nền tảng). Áp cho 5 nhánh `requirements/` · `testcases/` · `checklists/` · `executions/` · `bugs/`, **luôn có** kể cả module mới chỉ có một nền tảng — thêm nền tảng thứ hai về sau không phải di chuyển file nào. File index `REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` / `TEST_CASES_<TÊN_MODULE>_SUMMARY.md` **giữ nguyên tên và vị trí**; workflow phía sau đọc index trước, rồi theo `## Bản đồ tài liệu` sang file nền tảng. Tài liệu cũ chưa có tầng này: **không** di chuyển lịch sử (`run_*`, `BUG_*` giữ nguyên chỗ) — workflow đọc quét cả `<module>/<nền-tảng>/` lẫn `<module>/`; requirements/testcases cũ chuyển sang tầng nền tảng **một lần**, ở lần đầu một workflow sinh/cập nhật chạm lại module đó (ID giữ nguyên, ghi Nhật ký).
 >
 > `docs/user-guides/` là nhánh **duy nhất** viết cho người ngoài đọc — khách hàng, người dùng cuối. Nó **dùng lại** kết quả recon của `requirements/` nhưng **không** chép nội dung sang: requirements nói *hệ thống phải làm gì*, hướng dẫn nói *người dùng làm thế nào*. 🔒 Ảnh trong nhánh này phải dùng **dữ liệu mẫu** — tài liệu được phát ra ngoài.
 >
@@ -325,7 +330,7 @@ Ba trang tĩnh trong `scripts/`, mở bằng cách double-click, chạy offline,
 | **KHÔNG đánh lại mã REQ từ `01`** khi module đã có tài liệu | Đụng mã là vỡ toàn bộ traceability |
 | **AMB / RISK mang prefix module, đánh số riêng từng module**: `AMB-<MODULE>-<nn>` · `RISK-<MODULE>-<nn>` (VD `AMB-CUST-01`). Module mới bắt đầu từ `01`, **không** nối số của module khác. Cấp hệ thống (cắt ngang, chưa quy về module): `AMB-SYS-<nn>` — `SYS` là prefix dành riêng | Mã trần `AMB-15` do hai module tự đánh số sẽ va nhau — một mã, hai câu hỏi. Có prefix thì grep ra đúng một nghĩa |
 | **KHÔNG xoá dòng REQ** — tính năng gỡ thì đổi trạng thái 🔴 Deprecated | Xoá dòng là mất dấu vết |
-| **KHÔNG đổi / đánh lại TC ID** khi cập nhật TC theo ticket — sửa tại chỗ, ghi **mốc git** (hash commit trước khi sửa) vào Nhật ký, TC bị gỡ đổi trạng thái 🗑️ Deprecated | TC ID là khoá nối sang `allure.label('testId', ...)` trong script, cột TC ID của RTM và execution report cũ. Đổi là cắt cả ba mối nối, không có cách phát hiện tự động |
+| **KHÔNG đổi / đánh lại TC ID** khi cập nhật TC theo ticket — sửa tại chỗ, ghi **mốc git** (hash commit trước khi sửa) vào Nhật ký, TC bị gỡ gắn tag `@Deprecated` ở cột `Tags` + tiền tố `🗑️ Deprecated (<TICKET-ID>, <ngày>) —` ở `Test Scenario` (bảng TC không có cột trạng thái) — `/execute-test-cases`, RTM, Bảng Đối Soát Coverage lọc theo tag này | TC ID là khoá nối sang `allure.label('testId', ...)` trong script, cột TC ID của RTM và execution report cũ. Đổi là cắt cả ba mối nối, không có cách phát hiện tự động |
 | Mọi thay đổi requirements phải ghi **Nhật ký thay đổi** ở cuối tài liệu module | Bộ nhớ liền mạch giữa các phiên, và là nơi báo TC nào đã stale |
 | Evidence nằm **cùng** tài liệu sinh ra nó (recon → `<module>/<nền-tảng>/evidence/`, execution → `<module>/<nền-tảng>/run_*/evidence/`) | Di chuyển/xoá không lạc file; link tương đối không gãy |
 | 🔒 **KHÔNG ghi giá trị bí mật thật vào `docs/`** — mật khẩu, token, cookie xác thực, session id, API key. Ghi **hình thái** (`<16 ký tự hex>`) thay cho giá trị | `docs/` được commit và **lịch sử git không xoá được bằng cách sửa file**. Credentials sống ở `.env` (đã `.gitignore`); tài liệu chỉ mô tả *hình dạng* |

@@ -30,8 +30,10 @@ Thực hiện theo hướng dẫn chi tiết trong skill `skills-rbt-manual-test
 ### Bước 1: Khởi tạo ngữ cảnh (Context & Role-play)
 1. Yêu cầu user cung cấp: tên dự án, mô tả hệ thống, mục tiêu MVP, tài liệu yêu cầu
 2. **Chốt độ hạt test case `GỘP` / `TÁCH`** — mặc định `GỘP`. Nêu rõ trong phần xác nhận bối cảnh kèm số TC ước tính theo từng độ hạt, để user chặn lại được ngay ở Bước 1 thay vì sau khi đã sinh xong. Quy tắc đầy đủ ở mục **Độ Hạt Test Case — GỘP / TÁCH** trong skill
-3. Đọc kỹ tài liệu, xác nhận hiểu bối cảnh
-4. **Chờ user xác nhận** → sang Bước 2
+3. **Kiểm module đã có bộ TC chưa** — `docs/testcases/<module>/TEST_CASES_<TÊN_MODULE>_SUMMARY.md` (hoặc tên cũ `test_cases_<module>.md`). Có rồi thì **KHÔNG sinh mới**: REQ đã có TC mà vừa đổi → dừng, chuyển `/update-testcases-from-impact`; REQ chưa có TC → **chế độ BỔ SUNG** của skill (phạm vi chỉ REQ đó, TC ID nối tiếp dải, giữ độ hạt đang dùng). Nêu rõ nhánh đã chọn trong phần xác nhận bối cảnh
+4. **Mở TOÀN BỘ evidence** — liệt kê `docs/requirements/<module>/<nền-tảng>/evidence/` và `Read` từng ảnh (Quy Tắc Đối Chiếu Evidence trong skill). Output Bước 1 có **Danh mục Evidence đã mở** (ảnh nào đủ / cắt cụt / thiếu). Chưa mở xong thì Bước 1 chưa xong
+5. Đọc kỹ tài liệu, xác nhận hiểu bối cảnh
+6. **Chờ user xác nhận** → sang Bước 2
 
 ### Bước 2: Phân tích yêu cầu (Analysis & QnA)
 1. Xác định Happy Path, Alternate Paths, Exception Paths
@@ -45,20 +47,21 @@ Thực hiện theo hướng dẫn chi tiết trong skill `skills-rbt-manual-test
 
 ### Bước 4: Đảm bảo độ bao phủ (Traceability)
 1. Map Module → mã Yêu cầu (REQ-01, REQ-02...)
-2. Cross-check thiếu sót (Gap Analysis), liệt kê High-Level Scenarios **xếp theo 4 vòng** (V1 Smoke / V2 Functional / V3 Technical / V4 Non-functional), mỗi nhánh chấm sơ bộ `✅ sẽ sinh` / `➖ không áp dụng + lý do kỹ thuật` / `⏭️ cố ý bỏ + lý do + ai quyết + điều kiện rà lại`. **Nêu rõ mức rủi ro đã chấm và độ sâu tương ứng** để user chặn được ngay nếu thấy quá nông hoặc quá dày
-3. **Chờ user review** scenarios và bảng 4 vòng → sang Bước 5
+2. Cross-check thiếu sót (Gap Analysis), liệt kê High-Level Scenarios **xếp theo 4 vòng** (V1 Smoke / V2 Functional / V3 Technical / V4 Non-functional), mỗi nhánh chấm sơ bộ `✅ sẽ sinh` / `➖ không áp dụng + lý do kỹ thuật` / `⏭️ cố ý bỏ + lý do + ai quyết + điều kiện rà lại`. Nhánh V3 `API` · `Database` · `Integration` · `Logging/Audit` lấy theo dòng `Năng lực kiểm thử của QA` ở `docs/requirements/README.md` — chưa có thì hỏi user **một lần** ở checkpoint này rồi ghi vào README
+3. **Chấm mức rủi ro từng Module (Cao / Trung bình / Thấp)** theo bảng tiêu chí mục "Độ sâu theo rủi ro" trong skill — agent **tự chấm và ghi căn cứ**, KHÔNG hỏi riêng — và nêu **độ sâu tương ứng** kèm số TC ước tính, để user chặn được ngay nếu thấy quá nông hoặc quá dày
+4. **Chờ user review** scenarios, bảng 4 vòng và mức rủi ro → sang Bước 5
    > Đây là lúc user chặn lại rẻ nhất: nhìn bảng 4 vòng là biết ngay bộ TC sắp sinh có bỏ sót lớp nào không, trước khi tốn công sinh chi tiết.
 
 ### Bước 5: Sinh Test Case chi tiết (RBT & TC Generation)
 0. **Sinh tuần tự theo 4 vòng** (**Bản Đồ Loại Kiểm Thử — 4 Vòng** trong skill): `V1 Smoke` → `V2 Functional` → `V3 Technical` → `V4 Non-functional`. Mỗi batch nằm trọn trong **một** vòng, KHÔNG trộn vòng. V1 luôn mở đầu bằng nhánh `UI cơ bản` (nhãn nguyên văn · thứ tự field · trạng thái mặc định) — đây là lớp bị bỏ sót nhiều nhất. V1 fail thì mọi TC V2 đều BLOCKED, nên phải sinh và chạy trước.
-1. **Đánh giá Risk Level (Cao/Trung bình/Thấp) theo bảng tiêu chí mục "Độ sâu theo rủi ro" trong skill** — agent **tự chấm và ghi căn cứ**, KHÔNG hỏi user; user phủ quyết ở checkpoint Bước 4. Mức rủi ro quyết định **độ sâu**: Cao → Đầy đủ (đủ 4 vòng, 40–60 TC) · Trung bình → Tiêu chuẩn (20–30 TC) · Thấp → Tối giản (8–12 TC).
+1. **Áp mức rủi ro đã được duyệt ở Bước 4** (user sửa mức nào thì theo mức đó) — mức rủi ro quyết định **độ sâu**: Cao → Đầy đủ (đủ 4 vòng, 40–60 TC) · Trung bình → Tiêu chuẩn (20–30 TC) · Thấp → Tối giản (8–12 TC).
    > ⚠️ Lưỡng lự thì chấm **mức cao hơn**. Bốn thứ **không bao giờ rút**: toàn bộ V1 · `Required`+`Validation` khi có field nhập · `Permission` khi ≥2 vai trò · `Security` khi chạm dữ liệu người dùng khác. Nhánh cố ý bỏ chấm `⏭️` kèm **lý do + ai quyết + điều kiện rà lại**, KHÔNG dùng `➖`.
 2. Sinh test cases đầy đủ: **REQ ID** (từ Traceability Matrix Bước 4), Title, Pre-condition, Steps (**đánh số 1,2,3 — mỗi bước 1 hành động**), Expected (đánh số khớp 1-1), Test Data, Priority.
 3. Áp dụng kỹ thuật theo **Quy Tắc Bắt Buộc** trong skill: EP+BVA (field có ràng buộc), **Decision Table** (≥3 điều kiện kết hợp), **State Transition** (có status flow).
 4. **Validation chuyên biệt từng trường (Field-Level Validation - 15 Field Types):**
    - Liệt kê tất cả input fields trên form/UI đang test.
    - Sinh validation TCs **riêng cho TỪNG trường** (Text, Email, Phone, Date, Number, Dropdown, Checkbox/Radio, File Upload, Password, Textarea, OTP/MFA, Date Range, Rich Text, Multi-Select, Range Slider).
-   - Tham chiếu **Bảng Field-Level Validation Checklist** trong skill `skills-rbt-manual-testing` — **đối soát đủ TỪNG MỤC** của dòng loại field tương ứng, mục không áp dụng phải ghi lý do. `1 positive + 2 negative` là **sàn tối thiểu, không phải mức đạt** (Password có 9 mục).
+   - Tham chiếu **Bảng Field-Level Validation Checklist** trong skill `skills-rbt-manual-testing` — **đối soát đủ TỪNG MỤC** của dòng loại field tương ứng, mục không áp dụng phải ghi lý do. `1 positive + 2 negative` là **sàn tối thiểu, không phải mức đạt** (Password có 7 mục).
    - **KHÔNG** gộp validation của **các trường khác nhau** vào 1 TC. Biến thể **cùng một trường** thì gộp hay tách theo độ hạt đã chốt ở Bước 1.
 5. **Bao phủ Component-Level Checklist** (trong skill): **Giao diện tĩnh của màn hình**, Data Table/List, CRUD Lifecycle, Permission/Role (đối chiếu Ma trận Phân quyền), Modal/Dialog, Notification, Status Flow (đối chiếu Ma trận Trạng thái).
 6. **Bao phủ Scenarios Chuyên Sâu & Non-Functional:**
@@ -87,6 +90,6 @@ Thực hiện theo hướng dẫn chi tiết trong skill `skills-rbt-manual-test
 
 - Bảng Test Cases Markdown hoàn chỉnh (có cột **REQ ID**) kèm Automation Metadata (`Automation`, `Auto Type`, `Tags`), sẵn sàng copy sang Excel/Jira/TestRail hoặc sync trực tiếp vào Google Sheets
 - Traceability Matrix + **Bảng Đối Soát Coverage** (REQ × số TC × đủ Positive/Negative/Boundary)
-- **Bảng Đối soát loại kiểm thử (4 vòng)** — mọi nhánh V1–V4 × ✅/➖/🔴 × TC ID (kèm số biến thể nếu GỘP) hoặc lý do + ai chịu
+- **Bảng Đối soát loại kiểm thử (4 vòng)** — mọi nhánh V1–V4 × ✅/➖/⏭️/🔴 × TC ID (kèm số biến thể nếu GỘP) hoặc lý do (➖) · lý do + ai quyết + điều kiện rà lại (⏭️)
 - Danh sách Ambiguities đã giải quyết
 - Báo cáo Self-Quality Gate Verification (11 tiêu chí)

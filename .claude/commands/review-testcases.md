@@ -52,15 +52,15 @@ skills:
 > **Mode AUTOMATION** → bỏ Bước 2–5, làm **Bước A1–A3** (ngay sau Bước 5).
 
 ### Bước 2: Review Từng TC
-1. Chấm điểm 6 tiêu chí (0-2 mỗi tiêu chí, tối đa 12) theo rubric trong skill
+1. Chấm điểm 6 tiêu chí (0-2 mỗi tiêu chí, tối đa 12) theo rubric trong skill — TC `@Deprecated` không chấm. Tiêu chí 2 soát ngôn ngữ DOM/HTTP ở phần TC chính; tiêu chí 6 **không** trừ điểm TC gộp đúng Kiểu A/B
 2. Xếp loại: 🟢 (10-12) / 🟡 (6-9) / 🔴 (0-5)
 3. Với mỗi TC 🔴/🟡: trích nguyên văn chỗ chưa đạt + viết đề xuất sửa cụ thể
 
 ### Bước 3: Phân Tích Mức Bộ TC
-1. **Đối soát 4 vòng (BẮT BUỘC)** — duyệt mọi nhánh của **Bản Đồ Loại Kiểm Thử — 4 Vòng** trong `skills-rbt-manual-testing`, chấm `✅` / `🟡 nông` / `🔴 thiếu` / `➖ không áp dụng (lý do)`. Soi kỹ ba nhánh hay mất nhất: `UI cơ bản` (V1), `Validation` (V2), `Permission` (V3)
+1. **Đối soát 4 vòng (BẮT BUỘC)** — duyệt mọi nhánh của **Bản Đồ Loại Kiểm Thử — 4 Vòng** trong `skills-rbt-manual-testing`, chấm `✅` / `🟡 nông` / `🔴 thiếu` / `➖ không áp dụng (lý do kỹ thuật)` / `⏭️ cố ý bỏ` (giữ nguyên nhánh bộ TC đã chấm `⏭️` hợp lệ — có lý do + ai quyết + điều kiện rà lại — **không** tính là gap; `⏭️` rơi vào thứ không bao giờ được rút thì chấm 🔴). Soi kỹ ba nhánh hay mất nhất: `UI cơ bản` (V1), `Validation` (V2), `Permission` (V3)
 2. **Đối soát bảng 15 loại field** — với TỪNG field, so từng mục của dòng loại field tương ứng với TC thực có; thiếu mục nào nêu đích danh mục đó
 3. Coverage gaps: liệt kê kịch bản cụ thể, **ghi kèm vòng/nhánh** tương ứng — không ghi "thiếu negative case" suông
-4. TC trùng lặp → đề xuất merge
+4. TC trùng lặp → đề xuất merge: giữ một TC, TC kia đánh dấu `@Deprecated` (không xoá dòng, không đánh lại số)
 5. Độ hạt GỘP → **đếm số biến thể**; tổng biến thể ít bất thường = đã rụng case dù REQ vẫn phủ đủ
 6. Kiểm tra priority có hợp lý không
 
@@ -72,9 +72,9 @@ skills:
 3. **⏸️ DỪNG LẠI** — trình bày kết quả. Mode REVIEW → KẾT THÚC. Mode FIX → hỏi user xác nhận danh sách TC sẽ sửa
 
 ### Bước 5: Sửa TC (Mode FIX — chỉ khi user xác nhận)
-1. Ghi lại **mốc git** của file TC trước khi sửa: `git log -1 --format=%h -- <file TC>`. File **chưa** được git theo dõi (VD Excel/CSV khách gửi) → **hỏi user** trước khi ghi đè, vì không có cách lấy lại bản cũ
+1. Ghi lại **mốc git** của file TC trước khi sửa: `git status --short <file TC>` có dòng (thay đổi chưa commit) → **dừng**, đề nghị user commit trước, agent không tự commit; sạch thì ghi `git log -1 --format=%h -- <file TC>`. File **chưa** được git theo dõi (VD Excel/CSV khách gửi) → **hỏi user** trước khi ghi đè, vì không có cách lấy lại bản cũ
 2. Sửa **tại chỗ**, chỉ các TC đã duyệt: TC 🟢 giữ nguyên; TC 🟡 sửa theo đề xuất; TC 🔴 viết lại (tuân thủ chuẩn `skills-rbt-manual-testing`)
-3. **Giữ nguyên TC ID** — không đánh lại số. TC bỏ hẳn → đổi trạng thái `🗑️ Deprecated`, **không** xoá dòng. Bỏ một biến thể → ghi lại lý do ngay trong Expected của TC đó
+3. **Giữ nguyên TC ID** — không đánh lại số. Tách TC → phần tách ra cấp **số mới nối tiếp dải** (không `TC_xxa`). TC bỏ hẳn → tag `@Deprecated` + tiền tố `🗑️ Deprecated (<lý do>, <ngày>) —` ở `Test Scenario`, **không** xoá dòng. Bỏ một biến thể → ghi lại lý do ngay trong Expected của TC đó
 4. Bổ sung TC mới cho coverage gaps ưu tiên High (nếu user đồng ý) — **nối tiếp** mã TC kế tiếp của module, tuân thủ **Bản Đồ Loại Kiểm Thử — 4 Vòng** và **Bảng Field-Level Validation Checklist**, đặt vào đúng nhánh đã báo thiếu
 5. **Đồng bộ file index** `TEST_CASES_<TÊN_MODULE>_SUMMARY.md`: Assumptions · Bảng Đối Soát Coverage · Vùng chưa có evidence · Đối soát 4 vòng · tổng số TC / biến thể · Bộ chạy đề xuất
 6. Ghi **1 dòng Nhật ký thay đổi** vào index: nguồn `/review-testcases` mode FIX + link báo cáo · TC nào sửa gì · **mốc git trước khi sửa**
@@ -93,7 +93,7 @@ skills:
 3. **⏸️ DỪNG LẠI** — hỏi user có ghi ngược vào cột `Automation` không. Không → KẾT THÚC
 
 ### Bước A3: Ghi ngược cột Automation (chỉ khi user duyệt)
-1. Ghi **mốc git** của file TC trước khi sửa. File chưa được git theo dõi → **hỏi user** trước khi ghi đè
+1. Ghi **mốc git** của file TC trước khi sửa — file đang có thay đổi chưa commit → **dừng**, đề nghị user commit trước. File chưa được git theo dõi → **hỏi user** trước khi ghi đè
 2. Sửa **tại chỗ** ô `Automation` của các TC đã duyệt — đúng một từ `Yes`/`Partial`/`No`. File chưa có cột → thêm cột tên đúng `Automation`. **Không** đụng Steps/Expected
 3. Ghi / cập nhật mục `## Đối soát cột Automation` ở index (mẫu mục 7.1 của tiêu chí)
 4. Ghi **1 dòng Nhật ký thay đổi**: nguồn `/review-testcases` Mode AUTOMATION + link báo cáo · số TC đổi giá trị · mốc git

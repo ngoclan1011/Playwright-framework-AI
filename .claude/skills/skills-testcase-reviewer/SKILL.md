@@ -35,11 +35,13 @@ Mỗi test case chấm theo 6 tiêu chí, thang điểm 0-2 (0 = không đạt, 
 | # | Tiêu chí | Câu hỏi kiểm tra |
 |---|---|---|
 | 1 | **Rõ ràng (Clarity)** | Người chưa biết feature đọc có thực hiện được không? Steps có đánh số, mỗi step 1 hành động? |
-| 2 | **Expected Result đo được** | Expected có cụ thể, verify được không? (❌ "hoạt động đúng" / ✅ "hiển thị message X, redirect về /dashboard") |
+| 2 | **Expected Result đo được** | Expected có cụ thể, verify được **bằng mắt thường** không? (❌ "hoạt động đúng" / ✅ "hiển thị message X, chuyển sang trang Dashboard"). Steps/Expected ở phần TC chính dùng ngôn ngữ DOM/DevTools (`document.`, `querySelector`, `className`, selector CSS/XPath, mã HTTP, header) → **tối đa 1 điểm** — trừ TC `Auto Type` = `API` và phần nằm dưới `🔧 Ghi chú kỹ thuật (cần DevTools):` của TC có tag `@TechCheck` (Quy Tắc Ngôn Ngữ Kiểm Chứng của `skills-rbt-manual-testing`) |
 | 3 | **Độc lập (Independence)** | TC có tự chuẩn bị precondition không, hay phụ thuộc TC khác chạy trước? |
 | 4 | **Test data cụ thể** | Data có được chỉ định rõ không? Field unique có ghi chú cần random không? |
 | 5 | **Truy vết được (Traceability)** | TC có link về requirement/user story không? |
-| 6 | **Đúng trọng tâm (Focus)** | 1 TC verify 1 mục tiêu, không gộp nhiều kịch bản vào 1 TC |
+| 6 | **Đúng trọng tâm (Focus)** | 1 TC verify **1 hành vi**. TC ở độ hạt GỘP **hợp lệ** — Bảng biến thể Kiểu A (cùng trường, cùng thao tác, cùng loại phản hồi) hoặc Bảng kiểm Kiểu B (quan sát tĩnh cùng màn hình) — **không** bị trừ điểm. Chỉ trừ khi vi phạm bảng **CẤM gộp** của `skills-rbt-manual-testing` (khác trường · khác loại phản hồi · gộp TC smoke khác hành vi · gộp TC thiết kế để FAIL · > 6 biến thể · biến thể không có mã riêng) hoặc gộp nhiều hành vi không theo hai kiểu trên |
+
+> TC mang tag `@Deprecated` (chức năng đã gỡ) **không** chấm rubric, **không** tính vào coverage — liệt kê riêng số lượng ở phần Tổng quan.
 
 **Xếp loại theo tổng điểm (tối đa 12):**
 - 🟢 **10-12:** Tốt — dùng được ngay
@@ -74,9 +76,11 @@ Dùng **Bản Đồ Loại Kiểm Thử — 4 Vòng** trong `skills-rbt-manual-t
 - Nhánh **không có TC nào** mà điều kiện kích hoạt đã thoả → ghi vào **Coverage Gaps** với loại là tên nhánh, **không** ghi chung chung "thiếu negative case"
 - 🚨 **Ba nhánh soi kỹ nhất, cũng là ba chỗ hay mất nhất:**
   - `UI cơ bản` (V1) — bộ TC không kiểm nhãn nguyên văn / thứ tự field / trạng thái mặc định là **thiếu hẳn một lớp**, dù mọi validation đều đủ. Đây là lỗi phổ biến số 1
-  - `Validation` (V2) — đọc lướt bảng 15 loại rồi sinh 2–3 TC/field. Password có 9 mục, Email có 9 mục: sinh 3 TC là **chưa đạt**
+  - `Validation` (V2) — đọc lướt bảng 15 loại rồi sinh 2–3 TC/field. Password có 7 mục, Email có 9 mục: sinh 3 TC là **chưa đạt**
   - `Permission` (V3) — hệ thống có ≥2 role mà không có TC phân quyền nào
-- Nhánh không áp dụng với module → ghi `➖` kèm lý do, **không** tính là gap
+- Nhánh không áp dụng với module → ghi `➖` kèm lý do kỹ thuật, **không** tính là gap
+- Nhánh bộ TC đã **cố ý bỏ** (`⏭️` ở Bảng 4 vòng của index, có lý do + ai quyết + điều kiện rà lại) → giữ `⏭️`, **không** tính là gap. Chỉ nêu lại khi điều kiện rà lại đã xảy ra (VD trang giờ đã có field nhập), hoặc khi `⏭️` rơi vào thứ **không bao giờ được rút** (toàn bộ V1 · `Required`/`Validation` khi có field nhập · `Permission` khi ≥ 2 role · `Security` khi chạm dữ liệu người khác) → chấm 🔴
+- `⏭️` thiếu người quyết hoặc thiếu điều kiện rà lại, hoặc `➖` thật ra là `⏭️` (có thứ đó nhưng không kiểm) → ghi vào báo cáo như lỗi ghi nhãn
 
 > ⚠️ Rubric 6 tiêu chí chấm **cách viết từng TC**. Một bộ TC chỉ có 12 TC validation, viết rất đẹp, vẫn ra 🟢 toàn bộ — **rubric không nhìn thấy phần thiếu**. Đối soát 4 vòng là chỗ duy nhất bắt được. Bỏ qua mục này thì report của skill sẽ xác nhận sai rằng bộ TC đã ổn.
 
@@ -111,15 +115,16 @@ Lưu tại `docs/testcases/<module>/review/testcase_review_report_<nền-tảng>
 | TC ID | Điểm | Xếp loại | Vấn đề chính | Đề xuất sửa |
 |---|---|---|---|---|
 | TC_01 | 11/12 | 🟢 | Thiếu ghi chú data random | Thêm "email = random unique" |
-| TC_02 | 7/12 | 🟡 | Expected mơ hồ; gộp 2 kịch bản | Tách thành TC_02a/02b; Expected: "..." |
+| TC_02 | 7/12 | 🟡 | Expected mơ hồ; gộp 2 hành vi khác loại phản hồi (bị chặn ngay trên form vs máy chủ báo lỗi) | Tách: TC_02 giữ kịch bản bị chặn trên form; kịch bản máy chủ báo lỗi cấp **TC mới nối tiếp dải** (VD TC_087) — KHÔNG đặt `TC_02a/02b`; Expected: "..." |
 
 ## Đối soát loại kiểm thử (4 vòng)
 | Vòng | Nhánh | Trạng thái | Ghi chú |
 |---|---|---|---|
 | 1 | UI cơ bản | 🔴 Thiếu | Không có TC nào kiểm nhãn, thứ tự field, trạng thái mặc định |
-| 2 | Validation | 🟡 Nông | Password mới có 3/9 mục của bảng 15 loại field |
+| 2 | Validation | 🟡 Nông | Password mới có 3/7 mục của bảng 15 loại field |
 | 3 | Permission | ✅ | TC_20–TC_26 |
-| 4 | Responsive | ➖ | Module chỉ dùng nội bộ trên desktop — đã thống nhất với PO |
+| 4 | Responsive | ⏭️ | Cố ý bỏ — module chỉ dùng nội bộ trên desktop. PO quyết định 10-09-2026; rà lại khi có người dùng trên thiết bị di động |
+| 4 | Performance | ➖ | Không có công cụ tải — đội Hạ tầng, đợt sau |
 
 ## Coverage Gaps (TC còn thiếu)
 | # | Kịch bản thiếu | Vòng / Nhánh | Priority đề xuất |
@@ -129,7 +134,7 @@ Lưu tại `docs/testcases/<module>/review/testcase_review_report_<nền-tảng>
 | 3 | Login với account bị khóa | V2 · Business Rule | High |
 
 ## TC trùng lặp — đề xuất merge
-- TC_05 ≈ TC_12 (cùng verify validation email) → giữ TC_05, bỏ TC_12
+- TC_05 ≈ TC_12 (cùng verify validation email) → giữ TC_05; TC_12 gắn `@Deprecated` + tiền tố `🗑️ Deprecated (trùng TC_05, <ngày>) —`, **không** xoá dòng. Biến thể riêng của TC_12 (nếu có) chuyển vào Bảng biến thể của TC_05
 
 ## Kết luận & Khuyến nghị
 - <Tóm tắt 3-5 hành động ưu tiên>
@@ -141,7 +146,9 @@ Lưu tại `docs/testcases/<module>/review/testcase_review_report_<nền-tảng>
 
 - [ ] Mỗi TC 🔴/🟡 đều có đề xuất sửa cụ thể (không chê chung chung)
 - [ ] Coverage gap liệt kê kịch bản cụ thể, không nói "thiếu negative case" suông
-- [ ] **Đã chạy đối soát 4 vòng** — mọi nhánh được chấm ✅/🟡/🔴/➖, không ô nào bỏ trống
+- [ ] **Đã chạy đối soát 4 vòng** — mọi nhánh được chấm ✅/🟡/🔴/➖/⏭️, không ô nào bỏ trống; `⏭️` hợp lệ không bị tính là gap
+- [ ] Rubric tiêu chí 6 không trừ điểm TC gộp đúng Kiểu A/B; tiêu chí 2 đã soát ngôn ngữ DOM/HTTP ở phần TC chính
+- [ ] Đề xuất tách TC cấp **số mới nối tiếp dải**, đề xuất bỏ TC dùng `@Deprecated` — không có `TC_xxa`, không có "xoá TC"
 - [ ] **Đã đối soát bảng 15 loại field cho TỪNG field** — mục thiếu nêu đích danh (VD "Password thiếu: chặn dán, hiện/ẩn, max length")
 - [ ] Gap ghi kèm **vòng/nhánh** tương ứng, không ghi loại chung chung
 - [ ] Không tự ý sửa file TC — chỉ báo cáo, trừ khi user yêu cầu sửa
@@ -155,9 +162,10 @@ Lưu tại `docs/testcases/<module>/review/testcase_review_report_<nền-tảng>
 | Việc | Cách làm |
 |---|---|
 | **Ghi vào đâu** | Chính file TC đang dùng — cùng tên, cùng vị trí. 🚨 **CẤM** sinh `<tên>_improved.md` / `_v2` / `_new` hay thư mục `archive/` |
+| **File đang có thay đổi chưa commit** | `git status --short <file>` có dòng → **dừng**, đề nghị user commit trước. Agent không tự commit; sửa đè lên thay đổi chưa commit là mất bản đối chiếu (cùng luật với Mode DELTA) |
 | **Giữ bản cũ thế nào** | Ghi **mốc git** (`git log -1 --format=%h -- <file>`) vào Nhật ký thay đổi của index; xem lại bằng `git show <mốc>:<file>` |
 | **File chưa được git theo dõi** (Excel/CSV khách gửi) | **Hỏi user** trước khi ghi đè — không có mốc git để lấy lại bản cũ |
-| **TC ID** | Giữ nguyên. TC bỏ hẳn → `🗑️ Deprecated`, không xoá dòng. TC mới → nối tiếp mã kế tiếp |
+| **TC ID** | Giữ nguyên. TC bỏ hẳn → tag `@Deprecated` + tiền tố `🗑️ Deprecated (<lý do>, <ngày>) —` ở `Test Scenario`, không xoá dòng. TC mới (kể cả phần tách ra) → nối tiếp mã kế tiếp của dải, không chèn giữa |
 | **Phạm vi** | Chỉ các TC user đã duyệt ở checkpoint — không tiện tay sửa TC khác |
 | **Sau khi sửa** | Đồng bộ file index (Assumptions · Coverage · Vùng chưa có evidence · 4 vòng · tổng TC/biến thể · Bộ chạy) + 1 dòng Nhật ký |
 
@@ -178,6 +186,7 @@ Lưu tại `docs/testcases/<module>/review/testcase_review_report_<nền-tảng>
 | Bộ TC của repo (`docs/testcases/<module>/…`) | Đọc index → theo `## Bản đồ tài liệu` sang file nền tảng. Có sẵn cột `Automation` → vẫn chấm **độc lập**, xong mới đối chiếu |
 | File Excel / CSV / Markdown bất kỳ, không có cột `Automation` | Chấm từ Title · Pre-Condition · Steps · Expected · Test Data — tra cột **Dấu hiệu** ở bảng 3A của tiêu chí |
 | TC không có TC ID | Đánh số tạm theo dòng (`#1`, `#2`…), ghi rõ trong báo cáo |
+| TC mang tag `@Deprecated` | Không chấm, không đếm — chỉ ghi số lượng ở Tổng quan |
 
 ### Quy trình
 

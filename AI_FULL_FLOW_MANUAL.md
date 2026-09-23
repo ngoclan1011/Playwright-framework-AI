@@ -179,8 +179,8 @@ Cộng thêm: `README.md` cập nhật `Trạng thái recon` ⬜ → ✅.
 ```
 docs/testcases/<module>/TEST_CASES_<TÊN_MODULE>_SUMMARY.md               ← INDEX, tên file BẤT BIẾN — tổng hợp · Bản đồ tài liệu · coverage
 docs/testcases/<module>/<nền-tảng>/test_cases_<module>_<nền-tảng>.md   ← TC của từng nền tảng: web · mobile · api
-docs/testcases/<module>/<nền-tảng>/parts/part_NN_<nền-tảng>_<slug>.md  ← khi file nền tảng > 40 TC
-docs/checklists/checklist_<loại>_<module>.md     ← nếu chạy mode CHECKLIST
+docs/testcases/<module>/<nền-tảng>/parts/part_NN_<nền-tảng>_<slug>.md  ← khi file nền tảng > 40 TC (TÁCH) · > 50 TC (GỘP)
+docs/checklists/<module>/<nền-tảng>/checklist_<loại>_<YYYYMMDD>.md ← nếu chạy mode CHECKLIST (post-hotfix: checklist_post-hotfix_<TICKET-ID>.md · release: docs/checklists/_release/checklist_release_<mốc>.md)
 ```
 
 ---

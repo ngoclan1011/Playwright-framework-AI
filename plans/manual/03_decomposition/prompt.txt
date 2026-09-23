@@ -2,6 +2,7 @@
 # BƯỚC 3: PHÂN RÃ HỆ THỐNG (Decomposition)
 # ============================================================
 # Đây là prompt độc lập — copy & paste vào bất kỳ AI nào
+# Nội dung đồng bộ với skill `skills-rbt-manual-testing` — Mode FULL RBT, Bước 3
 # ============================================================
 # CÁCH DÙNG:
 # 1. Gửi prompt này SAU KHI đã trả lời hết câu hỏi Q&A ở Bước 2
@@ -11,7 +12,7 @@
 
 ---START---
 
-Giả định rằng các yêu cầu đã được làm rõ thông qua quá trình Q&A ở Bước 2.
+Giả định rằng các yêu cầu đã được làm rõ thông qua quá trình Q&A ở Bước 2. Câu hỏi nào tôi chưa trả lời thì dùng giả định bạn đã đề xuất và ghi lại thành `ASM-XX`.
 
 Hãy tiến hành **phân rã hệ thống (Decomposition)** tính năng này thành các Module / Sub-module nhỏ hơn để dễ quản lý kiểm thử.
 
@@ -31,7 +32,9 @@ Chia tính năng thành các Module và Sub-module cụ thể.
 Với mỗi Module/Sub-module, cung cấp:
 - Tên Module (đặt tên ngắn gọn, rõ nghĩa)
 - Mô tả chức năng (1-2 câu)
-- Các thành phần UI chính (nếu có)
+- Các thành phần UI chính (nếu có) — ghi **nhãn nguyên văn** theo ảnh giao diện
+- **Nền tảng** áp dụng (Web / Android / iOS / API) khi hệ thống có nhiều nền tảng
+- **Thành phần có trong module** — đánh dấu để Bước 5 biết phải rà checklist nào: Giao diện tĩnh · Form nhập liệu · Data Table/List · CRUD · Phân quyền · Modal/Dialog · Notification/Toast · Luồng trạng thái
 
 ### 3. Sơ đồ phụ thuộc (Dependencies)
 
@@ -41,6 +44,8 @@ Chỉ ra sự phụ thuộc và dữ liệu tương tác giữa các Module:
 - Module "Data Table" hiển thị dữ liệu phụ thuộc vào dữ liệu từ Module "Form Đăng ký"
 - Module "Chi tiết Khách hàng" phụ thuộc vào Module "Danh sách Khách hàng"
 - Module "Xuất báo cáo" phụ thuộc vào dữ liệu chạy Filter/Search...]
+
+Module nào là **cổng vào** của module khác (hỏng thì chặn cả đợt kiểm thử) → đánh dấu rõ, vì đây là một dấu hiệu rủi ro **Cao** ở Bước 4.
 
 ---
 

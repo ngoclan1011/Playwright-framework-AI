@@ -1,5 +1,5 @@
 ---
-description: Cập nhật manual test cases đã có theo Impact Report (chế độ delta) — sửa TC stale tại chỗ trong index, đánh dấu Deprecated TC của chức năng bị gỡ, ghi Nhật ký thay đổi, ghi Delta TC List ra file làm đầu vào cho automation. Hỗ trợ 2 mode — PLAN (chỉ lập kế hoạch) và APPLY (sửa + cập nhật danh mục).
+description: Cập nhật manual test cases đã có theo Impact Report (chế độ delta) — sửa TC stale tại chỗ trong file nền tảng, đánh dấu @Deprecated TC của chức năng bị gỡ, ghi Nhật ký thay đổi, ghi Delta TC List ra file làm đầu vào cho automation. Hỗ trợ 2 mode — PLAN (chỉ lập kế hoạch) và APPLY (sửa + cập nhật danh mục).
 skills:
   - skills-rbt-manual-testing
   - skills-coverage-traceability
@@ -46,7 +46,7 @@ Hai workflow trả lời **hai câu hỏi khác nhau**. Chạy sai cái là bỏ
 - **Tất cả output bằng Tiếng Việt**
 - 🚨 **CẤM sinh lại cả file/module TC.** Chỉ sửa đúng dòng của TC nằm trong delta. Sinh lại là xoá sạch công biên tập tay và các TC bổ sung đã tích luỹ
 - 🚨 **CẤM đổi TC ID, CẤM đánh lại số từ `001`** — TC ID là khoá nối sang automation (`allure.label('testId', ...)`) và RTM. Đứt TC ID là vỡ truy vết cả hai chiều
-- 🚨 **CẤM xoá dòng TC** — chức năng bị gỡ thì đổi trạng thái `🗑️ Deprecated` kèm mã ticket, giữ nguyên dòng (đối xứng quy tắc "KHÔNG xoá dòng REQ" của tầng requirements)
+- 🚨 **CẤM xoá dòng TC** — chức năng bị gỡ thì gắn tag `@Deprecated` ở cột `Tags` **và** tiền tố `🗑️ Deprecated (<TICKET-ID>, <DD-MM-YYYY>) —` ở đầu ô `Test Scenario`, giữ nguyên dòng (đối xứng quy tắc "KHÔNG xoá dòng REQ" của tầng requirements). Bảng TC không có cột trạng thái — **tag** là thứ `/execute-test-cases`, RTM và Bảng Đối Soát Coverage lọc theo
 - 🚨 **CẤM sinh file `_improved` / `_v2` / `_new`** — tên index **bất biến** là `TEST_CASES_<TÊN_MODULE>_SUMMARY.md`. Bản trước khi sửa **không** chép ra đâu cả — ghi **mốc git** (hash commit) và tra bằng `git show`. **KHÔNG** tạo thư mục `archive/`
 - **KHÔNG tự viết TC cho REQ mới (nhóm ➕)** — ngoài phạm vi, route sang `/generate-testcases-manual-rbt` hoặc `/generate-testcases-from-requirements`
 - **KHÔNG sửa TC theo suy đoán từ tên TC** — phải đọc **nội dung REQ sau khi đổi** trong tài liệu requirements. Tên TC không chứa đủ thông tin để biết kỳ vọng mới là gì
@@ -72,7 +72,7 @@ Hai workflow trả lời **hai câu hỏi khác nhau**. Chạy sai cái là bỏ
 |---|---|---|
 | **Impact Report** | ⭐ Bắt buộc (hoặc thay bằng danh sách REQ dưới) | `docs/requirements/<module>/impact/impact_<TICKET-ID>.md` — do `/update-requirements-from-ticket` ghi ra, hoặc `impact_spec_<YYYY-MM-DD>.md` do `/generate-requirements-from-api` ghi ra khi spec API đổi phiên bản. Hoặc dán trực tiếp nội dung |
 | **Danh sách REQ đã đổi** | Thay thế cho Impact Report | Khi user tự biết REQ nào đổi: REQ ID + đổi cái gì |
-| **Tài liệu requirements hiện hành** | ⭐ Bắt buộc | `docs/requirements/<module>/REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` — nguồn sự thật của kỳ vọng **mới** |
+| **Tài liệu requirements hiện hành** | ⭐ Bắt buộc | Index `docs/requirements/<module>/REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` (REQ dùng chung ≥ 2 nền tảng) **và** file nền tảng `docs/requirements/<module>/<nền-tảng>/requirements_<module>_<nền-tảng>.md` của nền tảng mà REQ đổi khai áp — nguồn sự thật của kỳ vọng **mới** |
 | **File test cases hiện hành** | ⭐ Bắt buộc | Index `docs/testcases/<module>/TEST_CASES_<TÊN_MODULE>_SUMMARY.md` → theo `## Bản đồ tài liệu` mở file nền tảng `<nền-tảng>/test_cases_<module>_<nền-tảng>.md` (+ `parts/` nếu có). REQ đổi khai áp nền tảng nào thì mở **đủ** file của các nền tảng đó |
 | **Evidence của module** | ⭕ Khuyến nghị · ⭐ **Bắt buộc khi ticket chạm V1** | `docs/requirements/<module>/<nền-tảng>/evidence/*.png` — **bắt buộc mở** nếu thay đổi đụng nhãn nguyên văn, bố cục, thứ tự field, giá trị mặc định hoặc định dạng hiển thị (4 nhóm không được suy diễn). Chưa có ảnh mới sau khi đổi → gắn `@NeedsVerify`, KHÔNG sửa theo suy đoán |
 | **RTM** | ⭕ Khuyến nghị | Có sẵn thì map REQ → TC nhanh và chắc hơn nhiều |
@@ -84,7 +84,7 @@ Hai workflow trả lời **hai câu hỏi khác nhau**. Chạy sai cái là bỏ
 ### Bước 1: Đọc Delta
 
 1. Đọc Impact Report, trích bảng **Test case cần xử lý** — 3 nhóm: `⚠️ Review & sửa` / `🗑️ Deprecated` / `➕ Viết mới`
-2. Với mỗi REQ trong nhóm 🟡 (SỬA): đọc **nội dung REQ sau khi đổi** trong `REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` để biết kỳ vọng mới là gì
+2. Với mỗi REQ trong nhóm 🟡 (SỬA): đọc **nội dung REQ sau khi đổi** — REQ nằm ở index `REQUIREMENTS_<TÊN_MODULE>_SUMMARY.md` hay ở file nền tảng thì đọc đúng nơi đó — để biết kỳ vọng mới là gì
 3. Đọc **Nhật ký thay đổi** ở cuối tài liệu requirements — nó ghi rõ đổi từ gì sang gì, đây là nguồn chính xác nhất
 4. Ghi rõ **đổi cái gì**: precondition / steps / expected result / test data / message nguyên văn / phân quyền
 
@@ -102,7 +102,7 @@ Hai workflow trả lời **hai câu hỏi khác nhau**. Chạy sai cái là bỏ
 | So khớp mô tả TC ↔ nội dung REQ | ⚠️ Suy luận | **Cần user xác nhận trước khi sửa** |
 | Không tìm thấy TC nào | ❓ | REQ chưa có TC — chuyển sang nhóm ➕, KHÔNG sửa gì |
 
-Mỗi TC ghi lại: **file nào** (index hay `parts/part_NN_*.md`), **dòng nào**, TC ID.
+Mỗi TC ghi lại: **file nào** (file nền tảng `<nền-tảng>/test_cases_<module>_<nền-tảng>.md` hay `<nền-tảng>/parts/part_NN_*.md` — index không chứa dòng TC; bộ TC cũ chưa có tầng nền tảng thì mới là index), **dòng nào**, TC ID.
 
 ### Bước 3: Lập Kế Hoạch Sửa Từng TC
 
@@ -122,7 +122,7 @@ Phân loại hành động cho TC — **khác** với hành động dành cho sc
 | Đổi **quy tắc nghiệp vụ / trạng thái** | **V2 · Business Rule · State Transition** | Sửa bảng quyết định / bảng transition, kiểm cả ô hợp lệ lẫn ô bị chặn | Nhóm TC tương ứng |
 | Đổi **phân quyền** | **V3 · Permission** | Sửa TC phân quyền, kiểm ma trận role còn khớp | Nhóm TC phân quyền |
 | Đổi **breakpoint / trình duyệt cam kết** | **V4 · Responsive · Compatibility** | Sửa danh sách kích thước/trình duyệt trong TC | Nhóm TC V4 |
-| Chức năng **bị gỡ** (REQ 🔴) | Nhánh của TC đó | Đổi trạng thái TC → `🗑️ Deprecated (TICKET-XXX)`, **KHÔNG xoá dòng** | Cột trạng thái |
+| Chức năng **bị gỡ** (REQ 🔴) | Nhánh của TC đó | Gắn tag `@Deprecated` + tiền tố `🗑️ Deprecated (TICKET-XXX, <ngày>) —` ở `Test Scenario`, **KHÔNG xoá dòng** | Cột `Tags` + ô `Test Scenario` |
 | REQ **mới** (🟢) | — | ❌ Ngoài phạm vi → `/generate-testcases-manual-rbt` | — |
 
 Mỗi mục ghi: `file:dòng`, TC ID, **vòng · nhánh**, sửa ô nào, có cần mở evidence không.
@@ -136,8 +136,8 @@ Mỗi mục ghi: `file:dòng`, TC ID, **vòng · nhánh**, sửa ô nào, có c�
 - **Ticket có đụng thành phần nhìn thấy được trên màn hình không** (thêm/bớt field, đổi nhãn, đổi vị trí, đổi giá trị mặc định)? → TC `UI cơ bản` ở **Vòng 1** phải cập nhật, **không chỉ** TC validation ở Vòng 2. Đây là câu hỏi hay bị bỏ qua nhất
 - Field đổi thành bắt buộc → có TC nào khác **dùng field đó ở bước phụ** mà giờ sẽ fail không?
 - TC bị Deprecated → có TC nào **lấy nó làm precondition** không?
-- Thêm field mới → **bảng 15 loại field** của loại field đó đã được đối soát đủ chưa (Password 9 mục, Email 9 mục…), hay mới sinh 2–3 TC cho xong?
-- Số TC sau khi thêm có **vượt ngưỡng 40** không → phải tách `parts/` theo quy tắc của skill?
+- Thêm field mới → **bảng 15 loại field** của loại field đó đã được đối soát đủ chưa (Password 7 mục, Email 9 mục…), hay mới sinh 2–3 TC cho xong?
+- Số TC sau khi thêm có **vượt ngưỡng** của file nền tảng không (> 40 TC ở độ hạt TÁCH · > 50 TC ở độ hạt GỘP) → phải tách `parts/` theo quy tắc của skill?
 
 ### Bước 4: Báo Cáo & Xin Duyệt (CHECKPOINT)
 
@@ -160,30 +160,18 @@ Mỗi mục ghi: `file:dòng`, TC ID, **vòng · nhánh**, sửa ô nào, có c�
    - Sạch → ghi `git log -1 --format=%h -- <file>` làm mốc. Đây là bước không được bỏ — bản cũ xem bằng `git show <hash>:<file>`
    - File **chưa từng** được commit → ghi `chưa có trong git`, báo user
 2. Sửa **tại chỗ** trong file nền tảng `<nền-tảng>/test_cases_<module>_<nền-tảng>.md` (hoặc `<nền-tảng>/parts/part_NN_*.md` nếu đã tách) — **chỉ chạm đúng ô đã liệt kê** ở Bước 3. Bộ TC cũ chưa có tầng nền tảng → sửa trong `TEST_CASES_<TÊN_MODULE>_SUMMARY.md` rồi chuyển một lần theo skill rbt (Quy Tắc Xuất File mục 2)
-3. TC bị gỡ → đổi trạng thái, giữ nguyên dòng và TC ID:
+3. TC bị gỡ → gắn tag + tiền tố, giữ nguyên dòng và TC ID (các cột khác không đổi):
    ```
-   | CRM_PRJ_TC_031 | Copy Project | ... | 🗑️ Deprecated — gỡ theo TICKET-123 (17-08-2026) |
+   | CRM_PRJ_TC_031 | REQ-PRJ-12 | ... | 🗑️ Deprecated (TICKET-123, 17-08-2026) — Copy Project | ... | @Regression @Deprecated |
    ```
 4. TC negative/boundary **mới sinh trong phạm vi REQ 🟡** → cấp TC ID **tiếp theo dải hiện có** của module, KHÔNG chèn số vào giữa
-5. Cập nhật **Bảng Đối Soát Coverage** ở index — REQ 🔴 không còn TC active là **đúng**, phải ghi rõ lý do; REQ 🟡 vẫn phải có ≥1 TC active
+5. Cập nhật **Bảng Đối Soát Coverage** ở index — **không đếm** TC `@Deprecated`. REQ 🔴 không còn TC active là **đúng**, phải ghi rõ lý do; REQ 🟡 vẫn phải có ≥1 TC active; REQ 🟢 ghi *"chưa có TC — ngoài phạm vi DELTA"* kèm command sinh bổ sung
 6. Cập nhật **Bảng Đối soát loại kiểm thử (4 vòng)** ở cuối index — **chỉ những nhánh ticket chạm tới**, giữ nguyên phần còn lại:
    - Nhánh có TC bị sửa/thêm → cập nhật lại dải TC ID và **số biến thể** (độ hạt GỘP)
    - Nhánh mà ticket vừa làm phát sinh nhu cầu mới nhưng chưa có TC → chấm `🔴 Thiếu`, bổ sung trước khi kết thúc
    - Nhánh mà chức năng vừa bị gỡ khiến không còn TC active → chuyển `➖` kèm lý do *"chức năng gỡ theo TICKET-XXX"*, **không** xoá dòng khỏi bảng
 
-### Bước 6: Quality Gate Delta
-
-Kiểm đủ 7 mục, thiếu mục nào là chưa xong:
-
-- [ ] **Mọi TC ID giữ nguyên** — không TC nào bị đổi số hay đánh lại
-- [ ] **Tên file index không đổi** — không sinh `_improved` / `_v2` / thư mục `archive/`
-- [ ] **Không dòng TC nào bị xoá** — TC gỡ đều ở trạng thái 🗑️ Deprecated kèm mã ticket
-- [ ] **Bảng Đối Soát Coverage** khớp lại: mọi REQ 🟡/🟢 active có ≥1 TC active
-- [ ] **Bảng Đối soát loại kiểm thử (4 vòng)** đã cập nhật **đúng những nhánh ticket chạm tới** — không rà lại cả module, không để nhánh nào rơi vào trạng thái sai sau khi sửa. Ticket đụng thành phần màn hình mà nhánh `V1 · UI cơ bản` không đổi gì = **dấu hiệu đã bỏ sót**
-- [ ] Số TC trong index **khớp** tổng của các `parts/` (nếu có tách)
-- [ ] **`docs/testcases/README.md`** (danh mục) đã cập nhật: số TC, REQ bao phủ, ngày cập nhật
-
-### Bước 7: Nhật Ký & Delta TC List
+### Bước 6: Nhật Ký & Delta TC List
 
 1. Ghi **Nhật ký thay đổi** vào cuối `TEST_CASES_<TÊN_MODULE>_SUMMARY.md`:
 
@@ -246,9 +234,22 @@ Kiểm đủ 7 mục, thiếu mục nào là chưa xong:
 | Dòng **Mốc git trước khi sửa** ghi đúng hash của từng file nền tảng | Automation chạy `git diff <hash> -- <file>` ra đúng ô đã đổi, không phải đoán từ cột mô tả |
 | Chạy APPLY lại cho **cùng ticket** (VD recon xong TC `⏸️`) → sửa **tại chỗ** dòng tương ứng + thêm dòng Nhật ký. KHÔNG tạo `delta_tc_<TICKET-ID>_v2.md` | Một ticket một file — automation chạy lại chỉ nhận những dòng đã đổi hành động |
 
-3. Chat chỉ hiện **tóm tắt theo nền tảng** (VD *"web 3 TC · mobile 1 TC `@Android @iOS` · 1 TC ⏸️ chưa sửa"*) + đường dẫn file. Nhắc user chuỗi tiếp theo: module đã có automation → `/update-automation-from-impact` (đọc đúng file vừa ghi) → `/generate-traceability-matrix` (khớp lại RTM)
+3. Sau khi Quality Gate ở Bước 7 đạt, chat chỉ hiện **tóm tắt theo nền tảng** (VD *"web 3 TC · mobile 1 TC `@Android @iOS` · 1 TC ⏸️ chưa sửa"*) + đường dẫn file. Nhắc user chuỗi tiếp theo: module đã có automation → `/update-automation-from-impact` (đọc đúng file vừa ghi) → `/generate-traceability-matrix` (khớp lại RTM)
 
 > 🚨 **Không được để Delta TC List chỉ nằm trong chat.** `/update-automation-from-impact` thường chạy ở phiên khác, có khi do người khác chạy — đóng phiên là mất, và dựng lại từ Nhật ký thì mất cột Nền tảng lẫn trạng thái `⏸️`.
+
+### Bước 7: Quality Gate Delta
+
+Chạy **sau** khi đã ghi Nhật ký và Delta TC List — kiểm đủ 8 mục (khớp Quality Gate DELTA của skill), thiếu mục nào là chưa xong:
+
+- [ ] **1. Mọi TC ID giữ nguyên** — không TC nào bị đổi số hay đánh lại
+- [ ] **2. Tên file index không đổi** — không sinh `_improved` / `_v2` / thư mục `archive/`
+- [ ] **3. Không dòng TC nào bị xoá** — TC gỡ đều mang **cả** tag `@Deprecated` **và** tiền tố `🗑️ Deprecated (<mã ticket>, <ngày>) —` ở `Test Scenario`
+- [ ] **4. Bảng Đối Soát Coverage** khớp lại: mọi REQ 🟡 và REQ chưa đổi còn active có ≥1 TC **không** `@Deprecated`; REQ 🔴 không còn TC active có ghi lý do; REQ 🟢 **không** chấm ở gate này — nằm ở *Ngoài phạm vi*
+- [ ] **5. Bảng Đối soát loại kiểm thử (4 vòng)** đã cập nhật **đúng những nhánh ticket chạm tới** — không rà lại cả module, không để nhánh nào rơi vào trạng thái sai sau khi sửa. Ticket đụng thành phần màn hình mà nhánh `V1 · UI cơ bản` không đổi gì = **dấu hiệu đã bỏ sót**
+- [ ] **6.** Số TC ở index (Bản đồ tài liệu) **khớp** tổng số TC của các file nền tảng / `parts/`, tách rõ số TC `@Deprecated`
+- [ ] **7. `docs/testcases/README.md`** (danh mục) đã cập nhật: số TC, REQ bao phủ, ngày cập nhật
+- [ ] **8. Nhật ký thay đổi** ở cuối index + **`impact/delta_tc_<TICKET-ID>.md`** đã ghi ra file — có cột Nền tảng, Vòng · Nhánh, đủ dòng `⏸️ @NeedsVerify`, mốc git từng file nền tảng
 
 ## Output
 

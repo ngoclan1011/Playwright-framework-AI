@@ -14,7 +14,7 @@ Command này sử dụng **Mode QUICK** của skill `skills-rbt-manual-testing` 
 
 - **Mode:** QUICK (1 lượt duy nhất, không chờ user giữa chừng)
 - Phù hợp cho module đơn giản, requirements đã rõ ràng
-- Nếu phát hiện requirements quá phức tạp hoặc mơ hồ → **tự động chuyển sang FULL RBT** và thông báo user
+- Nếu phát hiện requirements quá phức tạp hoặc mơ hồ → **trước batch đầu tiên** đề xuất chuyển sang FULL RBT và chờ user chọn (xem *Khi nào chuyển sang FULL RBT*). Đã bắt đầu sinh thì chạy thẳng tới hết
 - Tất cả output bằng **Tiếng Việt**
 
 ## Độ hạt test case — tham số `GỘP` / `TÁCH`
@@ -36,7 +36,8 @@ Quy tắc đầy đủ (2 kiểu gộp được phép · bảng CẤM gộp · t
 
 ## Các bước thực hiện
 
-0. **Chốt độ hạt GỘP / TÁCH** theo tham số truyền vào (mặc định `GỘP`) và nêu ra chat cùng kế hoạch batch. **Chưa chốt thì chưa được ghi dòng TC đầu tiên.**
+0a. **Kiểm module đã có bộ TC chưa** — `docs/testcases/<module>/TEST_CASES_<TÊN_MODULE>_SUMMARY.md` (hoặc tên cũ `test_cases_<module>.md`). Có rồi thì **KHÔNG sinh mới**: REQ đã có TC mà vừa đổi → dừng, chuyển `/update-testcases-from-impact`; REQ chưa có TC → chạy **chế độ BỔ SUNG** của skill (chỉ sinh cho REQ đó, TC ID nối tiếp dải, giữ độ hạt đang dùng, ghi nối vào file hiện có, Nhật ký có mốc git). Nêu rõ nhánh đã chọn ở dòng kế hoạch
+0. **Chốt độ hạt GỘP / TÁCH** theo tham số truyền vào (mặc định `GỘP`; chế độ BỔ SUNG thì **theo độ hạt của bộ TC đang có**) và nêu ra chat cùng kế hoạch batch. **Chưa chốt thì chưa được ghi dòng TC đầu tiên.**
 1. **Đọc và hiểu requirements** được user cung cấp
    - Requirements đã có REQ ID → dùng nguyên mã; chưa có → agent tự gán `REQ-<MODULE>-<SỐ>`
 2. **Mở TOÀN BỘ evidence** — liệt kê `docs/requirements/<module>/<nền-tảng>/evidence/` và `Read` từng ảnh (Quy Tắc Đối Chiếu Evidence trong skill). **Chưa mở xong thì chưa được ghi dòng TC đầu tiên.** Tài liệu ↔ ảnh mâu thuẫn → **ảnh thắng**, ghi `ASM-XX` và báo user. Vùng không có ảnh → TC gắn `@NeedsVerify`
@@ -44,6 +45,7 @@ Quy tắc đầy đủ (2 kiểu gộp được phép · bảng CẤM gộp · t
 4. **Xác định các luồng chính:** Happy Path, Negative Path, Boundary Cases, Edge Cases
 4b. **Chấm mức rủi ro rồi lập kế hoạch theo 4 vòng (BẮT BUỘC — TRƯỚC khi ghi dòng TC đầu tiên):**
    - **Chấm Risk Level** theo bảng tiêu chí mục "Độ sâu theo rủi ro" trong skill → chọn độ sâu: Cao → **Đầy đủ** (40–60 TC) · Trung bình → **Tiêu chuẩn** (20–30 TC) · Thấp → **Tối giản** (8–12 TC). Agent tự chấm, ghi căn cứ vào dòng kế hoạch batch; lưỡng lự thì chấm **mức cao hơn**
+   - Đọc dòng `Năng lực kiểm thử của QA` ở `docs/requirements/README.md` cho các nhánh V3 `API` · `Database` · `Integration` · `Logging/Audit` — có sẵn thì dùng, **không** hỏi lại; chưa có thì hỏi user **một lần** rồi ghi ngay vào README
    - Duyệt **Bản Đồ Loại Kiểm Thử — 4 Vòng**, chấm sơ bộ từng nhánh `✅ sẽ sinh` / `➖ không áp dụng (lý do kỹ thuật)` / `⏭️ cố ý bỏ (lý do + ai quyết + điều kiện rà lại)`
    - Sinh **tuần tự V1 → V2 → V3 → V4**. Batch chia theo vòng, KHÔNG trộn hai vòng vào một batch
    > ⚠️ Bốn thứ **không bao giờ rút** dù rủi ro Thấp: toàn bộ V1 · `Required`+`Validation` khi có field nhập · `Permission` khi ≥2 vai trò · `Security` khi chạm dữ liệu người dùng khác
@@ -77,7 +79,7 @@ Quy tắc đầy đủ (2 kiểu gộp được phép · bảng CẤM gộp · t
    - `Priority` (Critical / High / Medium / Low)
    - `Automation` (Yes / No / Partial)
    - `Auto Type` (UI / API / Unit / N/A)
-   - `Tags` (`@Smoke`, `@Regression`, `@CriticalPath`, `@TechCheck` cho TC cần DevTools...)
+   - `Tags` (`@Smoke`, `@Regression`, `@CriticalPath`, `@TechCheck` cho TC cần DevTools, `@NeedsVerify` cho TC chưa có evidence, tag nền tảng `@Web`/`@Android`/`@iOS`/`@API` khi module có ≥ 2 nền tảng...)
 10. **Chạy Self-Quality Gate (11 Tiêu chí):** **Độ hạt nhất quán** (toàn bộ theo một độ hạt đã chốt; nếu GỘP thì mọi biến thể có mã riêng, không TC nào quá 6 biến thể, không vi phạm bảng CẤM gộp), Unique TC ID, 1-to-1 Step-Expected matching, Concrete Test Data, Field Validation Coverage, Automation Metadata Ready (cột `Automation` chấm theo `references/automation_criteria.md` của skill — không gắn `Yes` hàng loạt; index có mục `## Đối soát cột Automation`), **Requirement Coverage** (mọi REQ có ≥1 TC — kèm Bảng Đối Soát Coverage và **chiều ngược** — không TC nào gánh ≥ 2 REQ mà các REQ đó không có TC khác chống lưng (skill mục 6b; vi phạm → tách, TC mới cấp số nối tiếp dải)), **Evidence-verified** (đã mở 100% ảnh evidence — kèm Bảng Đối Soát Evidence), **Ngôn ngữ kiểm chứng** (phần TC chính không còn `document.` / `querySelector` / `checkValidity` / `className` / selector / mã HTTP; phần kỹ thuật nằm dưới `🔧 Ghi chú kỹ thuật` + tag `@TechCheck`), **Rà soát đặc tính chất lượng** (chấm đủ 9/9 đặc tính ISO/IEC 25010:2023 — ô `➖` phải ghi ai chịu trách nhiệm, ô 🔴 phải bổ sung TC trước khi xuất; bảng đặt cuối tài liệu TC), và **Đối soát loại kiểm thử 4 vòng** (mọi nhánh V1–V4 được chấm bằng **4 trạng thái** `✅ có TC` / `➖ không áp dụng + lý do kỹ thuật` / `⏭️ cố ý bỏ + lý do + ai quyết + điều kiện rà lại` / `🔴 thiếu`; `➖` và `⏭️` KHÔNG được dùng lẫn; ba nhánh `UI cơ bản`, `Validation`, `Permission` KHÔNG BAO GIỜ được `➖` hay `⏭️`; độ hạt GỘP thì ghi kèm số biến thể; mức rủi ro và độ sâu ghi ở đầu tài liệu kèm dòng "Nâng lên khi…"; bảng đặt cuối tài liệu TC, trước bảng ISO 25010).
 11. **Ghi file theo Quy Tắc Xuất File & Theo Dõi Tiến Độ** (xem skill) — KHÔNG in bảng TC ra chat
 

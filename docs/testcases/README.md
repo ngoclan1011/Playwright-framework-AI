@@ -70,7 +70,7 @@ docs/testcases/
 | Tên index **luôn** `TEST_CASES_<TÊN_MODULE>_SUMMARY.md` | `/execute-test-cases`, `/review-testcases`, `/generate-automation-from-testcases`, `/generate-traceability-matrix` đều đọc theo mẫu đường dẫn cố định |
 | **KHÔNG** nhét số phiên bản vào tên index (`_v2`, `_new`, `_improved`) | Bản mới **thay thế** tại chỗ; bản cũ tra bằng **lịch sử git** — không có thư mục `archive/` |
 | **KHÔNG đổi / đánh lại TC ID** khi cập nhật | TC ID là khoá nối sang `allure.label('testId', ...)`, cột TC ID của RTM, và execution report cũ |
-| **KHÔNG xoá dòng TC** — chức năng gỡ thì đổi trạng thái 🗑️ Deprecated kèm mã ticket | Xoá dòng làm script tương ứng thành orphan, không phát hiện được tự động |
+| **KHÔNG xoá dòng TC** — chức năng gỡ thì gắn tag `@Deprecated` ở cột `Tags` + tiền tố `🗑️ Deprecated (<mã ticket>, <ngày>) —` ở `Test Scenario` | Xoá dòng làm script tương ứng thành orphan, không phát hiện được tự động |
 | Module đã có TC mà requirements đổi → dùng **Mode DELTA** (`/update-testcases-from-impact`) | Chạy lại QUICK/FULL RBT là sinh bộ thứ hai, TC ID đánh lại từ `001` |
 | Vượt ngưỡng thì tách `parts/`, cắt tại ranh giới nhóm chức năng — **>40 TC** ở độ hạt TÁCH, **>50 TC** ở độ hạt GỘP | Ngưỡng đếm theo số TC vì người review đọc lần lượt từng TC |
 

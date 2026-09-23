@@ -169,6 +169,7 @@ Cột `Automation` giữ nguyên giá trị thật (`Yes`/`Partial`/`No`); trạ
 ```
 
 - TC `Yes` không vướng gì → **không** liệt kê, bảng chỉ chứa ngoại lệ
+- TC `@Deprecated` (chức năng đã gỡ) **không** đếm vào bảng số lượng — giữ nguyên giá trị cột `Automation` cũ, script tương ứng đánh dấu skip ở tầng automation
 - 🚨 Bảng có cột `TC ID` nhưng **không** có cột nội dung TC → viewer bỏ qua, không đếm trùng. **Không** đặt tên cột chứa `Expected` / `Scenario` / `Test Steps` / `Test Title` trong bảng này — viewer sẽ nhận nhầm thành dòng TC
 
 ### 7.2 Khi review độc lập — báo cáo riêng

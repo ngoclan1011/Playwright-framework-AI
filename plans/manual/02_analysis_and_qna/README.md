@@ -21,4 +21,6 @@ Yêu cầu AI phân tích tài liệu từ Bước 1 để tìm ra các điểm 
 - **Đây là bước quan trọng nhất** trong quy trình. Nếu bỏ qua, AI sẽ tự đoán logic → test case sai nghiêm trọng.
 - Trả lời **càng cụ thể càng tốt**. Nếu chưa biết, nói rõ "Chưa xác định, giả định là..." để AI ghi nhận.
 - Có thể bổ sung thêm gợi ý vào phần `[...]` trong prompt.txt để AI tập trung vào mảng bạn quan tâm.
+- **Xung đột tài liệu ↔ ảnh giao diện** luôn thành câu hỏi Q&A — đó là dấu hiệu tài liệu đã lỗi thời, cần bạn xác nhận bên nào đúng.
+- Câu nào không trả lời → AI dùng giả định đã đề xuất và ghi thành `ASM-XX` trong bộ TC, không đoán ngầm.
 
