@@ -108,10 +108,15 @@ appium-java-framework:
   rules:
     - if: $ANDROID_RUNNER_TAG == null || $ANDROID_RUNNER_TAG == ""
       when: never
+    # APK không nằm trong repo → chưa có thì không tạo job (tránh dựng emulator rồi lỗi tạo phiên)
     - if: $CI_PIPELINE_SOURCE == "web"
+      exists:
+        - appium-java-framework/apps/*.apk
     - changes:
         - appium-java-framework/**/*
         - .gitlab-ci.yml
+      exists:
+        - appium-java-framework/apps/*.apk
   before_script:
     - test -w /dev/kvm || { echo "Runner không có /dev/kvm — emulator không chạy được"; exit 1; }
     - apt-get update -qq && apt-get install -y -qq curl unzip libpulse0 libgl1 libnss3 libxcomposite1 libxcursor1 libxi6 libxtst6 libasound2t64 > /dev/null
@@ -143,7 +148,7 @@ appium-java-framework:
     - mkdir -p reports/logs
     - npm run appium > reports/logs/appium-ci.log 2>&1 &
     - timeout 120 sh -c 'until curl -sf http://127.0.0.1:4723/status > /dev/null; do sleep 2; done'
-    - if ls apps/*.apk > /dev/null 2>&1; then adb install -r apps/*.apk; else echo "WARNING - Không có APK trong apps/ — test cần app Book sẽ lỗi ở bước tạo phiên"; fi
+    - adb install -r apps/*.apk
     - chmod +x mvnw
     # Chạy test nhưng vẫn sinh report khi đỏ, rồi trả đúng mã thoát ở cuối
     - ./mvnw -B test -Dsuite=$SUITE && TEST_EXIT=0 || TEST_EXIT=$?

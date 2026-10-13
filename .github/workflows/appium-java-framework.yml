@@ -35,30 +35,46 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # APK không nằm trong repo → chưa có thì bỏ qua cả job (vàng, không đỏ) thay vì dựng emulator rồi lỗi tạo phiên
+      - name: Kiểm tra APK app Book trong apps/
+        id: apk
+        run: |
+          if ls apps/*.apk > /dev/null 2>&1; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Không có APK trong appium-java-framework/apps/ — bỏ qua test Appium. Chép file .apk vào đó rồi push để chạy"
+          fi
+
       - uses: actions/setup-java@v4
+        if: steps.apk.outputs.found == 'true'
         with:
           distribution: temurin
           java-version: "17"
           cache: maven
 
       - uses: actions/setup-node@v4
+        if: steps.apk.outputs.found == 'true'
         with:
           node-version: "22"
           cache: npm
           cache-dependency-path: appium-java-framework/package-lock.json
 
       - name: Bật KVM cho emulator
+        if: steps.apk.outputs.found == 'true'
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
       - name: Cài Appium + UiAutomator2 cục bộ trong project
+        if: steps.apk.outputs.found == 'true'
         run: |
           npm ci
           npm run setup:driver
 
       - name: Chạy test trên emulator
+        if: steps.apk.outputs.found == 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 35
@@ -72,16 +88,16 @@ jobs:
             mkdir -p reports/logs
             (npm run appium > reports/logs/appium-ci.log 2>&1 &)
             for i in $(seq 1 60); do curl -sf http://127.0.0.1:4723/status > /dev/null && break; sleep 2; done
-            if ls apps/*.apk > /dev/null 2>&1; then adb install -r apps/*.apk; else echo "::warning::Không có APK trong apps/ — test cần app Book sẽ lỗi ở bước tạo phiên"; fi
+            adb install -r apps/*.apk
             chmod +x mvnw
             ./mvnw -B test -Dsuite=$SUITE || echo "TESTS_FAILED=1" >> $GITHUB_ENV
 
       - name: Sinh Allure report (CLI trong project — CI không cài Allure riêng)
-        if: always()
+        if: always() && steps.apk.outputs.found == 'true'
         run: ./mvnw -B allure:report
 
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && steps.apk.outputs.found == 'true'
         with:
           name: appium-reports
           path: appium-java-framework/reports/
