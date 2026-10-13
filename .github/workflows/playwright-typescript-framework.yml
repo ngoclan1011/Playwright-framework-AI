@@ -60,8 +60,24 @@ jobs:
           BASE_URL: ${{ secrets.BASE_URL || 'https://book.anhtester.com' }}
           TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
           TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
+          CRM_ADMIN_EMAIL: ${{ secrets.CRM_ADMIN_EMAIL }}
+          CRM_ADMIN_PASSWORD: ${{ secrets.CRM_ADMIN_PASSWORD }}
+          CRM_PM_EMAIL: ${{ secrets.CRM_PM_EMAIL }}
+          CRM_PM_PASSWORD: ${{ secrets.CRM_PM_PASSWORD }}
+          # Tuỳ chọn — để trống thì test tương ứng tự skip
+          CRM_CUSTOMER_EMAIL: ${{ secrets.CRM_CUSTOMER_EMAIL }}
+          CRM_CUSTOMER_PASSWORD: ${{ secrets.CRM_CUSTOMER_PASSWORD }}
+          CRM_TC014_EMAIL: ${{ secrets.CRM_TC014_EMAIL }}
+          CRM_TC014_PASSWORD: ${{ secrets.CRM_TC014_PASSWORD }}
           HEADLESS: 'true'
-        run: npm test
+        # Chưa khai đủ tài khoản → chỉ chạy test công khai (bỏ @auth) thay vì đỏ cả suite
+        run: |
+          if [ -n "$TEST_EMAIL" ] && [ -n "$TEST_PASSWORD" ] && [ -n "$CRM_ADMIN_EMAIL" ] && [ -n "$CRM_ADMIN_PASSWORD" ] && [ -n "$CRM_PM_EMAIL" ] && [ -n "$CRM_PM_PASSWORD" ]; then
+            npm test
+          else
+            echo "::warning::Chưa khai đủ secrets TEST_* / CRM_* — chỉ chạy test công khai (npm run test:public), bỏ qua test @auth"
+            npm run test:public
+          fi
 
       - name: Sinh Allure report
         if: always()

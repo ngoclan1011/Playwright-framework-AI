@@ -2,6 +2,9 @@
 #
 # Biến cần khai ở Settings → CI/CD → Variables (bật Masked, KHÔNG ghi giá trị vào file này):
 #   Playwright : BASE_URL (tuỳ chọn) · TEST_EMAIL · TEST_PASSWORD
+#                CRM_ADMIN_EMAIL · CRM_ADMIN_PASSWORD · CRM_PM_EMAIL · CRM_PM_PASSWORD
+#                (tuỳ chọn) CRM_CUSTOMER_EMAIL · CRM_CUSTOMER_PASSWORD · CRM_TC014_EMAIL · CRM_TC014_PASSWORD
+#                Thiếu tài khoản bắt buộc → job chỉ chạy test công khai (npm run test:public)
 #   Appium     : BOOK_USER_EMAIL · BOOK_USER_PASSWORD · ANDROID_RUNNER_TAG (tag của runner có KVM)
 #
 # Chạy tay: Build → Pipelines → Run pipeline (có thể đặt SUITE cho Appium, WORKERS cho Playwright).
@@ -52,7 +55,15 @@ playwright-typescript-framework:
   script:
     - export BASE_URL="${BASE_URL:-https://book.anhtester.com}"
     # Chạy test nhưng vẫn sinh report khi đỏ, rồi trả đúng mã thoát ở cuối
-    - npm test && TEST_EXIT=0 || TEST_EXIT=$?
+    # Chưa khai đủ tài khoản → chỉ chạy test công khai (bỏ @auth) thay vì đỏ cả suite
+    - |
+      if [ -n "$TEST_EMAIL" ] && [ -n "$TEST_PASSWORD" ] && [ -n "$CRM_ADMIN_EMAIL" ] && [ -n "$CRM_ADMIN_PASSWORD" ] && [ -n "$CRM_PM_EMAIL" ] && [ -n "$CRM_PM_PASSWORD" ]; then
+        TEST_CMD="npm test"
+      else
+        echo "WARNING - Chưa khai đủ biến TEST_* / CRM_* — chỉ chạy test công khai (npm run test:public)"
+        TEST_CMD="npm run test:public"
+      fi
+    - $TEST_CMD && TEST_EXIT=0 || TEST_EXIT=$?
     - npm run report:generate && npm run report:single
     - exit $TEST_EXIT
   artifacts:
