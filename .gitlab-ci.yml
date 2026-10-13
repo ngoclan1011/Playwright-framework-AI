@@ -1,0 +1,147 @@
+# GitLab CI — tương đương .github/workflows/ (Playwright TS + Appium Java)
+#
+# Biến cần khai ở Settings → CI/CD → Variables (bật Masked, KHÔNG ghi giá trị vào file này):
+#   Playwright : BASE_URL (tuỳ chọn) · TEST_EMAIL · TEST_PASSWORD
+#   Appium     : BOOK_USER_EMAIL · BOOK_USER_PASSWORD · ANDROID_RUNNER_TAG (tag của runner có KVM)
+#
+# Chạy tay: Build → Pipelines → Run pipeline (có thể đặt SUITE cho Appium, WORKERS cho Playwright).
+
+stages:
+  - test
+
+# Một pipeline duy nhất cho mỗi sự kiện: MR, push lên main, hoặc chạy tay — tránh chạy trùng branch + MR
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE == "web"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# ---------------------------------------------------------------------------
+# Playwright TypeScript — UI lần lượt Chrome → Edge → Firefox, rồi crm, api
+# ---------------------------------------------------------------------------
+playwright-typescript-framework:
+  stage: test
+  # Khớp đúng version @playwright/test trong package-lock.json — nâng Playwright thì nâng tag image theo
+  image: mcr.microsoft.com/playwright:v1.63.0-noble
+  timeout: 60m
+  variables:
+    # Số luồng song song CHO MỖI TRÌNH DUYỆT — sửa đúng dòng này, KHÔNG đụng playwright.config.ts.
+    # Runner SaaS nhỏ (2 vCPU): nếu test chập chờn thì hạ xuống 2–3 ở đây.
+    WORKERS: "5"
+    HEADLESS: "true"
+    npm_config_cache: $CI_PROJECT_DIR/.npm
+  cache:
+    key:
+      files:
+        - playwright-typescript-framework/package-lock.json
+    paths:
+      - .npm/
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "web"
+    - changes:
+        - playwright-typescript-framework/**/*
+        - .gitlab-ci.yml
+  before_script:
+    # CLI Allure 2 (allure-commandline trong devDependencies) chạy trên Java
+    - apt-get update -qq && apt-get install -y -qq openjdk-21-jre-headless > /dev/null
+    - cd playwright-typescript-framework
+    - npm ci
+    # Image đã có Firefox · Chrome/Edge bản chính thức phải cài thêm
+    - npm run browsers:install -- --with-deps chrome msedge
+    - npm run typecheck
+  script:
+    - export BASE_URL="${BASE_URL:-https://book.anhtester.com}"
+    # Chạy test nhưng vẫn sinh report khi đỏ, rồi trả đúng mã thoát ở cuối
+    - npm test && TEST_EXIT=0 || TEST_EXIT=$?
+    - npm run report:generate && npm run report:single
+    - exit $TEST_EXIT
+  artifacts:
+    name: test-reports
+    when: always
+    expire_in: 14 days
+    paths:
+      - playwright-typescript-framework/reports/
+
+# ---------------------------------------------------------------------------
+# Appium Java — Android emulator
+# ---------------------------------------------------------------------------
+# ⚠️ Emulator x86_64 cần KVM. Runner SaaS của GitLab KHÔNG có /dev/kvm → phải dùng runner tự dựng
+#    (Docker executor, config.toml: devices = ["/dev/kvm"]) và khai tag của nó vào biến ANDROID_RUNNER_TAG.
+#    Chưa khai biến này thì job không được tạo — tránh job treo "pending" mãi vì không runner nào nhận.
+appium-java-framework:
+  stage: test
+  image: eclipse-temurin:17-jdk
+  timeout: 60m
+  tags:
+    - $ANDROID_RUNNER_TAG
+  variables:
+    # Appium: số luồng = số device. CI dựng 1 emulator → thread-count="1" trong testng.xml
+    SUITE: "testng.xml"
+    APPIUM_SERVER: http://127.0.0.1:4723
+    ANDROID_API_LEVEL: "35"
+    ANDROID_HOME: $CI_PROJECT_DIR/.android-sdk
+    ANDROID_AVD_HOME: $CI_PROJECT_DIR/.android-avd
+    MAVEN_OPTS: -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository
+    npm_config_cache: $CI_PROJECT_DIR/.npm
+  cache:
+    - key: android-sdk-$ANDROID_API_LEVEL
+      paths:
+        - .android-sdk/
+    - key:
+        files:
+          - appium-java-framework/pom.xml
+          - appium-java-framework/package-lock.json
+      paths:
+        - .m2/repository/
+        - .npm/
+  rules:
+    - if: $ANDROID_RUNNER_TAG == null || $ANDROID_RUNNER_TAG == ""
+      when: never
+    - if: $CI_PIPELINE_SOURCE == "web"
+    - changes:
+        - appium-java-framework/**/*
+        - .gitlab-ci.yml
+  before_script:
+    - test -w /dev/kvm || { echo "Runner không có /dev/kvm — emulator không chạy được"; exit 1; }
+    - apt-get update -qq && apt-get install -y -qq curl unzip libpulse0 libgl1 libnss3 libxcomposite1 libxcursor1 libxi6 libxtst6 libasound2t64 > /dev/null
+    # Node 22 cho Appium server cài cục bộ trong project
+    - curl -fsSL https://deb.nodesource.com/setup_22.x | bash - > /dev/null && apt-get install -y -qq nodejs > /dev/null
+    # Android SDK — tải một lần, các lần sau lấy từ cache
+    - |
+      if [ ! -x "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" ]; then
+        mkdir -p "$ANDROID_HOME/cmdline-tools"
+        curl -fsSL -o /tmp/cmdline-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+        unzip -q /tmp/cmdline-tools.zip -d "$ANDROID_HOME/cmdline-tools"
+        mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
+      fi
+    - export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$PATH"
+    - yes | sdkmanager --licenses > /dev/null
+    - sdkmanager --install "platform-tools" "emulator" "system-images;android-${ANDROID_API_LEVEL};google_apis;x86_64" > /dev/null
+    - echo no | avdmanager create avd -n Pixel_10_Pro_XL -k "system-images;android-${ANDROID_API_LEVEL};google_apis;x86_64" --force
+    - emulator -avd Pixel_10_Pro_XL -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot > /tmp/emulator.log 2>&1 &
+    - adb wait-for-device
+    - timeout 600 sh -c 'until [ "$(adb shell getprop sys.boot_completed | tr -d "\r")" = "1" ]; do sleep 5; done'
+    - adb shell settings put global window_animation_scale 0
+    - adb shell settings put global transition_animation_scale 0
+    - adb shell settings put global animator_duration_scale 0
+    - cd appium-java-framework
+    # Cài Appium + UiAutomator2 cục bộ trong project
+    - npm ci
+    - npm run setup:driver
+  script:
+    - mkdir -p reports/logs
+    - npm run appium > reports/logs/appium-ci.log 2>&1 &
+    - timeout 120 sh -c 'until curl -sf http://127.0.0.1:4723/status > /dev/null; do sleep 2; done'
+    - if ls apps/*.apk > /dev/null 2>&1; then adb install -r apps/*.apk; else echo "WARNING - Không có APK trong apps/ — test cần app Book sẽ lỗi ở bước tạo phiên"; fi
+    - chmod +x mvnw
+    # Chạy test nhưng vẫn sinh report khi đỏ, rồi trả đúng mã thoát ở cuối
+    - ./mvnw -B test -Dsuite=$SUITE && TEST_EXIT=0 || TEST_EXIT=$?
+    # Sinh Allure report bằng CLI trong project — CI không cài Allure riêng
+    - ./mvnw -B allure:report
+    - exit $TEST_EXIT
+  artifacts:
+    name: appium-reports
+    when: always
+    expire_in: 14 days
+    paths:
+      - appium-java-framework/reports/

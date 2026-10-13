@@ -1,0 +1,29 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@playwright/mcp@latest",
+        "--viewport-size=1600,750",
+        "--config",
+        "C:\\Users\\lanl\\AppData\\Local\\Packages\\Claude_pzs8sxrjxfjjc\\LocalCache\\Roaming\\Claude\\playwright-mcp-config.json"
+      ]
+    },
+    "appium-mcp": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "appium-mcp@latest"
+      ],
+      "env": {
+        "ANDROID_HOME": "C:\\Users\\lanl\\AppData\\Local\\Android\\Sdk",
+        "CAPABILITIES_CONFIG": "C:\\Users\\lanl\\AppData\\Local\\Packages\\Claude_pzs8sxrjxfjjc\\LocalCache\\Roaming\\Claude\\capabilities.json"
+      }
+    }
+  }
+}

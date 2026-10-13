@@ -1,0 +1,14 @@
+[
+  {
+    "variant": "a",
+    "title": "email chưa đăng ký",
+    "useAccountEmail": false,
+    "password": "Wrong@123456"
+  },
+  {
+    "variant": "b",
+    "title": "đúng email nhưng sai mật khẩu",
+    "useAccountEmail": true,
+    "password": "Wrong@123456"
+  }
+]

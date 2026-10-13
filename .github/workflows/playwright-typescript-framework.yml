@@ -1,0 +1,75 @@
+name: Playwright TypeScript Framework
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'playwright-typescript-framework/**'
+      - '.github/workflows/playwright-typescript-framework.yml'
+  pull_request:
+    paths:
+      - 'playwright-typescript-framework/**'
+      - '.github/workflows/playwright-typescript-framework.yml'
+  workflow_dispatch:
+    inputs:
+      workers:
+        description: "Số luồng song song cho mỗi trình duyệt"
+        required: false
+        default: "5"
+
+# Push mới lên cùng nhánh/PR thì huỷ lượt chạy cũ đang dở
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Số luồng song song CHO MỖI TRÌNH DUYỆT — sửa đúng dòng này, KHÔNG đụng playwright.config.ts.
+  # Các trình duyệt chạy LẦN LƯỢT (Chrome → Edge → Firefox), không chạy cùng lúc.
+  # Runner GitHub mặc định 2 vCPU: nếu test chập chờn thì hạ xuống 2–3 ở đây.
+  WORKERS: ${{ github.event.inputs.workers || 5 }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: playwright-typescript-framework
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: playwright-typescript-framework/package-lock.json
+
+      # CLI Allure 2 (allure-commandline trong devDependencies) chạy trên Java
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - run: npm ci
+      # Firefox + ffmpeg vào .browsers/ · Runner Linux không có sẵn Chrome/Edge → Playwright cài bản chính thức lên runner
+      - run: npm run browsers:install -- --with-deps chrome msedge
+      - run: npm run typecheck
+
+      - name: Run tests — UI lần lượt Chrome → Edge → Firefox (mỗi trình duyệt WORKERS luồng), rồi crm, api
+        env:
+          BASE_URL: ${{ secrets.BASE_URL || 'https://book.anhtester.com' }}
+          TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
+          HEADLESS: 'true'
+        run: npm test
+
+      - name: Sinh Allure report
+        if: always()
+        run: npm run report:generate && npm run report:single
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-reports
+          path: playwright-typescript-framework/reports/
+          retention-days: 14

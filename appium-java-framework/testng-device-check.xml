@@ -1,0 +1,15 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!-- Kiểm kết nối device — không cần app Book. Chạy: mvnw test -Dsuite=testng-device-check.xml -->
+<suite name="Device check" parallel="tests" thread-count="1" verbose="1">
+    <listeners>
+        <listener class-name="com.anhtester.mobile.listeners.TestLogListener"/>
+        <listener class-name="com.anhtester.mobile.listeners.ScreenshotListener"/>
+    </listeners>
+    <test name="Pixel_10_Pro_XL · emulator-5554 · app Cài đặt">
+        <parameter name="platform" value="android"/>
+        <parameter name="deviceKey" value="android_pixel_10_pro_xl_settings"/>
+        <classes>
+            <class name="com.anhtester.mobile.tests.DeviceConnectionTest"/>
+        </classes>
+    </test>
+</suite>

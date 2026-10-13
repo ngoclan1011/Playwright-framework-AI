@@ -1,0 +1,23 @@
+[
+  {
+    "tcId": "BK_AUTH_TC_007",
+    "title": "Sign in: bỏ trống Email thì bị chặn ngay trên app",
+    "email": "",
+    "password": "Abc@12345",
+    "expectedError": "Email is required."
+  },
+  {
+    "tcId": "BK_AUTH_TC_008",
+    "title": "Sign in: bỏ trống Password thì bị chặn ngay trên app",
+    "email": "auto_signin_valid@auto.test",
+    "password": "",
+    "expectedError": "Password is required."
+  },
+  {
+    "tcId": "BK_AUTH_TC_010",
+    "title": "Sign in: Email sai định dạng bị app chặn, không gửi lên máy chủ",
+    "email": "auto_signin_invalid.auto.test",
+    "password": "Abc@12345",
+    "expectedError": "Invalid email address"
+  }
+]

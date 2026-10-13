@@ -1,0 +1,26 @@
+# Output test — gom hết trong reports/
+reports/
+
+# Build
+target/
+
+# Allure CLI giải nén bởi Maven, Appium cài cục bộ bởi npm — sinh lại được
+.allure/
+.appium/
+node_modules/
+
+# Thư mục mặc định của tool (phòng khi config bị bỏ sót)
+allure-results/
+test-output/
+
+# Bí mật
+.env
+
+# App build (APK/IPA) — không commit file nhị phân
+apps/*
+!apps/.gitkeep
+
+# IDE
+.idea/
+*.iml
+.vscode/

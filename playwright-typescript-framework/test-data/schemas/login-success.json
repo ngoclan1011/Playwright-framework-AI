@@ -1,0 +1,9 @@
+{
+  "type": "object",
+  "required": ["msg", "accessToken", "exp"],
+  "properties": {
+    "msg": { "type": "string" },
+    "accessToken": { "type": "string", "minLength": 1 },
+    "exp": { "type": "string" }
+  }
+}

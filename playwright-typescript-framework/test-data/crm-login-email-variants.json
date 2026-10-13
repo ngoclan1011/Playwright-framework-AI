@@ -1,0 +1,6 @@
+[
+  { "variant": "a", "title": "lẫn hoa thường", "email": "ADMIN@Example.COM" },
+  { "variant": "b", "title": "toàn chữ HOA", "email": "ADMIN@EXAMPLE.COM" },
+  { "variant": "c", "title": "2 dấu cách mỗi đầu", "email": "  admin@example.com  " },
+  { "variant": "d", "title": "1 dấu cách cuối", "email": "admin@example.com " }
+]

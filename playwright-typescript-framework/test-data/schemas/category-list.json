@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "required": ["list", "pagination"],
+  "properties": {
+    "list": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "bookCount"],
+        "properties": {
+          "name": { "type": "string" },
+          "bookCount": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "pagination": { "type": "object" }
+  }
+}

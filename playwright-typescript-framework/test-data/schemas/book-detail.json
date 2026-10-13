@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "required": ["id", "name", "status", "price", "currentPrice", "categories", "createdAt", "updatedAt"],
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "status": { "enum": ["AVAILABLE", "UNAVAILABLE"] },
+    "price": { "type": "number" },
+    "currentPrice": { "type": "number" },
+    "categories": { "type": "array", "items": { "type": "string" } },
+    "createdAt": { "type": "string" },
+    "updatedAt": { "type": "string" }
+  }
+}

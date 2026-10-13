@@ -1,0 +1,14 @@
+{
+  "name": "appium-java-framework-server",
+  "private": true,
+  "description": "Appium server + driver UiAutomator2 cài CỤC BỘ trong project (APPIUM_HOME=./.appium) — không cài global",
+  "scripts": {
+    "setup:driver": "cross-env APPIUM_HOME=./.appium appium driver install uiautomator2",
+    "appium": "cross-env APPIUM_HOME=./.appium appium --address 127.0.0.1 --port 4723 --log-level warn --log reports/logs/appium-server.log",
+    "appium:doctor": "cross-env APPIUM_HOME=./.appium appium driver doctor uiautomator2"
+  },
+  "devDependencies": {
+    "appium": "^3.0.0",
+    "cross-env": "^7.0.3"
+  }
+}

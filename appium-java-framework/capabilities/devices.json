@@ -1,0 +1,52 @@
+{
+  "android_pixel_10_pro_xl": {
+    "_comment": "Lấy từ capabilities.json ở gốc project (khối android) + systemPort riêng cho chạy song song",
+    "platformName": "Android",
+    "appium:automationName": "UiAutomator2",
+    "appium:deviceName": "Pixel_10_Pro_XL",
+    "appium:platformVersion": "17",
+    "appium:udid": "emulator-5554",
+    "appium:systemPort": 8201,
+    "appium:appPackage": "com.anhtester.book",
+    "appium:appActivity": ".MainActivity",
+    "appium:noReset": true,
+    "appium:autoGrantPermissions": true,
+    "appium:newCommandTimeout": 120
+  },
+  "android_pixel_10_pro_xl_settings": {
+    "_comment": "Kiểm kết nối device — mở app Cài đặt có sẵn của Android, KHÔNG cần app Book (testng-device-check.xml)",
+    "platformName": "Android",
+    "appium:automationName": "UiAutomator2",
+    "appium:deviceName": "Pixel_10_Pro_XL",
+    "appium:udid": "emulator-5554",
+    "appium:systemPort": 8201,
+    "appium:appPackage": "com.android.settings",
+    "appium:appActivity": ".Settings",
+    "appium:noReset": true,
+    "appium:newCommandTimeout": 120
+  },
+  "android_pixel_8": {
+    "_comment": "Mẫu cho thiết bị thứ 2 — systemPort KHÁC thiết bị 1",
+    "platformName": "Android",
+    "appium:automationName": "UiAutomator2",
+    "appium:deviceName": "Pixel_8",
+    "appium:udid": "emulator-5556",
+    "appium:systemPort": 8202,
+    "appium:appPackage": "com.anhtester.book",
+    "appium:appActivity": ".MainActivity",
+    "appium:noReset": true,
+    "appium:autoGrantPermissions": true,
+    "appium:newCommandTimeout": 120
+  },
+  "ios_iphone": {
+    "_comment": "Lấy từ capabilities.json (khối ios) — chưa dùng được trên Windows",
+    "platformName": "iOS",
+    "appium:automationName": "XCUITest",
+    "appium:deviceName": "iPhone 17 Pro Max",
+    "appium:platformVersion": "27.0",
+    "appium:udid": "your-device-udid",
+    "appium:wdaLocalPort": 8101,
+    "appium:app": "/path/to/your/ios/app.ipa",
+    "appium:newCommandTimeout": 120
+  }
+}

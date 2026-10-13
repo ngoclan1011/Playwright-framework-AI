@@ -1,0 +1,58 @@
+{
+  "tc011": [
+    {"variant": "a", "title": "Rỗng cả hai", "usesAdminEmail": false, "email": "", "password": "", "alerts": ["The Password field is required.", "The Email Address field is required."]},
+    {"variant": "b", "title": "Rỗng riêng Email", "usesAdminEmail": false, "email": "", "password": "Abc12345", "alerts": ["The Email Address field is required."]},
+    {"variant": "c", "title": "Rỗng riêng Password", "usesAdminEmail": true, "email": "", "password": "", "alerts": ["The Password field is required."]},
+    {"variant": "d", "title": "Toàn khoảng trắng", "usesAdminEmail": false, "email": "   ", "password": "   ", "alerts": ["The Password field is required.", "The Email Address field is required."]}
+  ],
+  "tc012": [
+    {"variant": "a", "title": "Thiếu @", "email": "abc"},
+    {"variant": "b", "title": "Thiếu tên miền", "email": "abc@"},
+    {"variant": "c", "title": "Thiếu phần trước @", "email": "@example.com"},
+    {"variant": "d", "title": "Nhiều @", "email": "a@b@example.com"},
+    {"variant": "e", "title": "Chuỗi tiêm SQL", "email": "admin@example.com' OR '1'='1"}
+  ],
+  "tc017": [
+    {"variant": "a", "title": "XSS", "usesAdminEmail": false, "password": "<script>alert(1)</script>"},
+    {"variant": "b", "title": "Tiêm SQL", "usesAdminEmail": true, "password": "' OR 1=1--"}
+  ],
+  "tc023": [
+    {"variant": "a", "role": "admin", "title": "Admin × trang đăng nhập", "path": "/admin/authentication", "userClass": "user-id-2"},
+    {"variant": "b", "role": "admin", "title": "Admin × Quên mật khẩu", "path": "/admin/authentication/forgot_password", "userClass": "user-id-2"},
+    {"variant": "c", "role": "pm", "title": "PM × trang đăng nhập", "path": "/admin/authentication", "userClass": "user-id-3"},
+    {"variant": "d", "role": "pm", "title": "PM × Quên mật khẩu", "path": "/admin/authentication/forgot_password", "userClass": "user-id-3"}
+  ],
+  "tc025": [
+    {"variant": "a", "title": "Mã bị sửa", "token": "00000000000000000000000000000000"},
+    {"variant": "b", "title": "Mã bị xoá rỗng", "token": ""}
+  ],
+  "tc031": [
+    {"variant": "a", "title": "Mã khoá sai", "path": "/admin/authentication/reset_password/2/0000000000000000000000000000000000000000"},
+    {"variant": "b", "title": "Mã người dùng không tồn tại", "path": "/admin/authentication/reset_password/999999/0000000000000000000000000000000000000000"}
+  ],
+  "tc043": [
+    {"variant": "a", "title": "Rỗng cả hai", "usesAdminEmail": false, "email": "", "password": ""},
+    {"variant": "b", "title": "Chỉ có Email", "usesAdminEmail": true, "email": "", "password": ""},
+    {"variant": "c", "title": "Chỉ có Password", "usesAdminEmail": false, "email": "", "password": "Abc12345"}
+  ],
+  "tc045": [
+    {"variant": "a", "title": "Dưới mốc một bậc (63 ký tự)", "localPartLength": 63, "domain": "example.com"},
+    {"variant": "b", "title": "Đúng mốc (64 ký tự)", "localPartLength": 64, "domain": "example.com"}
+  ],
+  "tc046": [
+    {"variant": "a", "title": "Vượt mốc một bậc (65 ký tự)", "localPartLength": 65, "domain": "example.com"},
+    {"variant": "b", "title": "Vượt xa (100 ký tự)", "localPartLength": 100, "domain": "example.com"},
+    {"variant": "c", "title": "Ca của bug đã đóng (250 ký tự)", "localPartLength": 250, "domain": "auto.test"}
+  ],
+  "tc047": [
+    {"variant": "a", "title": "Mật khẩu 256 ký tự", "length": 256},
+    {"variant": "b", "title": "Mật khẩu 1000 ký tự", "length": 1000}
+  ],
+  "tc049": [
+    {"variant": "a", "title": "Màn hình lớn", "width": 1920, "height": 1080},
+    {"variant": "b", "title": "Màn hình chuẩn dự án", "width": 1600, "height": 750},
+    {"variant": "c", "title": "Laptop phổ thông", "width": 1366, "height": 700},
+    {"variant": "d", "title": "Máy tính bảng dọc", "width": 768, "height": 1024},
+    {"variant": "e", "title": "Điện thoại", "width": 375, "height": 700}
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "type": "object",
+  "required": ["list", "pagination"],
+  "properties": {
+    "list": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "status", "price", "currentPrice", "categories"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "status": { "enum": ["AVAILABLE", "UNAVAILABLE"] },
+          "price": { "type": "number" },
+          "currentPrice": { "type": "number" },
+          "categories": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "pagination": {
+      "type": "object",
+      "required": ["total", "totalPage", "currentPage", "lengthData"],
+      "properties": {
+        "total": { "type": "integer", "minimum": 0 },
+        "totalPage": { "type": "integer", "minimum": 0 },
+        "currentPage": { "type": "integer", "minimum": 1 },
+        "lengthData": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+# Test output — gom hết trong reports/
+reports/
+
+# Thư mục mặc định của tool (phòng khi config bị bỏ sót)
+allure-results/
+allure-report/
+test-results/
+playwright-report/
+.playwright-mcp/
+
+node_modules/
+# Trình duyệt Playwright tải về (npm run browsers:install)
+.browsers/
+.env

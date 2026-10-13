@@ -1,0 +1,16 @@
+[
+  {
+    "variant": "a",
+    "title": "tỉnh/thành có trong danh mục thì trả về danh sách phường/xã",
+    "division": "Thành phố Hà Nội",
+    "expectEmpty": false,
+    "sampleWard": "Phường Hoàn Kiếm"
+  },
+  {
+    "variant": "b",
+    "title": "tỉnh/thành không tồn tại thì trả về danh sách rỗng",
+    "division": "Tỉnh Không Tồn Tại",
+    "expectEmpty": true,
+    "sampleWard": null
+  }
+]

@@ -1,0 +1,92 @@
+name: Appium Android Tests
+
+on:
+  push:
+    branches: [main]
+    paths: ["appium-java-framework/**", ".github/workflows/appium-java-framework.yml"]
+  pull_request:
+    paths: ["appium-java-framework/**", ".github/workflows/appium-java-framework.yml"]
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: "Suite TestNG cần chạy"
+        required: false
+        default: "testng.xml"
+
+# Push mới lên cùng nhánh/PR thì huỷ lượt chạy cũ đang dở
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: appium-java-framework
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      # Appium: số luồng = số device. CI dựng 1 emulator → thread-count="1" trong testng.xml
+      SUITE: ${{ github.event.inputs.suite || 'testng.xml' }}
+      APPIUM_SERVER: http://127.0.0.1:4723
+      BOOK_USER_EMAIL: ${{ secrets.BOOK_USER_EMAIL }}
+      BOOK_USER_PASSWORD: ${{ secrets.BOOK_USER_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: appium-java-framework/package-lock.json
+
+      - name: Bật KVM cho emulator
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Cài Appium + UiAutomator2 cục bộ trong project
+        run: |
+          npm ci
+          npm run setup:driver
+
+      - name: Chạy test trên emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          target: google_apis
+          avd-name: Pixel_10_Pro_XL
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          disable-animations: true
+          working-directory: appium-java-framework
+          script: |
+            mkdir -p reports/logs
+            (npm run appium > reports/logs/appium-ci.log 2>&1 &)
+            for i in $(seq 1 60); do curl -sf http://127.0.0.1:4723/status > /dev/null && break; sleep 2; done
+            if ls apps/*.apk > /dev/null 2>&1; then adb install -r apps/*.apk; else echo "::warning::Không có APK trong apps/ — test cần app Book sẽ lỗi ở bước tạo phiên"; fi
+            chmod +x mvnw
+            ./mvnw -B test -Dsuite=$SUITE || echo "TESTS_FAILED=1" >> $GITHUB_ENV
+
+      - name: Sinh Allure report (CLI trong project — CI không cài Allure riêng)
+        if: always()
+        run: ./mvnw -B allure:report
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: appium-reports
+          path: appium-java-framework/reports/
+          retention-days: 14
+
+      - name: Đánh dấu job đỏ nếu có test fail
+        if: env.TESTS_FAILED == '1'
+        run: exit 1
