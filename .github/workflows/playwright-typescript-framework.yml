@@ -70,13 +70,35 @@ jobs:
           CRM_TC014_EMAIL: ${{ secrets.CRM_TC014_EMAIL }}
           CRM_TC014_PASSWORD: ${{ secrets.CRM_TC014_PASSWORD }}
           HEADLESS: 'true'
-        # Chưa khai đủ tài khoản → chỉ chạy test công khai (bỏ @auth) thay vì đỏ cả suite
+        # Chưa khai đủ tài khoản → chỉ chạy test công khai (bỏ @auth) thay vì đỏ cả suite.
+        # Test @knownbug (bug app đã báo cáo) KHÔNG quyết định xanh/đỏ ở đây — chạy riêng ở bước sau.
         run: |
           if [ -n "$TEST_EMAIL" ] && [ -n "$TEST_PASSWORD" ] && [ -n "$CRM_ADMIN_EMAIL" ] && [ -n "$CRM_ADMIN_PASSWORD" ] && [ -n "$CRM_PM_EMAIL" ] && [ -n "$CRM_PM_PASSWORD" ]; then
-            npm test
+            node scripts/run-browsers.mjs --all --grep-invert "@knownbug"
           else
-            echo "::warning::Chưa khai đủ secrets TEST_* / CRM_* — chỉ chạy test công khai (npm run test:public), bỏ qua test @auth"
-            npm run test:public
+            echo "::warning::Chưa khai đủ secrets TEST_* / CRM_* — chỉ chạy test công khai, bỏ qua test @auth"
+            node scripts/run-browsers.mjs --all --grep-invert "@auth|@knownbug"
+          fi
+
+      # Bug app đang mở (docs/bugs/) — vẫn chạy, vẫn hiện FAIL trong Allure report, nhưng không làm đỏ pipeline.
+      # Bug được fix thì test chuyển xanh → gỡ tag @knownbug để nó quay lại nhóm chặn.
+      - name: Run tests @knownbug (không chặn pipeline)
+        if: always()
+        continue-on-error: true
+        env:
+          BASE_URL: ${{ secrets.BASE_URL || 'https://book.anhtester.com' }}
+          CRM_ADMIN_EMAIL: ${{ secrets.CRM_ADMIN_EMAIL }}
+          CRM_ADMIN_PASSWORD: ${{ secrets.CRM_ADMIN_PASSWORD }}
+          CRM_PM_EMAIL: ${{ secrets.CRM_PM_EMAIL }}
+          CRM_PM_PASSWORD: ${{ secrets.CRM_PM_PASSWORD }}
+          HEADLESS: 'true'
+          KEEP_ALLURE_RESULTS: '1'
+          PLAYWRIGHT_HTML_REPORT: reports/html/knownbug
+        run: |
+          if [ -n "$CRM_ADMIN_PASSWORD" ] && [ -n "$CRM_PM_PASSWORD" ]; then
+            npx playwright test --project=crm --grep "@knownbug"
+          else
+            npx playwright test --project=crm --grep "@knownbug" --grep-invert "@auth"
           fi
 
       # Lấy history của report đang public trên GitHub Pages → biểu đồ Trend nối tiếp giữa các lần chạy

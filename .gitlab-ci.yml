@@ -55,15 +55,17 @@ playwright-typescript-framework:
   script:
     - export BASE_URL="${BASE_URL:-https://book.anhtester.com}"
     # Chạy test nhưng vẫn sinh report khi đỏ, rồi trả đúng mã thoát ở cuối
-    # Chưa khai đủ tài khoản → chỉ chạy test công khai (bỏ @auth) thay vì đỏ cả suite
+    # Chưa khai đủ tài khoản → chỉ chạy test công khai (bỏ @auth) thay vì đỏ cả suite.
+    # Test @knownbug (bug app đã báo cáo ở docs/bugs/) chạy riêng, vẫn hiện FAIL trong report nhưng không làm đỏ job.
     - |
       if [ -n "$TEST_EMAIL" ] && [ -n "$TEST_PASSWORD" ] && [ -n "$CRM_ADMIN_EMAIL" ] && [ -n "$CRM_ADMIN_PASSWORD" ] && [ -n "$CRM_PM_EMAIL" ] && [ -n "$CRM_PM_PASSWORD" ]; then
-        TEST_CMD="npm test"
+        node scripts/run-browsers.mjs --all --grep-invert "@knownbug" && TEST_EXIT=0 || TEST_EXIT=$?
+        KEEP_ALLURE_RESULTS=1 PLAYWRIGHT_HTML_REPORT=reports/html/knownbug npx playwright test --project=crm --grep "@knownbug" || true
       else
-        echo "WARNING - Chưa khai đủ biến TEST_* / CRM_* — chỉ chạy test công khai (npm run test:public)"
-        TEST_CMD="npm run test:public"
+        echo "WARNING - Chưa khai đủ biến TEST_* / CRM_* — chỉ chạy test công khai, bỏ qua test @auth"
+        node scripts/run-browsers.mjs --all --grep-invert "@auth|@knownbug" && TEST_EXIT=0 || TEST_EXIT=$?
+        KEEP_ALLURE_RESULTS=1 PLAYWRIGHT_HTML_REPORT=reports/html/knownbug npx playwright test --project=crm --grep "@knownbug" --grep-invert "@auth" || true
       fi
-    - $TEST_CMD && TEST_EXIT=0 || TEST_EXIT=$?
     - npm run report:generate && npm run report:single
     - exit $TEST_EXIT
   artifacts:

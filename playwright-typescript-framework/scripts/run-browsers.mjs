@@ -23,8 +23,9 @@ const runAll = args.includes('--all');
 const named = args.filter(a => KNOWN.includes(a));
 const passthrough = args.filter(a => a !== '--all' && !KNOWN.includes(a));
 
-// `shell: true` (cần cho `npx` trên Windows) tách tham số theo dấu cách → bọc những tham số có dấu cách như `--grep "đăng nhập"`
-const quote = a => (/\s/.test(a) && !a.startsWith('"') ? `"${a}"` : a);
+// `shell: true` (cần cho `npx` trên Windows) tách tham số theo dấu cách và hiểu `|` `&` `<` `>` là toán tử shell
+// → bọc những tham số như `--grep "đăng nhập"` hay `--grep-invert "@auth|@knownbug"`
+const quote = a => (/[\s|&<>^]/.test(a) && !a.startsWith('"') ? `"${a}"` : a);
 const queue = named.length > 0 ? named : [...UI_BROWSERS, ...(runAll ? OTHER_PROJECTS : [])];
 const listOnly = passthrough.includes('--list');
 
