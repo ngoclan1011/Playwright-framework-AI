@@ -96,9 +96,9 @@ jobs:
           PLAYWRIGHT_HTML_REPORT: reports/html/knownbug
         run: |
           if [ -n "$CRM_ADMIN_PASSWORD" ] && [ -n "$CRM_PM_PASSWORD" ]; then
-            npx playwright test --project=crm --grep "@knownbug"
+            npx playwright test --project=crm --project=api --grep "@knownbug"
           else
-            npx playwright test --project=crm --grep "@knownbug" --grep-invert "@auth"
+            npx playwright test --project=crm --project=api --grep "@knownbug" --grep-invert "@auth"
           fi
 
       # Lấy history của report đang public trên GitHub Pages → biểu đồ Trend nối tiếp giữa các lần chạy

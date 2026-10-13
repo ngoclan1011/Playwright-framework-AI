@@ -60,11 +60,11 @@ playwright-typescript-framework:
     - |
       if [ -n "$TEST_EMAIL" ] && [ -n "$TEST_PASSWORD" ] && [ -n "$CRM_ADMIN_EMAIL" ] && [ -n "$CRM_ADMIN_PASSWORD" ] && [ -n "$CRM_PM_EMAIL" ] && [ -n "$CRM_PM_PASSWORD" ]; then
         node scripts/run-browsers.mjs --all --grep-invert "@knownbug" && TEST_EXIT=0 || TEST_EXIT=$?
-        KEEP_ALLURE_RESULTS=1 PLAYWRIGHT_HTML_REPORT=reports/html/knownbug npx playwright test --project=crm --grep "@knownbug" || true
+        KEEP_ALLURE_RESULTS=1 PLAYWRIGHT_HTML_REPORT=reports/html/knownbug npx playwright test --project=crm --project=api --grep "@knownbug" || true
       else
         echo "WARNING - Chưa khai đủ biến TEST_* / CRM_* — chỉ chạy test công khai, bỏ qua test @auth"
         node scripts/run-browsers.mjs --all --grep-invert "@auth|@knownbug" && TEST_EXIT=0 || TEST_EXIT=$?
-        KEEP_ALLURE_RESULTS=1 PLAYWRIGHT_HTML_REPORT=reports/html/knownbug npx playwright test --project=crm --grep "@knownbug" --grep-invert "@auth" || true
+        KEEP_ALLURE_RESULTS=1 PLAYWRIGHT_HTML_REPORT=reports/html/knownbug npx playwright test --project=crm --project=api --grep "@knownbug" --grep-invert "@auth" || true
       fi
     - npm run report:generate && npm run report:single
     - exit $TEST_EXIT

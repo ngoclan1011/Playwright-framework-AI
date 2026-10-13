@@ -81,8 +81,9 @@ test.describe('API Sách', () => {
       id: 'BOOK_BOOKS_TC_004',
       feature: 'API Sách',
       severity: 'blocker',
-      description: 'Đã đăng nhập, tạo thể loại riêng rồi tạo sách mới qua POST /api/book: trả 201, '
-        + 'tìm lại được cuốn sách theo tên với đúng giá và thể loại. Test tự xoá sách và thể loại đã tạo.',
+      description: 'Đã đăng nhập, tạo thể loại riêng rồi tạo sách mới qua POST /api/book: trả thành công kèm "Book created successfully.", '
+        + 'tìm lại được cuốn sách theo tên với đúng giá và thể loại. Test tự xoá sách và thể loại đã tạo. '
+        + 'Mã đúng 201 theo spec kiểm riêng ở BOOK_BOOKS_TC_005 (@knownbug).',
     });
     const category = TestData.bookName('bookCategory');
     const book = { name: TestData.bookName('createBook'), status: 'AVAILABLE' as const, categories: [category], price: 125_000 };
@@ -96,8 +97,9 @@ test.describe('API Sách', () => {
 
       const response = await test.step('Act: Tạo sách mới', () => bookApi.create(book, accessToken));
 
-      await test.step('Assert: Trả 201 và tìm lại được sách đúng dữ liệu', async () => {
-        expect(response.status(), 'Tạo sách phải trả 201').toBe(201);
+      await test.step('Assert: Tạo thành công và tìm lại được sách đúng dữ liệu', async () => {
+        expect(response.ok(), `Tạo sách phải thành công (2xx), nhận ${response.status()}`).toBe(true);
+        expect((await response.json()).msg, 'Thông báo phải đúng nguyên văn').toBe('Book created successfully.');
         const found = await bookApi.findByName(book.name);
         expect(found, 'Phải tìm lại được sách vừa tạo theo tên').toBeDefined();
         createdId = found!.id;
@@ -109,6 +111,40 @@ test.describe('API Sách', () => {
       // Chỉ xoá đúng bản ghi test này tạo — môi trường dùng chung
       await test.step('Cleanup: Xoá sách và thể loại đã tạo', async () => {
         if (createdId) await bookApi.remove(createdId, accessToken);
+        await categoryApi.remove(category, accessToken);
+      });
+    }
+  });
+
+  test('API tạo sách mới phải trả đúng mã 201 Created theo spec', {
+    tag: ['@regression', '@api', '@book', '@auth', '@knownbug'],
+  }, async ({ bookApi, categoryApi, accessToken }) => {
+    await meta({
+      id: 'BOOK_BOOKS_TC_005',
+      feature: 'API Sách',
+      severity: 'minor',
+      description: '🐞 REQ-BK-BOOK-83 · AMB-BK-BOOK-23 (chốt: spec đúng): tạo sách thành công qua POST /api/book phải trả 201. '
+        + 'Hiện trạng hệ thống trả 200 — FAIL là kết quả đúng, không hạ assertion. Test tự xoá sách và thể loại đã tạo.',
+    });
+    const category = TestData.bookName('bookCategory201');
+    const book = { name: TestData.bookName('createBook201'), status: 'AVAILABLE' as const, categories: [category], price: 125_000 };
+
+    try {
+      await test.step('Arrange: Tạo thể loại riêng cho test', async () => {
+        const response = await categoryApi.create(category, accessToken);
+        expect(response.status(), 'Tạo thể loại phải trả 201').toBe(201);
+      });
+
+      const response = await test.step('Act: Tạo sách mới', () => bookApi.create(book, accessToken));
+
+      await test.step('Assert: Trả đúng 201 Created', async () => {
+        expect(response.status(), 'Tạo sách phải trả 201 theo spec').toBe(201);
+      });
+    } finally {
+      // Chỉ xoá đúng bản ghi test này tạo — môi trường dùng chung
+      await test.step('Cleanup: Xoá sách và thể loại đã tạo', async () => {
+        const found = await bookApi.findByName(book.name);
+        if (found) await bookApi.remove(found.id, accessToken);
         await categoryApi.remove(category, accessToken);
       });
     }
